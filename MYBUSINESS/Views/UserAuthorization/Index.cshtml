@@ -1,0 +1,184 @@
+﻿@model IList<MYBUSINESS.Models.UserAuthorization>
+@{
+    ViewBag.Title = "User Permissions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<link href="~/Content/custom/downloads/datatables.min.css" rel="stylesheet" />
+    <script src="~/Content/custom/downloads/datatables.min.js"></script>*@
+<center><h2>User Permissions</h2></center>
+
+@*<p>
+        @Html.ActionLink("Create New Customer", "Create")
+    </p>*@
+
+@using (Html.BeginForm("Index", "UserAuthorization", FormMethod.Post, new { name = "UserAuthorization", id = "UserAuthorization" }))
+
+{
+
+
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    double TotalRA = 0;//Receivables (RA)
+    double TotalPA = 0;//Payables (PA)
+    double RAcount = 0;
+    double PAcount = 0;
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box">
+                    @*<div class="box-header">
+            <h3 class="box-title">Hover Data Table</h3>
+        </div>*@
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <table class="table table-hover cell-border" id="CustomerIndex">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayName("Id")
+
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Description")
+
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Authorize")
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @if (Model != null)
+                                {
+                                    for (var i = 0; i < Model.Count; i++)
+                                    {
+                                        {
+
+                                            <tr>
+                                                <td>
+                                                    @Html.DisplayFor(m => Model[i].Id)
+                                                    @Html.HiddenFor(m => Model[i].Id)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(m => Model[i].Description)
+                                                    @Html.HiddenFor(m => Model[i].Description)
+                                                </td>
+                                                <td>
+                                                    @Html.EditorFor(m => Model[i].Authorize)
+                                                </td>
+
+                                            </tr>
+                                        }
+                                    }
+                                }
+                                @*@Html.Raw(TempData["msg"])*@
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td><input type="submit" id="submitButton" value="Update" class="btn btn-primary" /></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="box-footer">
+                        
+                        
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+       
+    </section>
+    
+}
+
+<style type="text/css" media="screen">
+    .noPrint {
+    }
+
+    .noScreen {
+        display: none;
+    }
+</style>
+
+<style type="text/css" media="print">
+    .noPrint {
+        display: none;
+    }
+
+    .noScreen {
+    }
+</style>
+
+<link href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/select/1.3.3/css/select.dataTables.min.css" rel="stylesheet" />
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#submitButton").on("click", function () {
+            alert('Authorizations updated successfully');
+        });
+        $('#printMe').click(function () {
+
+
+            if ($.fn.DataTable.isDataTable('#CustomerIndex')) {
+                $('#CustomerIndex').DataTable().destroy();
+            }
+
+            //$("#printMe").hide();
+
+            window.print();
+
+        });
+
+        //$('#SOSRIndex').DataTable({
+        //    fixedHeader: {
+        //        footer: true
+        //    }
+        //});
+
+        //$('#CustomerIndex').DataTable({
+        //    //fixedHeader: {
+        //    //    header: true,
+        //    //    footer: true
+        //    //},
+        //    "scrollY": "400px",
+        //    "scrollCollapse": true,
+        //    "paging": false,
+        //    "bInfo": false,
+        //    "order": [[0, "desc"]],
+        //    "searching": false
+
+        //});
+
+        $('#CustomerIndex').DataTable({
+            searching: true,
+            paging: false,
+            //columnDefs: [{
+            //    orderable: false,
+            //    className: 'select-checkbox',
+            //    targets: 0
+            //}],
+            //select: {
+            //    style: 'os',
+            //    selector: 'td:first-child',
+            //    style: 'multi'
+            //},
+            order: [[0, 'asc']]
+        });
+
+
+    });
+
+</script>

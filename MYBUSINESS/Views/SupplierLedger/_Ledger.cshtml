@@ -1,0 +1,372 @@
+﻿@model IEnumerable<MYBUSINESS.Models.PO>
+
+@*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">*@
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>*@
+
+@{
+    /**/
+
+    /**/
+
+    int TotalPOQty = 0;
+    decimal TotalPOAmout = 0;
+    decimal POAmountDiscounted = 0;
+    int TotalSRQty = 0;
+    decimal TotalSRAmout = 0;
+    decimal TotalBillPaid = 0;
+    decimal Discount = 0;
+    decimal Balance = 0;
+    decimal PrevBalance = 0;
+    decimal subTotal = 0;
+    decimal TotalsubTotal = 0;
+    decimal Total = 0;
+    string whtieSpace = ((char)160).ToString() + ((char)160).ToString() + ((char)160).ToString() + ((char)160).ToString();
+    Dictionary<int, int> LstMaxSerialNo = ViewBag.LstMaxSerialNo as Dictionary<int, int>;
+    <div id="NewData">
+        <section class="content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        @*<div class="box-header">
+                                <h3 class="box-title">Hover Data Table</h3>
+                            </div>*@
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table class="table table-hover cell-border" id="POPRIndex">
+                                <thead>
+                                    <tr>
+                                        <th style="width:13%;">
+                                            Month
+                                        </th>
+                                        <th>
+                                            Order No.
+                                        </th>
+                                        <th>
+                                            Type
+                                        </th>
+                                        <th>
+                                            Narration
+                                        </th>
+                                        <th>
+                                            @*@Html.DisplayNameFor(model => model.PurchaseOrderAmount)/*@Debit@*/Decrease*@
+                                        </th>
+                                        <th>
+                                            @*@Html.DisplayNameFor(model => model.BillPaid)/*@Credit@*/Increase*@
+                                        </th>
+
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Balance)
+                                        </th>
+
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+
+                                    {
+                                        <tr>
+                                            <td>@Html.DisplayFor(modelItem => item.Date)</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>Opening Balance</td>
+                                            <td></td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.PrevBalance) DR
+                                                @{TotalPOAmout += (decimal)item.PrevBalance;}
+                                            </td>
+                                            <td>@Html.DisplayFor(modelItem => item.PrevBalance) DR</td>
+                                        </tr>
+                                        break;
+                                    }
+
+                                    @foreach (var item in Model)
+
+                                    {
+
+                                        //if (item.PurchaseOrderAmount == 2400)
+                                        //{
+                                        //    string abc = "";
+                                        //}
+
+
+                                        for (int turn = 0; turn < 3; turn++)
+                                        {
+                                            POAmountDiscounted = 0;
+
+                                            if (turn == 0 && (decimal)(item.PurchaseOrderAmount - item.Discount) != 0)//will run in Purchaseorder case
+                                            {
+                                                @*@(POAmountDiscounted = (decimal)(item.PurchaseOrderAmount - item.Discount))*@
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Date)
+                                                    </td>
+                                                    <td>
+                                                        @*@Html.DisplayFor(modelItem => item.POSerial)*@
+
+                                                        <ul class="nav navbar-nav">
+                                                            <li class="dropdown">
+                                                                @item.POSerial <b class="caret"></b>
+                                                                <ul id="products-menu" class="dropdown-menu clearfix" role="menu">
+                                                                    <li>
+
+                                                                        @{
+
+                                                                            if (LstMaxSerialNo != null && LstMaxSerialNo.ContainsValue((int)item.POSerial))
+                                                                            {
+                                                                                @*@Html.ActionLink("Update", "Edit", new { id = item.Id, update = true })*@
+
+                                                                                <a href="@Url.Action("Edit", "POPR", new { id = item.Id, update = true })" data-toggle="tooltip" data-placement="top" title="View Purchase Order">Update Purchase Order</a>
+                                                                            }
+                                                                            else
+                                                                            {
+
+                                                                                @*@Html.ActionLink(whtieSpace + "View", "Edit", new { id = item.Id, update = false })*@
+
+                                                                                <a href="@Url.Action("Edit", "POPR", new { id = item.Id, update = false })" data-toggle="tooltip" data-placement="top" title="View Purchase Order">View Purchase Order</a>
+
+                                                                            }
+
+                                                                        }
+                                                                    </li>
+
+
+
+                                                                </ul>
+                                                            </li>
+                                                        </ul>
+
+
+                                                    </td>
+                                                    <td>P</td>
+                                                    <td>Purchase Against Invoice #  @(item.POSerial)</td>
+                                                    <td></td>
+                                                    <td>
+                                                        @*@Html.DisplayFor(modelItem => item.SaleOrderAmount)*@
+                                                        @(POAmountDiscounted = (decimal)(item.PurchaseOrderAmount - item.Discount))
+                                                        @{TotalPOAmout += (decimal)(item.PurchaseOrderAmount - item.Discount);}
+                                                    </td>
+
+                                                    <td>
+                                                        @*@Html.DisplayFor(modelItem => item.Balance)*@
+
+                                                        @((decimal)(item.PrevBalance + POAmountDiscounted)) DR
+
+                                                    </td>
+
+                                                </tr>
+                                                //Balance = TotalPOAmout - TotalSRAmout - TotalBillPaid - Discount - PrevBalance;
+                                            }
+
+
+                                            else if (turn == 1 && item.PurchaseReturnAmount != 0)//will run in sale return case
+                                                                                                 //if (turn != 1)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Date)
+                                                    </td>
+                                                    <td>
+                                                        @*@Html.DisplayFor(modelItem => item.POSerial)*@
+
+                                                        <ul class="nav navbar-nav">
+                                                            <li class="dropdown">
+                                                                @item.POSerial <b class="caret"></b>
+                                                                <ul id="products-menu" class="dropdown-menu clearfix" role="menu">
+                                                                    <li>
+
+                                                                        @{
+
+                                                                            if (LstMaxSerialNo != null && LstMaxSerialNo.ContainsValue((int)item.POSerial))
+                                                                            {
+                                                                                @*@Html.ActionLink("Update", "Edit", new { id = item.Id, update = true })*@
+
+                                                                                <a href="@Url.Action("Edit", "POPR", new { id = item.Id, update = true })" data-toggle="tooltip" data-placement="top" title="View Purchase Order">Update Purchase Order</a>
+                                                                            }
+                                                                            else
+                                                                            {
+
+                                                                                @*@Html.ActionLink(whtieSpace + "View", "Edit", new { id = item.Id, update = false })*@
+
+                                                                                <a href="@Url.Action("Edit", "POPR", new { id = item.Id, update = false })" data-toggle="tooltip" data-placement="top" title="View Purchase Order">View Purchase Order</a>
+
+                                                                            }
+
+                                                                        }
+                                                                    </li>
+
+
+
+                                                                </ul>
+                                                            </li>
+                                                        </ul>
+
+
+                                                    </td>
+                                                    <td>P</td>
+                                                    <td>Purchase return Against Invoice #  @(item.POSerial)</td>
+                                                    <td>
+
+                                                        @*@Html.DisplayFor(modelItem => item.BillPaid)
+                                                            @{TotalBillPaid += item.BillPaid;}*@
+
+                                                    </td>
+
+                                                    <td>
+                                                        @*@Html.DisplayFor(modelItem => item.PurchaseReturnAmount * (-1))*@
+                                                        @(item.PurchaseReturnAmount * -1)
+                                                        @{TotalPOAmout -= (decimal)item.PurchaseReturnAmount;}
+                                                    </td>
+
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Balance) DR
+
+
+                                                        @*@((decimal)(item.PrevBalance - POAmountDiscounted))*@
+
+
+
+
+                                                    </td>
+
+                                                </tr>
+                                                //Balance = TotalPOAmout - TotalSRAmout - TotalBillPaid - Discount - PrevBalance;
+                                            }
+                                            else if (turn == 2 && item.BillPaid != 0)//will run in bill paid
+                                            {
+                                                @*@(POAmountDiscounted = (decimal)(item.PurchaseOrderAmount - item.Discount))*@
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Date)
+                                                    </td>
+                                                    <td>
+                                                        @*@Html.DisplayFor(modelItem => item.POSerial)*@
+
+                                                        <ul class="nav navbar-nav">
+                                                            <li class="dropdown">
+                                                                @item.POSerial <b class="caret"></b>
+                                                                <ul id="products-menu" class="dropdown-menu clearfix" role="menu">
+                                                                    <li>
+
+                                                                        @{
+
+                                                                            if (LstMaxSerialNo != null && LstMaxSerialNo.ContainsValue((int)item.POSerial))
+                                                                            {
+                                                                                @*@Html.ActionLink("Update", "Edit", new { id = item.Id, update = true })*@
+
+                                                                                <a href="@Url.Action("Edit", "POPR", new { id = item.Id, update = true })" data-toggle="tooltip" data-placement="top" title="View Purchase Order">Update Purchase Order</a>
+                                                                            }
+                                                                            else
+                                                                            {
+
+                                                                                @*@Html.ActionLink(whtieSpace + "View", "Edit", new { id = item.Id, update = false })*@
+
+                                                                                <a href="@Url.Action("Edit", "POPR", new { id = item.Id, update = false })" data-toggle="tooltip" data-placement="top" title="View Purchase Order">View Purchase Order</a>
+
+                                                                            }
+
+                                                                        }
+                                                                    </li>
+
+
+
+                                                                </ul>
+                                                            </li>
+                                                        </ul>
+
+
+                                                    </td>
+
+                                                    <td>G</td>
+                                                    <td>Paid @(item.PaymentMethod) @(item.PaymentDetail)</td>
+                                                    <td>
+
+                                                        @Html.DisplayFor(modelItem => item.BillPaid)
+                                                        @{TotalBillPaid += item.BillPaid;}
+
+
+                                                    </td>
+                                                    <td></td>
+                                                    <td>
+
+                                                        @Html.DisplayFor(modelItem => item.Balance) DR
+
+                                                    </td>
+
+                                                </tr>
+                                                //Balance = TotalPOAmout - TotalSRAmout - TotalBillPaid - Discount - PrevBalance;
+                                            }
+
+                                        }
+                                    }
+
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><a href="/POPR/Create?IsReturn=false" id="createPOPR">New</a></td>
+                                        <td></td>
+                                        <td></td>
+
+                                    </tr>
+                                    <tr style="font-weight:bold">
+                                        <td></td>
+                                        <td>@*@Model.Count()*@</td>
+                                        <td></td>
+                                        <td></td>
+                                        @*<td>@TotalPOQty</td>*@
+
+
+                                        @*<td>@TotalSRQty</td>*@
+                                        @*<td>@TotalSRAmout</td>*@
+
+                                        @*<td>@Discount</td>*@
+                                        @*<td>@TotalsubTotal</td>*@
+                                        @*<td>@PrevBalance</td>*@
+                                        @*<td></td>*@
+                                        <td>@TotalBillPaid</td>
+                                        <td>@TotalPOAmout</td>
+                                        <td>@ViewBag.TotalBalance</td>
+
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        //$('#POPRIndex').DataTable({
+        //    fixedHeader: {
+        //        footer: true
+        //    }
+        //});
+        $('#').DataTable({
+            //fixedHeader: {
+            //    header: true,
+            //    footer: true
+            //},
+            "scrollY": "400px",
+            "scrollCollapse": true,
+            "paging": false,
+            "bInfo": false,
+            "order": [[0, "desc"]],
+            "searching": false,
+            "ordering": false
+
+        });
+
+
+    });
+
+
+</script>

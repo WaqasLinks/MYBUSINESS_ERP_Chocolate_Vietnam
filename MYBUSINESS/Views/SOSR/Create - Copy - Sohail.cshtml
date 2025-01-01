@@ -1,0 +1,778 @@
+﻿@model MYBUSINESS.Models.SaleOrderViewModel
+
+@{
+    ViewBag.Title = "Create SO";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+@*<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js"></script>*@
+
+
+
+<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.css">
+
+
+<script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="//code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-sliderAccess.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.js"></script>
+
+
+
+<link href="@Url.Content("~/Content/custom/custom.css")" rel="stylesheet" type="text/css" />
+<script src="~/Content/custom/customerSOSR.js"></script>
+<script src="~/Content/custom/downloads/jquery.mcautocomplete.js"></script>
+<script src="~/Content/custom/downloads/jquery.scannerdetection.js"></script>
+
+<!-- jQuery library -->
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>*@
+
+<!-- Latest compiled JavaScript -->
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+@*<link href="@Url.Content("~/Content/custom/downloads/datetimepicker-master/jquery.datetimepicker.css")" rel="stylesheet" type="text/css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/Content/custom/downloads/datetimepicker-master/jquery.datetimepicker.js"></script>*@
+
+<style>
+    .table-wrapper2 {
+        margin: 30px auto;
+        background: #fff;
+        padding: 20px;
+        box-shadow: 0 1px 1px rgb(0 0 0 / 5%);
+    }
+</style>
+@*<h2>Create</h2>*@
+
+@* @using (Html.BeginForm(null, null, FormMethod.Post, new { name = "SOEdit", id = "SOEdit" })) *@
+@using (Html.BeginForm("Create", "SOSR", FormMethod.Post, new { name = "SOCreate", id = "SOCreate" }))
+
+{
+
+
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="container" id="container">
+        <div class="table-wrapper2">
+            <div class="table-title">
+                <div class="row">
+                    <div id="saleOrder" class="col-sm-offset-5"><h2>Sale <b>Order</b></h2></div>
+                    <div id="saleReturn" class="col-sm-offset-5"><h2>Sale <b>Return</b></h2></div>
+                    
+                </div>
+                
+                <input type="hidden" name="SaleOrder.SaleReturn" id="saleReturn" value=@ViewBag.IsReturn />
+                
+                <input type="hidden" name="SaleOrder.CustomerId" id="idnCustomer" value="" />
+                <div class="row">
+                    <div class="col-md-6">
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                    </div>
+
+                    
+                </div>
+
+            </div>
+          
+
+            <table id="selectedProducts" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width:5%;">#</th>
+                        
+                        <th style="width:25%;">
+                            Name
+                        </th>
+                        <th>
+                            Price
+                        </th>
+                        <th>
+                            Qty
+                        </th>
+                        <th style="display:none;">
+                            Unit
+                        </th>
+                        <th style="display:none;">
+                            PerPack
+                        </th>
+
+                        <th>
+                            Total
+                        </th>
+
+                        <th style="display:none;">
+                            Type
+                        </th>
+                        <th>
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="SNo0">1</td>
+                        <td style="display:none;"><input type="hidden" name="SaleOrderDetail.Index" value="0" /></td>
+                        <td style="display:none;"><input type="text" readonly class="form-control classBGcolor" name="SaleOrderDetail[0].ProductId" id="idn0"></td>
+                        @*<td><input type="text" class="form-control" name="name0" id="name0" onkeyup="myFunction()" data-toggle="tooltip" data-placement="top" title="Type product name"></td>*@
+                        @*<td><input type="text" autocomplete="off"  class="form-control" name="name0" id="name0" onkeyup="myFunction()"></td>*@
+                        <td><input type="text" autocomplete="off" class="form-control" name="SaleOrderDetail[0].Product.Name" id="name0" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name"></td>
+                        <td><input type="text" autocomplete="off" class="form-control classBGcolor" name="SaleOrderDetail[0].SalePrice" id="salePrice0"></td>
+                        <td><input type="text" autocomplete="off" class="form-control" name="SaleOrderDetail[0].Quantity" id="quantity0"></td>
+
+                        <td style="display:none;">
+                            <select class="form-control" name="SaleOrderDetail[0].IsPack" id="isPack0">
+                                <option value="false">Piece</option>
+                                <option value="true" selected>Pack</option>
+                            </select>
+                        </td>
+                        <td style="display:none;"><input type="text" readonly autocomplete="off" class="form-control" name="SaleOrderDetail[0].PerPack" id="perPack0"></td>
+                        <td><input type="text" readonly class="form-control classBGcolor" name="itemTotal0" id="itemTotal0" tabindex="-1"></td>
+                        <td style="display:none;">
+                            <select class="form-control" name="SaleOrderDetail[0].SaleType" id="saleType0">
+                                <option value="false" selected>Order</option>
+                                <option value="true">Return</option>
+                            </select>
+                        </td>
+
+                        <td>
+                            @*<a class="add" title="Add" data-toggle="tooltip"><i class="material-icons">&#xE03B;</i></a>
+                                <a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>*@
+                            @*<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>*@
+                            @*<i class="material-icons"><a class="delete" title="Delete" data-toggle="tooltip">&#xE872;</a></i>*@
+                            @*<button type="button" id="delete0" class="delete btn btn-default add-new"> <i class="material-icons"><a class="delete" title="Delete" data-toggle="tooltip">&#xE872;</a></i></button>*@
+                            <button type="button" id="delete0" class="delete btn btn-default add-new"><a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display:inline" id="dvCalculations">
+                <div class="row" style="margin-top:30px;">
+                    <div class="col-md-6">
+                        @Html.DropDownList("SaleOrder.BankAccountId", (IEnumerable<SelectListItem>)ViewBag.BankAccounts, null, new { @class = "form-control", @style = "display:none" })
+                        <select class="form-control" name="SaleOrder.PaymentMethod" id="SaleOrder.PaymentMethod" data-toggle="tooltip" data-placement="top" title="Select Payment method">
+                            <option value="Cash" selected>Cash</option>
+                            <option value="Online">Online</option>
+                            <option value="Cheque">Cheque</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <input type="text" autocomplete="off" class="form-control" name="SaleOrder.PaymentDetail" id="SaleOrder.PaymentDetail" value="" placeholder="Cheque No./Online payment No./etc..." data-toggle="tooltip" data-placement="top" title="Enter any details you want">
+                        <textarea name="SaleOrder.Remarks" rows="1" cols="100" class="form-control" placeholder="These remarks will print on bill" data-toggle="tooltip" data-placement="top" title="These remarks will print on bill"></textarea>
+                        <textarea name="SaleOrder.Remarks2" rows="1" cols="100" class="form-control" placeholder="These remarks will not print on bill" data-toggle="tooltip" data-placement="top" title="These remarks will not print on bill"></textarea>
+                    </div>
+                    <div class="col-md-6" style="margin-top:20px;">
+
+                        <table>
+                            <thead></thead>
+                            <tbody>
+                                <tr style="display:none;">
+                                    <td><input type="text" readonly class="form-control classBorder0" name="OrderTotal" id="OrderTotal" value="Order Total" tabindex="-1"></td>
+                                    <td><input type="text" readonly class="form-control classBorder0" name="SaleOrder.BillAmount" id="ItemsTotal" value="0" tabindex="-1"></td>
+                                </tr>
+                                @*<tr>
+                                        <td><input type="text" readonly class="form-control classBorder0" name="ReturnTotal" id="ReturnTotal" value="Return Total" tabindex="-1"></td>
+                                        <td><input type="text" readonly class="form-control classBorder0" name="ReturnItemsTotal" id="ReturnItemsTotal" value="0" tabindex="-1"></td>
+                                    </tr>*@
+                                <tr style="display:none;">
+                                    <td><input type="text" readonly class="form-control classBorder0" name="dc3" id="dc3" value="Order Discount" tabindex="-1"></td>
+                                    <td><input type="text" autocomplete="off" class="form-control" name="SaleOrder.Discount" id="discount" value="0"></td>
+                                </tr>
+                                <tr class="text-bold" style="display:none;">
+                                    <td><b><input type="text" readonly class="form-control classBorder0" name="st3" id="st3" value="Sub Total" tabindex="-1"></b></td>
+                                    <td><b><input type="text" readonly class="form-control classBorder0" name="subtotal" id="subtotal" value="0" tabindex="-1"></b></td>
+                                </tr>
+                                <tr style="display:none;">
+                                    <td><input type="text" readonly class="form-control classBorder0" name="pb3" id="pb3" value="Prev.Balance" tabindex="-1"></td>
+                                    <td><input readonly type="text" autocomplete="off" class="form-control" name="SaleOrder.PrevBalance" id="PreviousBalance" value="0" tabindex="-1"></td>
+                                </tr>
+                                <tr class="text-bold" style="display:none;">
+                                    <td><b><input type="text" readonly class="form-control classBorder0" name="tt3" id="tt3" value="Total" tabindex="-1"></b></td>
+                                    <td><b><input type="text" readonly class="form-control classBorder0" name="total" id="total" value="0" tabindex="-1"></b></td>
+                                </tr>
+                                <tr style="display:none;">
+                                    <td style="background-color: #c5deed;"><input type="text" readonly class="form-control classBorder0" name="pd3" id="pd3" value="Paid" tabindex="-1"></td>
+                                    <td style="background-color: #c5deed;"><input type="text" autocomplete="off" class="form-control" name="SaleOrder.BillPaid" id="paid" value="0"></td>
+                                </tr>
+                                <tr style="display:none;">
+                                    <td><input type="text" readonly class="form-control classBorder0" name="bl3" id="bl3" value="Balance" tabindex="-1"></td>
+                                    <td><input readonly type="text" autocomplete="off" class="form-control" name="SaleOrder.Balance" id="balance" value="0" tabindex="-1"></td>
+                                </tr>
+                                <tr>
+                                    @*<td colspan="2" rowspan="2"><button type="button" id="CreateSO" class="btn btn-primary" style="background-color: #2bbdb9; width: 300px; height: 70px; margin-left: auto; margin-right: auto; display: block; margin-top: 10px; margin-bottom: 0%; font-size: 32px;">Pay</button></td>*@
+                                    <td colspan="2" rowspan="2"><button type="button" id="CreateSO" class="btn btn-primary" style="background-color: #2bbdb9; width: 300px; height: 70px; margin-left: auto; margin-right: auto; display: block; margin-top: 10px; margin-bottom: 0%; font-size: 32px;">Pay</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="table-title">
+                    <div class="row">
+                        @*<div class="col-sm-8"><h2>Sale <b>Order</b></h2></div>*@
+                        <div class="col-sm-3">
+                        </div>
+                        <div class="col-sm-7">
+                            @*<textarea name="SaleOrder.PaymentMethod" rows="1" cols="100" class="form-control" placeholder="Payment method..."></textarea>*@
+                        </div>
+                    </div>
+                    <div class="row">
+                        @*<div class="col-sm-8"><h2>Sale <b>Order</b></h2></div>*@
+                        <div class="col-sm-3">
+
+                        </div>
+                        <div class="col-sm-7">
+                        </div>
+                    </div>
+                    <div class="row">
+                        @*<div class="col-sm-8"><h2>Sale <b>Order</b></h2></div>*@
+                        <div class="col-sm-3">
+                        </div>
+                        <div class="col-sm-7">
+                        </div>
+                    </div>
+                    <div class="row">
+                        @*<div class="col-sm-8"><h2>Sale <b>Order</b></h2></div>*@
+                        <div class="col-sm-3">
+                        </div>
+                        <div class="col-sm-7">
+                        </div>
+                        <div class="col-sm-2">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pay Modal -->
+    <div class="modal fade bd-pay-modal-lg" id="payModal" tabindex="-1" role="dialog" aria-labelledby="payModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="payModalTitle" style="text-align:center;">Total : <span id="totalitsmspan">0</span> </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container mt-5">
+                        <div class="row justify-content-center">
+                            <div class="col-md-9">
+                                <div class="card">
+                                    <div class="card-header">
+                                        @*<h4 class="card-title">Total</h4>*@
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-3">
+
+                                                <!-- Content for the first column (2 columns wide) -->
+                                                <!-- Content for the second column (5 columns wide) -->
+                                                <h4 class="card-title">VND(₫)</h4>
+                                                <div id="inputFields">
+                                                    <input type="text" class="form-control styled-input" value="1000 ₫" readonly><br />
+                                                    <input type="text" class="form-control styled-input" value="2000 ₫" readonly><br />
+                                                    <input type="text" class="form-control styled-input" value="2000 ₫" readonly><br />
+                                                    <input type="text" class="form-control styled-input" value="5000 ₫" readonly><br />
+                                                    <input type="text" class="form-control styled-input" value="10 000 ₫" readonly><br />
+                                                    <input type="text" class="form-control styled-input" value="20 000 ₫" readonly><br />
+                                                    <input type="text" class="form-control styled-input" value="50 000 ₫" readonly><br />
+                                                    <input type="text" class="form-control styled-input" value="100 000 ₫" readonly><br />
+                                                    <input type="text" class="form-control styled-input" value="100 000 ₫" readonly><br />
+                                                    <input type="text" class="form-control styled-input" value="500 000 ₫" readonly><br />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <div style="display:flex;">
+                                                    <button type="button" class="btn btn-primary" id="payallbycard">Pay all by card</button> &nbsp;
+                                                    <div style="display:flex;">
+                                                        &nbsp;
+                                                        &nbsp;
+                                                        &nbsp;
+                                                        <label for="okCheckbox" style="font-size: 11px;">Pay in multiple currencies</label>
+                                                        <input type="checkbox" id="okCheckbox" style="margin-top: -18px; margin-left: 16px;">
+                                                    </div>
+                                                </div>
+                                                <br />
+                                                <form>
+                                                    @*<div class="form-group" style="display:flex">*@
+                                                    <div class="form-group">
+                                                        <label for="inputField">Card VND</label>
+                                                        @*<input type="text" readonly class="form-control classBorder0" name="cardVnd" id="cardVnd" value="cardVnd" tabindex="-1">*@
+                                                        <input type="text" autocomplete="off" class="form-control" name="SaleOrder.BillPaid" id="cardvnd" value="0">
+                                                        @*<input type="text" class="form-control" name="cardvnd" id="cardvnd" placeholder="Card Vnd">*@
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="inputField">Cash VND</label>
+                                                        <input type="text" class="form-control" id="cashvnd" placeholder="Cash Vnd">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="inputField">Change (USD)</label>
+                                                        <input type="text" class="form-control" id="changeusvnd" placeholder="Change USD">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="inputField">Change (JPY)</label>
+                                                        <input type="text" class="form-control" id="changejpy" placeholder="Change JPY">
+                                                    </div>
+                                                    @*<div class="form-group">
+                                                            <label for="inputField">Change (Vnd)</label>
+                                                            <input type="text" class="form-control" id="changevnd" placeholder="Change VND">
+                                                        </div>*@
+                                                    <div class="form-group">
+                                                        <label for="inputField">Left to pay VND</label>
+                                                        @*<input type="text" readonly class="form-control classBorder0" name="LeftToPayVnd" id="LeftToPayVnd" value="LeftToPayVnd" tabindex="-1">*@
+                                                        <input readonly type="text" autocomplete="off" class="form-control" name="SaleOrder.Balance" id="lefttopayvnd" value="0" tabindex="-1">
+                                                        @*<input type="text" class="form-control" name="lefttotalvnd" id="lefttotalvnd" value="0" tabindex="-1" placeholder="Left to Pay Vnd">*@
+                                                    </div>
+                                                    @*<button type="submit" class="btn btn-primary btn-block btnupdatestatus">Submit</button>*@
+                                                </form>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <!-- Content for the third column (4 columns wide) -->
+                                                <!-- Calculator buttons -->
+                                                <div class="calculator">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <button class="btn btn-secondary btn-block" type="button">7</button>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <button class="btn btn-secondary btn-block" type="button">8</button>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <button class="btn btn-secondary btn-block" type="button">9</button>
+                                                        </div>
+                                                    </div>
+                                                    <br />
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <button class="btn btn-secondary btn-block" type="button">4</button>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <button class="btn btn-secondary btn-block" type="button">5</button>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <button class="btn btn-secondary btn-block" type="button">6</button>
+                                                        </div>
+                                                    </div>
+                                                    <br />
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <button class="btn btn-secondary btn-block" type="button">1</button>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <button class="btn btn-secondary btn-block" type="button">2</button>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <button class="btn btn-secondary btn-block" type="button">3</button>
+                                                        </div>
+                                                    </div>
+                                                    <br />
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <button class="btn btn-secondary btn-block" type="button">CE</button>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <button class="btn btnbtn-secondary btn-block" type="button">0</button>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <button class="btn btnbtn-secondary btn-block" type="button">X</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="modal-body">
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                        <h4 class="card-title">Total</h4>
+                                    </div>
+                                <div class="card-body">-->
+                @*<form>
+                        <div class="form-group">
+                            <label for="inputField">Order No</label>
+                            <input type="text" class="form-control" id="poslatestserial" placeholder="Enter something">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block btnupdatestatus">Submit</button>
+                    </form>*@
+                <!--</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" name="validatepyment" id="validatepyment" disabled>Validate</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Curomer Tex Modal -->
+    <div class="modal fade bd-tax-modal-lg" id="taxModal" tabindex="-1" role="dialog" aria-labelledby="taxModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="taxModalTitle" style="text-align:center;">QUY 123456666</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container mt-5">
+                        <div class="row justify-content-center">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <div class="row"></div><div class="col-md-6"></div><div class="col-md-5">
+                                            <div class="d-flex justify-content-center justify-content-md-end">
+                                                <button type="button" class="card-title btn btn-primary">Individual without VAT number</button>
+                                            </div>
+                                        </div><div class="col-md-1"></div>
+
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <form>
+                                                    <div class="form-group">
+                                                        <label for="dropdown">Customer</label>
+                                                        <input type="text" autocomplete="off" class="form-control" name="Customer.Name" id="customer" value="" placeholder="Type customer name" data-toggle="tooltip" data-placement="top" title="Type customer name">
+                                                    </div>
+                                                    @*<div class="form-group">
+                                                            <label for="dropdown">Customer</label>
+                                                            <select class="form-control" id="dropdown">
+                                                                <option value="">Select customer</option>
+                                                                <option value="1">Option 1</option>
+                                                                <option value="2">Option 2</option>
+                                                                <option value="3">Option 3</option>
+                                                            </select>
+                                                        </div>*@
+                                                    <div class="form-group">
+                                                        <label for="field1">Customer Name</label>
+                                                        <input type="text" class="form-control" name="Customer.Name" id="vndCustomerName" placeholder="Cutomer name">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="field2">Customer Company</label>
+                                                        <input type="text" class="form-control" name="Customer.CompanyName" id="vndCustomerCompany" placeholder="Customer company">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="field3">Address</label>
+                                                        <input type="text" class="form-control" name="Customer.Address" id="vndCustomerAddress" placeholder="Address">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="field4">VAT Number</label>
+                                                        @*<input type="text" class="form-control" name="vndCustomerVat" id="vndCustomerVat" placeholder="VAT Number">*@
+                                                        <input type="text" class="form-control" name="Customer.Vat" id="vndCustomerVat" placeholder="VAT Number">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="field5">Email</label>
+                                                        <input type="text" class="form-control" name="Customer.Email" id="vndCustomerEmail" placeholder="Email">
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="modal-body">
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                        <h4 class="card-title">Total</h4>
+                                    </div>
+                                <div class="card-body">-->
+                @*<form>
+                        <div class="form-group">
+                            <label for="inputField">Order No</label>
+                            <input type="text" class="form-control" id="poslatestserial" placeholder="Enter something">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block btnupdatestatus">Submit</button>
+                    </form>*@
+                <!--</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" name="saveSales" id="saveSales">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+}
+
+<script>
+
+    $(document).ready(function () {
+        document.getElementById('SOCreate').reset(); // has to be handle
+    });
+    //$("[id^='quantity'],#salePrice").keyup(function () {
+    //    //alert("afasf");
+    //    update_itemTotal();
+    //});
+    //$("[id^='delete']").keyup(function (event) {
+    //    //alert("hi");
+    //    if (event.keyCode == 13) {
+    //        $("[id^='delete']").trigger('click');
+    //    }
+    //});
+    //$("[id^='delete']").click(function () {
+    //    $(this).parents("tr").remove();
+    //    $("#addNewRow").removeAttr("disabled");
+    //    update_itemTotal();
+    //});
+    txtSerialNum = 0;
+    TriggerBodyEvents();
+
+    @foreach (var d in Model.Customers)
+    {
+        @*@:products.push(["@d.Name","@d.SalePrice","@d.Stock"]);*@
+        @:customers.push(["@d.Id","@d.Name", "@d.Address", "@d.Balance","@d.Email","@d.Vat","@d.CompanyName"]);
+    }
+
+    OnTypeCustomerName('#customer');
+    //OpenDialogue('#name0');
+        var getPrevBalanceUrl = '@Url.Action("GetPreviousBalance", "SOSR")';                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     //OpenDialogue('#name0');
+
+    //var productColumns = [{ name: 'Product', minWidth: '320px' }, { name: 'Price', minWidth: '100px' }, { name: 'Qty', minWidth: '70px' }];
+    //var products = [['Ciplet', '10', '60'], ['Gaviscon', '85', '12'], ['Surficol', '110', '8']];
+    //alert(products);
+    @{
+        var carton = 0; //= (d.Stock / d.PerPack);
+        var piece = 0;
+        foreach (var d in Model.Products)
+        {
+            carton = (int)(d.Stock / d.PerPack);
+            piece = (int)(d.Stock % d.PerPack);
+            if (piece == 0)
+            {
+                @:products.push(["@d.Id", "@d.Name", "@d.SalePrice", "@carton", "@d.PerPack", "@d.WholeSalePrice"]);
+            }
+            else
+            {
+                @:products.push(["@d.Id", "@d.Name", "@d.SalePrice", "@carton,@piece", "@d.PerPack", "@d.WholeSalePrice"]);
+            }
+            @:productsBarcodes.push(["@d.Id", "@d.BarCode"]);
+
+        }
+     }
+
+    //alert(products);
+
+    //OnTypeName('#name0');
+
+</script>
+
+
+<div id="dialog-CreateCustomer" title="Create customer dialog">
+    @*@using (Html.BeginForm())*@
+    @*@using (Html.BeginForm("Create", "Customers", FormMethod.Post, new { name = "SOSRCreateNewCustomer", id = "SOSRCreateNewCustomer" }))*@
+    @*{*@
+    @*@Html.AntiForgeryToken()*@
+    @*ViewBag.Controller = "SOSR";
+        ViewBag.Action = "Create";
+        TempData["Controller"] = "SOSR";
+        TempData["Action"] = "Create";*@
+    @*<input type="hidden" name="CustomerId" value="@ViewBag.Data1" />
+        <input type="hidden" name="CustomerId" value="@ViewBag.Data1" />*@
+    <div class="form-horizontal"> @*Add styling display none to Customer Form by Sohail*@
+
+        <h4>Add New Customer</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Customer.Id, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*@Html.EditorFor(model => model.Customer.Id, new { htmlAttributes = new { @class = "form-control", @name = "Customer.Id", @id ="NewCustomerId", @Value = ViewBag.SuggestedNewCustId, @readonly = "readonly" } })*@
+                <input type="text" autocomplete="off" class="form-control" id="NewCustomerId" value=@ViewBag.SuggestedNewCustId readonly="readonly" />
+                @*@Html.ValidationMessageFor(model => model.Customer.Id, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Customer.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*@Html.EditorFor(model => model.Customer.Name, new { htmlAttributes = new { @class = "form-control", @name = "Customer.Name", @id = "NewCustomerName"} })*@
+                <input type="text" autocomplete="off" class="form-control" id="NewCustomerName" value="" />
+                @*<input type="hidden" name="SaleOrder.CustomerId" id="idnCustomer" value="10" />*@
+                @*@Html.ValidationMessageFor(model => model.Customer.Name, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Customer.Address, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*@Html.EditorFor(model => model.Customer.Name, new { htmlAttributes = new { @class = "form-control", @name = "Customer.Name", @id = "NewCustomerName"} })*@
+                <input type="text" autocomplete="off" class="form-control" id="NewCustomerAddress" value="" />
+                @*<input type="hidden" name="SaleOrder.CustomerId" id="idnCustomer" value="10" />*@
+                @*@Html.ValidationMessageFor(model => model.Customer.Name, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+
+
+        <div class="table-title">
+            <div class="row">
+                @*<div class="col-sm-8"><h2>Sale <b>Order</b></h2></div>*@
+                <div class="col-sm-8">
+                    @*<button type="submit" id="CreateSO" class="btn btn-info add-new"><i class="fa fa-plus"></i>Save & Print</button>*@
+                    <input type="button" value="Add" id="btnCreateNewCust" class="btn btn-danger" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+    @*}*@
+</div>
+@{Html.RenderPartial("_ProductDetail", new List<MYBUSINESS.Models.ProductDetail>()); }
+<div class="text-center">
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+
+
+
+
+
+
+<script type="text/javascript">
+    @if (ViewBag.ReportId != null && ViewBag.ReportId != "") {
+        @:window.open("PrintSO3/@(ViewBag.ReportId)", "_blank");
+    }
+    var reportId = '@(ViewBag.ReportId)';
+    //if (reportId != null && reportId != "") {
+    //    var storedTotal = localStorage.getItem('totalItems');
+    //    if (storedTotal) {
+    //        $('#lefttotalvnd').val(storedTotal); // Set the stored value
+    //    }
+    //    $('#payModal').modal('show');
+    //}
+    IsReturn = '@(ViewBag.IsReturn)';
+    //alert(IsReturn);
+
+    $('.from-date-picker').datetimepicker({
+        dateFormat: "dd-M-yy",
+        timeFormat: "hh:mm tt",
+        showOn: "both",
+        timeInput: true,
+        stepHour: 1,
+        stepMinute: 5,
+        oneLine: true,
+        //changeMonth: true,
+        //changeYear: true,
+        controlType: 'select',
+        buttonImageOnly: true,
+        buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif",
+        buttonText: "Select date"
+    });
+
+    //$('#demo').datetimepicker({
+    //    // options here
+    //});
+
+
+     $("#NewData").dialog({
+        autoOpen: false,
+         title: 'Should not sell-out, already rented on thses dates',
+        closeText: '', //Changes the text of the titlebar-close button to hello instead of default Close
+        width: 500,
+        Height:500
+
+    });
+
+    function FetchProductRentStatus() {
+    //alert('wwww');
+
+        var date = new Date();
+        var day = date.getDate();       // yields date
+        var month = date.getMonth() + 1;    // yields month (add one as '.getMonth()' is zero indexed)
+        var year = date.getFullYear();  // yields year
+        var hour = date.getHours();     // yields hours
+        var minute = date.getMinutes(); // yields minutes
+        var second = date.getSeconds(); // yields seconds
+
+        // After this construct a string with the above results as below
+        var sellDate = day + "/" + month + "/" + year;// + " " + hour + ':' + minute + ':' + second;
+
+        var prodId = $('#idn' + clickedIdNum).val();
+
+        //alert(prodId);
+        //alert(startDate);
+        //alert(endDate);
+        //var dataLength1 = 'qqq';
+
+
+
+        $.ajax({
+            url: "@Url.Action("ProductRentStatus","SOSR")",
+            data: { 'prodId': prodId, 'sellDate': sellDate},
+            type: "GET",
+            cache: false,
+            success: function (data) {
+                //toastr.success('Hi! I am success message.');
+                //var abc = data;
+                //alert(data);
+                if (data.indexOf('12:00:00 AM') != -1) {
+
+                    $("#NewData").html(data);
+                    $("#NewData").dialog("open");
+                //}
+                }
+
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                //$('#lblCommentsNotification').text("Error encountered while saving the comments.");
+                alert('Data provided was not valid');
+            }
+        });
+    }
+
+    //alert(IsReturn);
+</script>
+
+@*@section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }*@
+

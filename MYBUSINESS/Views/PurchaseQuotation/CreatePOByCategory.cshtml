@@ -1,0 +1,215 @@
+﻿@model MYBUSINESS.Models.PurchaseOrderViewModel
+
+@{
+    ViewBag.Title = "Create PO By Category";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    //var selectedProductCategory = ViewBag.SelectedProductCategory as Dictionary<string, List<MYBUSINESS.Models.Product>>;
+    var selectedProductCategory = ViewBag.SelectedProductCategory as Dictionary<string, List<MYBUSINESS.Models.Product>>;
+}
+
+<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.css">
+<script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="//code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-sliderAccess.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.js"></script>
+
+
+@*<link href="@Url.Content("~/Content/custom/custom.css")" rel="stylesheet" type="text/css" />*@
+<script src="~/Content/custom/quotationPOPR.js"></script>
+<script src="~/Content/custom/downloads/jquery.mcautocomplete.js"></script>
+<script src="~/Content/custom/downloads/jquery.scannerdetection.js"></script>
+
+
+@using (Html.BeginForm("CreatePOByCategory", "PurchaseQuotation", FormMethod.Post, new { name = "POCreate", id = "POCreate" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="container" id="container">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div id="saleOrder" class="col-sm-offset-5">
+                        <h2>New <b>Quotation Category</b></h2>
+                    </div>
+                    <div id="saleReturn" class="col-sm-offset-5">
+                        <h2>Purchase <b>Return</b></h2>
+                    </div>
+                </div>
+                <input type="hidden" name="PurchaseOrder.PurchaseReturn" id="purchaseReturn" value="@ViewBag.IsReturn" />
+                <input type="hidden" name="PurchaseOrder.SupplierId" id="idnSupplier" value="" />
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h5><b>Supplier Name</b></h5>
+                        <input type="text" autocomplete="off" class="form-control" name="Supplier.Name" id="supplier" value="" placeholder="Type supplier name">
+                    </div>
+                    <div class="col-md-6">
+                        <h5><b>Date</b></h5>
+                        <input type="text" autocomplete="off" class="form-control from-date-picker" value="@ViewBag.MalaysiaTime.ToString("dd-MMM-yyyy hh:mm tt")" name="PurchaseOrder.Date" id="PurshaseOrderDate" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                @if (selectedProductCategory != null)
+                {
+                    var index = 0; // Index to differentiate between input fields for each product
+                    foreach (var category in selectedProductCategory)
+                    {
+                        <div class="col-md-6">
+                            <h4><b>@category.Key</b></h4>
+                            @foreach (var product in category.Value)
+                            {
+                                <div class="card mb-3" style="display:flex;">
+                                    <div class="card-header">
+                                        <h5>@product.Name</h5>
+                                        <input type="hidden" name="PurchaseOrderDetail[@index].ProductId" value="@product.Id" />
+                                    </div>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;
+                                    <div class="card-body">
+                                        <input type="number" name="PurchaseOrderDetail[@index].Quantity" class="form-control" placeholder="" />
+                                        <br />
+                                        <input type="hidden" name="PurchaseOrderDetail[@index].IsPack" value="false" />
+                                        <input type="hidden" name="PurchaseOrderDetail[@index].PurchasePrice" value="@product.PurchasePrice" />
+                                    </div>
+                                </div>
+                                index++;
+                            }
+                        </div>
+                    }
+                }
+            </div>
+
+            <div style="display:inline" id="dvCalculations">
+                <div class="table-title">
+                    <div class="row">
+                        <div class="col-sm-7">
+                            @Html.DropDownList("PurchaseOrder.BankAccountId", (IEnumerable<SelectListItem>)ViewBag.BankAccounts, null, new { @class = "form-control", @style = "display:none" })
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <button type="submit" id="CreatePO" class="btn btn-info add-new">Save & Print</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script>
+
+    $(document).ready(function () {
+        document.getElementById('POCreate').reset();
+    });
+
+    txtSerialNum = 0;
+    TriggerBodyEvents();
+
+    OnTypeSupplierName('#supplier');
+        var getPrevBalanceUrl = '@Url.Action("GetPreviousBalance", "POPR")';                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     //OpenDialogue('#name0');
+
+         @{
+         var storeProductStock = 0;
+         var carton = 0; //= (d.Stock / d.PerPack);
+         var piece = 0;
+         foreach (var d in Model.Products)
+         {
+             foreach (var sp in d.StoreProducts)
+             {
+                 if (sp.StoreId == 1)
+                 {
+                     storeProductStock = (int)sp.Stock;
+                     break;
+                 }
+             }
+
+             carton = (int)(storeProductStock / d.PerPack);
+             piece = (int)(storeProductStock % d.PerPack);
+             if (piece == 0)
+             {
+                 @:products.push(["@d.Id", "@d.Name", "@d.PurchasePrice", "@carton", "@d.PerPack"]);
+            }
+            else
+            {
+                 @:products.push(["@d.Id", "@d.Name", "@d.PurchasePrice", "@carton,@piece", "@d.PerPack"]);
+            }
+             @:productsBarcodes.push(["@d.Id", "@d.BarCode"]);
+
+         }
+      }
+    //alert(products);
+
+    //OnTypeName('#name0');
+
+</script>
+
+
+<div id="dialog-CreateSupplier" title="Create supplier dialog">
+    <div class="form-horizontal">
+
+        <h4>Add New Supplier</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Supplier.Id, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="text" autocomplete="off" class="form-control" id="NewSupplierId" value=@ViewBag.SuggestedNewSuppId readonly="readonly" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Supplier.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="text" autocomplete="off" class="form-control" id="NewSupplierName" value="" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Supplier.Address, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="text" autocomplete="off" class="form-control" id="NewSupplierAddress" value="" />
+            </div>
+        </div>
+
+
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-8">
+                    <input type="button" value="Add" id="btnCreateNewSupp" class="btn btn-info add-new" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+    @*}*@
+</div>
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+<script>
+    $(document).ready(function () {
+        document.getElementById('POCreate').reset(); // has to be handle
+    });
+    txtSerialNum = 0;
+    TriggerBodyEvents();
+
+    @foreach (var d in Model.Suppliers)
+    {
+        @*@:products.push(["@d.Name","@d.PurchasePrice","@d.Stock"]);*@
+        @:suppliers.push(["@d.Id","@d.Name", "@d.Address", "@d.Balance"]);
+    }
+
+    OnTypeSupplierName('#supplier');
+        var getPrevBalanceUrl = '@Url.Action("GetPreviousBalance", "POPR")';                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     //OpenDialogue('#name0');
+
+</script>
+

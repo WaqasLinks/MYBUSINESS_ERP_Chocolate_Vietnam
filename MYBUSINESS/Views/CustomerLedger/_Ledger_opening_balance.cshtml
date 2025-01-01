@@ -1,0 +1,201 @@
+﻿@model IEnumerable<MYBUSINESS.Models.SO>
+
+@{
+    /**/
+
+    /**/
+
+    int TotalSOQty = 0;
+    double TotalSOAmout = 0;
+    int TotalSRQty = 0;
+    double TotalSRAmout = 0;
+    decimal TotalProfit = 0;
+    double BillPaid = 0;
+    double Discount = 0;
+    double Balance = 0;
+    double PrevBalance = 0;
+
+
+    <div id="NewData">
+        @*<center><h2>@ViewBag.ThisCustomer.Name Ledger</h2></center>
+            <center><h4>@ViewBag.ThisCustomer.Address</h4></center>*@
+
+        @if (Model != null && Model.Count() == 0)
+        {
+            <script type="text/javascript">
+                alert("No data found");
+            </script>
+
+        }
+
+        @if (Model != null && Model.Count() > 0)
+        {
+
+
+            <center><h2>@Model.First().Customer.Name Ledger</h2></center>
+            <center><h4>@Model.First().Customer.Address</h4></center>
+            <hr />
+            <table class="table table-hover cell-border" id="SOSRIndex">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Date)
+                        </th>
+                        <th>
+                            Desc.
+                        </th>
+
+
+                        <th>
+                            @Html.DisplayNameFor(model => model.BillPaid)
+
+                        </th>
+                        @*<th>
+                                @Html.DisplayNameFor(model => model.SaleReturnAmount)
+
+                            </th>*@
+
+                        <th>
+                            @Html.DisplayNameFor(model => model.Balance)
+                        </th>
+                        <th>
+
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            @Model.First().Date.ToString()
+                        </td>
+                        <td>
+                            @*Order No. @Model.First().SOSerial.ToString()*@
+                            Opening Balance
+                        </td>
+
+
+                        <td>
+                            @*@Model.First().BillPaid.ToString()*@
+
+                        </td>
+                        @*<td></td>*@
+
+                        <td>
+                            @Model.First().Balance.ToString()
+                        </td>
+
+                        <td></td>
+
+
+                    </tr>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Date)
+                            </td>
+                            <td>
+
+                                <a href="@Url.Action("PrintSO3", "SOSR", new { id = item.Id })" data-toggle="tooltip" data-placement="top" title="View invoice">
+                                    Order No. @Html.DisplayFor(modelItem => item.SOSerial)
+                                </a>
+
+
+                            </td>
+
+                            @*<td class="CustomerIdForSearch" style="display:none;">
+                                    @Html.DisplayFor(modelItem => item.Customer.Id)
+                                </td>*@
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.BillPaid)
+                                @{BillPaid += item.BillPaid;}
+
+                            </td>
+                            @*<td>
+                                    @Html.DisplayFor(modelItem => item.SaleReturnAmount)
+
+
+                                </td>*@
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Balance)
+                            </td>
+
+                            <td>
+                                @{
+                                    @*if (item.Balance != 0)
+                                        {
+                                            @Html.ActionLink("Payments", "Create", "Payments", new { custName = item.Customer.Name, orderNo= item.SOSerial,id = item.Id }, null)
+                                        }*@
+                                    @Html.ActionLink("Payments", "Create", "Payments", new { custName = item.Customer.Name, orderNo = item.SOSerial, id = item.Id }, null)
+                                }
+                            </td>
+
+                        </tr>
+                        //Balance = TotalSOAmout - TotalSRAmout - BillPaid - Discount - PrevBalance;
+                    }
+                    <tr>
+                        <td>
+                            @Model.Last().Date.ToString()
+                        </td>
+                        <td>
+                            @*Order No. @Model.First().SOSerial.ToString()*@
+                            Closing Balance
+                        </td>
+
+
+                        <td>
+                            @*@Model.First().BillPaid.ToString()*@
+
+                        </td>
+                        @*<td></td>*@
+
+                        <td>
+                            @Model.Last().Balance.ToString()
+                        </td>
+                        <td></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr style="font-weight:bold">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+
+                    </tr>
+                </tfoot>
+            </table>
+        }
+    </div>
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        //$('#SOSRIndex').DataTable({
+        //    fixedHeader: {
+        //        footer: true
+        //    }
+        //});
+        $('#SOSRIndex').DataTable({
+            //fixedHeader: {
+            //    header: true,
+            //    footer: true
+            //},
+            "scrollY": "400px",
+            "scrollCollapse": true,
+            "paging": false,
+            "bInfo": false,
+            "order": [[0, "asc"]],
+            "searching": false,
+            "ordering": false
+
+        });
+
+
+    });
+
+
+</script>

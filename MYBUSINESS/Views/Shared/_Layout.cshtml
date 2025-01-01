@@ -1,0 +1,469 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>@ViewBag.Title - Hans Corp Abwabal</title>
+
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    @Styles.Render("~/Content/css")
+
+    <link href="~/Content/custom/treeView.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="~/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/bower_components/font-awesome/css/all.min.css">
+
+    <link rel="stylesheet" href="~/dist/css/AdminLTE.min.css">
+
+    <link rel="stylesheet" href="~/dist/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+
+    <link href="~/Content/custom/icon.css" rel="stylesheet" />
+
+    <!-- jQuery 3 -->
+    <script src="~/bower_components/jquery/dist/jquery.min.js"></script>
+
+    <script src="~/dist/js/adminlte.min.js"></script>
+    <script>
+        $.widget.bridge('uibutton', $.ui.button);
+    </script>
+    <!-- AdminLTE App -->
+    <!-- Latest compiled JavaScript -->
+    <!-- jQuery library -->
+
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>*@
+
+    <script src="~/Content/custom/shared.js"></script>
+    <script src="~/Content/custom/menuHide.js"></script>
+    <style>
+        .form-group {
+            margin-bottom: 15px; /* Add some spacing between form groups */
+        }
+
+        .flex-row {
+            display: flex;
+            align-items: center;
+        }
+
+            .flex-row label {
+                flex: 0 0 150px; /* Adjust width as needed */
+                margin-right: 10px; /* Space between label and input */
+            }
+
+            .flex-row input {
+                flex: 1; /* Allow input to take up remaining space */
+            }
+    </style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+    <div class="wrapper">
+        <header class="main-header">
+            <!-- Logo -->
+            <a href="#" class="logo">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini"><b></b></span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg"><b>Hans Corp </b>Abwabal</span>
+            </a>
+            <!-- Header Navbar: style can be found in header.less -->
+            <nav class="navbar navbar-static-top">
+                <!-- Sidebar toggle button-->
+                <a href="#" id="menuToggle" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                </a>
+
+                <script>
+
+                </script>
+
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        @if (Session["CurrentUser"] != null)
+                        {
+                            MYBUSINESS.Models.Employee user = (MYBUSINESS.Models.Employee)HttpContext.Current.Session["CurrentUser"];
+                            MYBUSINESS.Models.Employee currentUser = (MYBUSINESS.Models.Employee)HttpContext.Current.Session["CurrentUser"];
+                            //if (currentUser.StoreId != null && storeId != 0)
+                            //var storeId = Session["StoreId"] as string;
+                            var storeId = Session["StoreId"];
+                            if (storeId != null)
+                            {
+                                <li><a href="#" id="closeStore" data-url="/SOSR/ClosePosPopup" data-target="#storeClosingModal">Close POS</a></li>
+                            }
+                            if (currentUser.EmployeeTypeId == 0)
+                            {
+                                <li>@Html.ActionLink("Support", "Contact", "Home")</li>
+                            }
+                            <li>@Html.ActionLink(user.Login, "Edit", "Employees", new { id = 0 }, null)</li>
+                            @*<li>@Html.ActionLink("Logout", "Logout", "UserManagement")</li>*@
+                            <li>
+                                <a href="#" onclick="logout()">Logout</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- Left side column. contains the logo and sidebar -->
+        <aside class="main-sidebar">
+            <!-- sidebar: style can be found in sidebar.less -->
+            <section class="sidebar">
+                <!-- Sidebar user panel -->
+                <!-- /.search form -->
+                <!-- sidebar menu: : style can be found in sidebar.less -->
+                <ul class="sidebar-menu" data-widget="tree">
+                    <li class="header">MAIN NAVIGATION</li>
+                    <li><a href="/Stores/StoreDashboard"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+
+
+                    <li></li>
+
+                    <li><a href="#"><i class=""></i> <span><b>Sales</b></span></a></li>
+                    <li><a href="/SOSR/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Sale</span></a></li>
+                    <li><a href="/SOSR/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Sale</span></a></li>
+                    <li><a href="/SOSR/Index"><i class="fa fa-search"></i> <span>Sales History</span></a></li>
+                    <li><a href="/SOSR/IndexReturn"><i class="fa fa-search"></i> <span>Returns History</span></a></li>
+
+                    <li><a href="#"><i class=""></i> <span><b>Purchases</b></span></a></li>
+                    <li><a href="/POPR/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Purchase</span></a></li>
+                    <li><a href="/POPR/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Purchase</span></a></li>
+                    <li><a href="/POPR/Index"><i class="fa fa-search"></i> <span>Purchases History</span></a></li>
+
+                    <li><a href="#"><i class=""></i> <span><b>Quotations</b></span></a></li>
+                    <li><a href="/PurchaseQuotation/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Quotation</span></a></li>
+                    <li><a href="/PurchaseQuotation/CreatePOByCategory?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Quotation By Category</span></a></li>
+                    <li><a href="/PurchaseQuotation/Index"><i class="fa fa-search"></i> <span>Quotations History</span></a></li>
+
+                    <li><a href="#"><i class=""></i> <span><b>Products</b></span></a></li>
+                    <li><a href="/Products/Create"><i class="fa fa-sparkles"></i> <span>New Product</span></a></li>
+                    <li><a href="/Products/Index"><i class="fa fa-gift"></i> <span>Products/Services List</span></a></li>
+                    <li><a href="/StockTransections/Summary"><i class="fa fa-list"></i> <span>Stock Summary</span></a></li>
+
+                    <li><a href="#"><i class=""></i> <span><b>BOM</b></span></a></li>
+                    <li><a href="~/BOM/Create"><i class="fa fa-sparkles"></i> <span>New BOM</span></a></li>
+                    <li><a href="~/BOM/Index"><i class="fa fa-gift"></i> <span>BOM List</span></a></li>
+
+                    <li><a href="#"><i class=""></i> <span><b>Production</b></span></a></li>
+                    <li><a href="~/NewProduction/Create"><i class="fa fa-sparkles"></i> <span>New Production</span></a></li>
+                    <li><a href="~/NewProduction/Index"><i class="fa fa-gift"></i> <span>New Production List</span></a></li>
+
+                    @*<li><a href="#"><i class=""></i> <span><b>Final Production</b></span></a></li>
+                    <li><a href="~/FinalProduction/Create"><i class="fa fa-sparkles"></i> <span>Final Production</span></a></li>
+                    <li><a href="~/FinalProduction/Index"><i class="fa fa-gift"></i> <span>New Production List</span></a></li>*@
+
+                    <li><a href="#"><i class=""></i> <span><b>Customers</b></span></a></li>
+                    <li><a href="/Customers/Create"><i class="fa fa-sparkles"></i> <span>New Customer</span></a></li>
+                    <li><a href="/Customers/Index"><i class="fa fa-search"></i> <span>Customers List</span></a></li>
+
+                    <li><a href="#"><i class=""></i> <span><b>Suppliers</b></span></a></li>
+                    <li><a href="/Suppliers/Create"><i class="fa fa-sparkles"></i> <span>New Supplier</span></a></li>
+                    <li><a href="/Suppliers/Index"><i class="fa fa-search"></i> <span>Suppliers List</span></a></li>
+
+                    <li><a href="#"><i class=""></i> <span><b>Stores</b></span></a></li>
+                    <li><a href="/Stores/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Store</span></a></li>
+                    <li><a href="/Stores/Index"><i class="fa fa-search"></i> <span>Stores History</span></a></li>
+                    <li><a href="/Stores/GetStoreVndBalance"><i class="fa fa-sparkles"></i> <span>Balance History</span></a></li>
+
+                    <li><a href="#"><i class=""></i> <span><b>Currency</b></span></a></li>
+                    <li><a href="/Currencies/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Currency</span></a></li>
+                    <li><a href="/Currencies/Index"><i class="fa fa-money"></i> <span>Currency History</span></a></li>
+
+                    <li><a href="#"><i class=""></i> <span><b>Settings</b></span></a></li>
+                    <li><a href="/MyBusinessInfoes/Edit/1"><i class="fa fa-building"></i> <span>My Business Info</span></a></li>
+                    <li><a href="/UserAuthorization/Index"><i class="fa fa-square-check"></i> <span>User Permissions</span></a></li>
+
+                </ul>
+                @*<input type="hidden" id="StorageItem" name="StorageItem" value="" />*@
+            </section>
+            <!-- /.sidebar -->
+        </aside>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <form id="hiddenForm" method="post" action="@Url.Action("StoreValue", "UserManagement")">
+                    <input type="hidden" name="storeId" id="storeIdInput" />
+                </form>
+            </section>
+            <!-- Main content -->
+            @RenderBody()
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <footer class="main-footer">
+            <div class="pull-right hidden-xs">
+                @*<b>Version</b> 1.0.0*@
+            </div>
+            <strong>Copyright &copy; @DateTime.Now.Year <a href="#">Hans Corp Abwabal</a>.</strong> All rights
+            reserved.
+        </footer>
+        @*<script>
+            $(document).ready(function () {
+                $('#menuToggle').trigger('click');
+            });
+        </script>*@
+
+        <!-- /.control-sidebar -->
+        <!-- Add the sidebar's background. This div must be placed
+     immediately after the control sidebar -->
+        <div class="control-sidebar-bg"></div>
+    </div>
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+<!--<div class="modal fade bd-tax-modal-lg" id="storeClosingPopup" tabindex="-1" role="dialog" aria-labelledby="storeClosingPopupLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="storeClosingPopupTitle" style="text-align:center;">Close</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-md-9" style="height: 537px !important; overflow-y:scroll;">
+                            <div class="card">
+                                <div class="card-header">
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <form>
+                                                <h4 class="card-title">VND (₫)</h4>
+                                                <div class="form-group flex-row">
+                                                    <label for="oneThsndVndClose">1 000 (₫)</label>
+                                                    <input type="text" autocomplete="off" class="form-control" name="oneThsndVndClose" id="oneThsndVndClose" value="0" oninput="calculateTotalClose('oneThsndVndClose', 1000, 'totalOneThsndVndClose')"> &nbsp;&nbsp;&nbsp;
+                                                    <input type="text" autocomplete="off" class="form-control" name="totalOneThsndVndClose" id="totalOneThsndVndClose" value="0">
+                                                </div>
+                                                <div class="form-group flex-row">
+                                                    <label for="twoThsndVndClose">2 000 (₫)</label>
+                                                    <input type="text" class="form-control" name="twoThsndVndClose" id="twoThsndVndClose" value="0" oninput="calculateTotalClose('twoThsndVndClose', 2000, 'totalTwoThsndVndClose')">&nbsp;&nbsp;&nbsp;
+                                                    <input type="text" class="form-control" name="totalTwoThsndVndClose" id="totalTwoThsndVndClose" value="0">
+                                                </div>
+                                                <div class="form-group flex-row">
+                                                    <label for="fiveThsndVndClose">5 000 (₫)</label>
+                                                    <input type="text" class="form-control" name="fiveThsndVndClose" id="fiveThsndVndClose" value="0" oninput="calculateTotalClose('fiveThsndVndClose', 5000, 'totalFiveThsndVndClose')">&nbsp;&nbsp;&nbsp;
+                                                    <input type="text" class="form-control" name="totalFiveThsndVndClose" id="totalFiveThsndVndClose" value="0">
+                                                </div>
+                                                <div class="form-group flex-row">
+                                                    <label for="tenThsndVndClose">10 000 (₫)</label>
+                                                    <input type="text" class="form-control" name="tenThsndVndClose" id="tenThsndVndClose" value="0" oninput="calculateTotalClose('tenThsndVndClose', 10000, 'totalTenThsndVndClose')">&nbsp;&nbsp;&nbsp;
+                                                    <input type="text" class="form-control" name="totalTenThsndVndClose" id="totalTenThsndVndClose" value="0">
+                                                </div>
+                                                <div class="form-group flex-row">
+                                                    <label for="twentyThsndVndClose">20 000 (₫)</label>
+                                                    <input type="text" class="form-control" name="twentyThsndVndClose" id="twentyThsndVndClose" value="0" oninput="calculateTotalClose('twentyThsndVndClose', 20000, 'totalTwentyThsndVndClose')">&nbsp;&nbsp;&nbsp;
+                                                    <input type="text" class="form-control" name="totalTwentyThsndVndClose" id="totalTwentyThsndVndClose" value="0">
+                                                </div>
+                                                <div class="form-group flex-row">
+                                                    <label for="fiftyThsndVndClose">50 000 (₫)</label>
+                                                    <input type="text" class="form-control" name="fiftyThsndVndClose" id="fiftyThsndVndClose" value="0" oninput="calculateTotalClose('fiftyThsndVndClose', 50000, 'totalFiftyThsndVndClose')">&nbsp;&nbsp;&nbsp;
+                                                    <input type="text" class="form-control" name="totalFiftyThsndVndClose" id="totalFiftyThsndVndClose" value="0">
+                                                </div>
+                                                <div class="form-group flex-row">
+                                                    <label for="oneLacVndClose">100 000 (₫)</label>
+                                                    <input type="text" class="form-control" name="oneLacVndClose" id="oneLacVndClose" value="0" oninput="calculateTotalClose('oneLacVndClose', 100000, 'totalOneLacVndClose')">&nbsp;&nbsp;&nbsp;
+                                                    <input type="text" class="form-control" name="totalOneLacVnClose" id="totalOneLacVndClose" value="0">
+                                                </div>
+                                                <div class="form-group flex-row">
+                                                    <label for="twoLacVndClose">200 000 (₫)</label>
+                                                    <input type="text" class="form-control" name="twoLacVndClose" id="twoLacVndClose" value="0" oninput="calculateTotalClose('twoLacVndClose', 200000, 'totalTwoLacVndClose')">&nbsp;&nbsp;&nbsp;
+                                                    <input type="text" class="form-control" name="totalTwoLacVndClose" id="totalTwoLacVndClose" value="0">
+                                                </div>
+                                                <div class="form-group flex-row">
+                                                    <label for="fiveLacVnd">500 000 (₫)</label>
+                                                    <input type="text" class="form-control" name="fiveLacVndClose" id="fiveLacVndClose" value="0" oninput="calculateTotalClose('fiveLacVndClose', 500000, 'totalFiveLacVndClose')">&nbsp;&nbsp;&nbsp;
+                                                    <input type="text" class="form-control" name="totalFiveLacVndClose" id="totalFiveLacVndClose" value="0">
+                                                </div>
+                                                <div class="form-group flex-row">
+                                                    <label for="totalVndClose">Total</label>
+                                                    <input type="text" class="form-control" name="totalVndClose" id="totalVndClose" value="0">&nbsp;&nbsp;&nbsp; Total (₫)
+                                                    <input type="text" class="form-control" name="totalVndCountClose" id="totalVndCountClose" value="0">
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="col-md-6">-->
+                                            <!-- Calculator buttons -->
+                                            <!--<div class="calculator">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <button class="btn btn-secondary btn-block" type="button">7</button>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <button class="btn btn-secondary btn-block" type="button">8</button>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <button class="btn btn-secondary btn-block" type="button">9</button>
+                                                    </div>
+                                                </div>
+                                                <br />
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <button class="btn btn-secondary btn-block" type="button">4</button>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <button class="btn btn-secondary btn-block" type="button">5</button>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <button class="btn btn-secondary btn-block" type="button">6</button>
+                                                    </div>
+                                                </div>
+                                                <br />
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <button class="btn btn-secondary btn-block" type="button">1</button>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <button class="btn btn-secondary btn-block" type="button">2</button>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <button class="btn btn-secondary btn-block" type="button">3</button>
+                                                    </div>
+                                                </div>
+                                                <br />
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <button class="btn btn-secondary btn-block" type="button">CE</button>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <button class="btn btnbtn-secondary btn-block" type="button">0</button>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <button class="btn btnbtn-secondary btn-block" type="button">X</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <hr />
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <form>
+                                                <h4 class="card-title">USD ($)</h4>
+                                                <div class="form-group flex-row">
+                                                    <label for="oneDollarClose">1 ($)</label>
+                                                    <input type="text" autocomplete="off" class="form-control" name="oneDollarClose" id="oneDollarClose" value="0">&nbsp;&nbsp;&nbsp;
+                                                    <input type="text" autocomplete="off" class="form-control" name="totalOneDollarClose" id="totalOneDollarClose" value="0">
+                                                </div>
+                                                <div class="form-group flex-row">
+                                                    <label for="fiveDollarsClose">5 ($)</label>
+                                                    <input type="text" class="form-control" name="fiveDollars" id="fiveDollarsClose" value="0">&nbsp;&nbsp;&nbsp;
+                                                    <input type="text" class="form-control" name="totalFiveDollarsClose" id="totalFiveDollarsClose" value="0">
+                                                </div>
+                                                <div class="form-group flex-row">
+                                                    <label for="tenDollarsClose">10 ($)</label>
+                                                    <input type="text" class="form-control" name="tenDollarsClose" id="tenDollarsClose" value="0">&nbsp;&nbsp;&nbsp;
+                                                    <input type="text" class="form-control" name="totalTenDollarsClose" id="totalTenDollarsClose" value="0">
+                                                </div>
+                                                <div class="form-group flex-row">
+                                                    <label for="twentyDollarsClose">20 ($)</label>
+                                                    <input type="text" class="form-control" name="twentyDollarsClose" id="twentyDollarsClose" value="0">&nbsp;&nbsp;&nbsp;
+                                                    <input type="text" class="form-control" name="totalTwentyDollarsClose" id="totalTwentyDollarsClose" value="0">
+                                                </div>
+                                                <div class="form-group flex-row">
+                                                    <label for="fiftyDollarsClose">50 ($)</label>
+                                                    <input type="text" class="form-control" name="fiftyDollarsClose" id="fiftyDollarsClose" value="0">&nbsp;&nbsp;&nbsp;
+                                                    <input type="text" class="form-control" name="totalFiftyDollarsClose" id="totalFiftyDollarsClose" value="0">
+                                                </div>
+                                                <div class="form-group flex-row">
+                                                    <label for="hundredDollarsClose">100 ($)</label>
+                                                    <input type="text" class="form-control" name="hundredDollarsClose" id="hundredDollarsClose" value="0">&nbsp;&nbsp;&nbsp;
+                                                    <input type="text" class="form-control" name="totalHundredDollarsClose" id="totalHundredDollarsClose" value="0">
+                                                </div>
+                                                <div class="form-group flex-row">
+                                                    <label for="totalDollarsClose">Total</label>
+                                                    <input type="text" class="form-control" name="totalDollarsClose" id="totalDollarsClose" value="0">&nbsp;&nbsp;&nbsp; Total ($)
+                                                    <input type="text" class="form-control" name="totalDollarsCountClose" id="totalDollarsCountClose" value="0">
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="col-md-4">
+                                        </div>
+                                    </div>
+
+                                    <hr />
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <form>
+                                                <h4 class="card-title">JPY (¥)</h4>
+                                                <div class="form-group flex-row">
+                                                    <label for="oneYenClose">1 (¥)</label>
+                                                    <input type="text" autocomplete="off" class="form-control" name="oneYenClose" id="oneYenClose" value="0">&nbsp;&nbsp;&nbsp;
+                                                    <input type="text" autocomplete="off" class="form-control" name="totalOneYen" id="totalOneYen" value="0">
+                                                </div>
+                                                <div class="form-group flex-row">
+                                                    <label for="twoYensClose">5 (¥)</label>
+                                                    <input type="text" class="form-control" name="twoYensClose" id="twoYensClose" value="0">&nbsp;&nbsp;&nbsp;
+                                                    <input type="text" class="form-control" name="totalTwoYensClose" id="totalTwoYensClose" value="0">
+                                                </div>
+                                                <div class="form-group flex-row">
+                                                    <label for="tenYensClose">10 (¥)</label>
+                                                    <input type="text" class="form-control" name="tenYensClose" id="tenYensClose" value="0">&nbsp;&nbsp;&nbsp;
+                                                    <input type="text" class="form-control" name="totalTenYensClose" id="totalTenYensClose" value="0">
+                                                </div>
+                                                <div class="form-group flex-row">
+                                                    <label for="fiftyYensClose">50 (¥)</label>
+                                                    <input type="text" class="form-control" name="fiftyYensClose" id="fiftyYensClose" value="0">&nbsp;&nbsp;&nbsp;
+                                                    <input type="text" class="form-control" name="totalFiftyYensClose" id="totalFiftyYensClose" value="0">
+                                                </div>
+                                                <div class="form-group flex-row">
+                                                    <label for="hundredYens">100 (¥)</label>
+                                                    <input type="text" class="form-control" name="hundredYensClose" id="hundredYensClose" value="0">&nbsp;&nbsp;&nbsp;
+                                                    <input type="text" class="form-control" name="totalHundredYensClose" id="totalHundredYensClose" value="0">
+                                                </div>
+                                                <div class="form-group flex-row">
+                                                    <label for="fivehundredYensClose">500 (¥)</label>
+                                                    <input type="text" class="form-control" name="fivehundredYensClose" id="fivehundredYensClose" value="0">&nbsp;&nbsp;&nbsp;
+                                                    <input type="text" class="form-control" name="totalFivehundredYensClose" id="totalFivehundredYensClose" value="0">
+                                                </div>
+                                                <div class="form-group flex-row">
+                                                    <label for="onethousandsYensClose">1 000 (¥)</label>
+                                                    <input type="text" class="form-control" name="onethousandsYens" id="onethousandsYens" value="0">&nbsp;&nbsp;&nbsp;
+                                                    <input type="text" class="form-control" name="totalOnethousandsYens" id="totalOnethousandsYens" value="0">
+                                                </div>
+                                                <div class="form-group flex-row">
+                                                    <label for="twothousandsYensClose">2 000 (¥)</label>
+                                                    <input type="text" class="form-control" name="twothousandsYensClose" id="twothousandsYensClose" value="0">&nbsp;&nbsp;&nbsp;
+                                                    <input type="text" class="form-control" name="totalTwothousandsYensClose" id="totalTwothousandsYensClose" value="0">
+                                                </div>
+                                                <div class="form-group flex-row">
+                                                    <label for="fivethousandsYensClose">5 000 (¥)</label>
+                                                    <input type="text" class="form-control" name="fivethousandsYensClose" id="fivethousandsYensClose" value="0">&nbsp;&nbsp;&nbsp;
+                                                    <input type="text" class="form-control" name="totalFivethousandsYensClose" id="totalFivethousandsYensClose" value="0">
+                                                </div>
+                                                <div class="form-group flex-row">
+                                                    <label for="tenthousandsYensClose">10 000 (¥)</label>
+                                                    <input type="text" class="form-control" name="tenthousandsYensClose" id="tenthousandsYensClose" value="0">&nbsp;&nbsp;&nbsp;
+                                                    <input type="text" class="form-control" name="totalTenthousandsYensClose" id="totalTenthousandsYensClose" value="0">
+                                                </div>
+                                                <div class="form-group flex-row">
+                                                    <label for="totalYenClose">Total</label>
+                                                    <input type="text" class="form-control" name="totalYensClose" id="totalYensClose" value="0">&nbsp;&nbsp;&nbsp; Total (¥)
+                                                    <input type="text" class="form-control" name="totalYensCountClose" id="totalYensCountClose" value="0">
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="col-md-4">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" name="closeShop" id="closeShop">Validate</button>
+            </div>
+        </div>
+    </div>
+</div>-->
+
+

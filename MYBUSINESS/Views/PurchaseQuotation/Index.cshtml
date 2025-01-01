@@ -1,0 +1,280 @@
+﻿@model IEnumerable<MYBUSINESS.Models.PO>
+
+@{
+    ViewBag.Title = "Purchase Orders";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+@* for modal *@
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+<link href="@Url.Content("~/Content/custom/downloads/jquery-ui-1.12.1.custom/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+<script src="~/Content/custom/downloads/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+
+
+@*<link href="@Url.Content("~/Content/custom/custom.css")" rel="stylesheet" type="text/css" />*@
+<script src="~/Content/custom/supplierPOPR.js"></script>
+
+<script src="~/Content/custom/downloads/jquery.mcautocomplete.js"></script>
+@*<center><h2>Purchases</h2></center>*@
+<center><h2>Quotations</h2></center>
+
+@*<h1>@ViewBag.myLog</h1>*@
+
+
+
+@*<p>
+        @Html.ActionLink("Create New Purchase Order", "Create")
+    </p>*@
+<div class="col-sm-12 noPrint">
+    @*<button type="submit" id="CreatePO" class="btn btn-info add-new"><i class="fa fa-plus"></i>Save & Print</button>*@
+    <a href="#" id="printMe" class="btn btn-info "><i class=""></i> Print</a>
+    @*<a href="/POPR/Create?IsReturn=false" id="createPOPR" class="btn btn-success "><i class=""></i> New Purchase</a>*@
+    <a href="/PurchaseQuotation/Create?IsReturn=false" id="createPOPR" class="btn btn-success "><i class=""></i> New Quotation</a>
+</div>
+<form name="registration_form_Product" id='registration_form_Product' class="form-inline noPrint">
+    <center>
+        <div class="row">
+            <input type="hidden" name="PurchaseOrder.SupplierId" id="idnSupplier" value="" />
+            @*@Html.Label("Supplier Name", htmlAttributes: new { @class = "control-label col-md-2" })*@
+            <input type="button" value="Update Status" id="opentatusmodal" class="btn btn-warning add-new" />
+
+            @*@Html.Editor("suppName", new { htmlAttributes = new { @class = "form-control", @placeholder = "Search by supplier" } })*@
+            <input type="text" autocomplete="off" class="form-control" name="SupplierName" id="supplier" value="" placeholder="Search by supplier" data-toggle="tooltip" data-placement="top" title="Search by supplier">
+
+            @*@Html.Label("Time", htmlAttributes: new { @class = "control-label col-md-2" })*@
+
+            @Html.Editor("startDate", new { htmlAttributes = new { @class = "form-control datepicker", @id = "datepickerStart", @placeholder = "Start date", @Value = ViewBag.StartDate } })
+
+
+            @*@Html.Label("Time", htmlAttributes: new { @class = "control-label col-md-2" })*@
+
+            @Html.Editor("endDate", new { htmlAttributes = new { @class = "form-control datepicker", @id = "datepickerEnd", @placeholder = "End date", @Value = ViewBag.EndDate } })
+
+            <input type="button" value="Go" id="btnSearch" class="btn btn-warning add-new" />
+
+            @*<input type="date" value="Search" id="btnSearch1" class="form-control " />*@
+
+        </div>
+    </center>
+</form>
+@*<div id="statusModal" title="Status Update" style="display:none;">
+        <p>Are you sure you want to proceed?</p>
+    </div>*@
+
+<!-- Button trigger modal -->
+@*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+        Launch demo modal
+    </button>*@
+
+<!-- Modal -->
+<div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-labelledby="statusModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="statusModal">Update Status</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="card">
+                                @*<div class="card-header">
+                                        <h4 class="card-title">Update Status</h4>
+                                    </div>*@
+                                <div class="card-body">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="inputField">Order No</label>
+                                            @*<input type="text" class="form-control" id="poslatestserial" placeholder="Enter something" data-poserial="@ViewBag.POSerial">*@
+                                            <input type="text" class="form-control" id="poslatestserial" placeholder="Enter order number">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-block btnupdatestatus">Submit</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@{Html.RenderPartial("_SelectedPOPR", Model); }
+
+<style type="text/css" media="screen">
+    .noPrint {
+    }
+
+    .noScreen {
+        display: none;
+    }
+</style>
+
+<style type="text/css" media="print">
+    .noPrint {
+        display: none;
+    }
+
+    .noScreen {
+    }
+</style>
+
+
+<script type="text/javascript">
+
+    //$('#myModal').on('shown.bs.modal', function () {
+    $(document).ready(function ($) {
+
+    });
+    $("#opentatusmodal").on("click", function (event) {
+        event.preventDefault();
+        //jQuery.noConflict();
+        $('#statusModal').modal('show');
+    });
+    //})
+    $('.btnupdatestatus').click(function upadtePurhcaseOrder(event) {
+        /* var poserialnumber = $('#poslatestserial').val(); // Corrected selector to get data-poserial from input field*/
+        event.preventDefault(); // Prevent the form from submitting immediately
+        var poserialnumber = $('#poslatestserial').val().trim(); // Get and trim the input value
+
+        if (poserialnumber === "") {
+            alert("Order No is required.");
+            $('#poslatestserial').focus(); // Focus on the input field
+            return false; // Stop the form submission
+        }
+        $.ajax({
+             url: '@Url.Action("UpadtePurhcaseOrder", "PurchaseQuotation")',
+            type: 'POST',
+            data: { poSerialNumber: poserialnumber },
+            success: function (response) {
+                // Accessing the properties of the response object
+                if (response.Success === true) {
+                    alert("Success: " + response.Message);
+                    $('#statusModal').modal('hide');
+                    $('#poslatestserial').val('');
+                } else {
+                    alert("Failed: " + response.Message);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("Error: " + xhr.responseText);
+            }
+        });
+    });
+
+    $('#printMe').click(function () {
+        if ($.fn.DataTable.isDataTable('#POPRIndex')) {
+            $('#POPRIndex').DataTable().destroy();
+        }
+
+        //$("#printMe").hide();
+
+        window.print();
+
+    });
+        @foreach(var d in ViewBag.Suppliers)
+        {
+            @*@: products.push(["@d.Name", "@d.PurchasePrice", "@d.Stock"]);*@
+            @: suppliers.push(["@d.Id", "@d.Name", "@d.Address", "@d.Balance"]);
+        }
+
+        OnTypeSupplierName('#supplier');
+        $(function () { // will trigger when the document is ready
+            //var date = $('.datepicker').datepicker({ dateFormat: 'dd-mm-yy' }).val();
+            $('.datepicker').datepicker({
+                dateFormat: 'dd-M-yy',
+                showOn: "both"//,
+                //buttonImageOnly: true,
+                //buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif",
+
+                //buttonText: "Select date"
+            });
+
+        });
+
+        $(document).ready(function () {
+
+            $('tr td.SupplierNameForSearch').click(function () {
+                //alert($(this).text());
+                //$('#idnSupplier').val();
+                $('#supplier').val($(this).text().trim());
+                $('#idnSupplier').val($(this).closest("tr").find(".SupplierIdForSearch").text());
+                SearchThis();
+            });
+
+            $('#btnSearch').click(function () {
+                SearchThis();
+            });
+
+            function SearchThis() {
+                //alert("yes");
+                var suppId = $('#idnSupplier').val();
+
+                if ($('#supplier').val().trim() != "" && $('#idnSupplier').val() == "") {
+                    alert('Supplier not found. Please select supplier from list');
+                    return false;
+
+                }
+
+
+                //var startDate = $('#startDate').val();
+                //var endDate = $('#endDate').val();
+
+                var startDate = $('#datepickerStart').datepicker({ dateFormat: 'dd-mm-yy' }).val();
+                var endDate = $('#datepickerEnd').datepicker({ dateFormat: 'dd-mm-yy' }).val();
+
+                //if (startDate.trim() == "" && Date.parse(startDate)) {
+                //    //Valid date
+                //} else {
+                //    alert("Start date is not valid");
+                //    return false;
+                //}
+
+                //if (Date.parse(startDate)) {
+                //    //Valid date
+                //} else {
+                //    alert("End date is not valid");
+                //    return false;
+                //}
+
+                //$('#loading-image').show();
+                $.ajax({
+                    url: "@Url.Action("SearchData","POPR")",
+                    data: { 'suppId': suppId, 'startDate': startDate, 'endDate': endDate },
+                    type: "GET",
+                    cache: false,
+                    success: function (data) {
+                        //alert(data);
+                        $("#NewData").html(data);
+
+                        //$("#hdnOrigComments").val($('#txtComments').val());
+                        //$('#lblCommentsNotification').text(savingStatus);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        //$('#lblCommentsNotification').text("Error encountered while saving the comments.");
+                        alert('Data provided was not valid');
+                    }
+                });
+            }
+
+        });
+
+
+</script>

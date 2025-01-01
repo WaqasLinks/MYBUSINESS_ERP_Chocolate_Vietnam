@@ -1,0 +1,293 @@
+﻿@model IEnumerable<MYBUSINESS.Models.SO>
+
+
+
+@{
+    /**/
+
+    /**/
+
+   
+    string whtieSpace = ((char)160).ToString() + ((char)160).ToString() + ((char)160).ToString() + ((char)160).ToString();
+    MYBUSINESS.Models.Employee currentUser = (MYBUSINESS.Models.Employee)HttpContext.Current.Session["CurrentUser"];
+    //Dictionary<decimal, decimal> LstMaxSerialNo = new Dictionary<decimal, decimal>();
+    //Dictionary<decimal, decimal> LstMaxSerialNo = @ViewBag.LstMaxSerialNo;
+   
+    <div id="NewData">
+        <section class="content">
+            <!-- Small boxes (Stat box) -->
+            <div class="row">
+
+                <div class="col-lg-3 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box bg-aqua">
+                        <div class="inner">
+                            <h3>@ViewBag.SOCount</h3>
+
+                            <p>Order Count</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-bag"></i>
+                        </div>
+                        <a href="/SOSR/Index" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box bg-green">
+                        <div class="inner">
+                            <h3>@ViewBag.SOAmount<sup style="font-size: 20px"></sup></h3>
+
+                            <p>Order Amount</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-stats-bars"></i>
+                        </div>
+                        <a href="/SOSR/Index" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box bg-yellow">
+                        <div class="inner">
+                            <h3>@ViewBag.ProductsCount</h3>
+
+                            <p>Products</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-person-add"></i>
+                        </div>
+                        <a href="/Products/Index" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box bg-red">
+                        <div class="inner">
+                            <h3>@ViewBag.CustomersCount</h3>
+
+                            <p>Customers</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-pie-graph"></i>
+                        </div>
+                        <a href="/Customers/Index" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+            </div>
+            <!-- /.row -->
+            <!-- Main row -->
+            
+            <!-- /.row (main row) -->
+
+        </section>
+
+
+    </div>
+
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //$("#success-alert").hide();
+
+        //$("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+        //    $("#success-alert").slideUp(500);
+        //});
+        //$('#toggle').bootstrapToggle({
+        //    on: 'Enabled',
+        //    off: 'Disabled'
+
+        //});
+
+        //$(document).on('change', ":checkbox", function () {
+
+        //    var checkbox = $(this).prop('checked');
+        //    alert(checkbox);
+        //});
+
+        //$('[id^="SR"]').click(function () {
+        //    var isChecked = $(this).is(':checked');
+        //    alert(isChecked);
+        //});
+
+        $(document).ajaxStart(function () {
+            /*$("#wait").css("display", "block");*/
+        });
+
+        $(document).ajaxComplete(function () {
+            /*$("#wait").css("display", "none");*/
+        });
+
+        $('[id^="SR"]').change(function () {
+            //var end = this.value;
+            //var firstDropVal = $('#saleType').val();
+            /*update_itemTotal();*/
+            /*alert($(this).attr('id'));*/
+            var SOSerial = $(this).attr('id');
+            var SaleStatus = false;
+            var checkbox = $(this).prop('checked');
+            var sent = false;
+            //alert(checkbox);
+            //var checkBoxes = $("input[type='checkbox']");
+            //alert(checkBoxes);
+            /*if ($(this).attr('checked') == true) {*/
+            //var lastValue = $(this).prop('checked');
+
+            if ($(this).prop('checked') == true) {
+                SaleStatus = true;
+                //$(this).prop('checked', true);
+                //alert($(this).prop('checked'));
+
+            }
+            else {
+                SaleStatus = false;
+                //$(this).prop('checked', false);
+                //alert($(this).prop('checked'));
+
+            }
+
+            if (sent == true) {
+
+            }
+            sent = true;
+
+
+            
+        });
+
+
+
+
+        //$('#SOSRIndex').DataTable({
+        //    fixedHeader: {
+        //        footer: true
+        //    }
+        //});
+        $('#example').DataTable({
+            "paging": false,
+            "lengthChange": false,
+            "pageLength": 100,
+            "searching": false,
+            "ordering": true,
+            "info": false,
+            "autoWidth": true,
+            "responsive": true,
+            "order": [[0, "desc"]]//,
+            //dom: 'Bfrtip',
+            //buttons: [
+            //  'copy', 'csv', 'excel', 'pdf', 'print'
+            //]
+
+
+
+            //"footerCallback": function (row, data, start, end, display) {
+            //    var api = this.api(), data;
+
+            //    // Remove the formatting to get integer data for summation
+            //    var intVal = function (i) {
+            //        return typeof i === 'string' ?
+            //            i.replace(/[\$,]/g, '') * 1 :
+            //            typeof i === 'number' ?
+            //                i : 0;
+            //    };
+
+            //    // Order No
+            //    pageTotal = api
+            //        .column(1, { page: 'current' })
+            //        .data()
+            //        .reduce(function (a, b) {
+            //            a += 1;
+            //            //alert(a);
+            //            return intVal(a);
+            //        }, 0);
+            //    $(api.column(1).footer()).html(pageTotal);
+
+
+            //    // Order Qty
+            //    pageTotal = api
+            //        .column(4, { page: 'current' })
+            //        .data()
+            //        .reduce(function (a, b) {
+            //            return intVal(a) + intVal(b);
+            //        }, 0);
+            //    $(api.column(4).footer()).html(pageTotal);
+
+
+
+            //    // Order Amount
+            //    pageTotal = api
+            //        .column(5, { page: 'current' })
+            //        .data()
+            //        .reduce(function (a, b) {
+            //            return intVal(a) + intVal(b);
+            //        }, 0);
+            //    $(api.column(5).footer()).html(pageTotal);
+
+            //    // Return Qty
+            //    pageTotal = api
+            //        .column(6, { page: 'current' })
+            //        .data()
+            //        .reduce(function (a, b) {
+            //            return intVal(a) + intVal(b);
+            //        }, 0);
+            //    $(api.column(6).footer()).html(pageTotal);
+
+            //    // Return amnt
+            //    pageTotal = api
+            //        .column(7, { page: 'current' })
+            //        .data()
+            //        .reduce(function (a, b) {
+            //            return intVal(a) + intVal(b);
+            //        }, 0);
+            //    $(api.column(7).footer()).html(pageTotal);
+
+            //    // Discount
+            //    pageTotal = api
+            //        .column(8, { page: 'current' })
+            //        .data()
+            //        .reduce(function (a, b) {
+            //            return intVal(a) + intVal(b);
+            //        }, 0);
+            //    $(api.column(8).footer()).html(pageTotal);
+
+
+            //    // Bill paid
+            //    pageTotal = api
+            //        .column(10, { page: 'current' })
+            //        .data()
+            //        .reduce(function (a, b) {
+            //            return intVal(a) + intVal(b);
+            //        }, 0);
+            //    $(api.column(10).footer()).html(pageTotal);
+
+            //    // Balance
+            //    //pageTotal = api
+            //    //    .column(11, { page: 'current' })
+            //    //    .data()
+            //    //    .reduce(function (a, b) {
+            //    //        return intVal(a) + intVal(b);
+            //    //    }, 0);
+            //    //$(api.column(11).footer()).html(pageTotal);
+
+            //    // Profit
+            //    pageTotal = api
+            //        .column(12, { page: 'current' })
+            //        .data()
+            //        .reduce(function (a, b) {
+            //            return intVal(a) + intVal(b);
+            //        }, 0);
+            //    $(api.column(12).footer()).html(pageTotal);
+
+            //}
+
+        });
+
+    });
+
+
+</script>

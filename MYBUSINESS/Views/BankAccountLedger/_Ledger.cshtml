@@ -1,0 +1,241 @@
+﻿@model IEnumerable<MYBUSINESS.Models.AccountLedgerViewModel>
+
+@*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">*@
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>*@
+
+@{
+    /**/
+
+    /**/
+
+
+    decimal OpeningBalance = (decimal)ViewBag.OpeningBal;
+    decimal TotalBalance = 0;
+    decimal BillPaid = 0;
+
+
+    string whtieSpace = ((char)160).ToString() + ((char)160).ToString() + ((char)160).ToString() + ((char)160).ToString();
+    Dictionary<decimal, decimal> LstMaxSerialNo = ViewBag.LstMaxSerialNo as Dictionary<decimal, decimal>;
+    <div id="NewData">
+        <section class="content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        @*<div class="box-header">
+                                <h3 class="box-title">Hover Data Table</h3>
+                            </div>*@
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table class="table table-hover cell-border" id="SOSRIndex">
+                                <thead>
+                                    <tr>
+                                        <th style="width:13%;">
+                                            Month
+                                        </th>
+                                        <th>
+                                            Order No.
+                                        </th>
+                                        <th>
+                                            Type
+                                        </th>
+                                        <th>
+                                            Narration
+                                        </th>
+                                        <th>
+                                            @*@Html.DisplayNameFor(model => model.SaleOrderAmount)/*@↑Debit@*/Decrease*@
+                                        </th>
+                                        <th>
+                                            @*@Html.DisplayNameFor(model => model.BillPaid)/*@↓Credit@*/Increase*@
+                                        </th>
+
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Balance)
+                                        </th>
+
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @*@foreach (var item in Model)
+
+                                    {
+                                        <tr>
+                                            <td>@Html.DisplayFor(modelItem => item.Date)</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>Opening Balance</td>
+                                            <td>
+                                                
+                                            </td>
+                                            <td></td>
+                                            <td>@OpeningBalance DR</td>
+                                        </tr>
+                                        break;
+                                    }*@
+
+                                    @foreach (var item in Model)
+
+                                    {
+                                        for (int turn = 0; turn < 2; turn++)
+                                        {
+                                            BillPaid = 0;
+
+                                            if (turn == 0 && (decimal)(item.BillPaid) != 0)//will run in saleorder case
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Date)
+                                                    </td>
+                                                    <td>
+                                                        
+                                                    </td>
+
+                                                    @if (item.IsSale == true && item.IsReturn == false)//sale order
+                                                    {
+                                                        TotalBalance += (decimal)(item.BillPaid);
+                                                        <td>Sale Order</td>
+                                                        <td>Invoice #  @(item.Serial)</td>
+                                                        <td>
+                                                            @*@Html.DisplayFor(modelItem => item.SaleOrderAmount)*@
+                                                            
+
+                                                        </td>
+                                                        <td>
+                                                            @(BillPaid = (decimal)(item.BillPaid))
+                                                        </td>
+                                                        <td>
+                                                            @(TotalBalance) DR
+                                                        </td>
+                                                    }
+                                                    else if (item.IsSale == true && item.IsReturn == true)//sale return
+                                                    {
+                                                        TotalBalance -= (decimal)item.BillPaid;
+                                                        <td>Sale return</td>
+                                                        <td>Invoice #  @(item.Serial)</td>
+                                                        <td>
+                                                            @*@Html.DisplayFor(modelItem => item.SaleReturnAmount * (-1))*@
+                                                            @*@(item.SaleOrderAmount * -1)*@
+                                                            @(BillPaid = (decimal)(item.BillPaid))
+                                                        </td>
+                                                        <td>
+                                                            @*@Html.DisplayFor(modelItem => item.SaleOrderAmount)*@
+                                                            
+                                                        </td>
+                                                        <td>
+                                                            @*@Html.DisplayFor(modelItem => item.Balance) DR*@
+                                                            @(TotalBalance) DR
+                                                        </td>
+                                                    }
+                                                    else if (item.IsSale == false && item.IsReturn == false)//purchase order
+                                                    {
+                                                        TotalBalance -= (decimal)(item.BillPaid);
+                                                        <td>Purchase Order</td>
+                                                        <td>Invoice #  @(item.Serial)</td>
+                                                        <td>
+                                                            @*@Html.DisplayFor(modelItem => item.SaleOrderAmount)*@
+                                                            @(BillPaid = (decimal)(item.BillPaid))
+
+                                                        </td>
+                                                        <td></td>
+                                                        <td>
+                                                            @(TotalBalance) DR
+                                                        </td>
+                                                    }
+                                                    else if (item.IsSale == false && item.IsReturn == true)//purchase return
+                                                    {
+                                                        TotalBalance += (decimal)item.BillPaid;
+                                                        <td>Purchase Return</td>
+                                                        <td>Invoice #  @(item.Serial)</td>
+                                                        <td>
+                                                            @*@Html.DisplayFor(modelItem => item.SaleReturnAmount * (-1))*@
+                                                            @*@(item.SaleOrderAmount * -1)*@
+                                                        </td>
+                                                        <td>
+                                                            @*@Html.DisplayFor(modelItem => item.SaleOrderAmount)*@
+                                                            @(BillPaid = (decimal)(item.BillPaid))
+                                                        </td>
+                                                        <td>
+                                                            @*@Html.DisplayFor(modelItem => item.Balance) DR*@
+                                                            @(TotalBalance) DR
+                                                        </td>
+                                                    }
+
+                                                </tr>
+                                            }
+
+                                           
+
+                                        }
+                                    }
+
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><a href="/SOSR/Create?IsReturn=false" id="createSOSR">New</a></td>
+                                        <td></td>
+                                        <td></td>
+
+                                    </tr>
+                                    <tr style="font-weight:bold">
+                                        <td></td>
+                                        <td>@*@Model.Count()*@</td>
+                                        <td></td>
+                                        <td></td>
+
+                                        @*<td>@TotalSOQty</td>*@
+                                        <td></td>
+
+                                        @*<td>@TotalSRQty</td>*@
+                                        @*<td>@TotalSRAmout</td>*@
+
+                                        @*<td>@Discount</td>*@
+                                        @*<td>@TotalsubTotal</td>*@
+                                        @*<td>@PrevBalance</td>*@
+                                        @*<td></td>*@
+                                        <td></td>
+
+                                        <td>@TotalBalance</td>
+                                        
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        //$('#SOSRIndex').DataTable({
+        //    fixedHeader: {
+        //        footer: true
+        //    }
+        //});
+        $('#').DataTable({
+            //fixedHeader: {
+            //    header: true,
+            //    footer: true
+            //},
+            "scrollY": "400px",
+            "scrollCollapse": true,
+            "paging": false,
+            "bInfo": false,
+            "order": [[0, "asc"]],
+            "searching": false,
+            "ordering": false
+
+        });
+
+
+    });
+
+
+</script>

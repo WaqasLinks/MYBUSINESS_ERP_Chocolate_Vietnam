@@ -1,0 +1,245 @@
+﻿@model MYBUSINESS.Models.Product
+
+@{
+    ViewBag.Title = "Update Product";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="content-wrapper">
+    <section class="content">
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-6">
+                <!-- general form elements -->
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Update Product</h3>
+                    </div>
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        <form role="form">
+                            <div class="box-body">
+
+
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                @*@Html.HiddenFor(model => model.Id)*@
+
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Id, htmlAttributes: new { @class = "control-label" })
+
+                                    @Html.EditorFor(model => model.Id, new { htmlAttributes = new { @class = "form-control", @Readonly = "Readonly" } })
+                                    @Html.ValidationMessageFor(model => model.Id, "", new { @class = "text-danger" })
+
+                                </div>
+
+
+
+                                @*@Html.HiddenFor(model => model.IsService, new { Value = "false" })*@
+                                @Html.HiddenFor(model => model.ShowIn, new { Value = "P" })
+
+                                <div style="display:none;" class="form-group">
+                                    <select class="form-control" name="IsService" id="isService">
+                                        <option value="false" selected>Product</option>
+                                        <option value="true">Service</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.BarCode, htmlAttributes: new { @class = "control-label" })
+
+                                    @Html.EditorFor(model => model.BarCode, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.BarCode, "", new { @class = "text-danger" })
+
+                                </div>
+
+                                <div class="form-group">
+                                    @*@Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label" })*@
+                                    <lebel><b>Product Name English</b></lebel>
+
+                                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+
+                                </div>
+
+                                <div class="form-group">
+                                    <lebel><b>Product Name Vietnamese</b></lebel>
+                                    <input type="text" class="form-control" name="prouctNameInVnd" id="prouctNameInVnd" />
+                                </div>
+
+                                <div class="form-group">
+                                    @*@Html.LabelFor(model => model.Saleable, htmlAttributes: new { @class = "control-label" })*@
+                                    <label>Supplier </label>
+                                    <input type="text" autocomplete="off" class="form-control" name="Supplier.Name" id="supplier" value="" placeholder="Supplier" data-toggle="tooltip" data-placement="top" title="Supplier">
+                                </div>
+
+                                <div class="form-group">
+                                    <label><b>Category</b></label>
+                                    @Html.DropDownListFor(model => model.Category, new SelectList(new[]
+                                         {
+                                        new { Value = "Select", Text = "Select" },
+                                        new { Value = "Box", Text = "Box" },
+                                        new { Value = "Bar", Text = "Bar" },
+                                        new { Value = "Bag", Text = "Bag" },
+                                        new { Value = "Miscellaneous", Text = "Miscellaneous" }
+                                    }, "Value", "Text", Model.Category), new { @class = "form-control" })
+                                </div>
+                                @*<div class="form-group">
+            <lebel>
+                <b>Category</b>
+            </lebel>
+            <select class="form-control" id="selectCategory" name="Category">
+                <option>Select</option>
+                <option>Box</option>
+                <option>Bar</option>
+                <option>Bag</option>
+                <option>Miscellanous</option>
+            </select>
+
+        </div>*@
+                                <div class="form-group">
+                                    <lebel>
+                                        <b>Unit</b>
+                                    </lebel>
+                                    <select class="form-control">
+                                        <option>Select</option>
+                                        <option>Box</option>
+                                        <option>Kg</option>
+                                        <option>Liter</option>
+                                    </select>
+
+                                </div>
+
+                                <div id="pprice" class="form-group">
+                                    @*@Html.LabelFor(model => model.PurchasePrice, htmlAttributes: new { @class = "control-label" })*@
+                                    <lebel><b>Purchase Price</b></lebel>
+                                    @Html.EditorFor(model => model.PurchasePrice, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.PurchasePrice, "", new { @class = "text-danger" })
+
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.SalePrice, htmlAttributes: new { @class = "control-label" })
+
+                                    @Html.EditorFor(model => model.SalePrice, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.SalePrice, "", new { @class = "text-danger" })
+
+                                </div>
+
+                                <div class="form-group">
+                                    <leble><b>Excluded Sale Price (VAT) </b></leble>
+
+                                    @Html.EditorFor(model => model.SalePrice, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.SalePrice, "", new { @class = "text-danger" })
+
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.WholeSalePrice, htmlAttributes: new { @class = "control-label" })
+
+                                    @Html.EditorFor(model => model.WholeSalePrice, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.WholeSalePrice, "", new { @class = "text-danger" })
+
+                                </div>
+                                <div id="stk" class="form-group">
+
+                                    @Html.LabelFor(model => model.Stock, htmlAttributes: new { @class = "control-label" })
+                                    @{
+                                        MYBUSINESS.Models.Employee currentUser = (MYBUSINESS.Models.Employee)HttpContext.Current.Session["CurrentUser"];
+                                        if (currentUser.EmployeeTypeId == 0)
+                                        {
+                                            @Html.EditorFor(model => model.Stock, new { htmlAttributes = new { @class = "form-control", @id = "stock" } })
+                                        }
+                                        else
+                                        {
+                                            @Html.EditorFor(model => model.Stock, new { htmlAttributes = new { @class = "form-control", @id = "stock", @disabled = "disabled" } })
+                                        }
+                                    }
+
+                                    @Html.ValidationMessageFor(model => model.Stock, "", new { @class = "text-danger" })
+
+                                </div>
+                                <div id="stk" class="form-group">
+                                    @Html.LabelFor(model => model.Remarks, htmlAttributes: new { @class = "control-label" })
+
+                                    @Html.EditorFor(model => model.Remarks, new { htmlAttributes = new { @class = "form-control", @id = "Remarks" } })
+                                    @Html.ValidationMessageFor(model => model.Remarks, "", new { @class = "text-danger" })
+
+                                </div>
+                                <div style="display:none;" id="ppack" class="form-group">
+                                    @Html.LabelFor(model => model.PerPack, htmlAttributes: new { @class = "control-label" }) (at least 1)
+
+                                    @Html.EditorFor(model => model.PerPack, new { htmlAttributes = new { @class = "form-control", @id = "perPack", @Value = 1 } })
+                                    @Html.ValidationMessageFor(model => model.PerPack, "", new { @class = "text-danger" })
+
+                                </div>
+
+                                <!--<div style="display:none;" class="form-group">
+    @Html.LabelFor(model => model.Saleable, htmlAttributes: new { @class = "control-label" })
+
+
+
+    @Html.EditorFor(model => model.Saleable)-->
+                                @*@Html.EditorFor(model => model.Saleable, new[] { new SelectListItem { Text = "Yes", Value = "True", Selected = true }, new SelectListItem { Text = "No", Value = "False" } })*@
+
+                                @*@Html.CheckBoxFor(m => m.Saleable, new { @value = "true" })*@
+
+                                <!--@Html.ValidationMessageFor(model => model.Saleable, "", new { @class = "text-danger" })
+    </div>-->
+
+                                <div class="form-group">
+                                    <!-- Purchasable Checkbox -->
+                                    <label>Purchasable</label>
+                                    &nbsp;
+                                    @Html.CheckBoxFor(model => model.Purchasable, new { @class = "form-check-input" })
+                                    @Html.ValidationMessageFor(model => model.Purchasable, "", new { @class = "text-danger" })
+                                    &nbsp;
+                                    &nbsp;
+                                    &nbsp;
+
+                                    <!-- Manufacturable Checkbox -->
+                                    <label>Manufacturable</label>
+                                    &nbsp;
+                                    @Html.CheckBoxFor(model => model.Manufacturable, new { @class = "form-check-input" })
+                                    @Html.ValidationMessageFor(model => model.Manufacturable, "", new { @class = "text-danger" })
+                                    &nbsp;
+                                    &nbsp;
+                                    &nbsp;
+
+                                    <!-- Saleable Checkbox -->
+                                    <label>Saleable</label>
+                                    &nbsp;
+                                    @Html.CheckBoxFor(model => model.Saleable, new { @class = "form-check-input" })
+                                    @Html.ValidationMessageFor(model => model.Saleable, "", new { @class = "text-danger" })
+                                </div>
+
+                            </div>
+                            <div class="box-footer">
+                                <input type="submit" value="Create" id="CreateProduct" class="btn btn-primary" />
+                                @Html.ActionLink("Back to List", "Index")
+                            </div>
+
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+
+<script>
+    $('#stock').keyup(function () {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+
+    //$('#packing,#perPack').keyup(function () {
+
+    //    $("#stock").val($("#packing").val() * $("#perPack").val())
+    //});
+
+
+</script>
+
+@*@section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }*@

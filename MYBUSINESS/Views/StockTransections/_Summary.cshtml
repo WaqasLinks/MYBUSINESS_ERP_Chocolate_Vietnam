@@ -1,0 +1,308 @@
+﻿@*@model IEnumerable<MYBUSINESS.Models.SO>*@
+@model MYBUSINESS.Models.DashboardViewModel
+
+
+@{
+    var carton = 0; //= (d.Stock / d.PerPack);
+    var piece = 0;
+
+    <div id="NewData">
+        <div class="noScreen">
+            <center><h4>@ViewBag.StartDate - @ViewBag.EndDate</h4></center>
+        </div>
+        <hr />
+
+        <section class="content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        @*<div class="box-header">
+                        <center><h3 class="box-title">Products</h3></center>
+                    </div>*@
+                        <div class="box-body">
+                            <table class="table table-hover cell-border" id="PWS">
+                                <thead>
+                                    <tr>
+                                        <th class="noPrint">Id</th>
+                                        <th>Product</th>
+                                        <th class="noPrint">Opening stock</th>
+                                        <th class="noPrint">Purchased stock</th>
+                                        <th class="noPrint">Total</th>
+                                        <th class="noPrint">Sold stock</th>
+                                        <th>Balance Stock</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+
+                                        int OpeningStock = 0;
+                                        int ClosingStock = 0;
+                                        int PurchasedStock = 0;
+                                        int TotalStock = 0;
+                                        int SoldStock = 0;
+                                        int Balnace = 0;
+
+                                        foreach (var product in Model.Products)
+                                        {
+
+                                            if (product.SODs.Count > 0)
+                                            {
+                                                OpeningStock = (int)(product.SODs.First().OpeningStock);
+                                                ClosingStock = (int)(product.SODs.Last().OpeningStock);
+
+                                            }
+                                            if (product.PODs.Count > 0)
+                                            {
+                                                OpeningStock = (int)(product.PODs.First().OpeningStock);
+                                                ClosingStock = (int)(product.PODs.Last().OpeningStock);
+
+                                            }
+
+
+                                            PurchasedStock = 0;
+                                            foreach (var pod in product.PODs)
+                                            {
+                                                if (pod.SaleType == false)//purchase order
+                                                {
+                                                    if (pod.IsPack == true)
+                                                    { PurchasedStock += (int)(pod.Quantity * pod.PerPack); }
+                                                    else
+                                                    { PurchasedStock += (int)(pod.Quantity); }
+
+                                                }
+                                                else
+                                                {
+                                                    if (pod.IsPack == true)
+                                                    { PurchasedStock -= (int)(pod.Quantity * pod.PerPack); }
+                                                    else
+                                                    { PurchasedStock -= (int)(pod.Quantity); }
+                                                }
+                                            }
+                                            SoldStock = 0;
+                                            foreach (var sod in product.SODs)
+                                            {
+                                                if (sod.SaleType == false)//sale order
+                                                {
+
+                                                    if (sod.IsPack == true)
+                                                    { SoldStock += (int)(sod.Quantity * sod.PerPack); }
+                                                    else
+                                                    { SoldStock += (int)(sod.Quantity); }
+
+
+                                                }
+                                                else
+                                                {
+
+                                                    if (sod.IsPack == true)
+                                                    { SoldStock -= (int)(sod.Quantity * sod.PerPack); }
+                                                    else
+                                                    { SoldStock -= (int)(sod.Quantity); }
+
+                                                }
+                                            }
+
+                                            <tr>
+                                                <td class="noPrint">
+                                                    @product.Id
+                                                </td>
+                                                <td>
+                                                    @product.Name
+                                                </td>
+                                                <td class="noPrint">
+
+                                                    @*@(OpeningStock / product.PerPack), @(OpeningStock % product.PerPack)*@
+
+                                                    @{
+                                                        carton = (int)(OpeningStock / product.PerPack);
+                                                        piece = (int)(OpeningStock % product.PerPack);
+                                                        if (piece == 0)
+                                                        {@(carton)}
+                                                        else
+                                                        {@(carton.ToString() + ", " + piece.ToString())}
+                                                    }
+                                                </td>
+                                                <td class="noPrint">
+                                                    @*@(PurchasedStock / product.PerPack), @(PurchasedStock % product.PerPack)*@
+                                                    @{
+                                                        carton = (int)(PurchasedStock / product.PerPack);
+                                                        piece = (int)(PurchasedStock % product.PerPack);
+                                                        if (piece == 0)
+                                                        {@(carton)}
+                                                        else
+                                                        {@(carton.ToString() + ", " + piece.ToString())}
+                                                    }
+                                                </td>
+
+                                                <td class="noPrint">
+                                                    @* return waly *@
+                                                    @{TotalStock = OpeningStock + PurchasedStock;}
+                                                    @*@(TotalStock / product.PerPack), @(TotalStock % product.PerPack)*@
+                                                    @{
+                                                        carton = (int)(TotalStock / product.PerPack);
+                                                        piece = (int)(TotalStock % product.PerPack);
+                                                        if (piece == 0)
+                                                        {@(carton)}
+                                                        else
+                                                        {@(carton.ToString() + ", " + piece.ToString())}
+                                                    }
+                                                </td>
+                                                <td class="noPrint">
+                                                    @*@(SoldStock / product.PerPack), @(SoldStock % product.PerPack)*@
+                                                    @{
+                                                        carton = (int)(SoldStock / product.PerPack);
+                                                        piece = (int)(SoldStock % product.PerPack);
+                                                        if (piece == 0)
+                                                        {@(carton)}
+                                                        else
+                                                        {@(carton.ToString() + ", " + piece.ToString())}
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @{Balnace = TotalStock - SoldStock;}
+                                                    @*@(Balnace / product.PerPack), @(Balnace % product.PerPack)*@
+                                                    @{
+                                                        carton = (int)(Balnace / product.PerPack);
+                                                        piece = (int)(Balnace % product.PerPack);
+                                                        if (piece == 0)
+                                                        {@(carton)}
+                                                        else
+                                                        {@(carton.ToString() + ", " + piece.ToString())}
+                                                    }
+
+                                                </td>
+
+                                            </tr>
+                                            //}
+
+                                        }
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    @*<tr style="font-weight:bold">
+                                    <td>Total</td>
+                                    <td>@totSOQty</td>
+                                    <td>@totSOAmnt.ToString("0.00")</td>
+                                    <td>@totSRQty</td>
+                                    <td>@totSRAmnt.ToString("0.00")</td>
+                                    <td>@totProfit.ToString("0.00")</td>
+                                </tr>*@
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+
+                    @* other table *@
+
+
+                </div>
+            </div>
+            *Note:Stock summary is based on starting date and ending date. this demonstrate that in this given time frame stock summary was this. Products page stock will only match with this stock balance if put starting date to very initial (date start using the system) and there should be no manual entry either.
+        </section>
+
+
+
+
+        @* ////////////////////////////////////////////////////////////////////////////////////////////////// *@
+
+    </div>
+
+}
+
+<link href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/buttons/2.1.0/css/buttons.dataTables.min.css" rel="stylesheet" />
+
+@*<script src="https://code.jquery.com/jquery-3.5.1.js"></script>*@
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.print.min.js"></script>
+
+
+<link href="https://cdn.datatables.net/rowreorder/1.2.8/css/rowReorder.dataTables.min.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css" rel="stylesheet" />
+
+<script src="https://cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+
+        $('#PWS1').DataTable({
+            //fixedHeader: {
+            //    header: true,
+            //    footer: true
+            //},
+            //"sScrollX": "100%",
+            //"scrollX": true,
+            "scrollY": "400px",
+            "scrollCollapse": true,
+            "paging": false,
+            "bInfo": false,
+            "order": [[0, "asc"]],
+            "searching": true
+        });
+
+        $('#PWS').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "pageLength": 100,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            rowReorder: {
+                selector: 'td:nth-child(2)'
+            },
+            "responsive": true,
+            "autoWidth": false,
+            "order": [[2, "desc"]],
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'copyHtml5',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6]
+                    }
+                },
+                {
+                    extend: 'csvHtml5',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6]
+                    }
+                },
+                {
+                    extend: 'excelHtml5',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6]
+                    }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    orientation: 'landscape',
+                    pageSize: 'LEGAL',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6]
+                    }
+                },
+                {
+                    extend: 'print',
+                    exportOptions: {
+                        columns: [0, 1, 6]
+                    }
+                },
+                'colvis'
+            ]
+
+        });
+
+
+    });
+
+
+</script>

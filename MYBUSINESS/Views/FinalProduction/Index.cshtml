@@ -1,0 +1,36 @@
+﻿@model IEnumerable<MYBUSINESS.Models.FinalProduction>
+
+<h2>Final Production</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create", "FinalProduction", null, new { @class = "btn btn-success" })
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.First().Id)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Date)</th>
+            <th>@Html.DisplayNameFor(model => model.First().ProductName)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Unit)</th>
+            <th>@Html.DisplayNameFor(model => model.First().QuantityToProduce)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(m => item.Id)</td>
+                <td>@Html.DisplayFor(m => item.Date)</td>
+                <td>@Html.DisplayFor(m => item.ProductName)</td>
+                <td>@Html.DisplayFor(m => item.Unit)</td>
+                <td>@Html.DisplayFor(m => item.QuantityToProduce)</td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-warning" }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

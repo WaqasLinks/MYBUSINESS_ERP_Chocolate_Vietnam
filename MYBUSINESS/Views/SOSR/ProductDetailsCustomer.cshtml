@@ -1,0 +1,102 @@
+﻿@using MYBUSINESS.Models
+@model List<CustomerDetailsViewModel>
+    <style>
+        #productDetailsTable td {
+            padding: 10px; /* Adjust the value as needed */
+        }
+    </style>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <h1>Selected Products</h1>
+            <table id="productDetailsTable">
+                <thead>
+                    <tr>
+                        @*<th>Product ID</th>*@
+                        @*<th>Product Name</th>*@
+                        @*<th>Sale Price</th>*@
+                        @*<th>Purchase Price</th>*@
+                        @*<th>Quantity</th>*@
+                        @*<th>Total</th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- This tbody will be dynamically populated -->
+                </tbody>
+            </table>
+        </div>
+        <div id="paymentDetails">
+
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery.signalR-2.4.3.js"></script>
+<script src="~/signalr/hubs"></script>
+<script>
+    $(document).ready(function () {
+        debugger;
+        const connection = $.connection.phevaHub;
+        connection.client.broadcastProductUpdate = function (products) {
+            console.log('Received product update in Detail view:', products);
+            $('#productDetailsTable tbody').empty();
+            let overallTotal = 0;
+            products.forEach(function (product) {
+                const totalPrice = product.SalePrice * product.Quantity;
+                overallTotal += totalPrice;
+                $('#productDetailsTable tbody').append(
+                    `<tr>
+                        <td>${product.ProductName}</td>
+                        <td>${product.Quantity}</td>
+                       <td>${formatNumberWithDotss(totalPrice)}</td>
+                    </tr>`
+                );
+            });
+            // Append the overall total row
+            $('#productDetailsTable tbody').append(
+                `<tr>
+                <td colspan="1"></td>
+                <td style="font-weight: bold;">${formatNumberWithDotss(overallTotal)} ₫</td> <!-- Display overall total -->
+            </tr>`
+            );
+        };
+        //////Payment Details
+        connection.client.broadcastPaymentDetails = function (payments) {
+            console.log('Received payment details in Detail view:', payments);
+            $('#paymentDetails').empty(); // assuming you have an element to show payment details
+            debugger;
+            payments.forEach(function (payment) {
+                debugger;
+                $('#paymentDetails').append(
+                    `<div>
+                Card VND Amount: ${formatNumberWithDotss(payment.CardVndAmount)}<br />
+                Left to Pay VND Balance: ${formatNumberWithDotss(payment.LeftToPayVndBalance)}
+            </div>`
+                );
+            });
+        };
+        ///Start connection
+        $.connection.hub.start({ transport: ['webSockets', 'longPolling', 'serverSentEvents'] })
+            .done(function () {
+                console.log('Connection started!');
+            })
+            .fail(function (error) {
+                console.error('Could not connect to SignalR hub:', error);
+            });
+
+        function formatNumberWithDotss(number) {
+            var numberStr = Math.floor(number).toString();
+            return numberStr.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+    });
+
+</script>
+
+@*<td>${product.ProductId}</td>
+    <td>${product.ProductName}</td>
+    <td>${product.SalePrice}</td>
+    <td>${product.PurchasePrice}</td>
+    <td>${product.Quantity}</td>*@
+@*<td colspan="2" style="text-align: right; font-weight: bold;">Overall Total:</td>*@

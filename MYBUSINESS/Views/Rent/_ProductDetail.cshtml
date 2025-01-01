@@ -1,0 +1,53 @@
+﻿@model IEnumerable<MYBUSINESS.Models.ProductDetail>
+
+
+
+                <div id="NewData">
+                    <section class="content">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="box">
+                                    @*<div class="box-header">
+                                            <h3 class="box-title">Hover Data Table</h3>
+                                        </div>*@
+                                    <!-- /.box-header -->
+                                    <div class="box-body">
+                                        <table class="table table-hover cell-border" id="SOSRIndex">
+                                            <thead>
+                                                <tr>
+
+                                                    <th>
+                                                        Rent Start Date
+                                                    </th>
+                                                    <th>
+                                                        Rent End Date
+                                                    </th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in Model)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.RentStartDate)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.RentEndDate)
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+           

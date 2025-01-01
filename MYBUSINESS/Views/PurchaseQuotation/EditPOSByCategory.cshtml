@@ -1,0 +1,280 @@
+﻿@model MYBUSINESS.Models.PurchaseOrderViewModel
+
+@{
+    ViewBag.Title = "Update PO";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var selectedProductCategories = ViewBag.SelectedProductCategory as Dictionary<string, List<MYBUSINESS.Models.Product>>;
+}
+
+<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.css">
+<script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="//code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-sliderAccess.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.js"></script>
+
+<link href="@Url.Content("~/Content/custom/custom.css")" rel="stylesheet" type="text/css" />
+<script src="~/Content/custom/quotationPOPR.js"></script>
+
+<script src="~/Content/custom/downloads/jquery.mcautocomplete.js"></script>
+<script src="~/Content/custom/downloads/jquery.scannerdetection.js"></script>
+
+@*@using (Html.BeginForm())*@
+@using (Html.BeginForm("UpdatePOByCategory", "PurchaseQuotation", FormMethod.Post, new { name = "POEdit", id = "POEdit" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="container" id="container">
+        @Html.HiddenFor(model => model.PurchaseOrder.Id)
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div id="saleOrder" class="col-sm-offset-5"><h2>Purchase <b>Order Quotation By Group</b></h2></div>
+                    <div id="saleReturn" class="col-sm-offset-5"><h2>Purchase <b>Return</b></h2></div>
+                </div>
+                <input type="hidden" name="PurchaseOrder.PurchaseReturn" id="purchaseReturn" value=@ViewBag.IsReturn />
+                <input type="hidden" name="PurchaseOrder.SupplierId" id="idnSupplier" value="@Model.PurchaseOrder.SupplierId" />
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h5><b>Supplier Name</b></h5>
+                        <input type="text" autocomplete="off" class="form-control" name="Supplier.Name" id="supplier" value="@(ViewBag.SupplierName)">
+                    </div>
+
+                    <div class="col-md-6">
+                        <h5><b>Date</b></h5>
+                        <input type="text" autocomplete="off" class="form-control from-date-picker" name="PurchaseOrder.Date" id="PurchaseOrderDate" readonly tabindex="-1" value="@Model.PurchaseOrder.Date">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                @{
+                    var index = 0;
+                }
+                @if (ViewBag.SelectedProductCategory != null)
+                {
+                    foreach (var category in ViewBag.SelectedProductCategory)
+                    {
+                        <div class="col-md-6">
+                            <h4><b>@category.Key</b></h4>
+                            @foreach (var product in category.Value)
+                            {
+                                <div class="card mb-3" style="display:flex;">
+                                    <div class="card-header">
+                                        <h5>@product.Name</h5>
+                                        <input type="hidden" name="PurchaseOrderDetail[@index].ProductId" value="@product.Id" />
+                                    </div>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;
+                                    <div class="card-body">
+                                        <input type="text"
+                                               name="PurchaseOrderDetail[@index].Quantity"
+                                               value="@(Model.PurchaseOrderDetail != null && Model.PurchaseOrderDetail.Count > index ? Model.PurchaseOrderDetail[index].Quantity.ToString() : "0")"
+                                               class="form-control"
+                                               placeholder="Enter quantity"
+                                               max="@product.Stock" />
+                                        <br />
+                                        <input type="hidden" name="PurchaseOrderDetail[@index].IsPack" value="false" />
+                                        <input type="hidden" name="PurchaseOrderDetail[@index].PurchasePrice" value="@product.PurchasePrice" />
+                                    </div>
+                                </div>
+                                index++;
+                            }
+                        </div>
+                    }
+                }
+            </div>
+            <div style="display:inline" id="dvCalculations">
+
+                <div class="table-title">
+                    <div class="row">
+                        <div class="col-sm-3">
+
+                        </div>
+                        <div class="col-sm-7">
+                            @Html.DropDownList("PurchaseOrder.BankAccountId", new SelectList(ViewBag.BankAccounts, "Value", "Text", @Model.PurchaseOrder.BankAccountId), new { @class = "form-control", @style = "display:none" })
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <button type="submit" id="CreatePO" class="btn btn-info add-new">Save</button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+
+
+<script type="text/javascript">
+
+        _total = @(Model.PurchaseOrder.PurchaseOrderAmount - Model.PurchaseOrder.Discount + Model.PurchaseOrder.PrevBalance)
+        IsReturn = '@(ViewBag.IsReturn)';
+
+    $('.from-date-picker').datetimepicker({
+        dateFormat: "dd-M-yy",
+        timeFormat: "hh:mm tt",
+        showOn: "both",
+        timeInput: true,
+        stepHour: 1,
+        stepMinute: 5,
+        oneLine: true,
+        //changeMonth: true,
+        //changeYear: true,
+        controlType: 'select',
+        buttonImageOnly: true,
+        buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif",
+        buttonText: "Select date"
+    });
+
+
+        @if (ViewBag.IsUpdate == false)
+        {
+            @:$("#POEdit :input").prop("disabled", true);
+        }
+
+
+        @foreach (var d in Model.Suppliers)
+        {
+            @*@:products.push(["@d.Name","@d.PurchasePrice","@d.Stock"]);*@
+            @:suppliers.push(["@d.Id", "@d.Name", "@d.Address", "@d.Balance"]);
+
+        }
+
+        @{
+            var carton = 0; //= (d.Stock / d.PerPack);
+            var piece = 0;
+            foreach (var d in Model.Products)
+            {
+                carton = (int)(d.Stock / d.PerPack);
+                piece = (int)(d.Stock % d.PerPack);
+                if (piece == 0)
+                {
+                    @:products.push(["@d.Id", "@d.Name", "@d.PurchasePrice", "@carton", "@d.PerPack"]);
+                }
+                else
+                {
+                    @:products.push(["@d.Id", "@d.Name", "@d.PurchasePrice", "@carton,@piece","@d.PerPack"]);
+                }
+                @:productsBarcodes.push(["@d.Id", "@d.BarCode"]);
+            }
+         }
+
+                OnTypeSupplierName('#supplier');
+
+                var i;
+                var podCount = "@Model.PurchaseOrderDetail.Count()";
+        for (i = 0; i < podCount; i++)
+        {
+
+            txtSerialNum = i;
+            OnTypeName('#name' + i);
+                TriggerBodyEvents();
+            }
+
+        //TriggerFooterEvents();
+        //update_itemTotal();
+
+
+        $('#btnPrintPO').click(function () {
+                //$("#btnPrintPO").attr("disabled", true);
+                //alert("PrintPO");
+                var newUrl = "@Url.Action("Index", "POPR")";
+            //alert(newUrl);
+            $.ajax({
+                url: "@Url.Action("PrintPO", "POPR")",
+                data: { 'POId': "@Model.PurchaseOrder.Id"},
+                type: "GET",
+                cache: false,
+                success: function () {
+                        //alert(data);
+                        //$("#NewData").html(data);
+                        window.location.href = newUrl;
+                    },
+                error: function () {
+                        //$('#lblCommentsNotification').text("Error encountered while saving the comments.");
+                        alert('Data provided was not valid');
+                    }
+                });
+            });
+
+    //});
+</script>
+
+<div id="dialog-CreateSupplier" title="Create supplier dialog">
+    @*@using (Html.BeginForm())*@
+    @*@using (Html.BeginForm("Create", "Suppliers", FormMethod.Post, new { name = "POPRCreateNewSupplier", id = "POPRCreateNewSupplier" }))*@
+    @*{*@
+    @*@Html.AntiForgeryToken()*@
+    @*ViewBag.Controller = "POPR";
+        ViewBag.Action = "Create";
+        TempData["Controller"] = "POPR";
+        TempData["Action"] = "Create";*@
+    @*<input type="hidden" name="SupplierId" value="@ViewBag.Data1" />
+        <input type="hidden" name="SupplierId" value="@ViewBag.Data1" />*@
+    <div class="form-horizontal">
+
+        <h4>Add New Supplier</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Supplier.Id, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*@Html.EditorFor(model => model.Supplier.Id, new { htmlAttributes = new { @class = "form-control", @name = "Supplier.Id", @id ="NewSupplierId", @Value = ViewBag.SuggestedNewSuppId, @readonly = "readonly" } })*@
+                <input type="text" autocomplete="off" class="form-control" id="NewSupplierId" value=@ViewBag.SuggestedNewSuppId readonly="readonly" />
+                @*@Html.ValidationMessageFor(model => model.Supplier.Id, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Supplier.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*@Html.EditorFor(model => model.Supplier.Name, new { htmlAttributes = new { @class = "form-control", @name = "Supplier.Name", @id = "NewSupplierName"} })*@
+                <input type="text" autocomplete="off" class="form-control" id="NewSupplierName" value="" />
+                @*<input type="hidden" name="PurchaseOrder.SupplierId" id="idnSupplier" value="10" />*@
+                @*@Html.ValidationMessageFor(model => model.Supplier.Name, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Supplier.Address, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*@Html.EditorFor(model => model.Supplier.Name, new { htmlAttributes = new { @class = "form-control", @name = "Supplier.Name", @id = "NewSupplierName"} })*@
+                <input type="text" autocomplete="off" class="form-control" id="NewSupplierAddress" value="" />
+                @*<input type="hidden" name="PurchaseOrder.SupplierId" id="idnSupplier" value="10" />*@
+                @*@Html.ValidationMessageFor(model => model.Supplier.Name, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+
+
+        <div class="table-title">
+            <div class="row">
+                @*<div class="col-sm-8"><h2>Purchase <b>Order</b></h2></div>*@
+                <div class="col-sm-8">
+                    @*<button type="submit" id="CreatePO" class="btn btn-info add-new"><i class="fa fa-plus"></i>Save & Print</button>*@
+                    <input type="button" value="Add" id="btnCreateNewSupp" class="btn btn-info add-new" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+    @*}*@
+</div>
+
+@*@section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }*@
