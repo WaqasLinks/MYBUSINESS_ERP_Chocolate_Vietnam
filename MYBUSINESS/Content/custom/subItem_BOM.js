@@ -62,35 +62,42 @@ function OnTypeName(param) {
             // Check if the product already exists in the table
             $('#selectedProducts > tbody > tr').each(function () {
                 if ($(this).find("[id^='idn']").val() == ui.item[0]) {
-                    // If product is found, update the quantity
+                    // If the product exists, update the quantity
                     var num = +$(this).find("[id^='quantity']").val() + 1;
                     $(this).find("[id^='quantity']").val(num);
                     update_itemTotal(); // Update the item total
-                    pfound = 1; // Set flag to indicate product was found
-                    return false; // Exit loop if found
+                    pfound = 1; // Mark as found
+                    return false; // Exit loop
                 }
             });
 
             if (pfound == 0) {
-                // If the product was not found, add a new row with product details
-                this.value = (ui.item ? ui.item[1] : ''); // Product Name
+                // Validate that the product data is present before adding a new row
+                if (!ui.item || !ui.item[0]) {
+                    console.warn("Invalid product selection");
+                    return false; // Do not create a row if no product is selected
+                }
+
+                // Add the product details to the form
+                this.value = ui.item[1] || ''; // Product Name
                 productName = this.value;
 
-                // Set the product price and quantity
-                $('#perPack' + clickedIdNum).val(ui.item ? ui.item[4] : ''); // PerPack
-                $('#salePrice' + clickedIdNum).val(ui.item ? ui.item[2] : ''); // Sale Price
-                $('#quantity' + clickedIdNum).val(ui.item ? 1 : ''); // Default quantity to 1
-                $('#idn' + clickedIdNum).val(ui.item ? ui.item[0] : ''); // Product ID
+                // Set product fields only if data exists
+                $('#perPack' + clickedIdNum).val(ui.item[4] || ''); // PerPack
+                $('#salePrice' + clickedIdNum).val(ui.item[2] || ''); // Sale Price
+                $('#quantity' + clickedIdNum).val(1); // Default quantity to 1
+                $('#idn' + clickedIdNum).val(ui.item[0] || ''); // Product ID
 
-                // Ensure correct assignment for Unit (ui.item[3] should contain "Kg", "Gram", etc.)
-                $('#unit' + clickedIdNum).val(ui.item ? ui.item[3] : ''); // Unit (Kg, Gram)
+                // Handle unit field safely
+                $('#unit' + clickedIdNum).val(ui.item[3] || ''); // Unit (e.g., Kg, Gram)
 
-                // Call the function to update the item total
+                // Update the item total
                 update_itemTotal();
                 return false; // Prevent default action
             }
         }
     });
+
 
 
 

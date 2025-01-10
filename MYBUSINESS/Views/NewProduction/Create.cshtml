@@ -27,20 +27,13 @@
                         @Html.ValidationMessageFor(model => Model.NewProduction.Id, "", new { @class = "text-danger" })
                     </div>
 
-                    <div class="form-group">
-                        @Html.LabelFor(model => Model.NewProduction.ProductionDate, htmlAttributes: new { @class = "control-label" })
-                        @Html.TextBoxFor(model => Model.NewProduction.ProductionDate, new { @class = "form-control", type = "date" })
-                        @Html.ValidationMessageFor(model => Model.NewProduction.ProductionDate, "", new { @class = "text-danger" })
-                    </div>
-
-
 
                     <div class="form-group">
-                        @Html.Label("Select Remarks", new { @class = "control-label" })
+                        @Html.Label("BOM Name", new { @class = "control-label" })
                         @Html.DropDownList(
                             "SelectedRemark",
                             (SelectList)ViewBag.Remarks,
-                            "Select a Remark",
+                            "Select a BOM Name",
                             new
                             {
                                 @class = "form-control",
@@ -54,6 +47,38 @@
                         <label for="unitField" class="control-label">Unit</label>
                         <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
                     </div>
+
+
+
+
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => Model.NewProduction.ProductionDate, htmlAttributes: new { @class = "control-label" })
+                        @Html.TextBoxFor(model => Model.NewProduction.ProductionDate, new { @class = "form-control", type = "date" })
+                        @Html.ValidationMessageFor(model => Model.NewProduction.ProductionDate, "", new { @class = "text-danger" })
+                    </div>
+
+
+
+                    @*<div class="form-group">
+            @Html.Label("BOM Name", new { @class = "control-label" })
+            @Html.DropDownList(
+                "SelectedRemark",
+                (SelectList)ViewBag.Remarks,
+                "Select a Remark",
+                new
+                {
+                    @class = "form-control",
+                    id = "remarksDropdown",
+                    data_remarks = @Html.Raw(Json.Encode(ViewBag.RemarksData))
+                }
+            )
+        </div>
+
+        <div class="form-group">
+            <label for="unitField" class="control-label">Unit</label>
+            <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
+        </div>*@
 
 
 

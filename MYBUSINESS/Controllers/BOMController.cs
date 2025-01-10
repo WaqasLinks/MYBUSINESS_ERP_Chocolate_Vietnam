@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using MYBUSINESS.CustomClasses;
 using MYBUSINESS.Models;
@@ -72,6 +73,11 @@ namespace MYBUSINESS.Controllers
 
             ViewBag.ProductList = new SelectList(products, "Value", "Text"); // Pass as a SelectList
 
+            var productDetails = db.ProductDetails.ToList();
+
+
+
+
             // Initialize the BOM and SubItem list in the ViewModel
             BOMViewModel bomViewModel = new BOMViewModel
             {
@@ -82,11 +88,17 @@ namespace MYBUSINESS.Controllers
                     Manufacturable = true
                 },
                 SubItem = new List<SubItem> { new SubItem() }, // Initialize SubItem list with one SubItem object
-                Products = DAL.dbProducts  // Assuming this contains product data
+                ProductTypeDetail = new List<ProductTypeDetail> { new ProductTypeDetail() },
+                ProductDetail = new List<ProductDetail> { new ProductDetail() },
+                Products = DAL.dbProducts, // Assuming this contains product data
+                //ProductList = new SelectList(products, "Id", "Name"),
+                //ProductDetail = new List<ProductDetail>()
             };
 
 
             return View(bomViewModel);  // Passing the ViewModel to the view
+
+
         }
 
 
@@ -155,7 +167,14 @@ namespace MYBUSINESS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Name,Remarks,Saleable,Purchasable,Manufacturable,ShelfLife,TimeUnit,ProductionProcessCateogry,ProductionProcessDescription,ProductId,CreateDate,UpdateDate,Unit")] BOM bom,
-                                   [Bind(Prefix = "SubItem", Include = "Id,ProductId,Quantity,Unit")] List<SubItem> subItems)
+                                   [Bind(Prefix = "SubItem", Include = "Id,ProductId,Quantity,Unit")] List<SubItem> subItems,
+                                   [Bind(Prefix = "ProductTypeDetail", Include = "Id,ProductionQty,BOMId,ProductDetailId")] List<ProductTypeDetail> productTypeDetails,
+            [Bind(Prefix = "ProductDetail", Include = "Id,ProductId,Shape,Weight")]
+        List<ProductDetail> productDetails)
+
+
+
+                                       
         {
             if (ModelState.IsValid)
             {
@@ -169,6 +188,23 @@ namespace MYBUSINESS.Controllers
                 {
                     item.ParentProductId = bom.Id;
                     db.SubItems.Add(item);
+                }
+                if (productDetails != null)
+                {
+                    foreach (var item in productDetails)
+                    {
+                        item.ProductId = bom.Id;
+                        db.ProductDetails.Add(item);
+                    }
+                }
+                if (productTypeDetails!=null)
+                {
+                    foreach (var item in productTypeDetails)
+                    {
+                        item.ProductId = bom.Id;
+                        db.ProductTypeDetails.Add(item);
+                        
+                    }
                 }
 
                 db.SaveChanges();
@@ -210,11 +246,11 @@ namespace MYBUSINESS.Controllers
 
 
             var subItems = db.SubItems.Where(x => x.ParentProductId == bom.Id).ToList();
-      
+            var producttypeDetails = db.ProductTypeDetails.Where(x => x.BOMId == bom.Id).ToList();
             bomViewModel.BOM = bom;
             bomViewModel.Products = DAL.dbProducts;
             bomViewModel.SubItem = db.SubItems.Where(x => x.ParentProductId == bom.Id).ToList();
-
+            bomViewModel.ProductTypeDetail = db.ProductTypeDetails.Where(x => x.BOMId == bom.Id).ToList();
             return View(bomViewModel);
             //return View(product);
         }
@@ -260,22 +296,30 @@ namespace MYBUSINESS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(
     [Bind(Prefix = "BOM", Include = "Id,Name,Remarks,Saleable,Purchasable,Manufacturable,ShelfLife,TimeUnit,ProductionProcessCateogry,ProductionProcessDescription,Unit,CreateDate,UpdateDate")] BOM bom,
-    [Bind(Prefix = "SubItem", Include = "Id,ProductId,Quantity,Unit")] List<SubItem> subItems)
+    [Bind(Prefix = "SubItem", Include = "Id,ProductId,Quantity,Unit")] List<SubItem> subItems,
+    [Bind(Prefix = "ProductTypeDetail", Include = "Id,ProductionQty,BOMId,ProductDetailId")] List<ProductTypeDetail> productTypeDetails)
         {
             if (ModelState.IsValid)
             {
                 // Remove existing SubItems for the BOM
                 var existingSubItems = db.SubItems.Where(x => x.ParentProductId == bom.Id).ToList();
+                var existingProductTypeDetails = db.ProductTypeDetails.Where(x => x.BOMId == bom.Id).ToList();
                 db.SubItems.RemoveRange(existingSubItems);
-
+                db.ProductTypeDetails.RemoveRange(existingProductTypeDetails);
                 // Update the BOM record
                 db.Entry(bom).State = EntityState.Modified;
-
+                
                 // Add the new SubItems
                 foreach (var item in subItems)
                 {
                     item.ParentProductId = bom.Id;
                     db.SubItems.Add(item);
+                }
+
+                foreach (var item in productTypeDetails)
+                {
+                    item.BOMId = bom.Id;
+                    db.ProductTypeDetails.Add(item);
                 }
 
                 // Save changes
@@ -350,7 +394,67 @@ namespace MYBUSINESS.Controllers
             }
             return Json(new { unit = "N/A" }, JsonRequestBehavior.AllowGet);
         }
-       
+        //[HttpGet]
+        //public JsonResult GetProductDetails(int productId)
+        //{
+        //    var productDetails = db.ProductDetails
+        //        .Where(pd => pd.ProductId == productId) // Filter by selected product
+        //        .Select(pd => new
+        //        {
+        //            pd.Id,
+        //            pd.Shape,
+        //            pd.Weight
+        //        }).ToList();
+
+        //    return Json(productDetails, JsonRequestBehavior.AllowGet);
+        //}
+
+        [HttpGet]
+        public JsonResult GetProductDetails(int productId)
+        {
+            try
+            {
+                var productDetails = db.ProductDetails
+                    .Where(pd => pd.ProductId == productId)
+                    .Select(pd => new
+                    {
+                        pd.Id,
+                        pd.Shape,
+                        pd.Weight
+                    }).ToList();
+
+                if (!productDetails.Any())
+                {
+                    return Json(new { message = "No product details found" }, JsonRequestBehavior.AllowGet);
+                }
+
+                return Json(productDetails, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                // Log exception
+                return Json(new { error = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        //[HttpGet]
+        //public JsonResult GetProductDetails(int productId)
+        //{
+        //    // Fetch all product details for the given ProductId
+        //    var productDetails = db.ProductDetails
+        //        .Where(p => p.ProductId == productId)
+        //        .Select(p => new
+        //        {
+        //            p.Id,
+        //            p.Shape,
+        //            p.Weight
+        //        })
+        //        .ToList();
+
+        //    // Return the data as JSON
+        //    return Json(productDetails);
+        //}
+
 
     }
 }

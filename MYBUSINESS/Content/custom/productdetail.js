@@ -250,20 +250,10 @@ $(document).ready(function () {
         var index = $("table tbody tr:last-child").index();
         //var rowCount = 
         var row = '<tr>' +
-            '<td id="SNo' + txtSerialNum + '">' + $('#selectedProducts tr').length + '</td>' +
-            '<td style="display:none;"><input type="hidden" name="SubItem.Index" value="' + txtSerialNum + '" /></td>' +
-            '<td style="display:none;"><input type="text" readonly class="form-control classBGcolor" name="SubItem[' + txtSerialNum + '].ProductId" id="idn' + txtSerialNum + '"></td>' +
-            '<td><input type="text" class="form-control" autocomplete="off" name="SubItem[' + txtSerialNum + '].Product.Name" id="name' + txtSerialNum + '"></td>' +
-            
-            '<td><input type="text" class="form-control" autocomplete="off" name="SubItem[' + txtSerialNum + '].Quantity" id="quantity' + txtSerialNum + '"></td>' +         
-
-           /* '<td><select class="form-control" name="SubItem[' + txtSerialNum + '].Unit" id="unit' + txtSerialNum + '"><option value="Kg" selected>Kg</option><option value="Gram">Gram</option></select></td>' +*/
-            '<td><input type="text" class="form-control" autocomplete="off" name="SubItem[' + txtSerialNum + '].AvailableInventory" id="avaibleinventory' + txtSerialNum + '"></td>' + 
-            /*'<td><input type="text" class="form-control" autocomplete="off" name="SubItem[' + txtSerialNum + '].QuantityRequested" id="quantityrequested' + txtSerialNum + '"></td>' + */
-            '<td><input type="text" class="form-control" autocomplete="off" name="SubItem[' + txtSerialNum + '].QuantitytoPrepare" id="quantitytoprepare' + txtSerialNum + '"></td>' + 
-            /*'<td><select class="form-control" name="SubItem[' + txtSerialNum + '].Unit" id="unit' + txtSerialNum + '"><option value="Kg" selected>Kg</option><option value="Gram">Gram</option></select></td>' +*/
-
-
+            '<td id="Pr0' + txtSerialNum + '">' + $('#selectedProducts tr').length + '</td>' +
+            '<td style="display:none;"><input type="hidden" name="ProductDetail.Index" value="' + txtSerialNum + '" /></td>' +
+            '<td style="display:none;"><input type="text" readonly class="form-control classBGcolor" name="ProductDetail[' + txtSerialNum + '].ProductId" id="idn' + txtSerialNum + '"></td>' +
+            '<td><input type="text" class="form-control" autocomplete="off" name="ProductDetail[' + txtSerialNum + '].Shape" id="shape' + txtSerialNum + '"></td>' +
             '<td><button type="button" id="delete' + txtSerialNum + '" class="delete btn btn-default add-new"> <a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button></td>' +
             '</tr>';
 

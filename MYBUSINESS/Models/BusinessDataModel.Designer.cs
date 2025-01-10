@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'E:\Project1\ERP_Chocolate-master\MYBUSINESS\Models\BusinessDataModel.edmx'. 
+﻿// T4 code generation is enabled for model 'E:\Project1\MYBUSINESS_ERP_Chocolate_Vietnam\MYBUSINESS\Models\BusinessDataModel.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

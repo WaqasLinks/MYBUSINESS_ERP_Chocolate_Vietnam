@@ -66,10 +66,10 @@
 
                         @*@Html.HiddenFor(model => model.IsService, new { Value = "false" })*@
                         @*@Html.HiddenFor(model => Model.BOM.ShowIn, new { Value = "P" })
-                           <div style="display:none;" class="form-group">
-                               @Html.DropDownList("IsService", new SelectList(ViewBag.UnitTypeOptionList, "Value", "Text", Model.BOM.IsService),
-        new { @class = "form-control", id = "isService" })
-                           </div>*@
+                                       <div style="display:none;" class="form-group">
+                                           @Html.DropDownList("IsService", new SelectList(ViewBag.UnitTypeOptionList, "Value", "Text", Model.BOM.IsService),
+                    new { @class = "form-control", id = "isService" })
+                                       </div>*@
                         <div class="form-group">
                             @Html.LabelFor(model => Model.BOM.Remarks, htmlAttributes: new { @class = "control-label" })
 
@@ -80,27 +80,27 @@
 
 
                         <!--<div class="form-group">
-    @Html.LabelFor(model => Model.BOM.Saleable, htmlAttributes: new { @class = "control-label" })
-    @Html.EditorFor(model => Model.BOM.Saleable)-->
+                @Html.LabelFor(model => Model.BOM.Saleable, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => Model.BOM.Saleable)-->
                         @*@Html.EditorFor(model => model.Saleable, new[] { new SelectListItem { Text = "Yes", Value = "True", Selected = true }, new SelectListItem { Text = "No", Value = "False" } })*@
                         @*@Html.CheckBoxFor(m => m.Saleable, new { @value = "true" })*@
                         <!--@Html.ValidationMessageFor(model => Model.BOM.Saleable, "", new { @class = "text-danger" })
-    </div>
+                </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => Model.BOM.Purchasable, htmlAttributes: new { @class = "control-label" })
-        @Html.EditorFor(model => Model.BOM.Purchasable)-->
+                <div class="form-group">
+                    @Html.LabelFor(model => Model.BOM.Purchasable, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => Model.BOM.Purchasable)-->
                         @*@Html.EditorFor(model => model.Saleable, new[] { new SelectListItem { Text = "Yes", Value = "True", Selected = true }, new SelectListItem { Text = "No", Value = "False" } })*@
                         @*@Html.CheckBoxFor(m => m.Saleable, new { @value = "true" })*@
                         <!--@Html.ValidationMessageFor(model => Model.BOM.Purchasable, "", new { @class = "text-danger" })
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => Model.BOM.Manufacturable, htmlAttributes: new { @class = "control-label" })
-        @Html.EditorFor(model => Model.BOM.Manufacturable)-->
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => Model.BOM.Manufacturable, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => Model.BOM.Manufacturable)-->
                         @*@Html.EditorFor(model => model.Saleable, new[] { new SelectListItem { Text = "Yes", Value = "True", Selected = true }, new SelectListItem { Text = "No", Value = "False" } })*@
                         @*@Html.CheckBoxFor(m => m.Saleable, new { @value = "true" })*@
                         <!--@Html.ValidationMessageFor(model => Model.BOM.Manufacturable, "", new { @class = "text-danger" })
-    </div>-->
+                </div>-->
 
                         <div class="form-group">
                             @Html.LabelFor(model => Model.BOM.ProductionProcessCateogry, htmlAttributes: new { @class = "control-label" })
@@ -139,12 +139,12 @@
 
                         </div>
                         @*<div class="form-group">
-            @Html.LabelFor(model => Model.BOM.TimeUnit, htmlAttributes: new { @class = "control-label" })
+                        @Html.LabelFor(model => Model.BOM.TimeUnit, htmlAttributes: new { @class = "control-label" })
 
-            @Html.EditorFor(model => Model.BOM.TimeUnit, new { htmlAttributes = new { @class = "form-control", @id = "stock" } })
-            @Html.ValidationMessageFor(model => Model.BOM.TimeUnit, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => Model.BOM.TimeUnit, new { htmlAttributes = new { @class = "form-control", @id = "stock" } })
+                        @Html.ValidationMessageFor(model => Model.BOM.TimeUnit, "", new { @class = "text-danger" })
 
-        </div>*@
+                    </div>*@
 
                     </div>
 
@@ -229,6 +229,89 @@
 
                 </div>
             </div>
+
+
+            <div class="col-md-6">
+                <!-- general form elements -->
+                <!-- general form elements -->
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Production Output</h3>
+                    </div>
+
+
+                    <div class="box-body">
+
+
+                        <table id="selectedProduct" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <!--<th style="width:5%;">#</th>-->
+                                    @*<th>Index</th>
+                                <th>pId</th>*@
+                                    <!--<th style="width:60%;">Name</th>
+
+
+                            <th style="width:20%;">Unit</th>
+                            <th></th>-->
+                                    <th style="width: 5%;">#</th>
+                                    <th style="width: 50%;">Shape</th>
+                                    @*<th style="width: 12%;">Qty</th>*@
+                                    <th style="width: 20%;">Production Qty</th>
+                                    @*<th style="width: 12%;"></th>*@
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.ProductTypeDetail != null && Model.ProductTypeDetail.Count > 0)
+                                {
+                                    int sNo = 0;
+                                    foreach (var item in Model.ProductTypeDetail)
+                                    {
+                                        <tr>
+                                            <td id="Pr@(sNo)">@(sNo + 1)</td>
+                                            <td style="display:none;">
+                                                <input  type="hidden" name="ProductTypeDetail.Index" value="@sNo" />
+                                            </td>
+                                            <td style="display:none;">
+                                                <input type="text" value="@item.BOMId" readonly class="form-control classBGcolor"
+                                                       name="ProductDetail[@sNo].BOMId" id="idn@(sNo)">
+                                            </td>
+                                            <td>
+                                                <input type="text" autocomplete="off" class="form-control"
+                                                       name="ProductDetail[@sNo].Shape" id="shape@(sNo)" placeholder="Type shape"
+                                                       data-toggle="tooltip" data-placement="top" title="Type shape">
+                                            </td>
+                                            <td>
+                                                <input type="text" autocomplete="off" value="@(item.ProductionQty)" class="form-control"
+                                                       name="ProductDetail[@sNo].ProductionQty" id="productionqty@(sNo)" placeholder="Type weight"
+                                                       data-toggle="tooltip" data-placement="top" title="Type weight">
+                                            </td>
+                                            <!-- No delete button for Production Output -->
+                                        </tr>
+
+
+                                    </tbody>
+
+                        </table>
+
+
+                        @*<div class="table-title">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
+                            </div>
+                        </div>
+                    </div>*@
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+
+
         </div>
     </section>
 

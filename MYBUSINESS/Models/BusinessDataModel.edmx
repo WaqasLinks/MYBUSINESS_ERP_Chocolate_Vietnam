@@ -368,8 +368,10 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="decimal" Precision="10" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="RentId" Type="varchar" MaxLength="50" />
           <Property Name="ProductId" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Shape" Type="nvarchar" MaxLength="50" />
+          <Property Name="Weight" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="RentId" Type="varchar" MaxLength="50" />
           <Property Name="RentStartDate" Type="datetime" />
           <Property Name="RentEndDate" Type="datetime" />
         </EntityType>
@@ -413,6 +415,16 @@
           <Property Name="SaleType" Type="bit" />
           <Property Name="ShortFall" Type="int" />
           <Property Name="Remarks" Type="int" />
+        </EntityType>
+        <EntityType Name="ProductTypeDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="ProductionQty" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="BOMId" Type="int" />
+          <Property Name="ProductDetailId" Type="decimal" Precision="10" Scale="0" />
+          <Property Name="ProductId" Type="decimal" Precision="18" Scale="0" />
         </EntityType>
         <EntityType Name="Rent">
           <Key>
@@ -913,18 +925,6 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ProductDetail_Rent">
-          <End Role="Rent" Type="Self.Rent" Multiplicity="0..1" />
-          <End Role="ProductDetail" Type="Self.ProductDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Rent">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ProductDetail">
-              <PropertyRef Name="RentId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ProductionOrder_Employee">
           <End Role="Employee" Type="Self.Employee" Multiplicity="0..1" />
           <End Role="ProductionOrder" Type="Self.ProductionOrder" Multiplicity="*" />
@@ -958,6 +958,42 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
             </Principal>
             <Dependent Role="ProductionOrderDetail">
               <PropertyRef Name="SOId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductTypeDetail_BOM1">
+          <End Role="BOM" Type="Self.BOM" Multiplicity="0..1" />
+          <End Role="ProductTypeDetail" Type="Self.ProductTypeDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BOM">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductTypeDetail">
+              <PropertyRef Name="BOMId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductTypeDetail_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+          <End Role="ProductTypeDetail" Type="Self.ProductTypeDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductTypeDetail">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductTypeDetail_ProductDetail">
+          <End Role="ProductDetail" Type="Self.ProductDetail" Multiplicity="0..1" />
+          <End Role="ProductTypeDetail" Type="Self.ProductTypeDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductTypeDetail">
+              <PropertyRef Name="ProductDetailId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1143,6 +1179,18 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SubItem_BOM">
+          <End Role="BOM" Type="Self.BOM" Multiplicity="0..1" />
+          <End Role="SubItem" Type="Self.SubItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BOM">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubItem">
+              <PropertyRef Name="BOMId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_SubItem_NewProduction1">
           <End Role="NewProduction" Type="Self.NewProduction" Multiplicity="0..1" />
           <End Role="SubItem" Type="Self.SubItem" Multiplicity="*" />
@@ -1257,6 +1305,7 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
           <EntitySet Name="ProductDetail" EntityType="Self.ProductDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductionOrder" EntityType="Self.ProductionOrder" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductionOrderDetail" EntityType="Self.ProductionOrderDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductTypeDetail" EntityType="Self.ProductTypeDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Rent" EntityType="Self.Rent" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RentDetail" EntityType="Self.RentDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Service" EntityType="Self.Service" Schema="dbo" store:Type="Tables" />
@@ -1365,10 +1414,6 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
             <End Role="Product" EntitySet="Product" />
             <End Role="ProductDetail" EntitySet="ProductDetail" />
           </AssociationSet>
-          <AssociationSet Name="FK_ProductDetail_Rent" Association="Self.FK_ProductDetail_Rent">
-            <End Role="Rent" EntitySet="Rent" />
-            <End Role="ProductDetail" EntitySet="ProductDetail" />
-          </AssociationSet>
           <AssociationSet Name="FK_ProductionOrder_Employee" Association="Self.FK_ProductionOrder_Employee">
             <End Role="Employee" EntitySet="Employee" />
             <End Role="ProductionOrder" EntitySet="ProductionOrder" />
@@ -1380,6 +1425,18 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
           <AssociationSet Name="FK_ProductionOrderDetail_ProductionOrder" Association="Self.FK_ProductionOrderDetail_ProductionOrder">
             <End Role="ProductionOrder" EntitySet="ProductionOrder" />
             <End Role="ProductionOrderDetail" EntitySet="ProductionOrderDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductTypeDetail_BOM1" Association="Self.FK_ProductTypeDetail_BOM1">
+            <End Role="BOM" EntitySet="BOM" />
+            <End Role="ProductTypeDetail" EntitySet="ProductTypeDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductTypeDetail_Product" Association="Self.FK_ProductTypeDetail_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="ProductTypeDetail" EntitySet="ProductTypeDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductTypeDetail_ProductDetail" Association="Self.FK_ProductTypeDetail_ProductDetail">
+            <End Role="ProductDetail" EntitySet="ProductDetail" />
+            <End Role="ProductTypeDetail" EntitySet="ProductTypeDetail" />
           </AssociationSet>
           <AssociationSet Name="FK_Rent_Customer" Association="Self.FK_Rent_Customer">
             <End Role="Customer" EntitySet="Customer" />
@@ -1440,6 +1497,10 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
           <AssociationSet Name="FK_StoreProduct_Store" Association="Self.FK_StoreProduct_Store">
             <End Role="Store" EntitySet="Store" />
             <End Role="StoreProduct" EntitySet="StoreProduct" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubItem_BOM" Association="Self.FK_SubItem_BOM">
+            <End Role="BOM" EntitySet="BOM" />
+            <End Role="SubItem" EntitySet="SubItem" />
           </AssociationSet>
           <AssociationSet Name="FK_SubItem_NewProduction1" Association="Self.FK_SubItem_NewProduction1">
             <End Role="NewProduction" EntitySet="NewProduction" />
@@ -1511,7 +1572,6 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
           <Parameter Name="Param1" Mode="In" Type="String" />
           </FunctionImport>
           <EntitySet Name="BankAccounts" EntityType="Models.BankAccount" />
-          <EntitySet Name="BOMs" EntityType="Models.BOM" />
           <EntitySet Name="BusinessInfoes" EntityType="Models.BusinessInfo" />
           <EntitySet Name="Currencies" EntityType="Models.Currency" />
           <EntitySet Name="Customers" EntityType="Models.Customer" />
@@ -1531,7 +1591,6 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
           <EntitySet Name="PODs" EntityType="Models.POD" />
           <EntitySet Name="Products" EntityType="Models.Product" />
           <EntitySet Name="ProductCategories" EntityType="Models.ProductCategory" />
-          <EntitySet Name="ProductDetails" EntityType="Models.ProductDetail" />
           <EntitySet Name="ProductionOrders" EntityType="Models.ProductionOrder" />
           <EntitySet Name="ProductionOrderDetails" EntityType="Models.ProductionOrderDetail" />
           <EntitySet Name="Rents" EntityType="Models.Rent" />
@@ -1553,10 +1612,6 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
           <AssociationSet Name="FK_SO_Account" Association="Models.FK_SO_Account">
             <End Role="BankAccount" EntitySet="BankAccounts" />
             <End Role="SO" EntitySet="SOes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SubItem_BOM" Association="Models.FK_SubItem_BOM">
-            <End Role="BOM" EntitySet="BOMs" />
-            <End Role="SubItem" EntitySet="SubItems" />
           </AssociationSet>
           <AssociationSet Name="FK_Customer_Business" Association="Models.FK_Customer_Business">
             <End Role="BusinessInfo" EntitySet="BusinessInfoes" />
@@ -1666,10 +1721,6 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
             <End Role="Product" EntitySet="Products" />
             <End Role="ProductCategory" EntitySet="ProductCategories" />
           </AssociationSet>
-          <AssociationSet Name="FK_ProductDetail_Product" Association="Models.FK_ProductDetail_Product">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="ProductDetail" EntitySet="ProductDetails" />
-          </AssociationSet>
           <AssociationSet Name="FK_ProductionOrderDetail_Product" Association="Models.FK_ProductionOrderDetail_Product">
             <End Role="Product" EntitySet="Products" />
             <End Role="ProductionOrderDetail" EntitySet="ProductionOrderDetails" />
@@ -1689,10 +1740,6 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
           <AssociationSet Name="FK_StoreProduct_Product" Association="Models.FK_StoreProduct_Product">
             <End Role="Product" EntitySet="Products" />
             <End Role="StoreProduct" EntitySet="StoreProducts" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductDetail_Rent" Association="Models.FK_ProductDetail_Rent">
-            <End Role="Rent" EntitySet="Rents" />
-            <End Role="ProductDetail" EntitySet="ProductDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_ProductionOrderDetail_ProductionOrder" Association="Models.FK_ProductionOrderDetail_ProductionOrder">
             <End Role="ProductionOrder" EntitySet="ProductionOrders" />
@@ -1735,9 +1782,32 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
             <End Role="Product" EntitySet="Products" />
             <End Role="FinalProduction" EntitySet="FinalProductions" />
           </AssociationSet>
+          <EntitySet Name="ProductDetails" EntityType="Models.ProductDetail" />
+          <AssociationSet Name="FK_ProductDetail_Product" Association="Models.FK_ProductDetail_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="ProductDetail" EntitySet="ProductDetails" />
+          </AssociationSet>
+          <EntitySet Name="ProductTypeDetails" EntityType="Models.ProductTypeDetail" />
+          <AssociationSet Name="FK_ProductTypeDetail_ProductDetail" Association="Models.FK_ProductTypeDetail_ProductDetail">
+            <End Role="ProductDetail" EntitySet="ProductDetails" />
+            <End Role="ProductTypeDetail" EntitySet="ProductTypeDetails" />
+          </AssociationSet>
+          <EntitySet Name="BOMs" EntityType="Models.BOM" />
           <AssociationSet Name="FK_BOM_Product1" Association="Models.FK_BOM_Product1">
             <End Role="Product" EntitySet="Products" />
             <End Role="BOM" EntitySet="BOMs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductTypeDetail_BOM" Association="Models.FK_ProductTypeDetail_BOM">
+            <End Role="BOM" EntitySet="BOMs" />
+            <End Role="ProductTypeDetail" EntitySet="ProductTypeDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubItem_BOM" Association="Models.FK_SubItem_BOM">
+            <End Role="BOM" EntitySet="BOMs" />
+            <End Role="SubItem" EntitySet="SubItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductTypeDetail_Product" Association="Models.FK_ProductTypeDetail_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="ProductTypeDetail" EntitySet="ProductTypeDetails" />
           </AssociationSet>
           </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
@@ -1930,27 +2000,6 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
           <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="POes" Relationship="Models.FK_PO_Account" FromRole="BankAccount" ToRole="PO" />
           <NavigationProperty Name="SOes" Relationship="Models.FK_SO_Account" FromRole="BankAccount" ToRole="SO" />
-        </EntityType>
-        <EntityType Name="BOM">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
-          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Saleable" Type="Boolean" Nullable="false" />
-          <Property Name="Purchasable" Type="Boolean" Nullable="false" />
-          <Property Name="Manufacturable" Type="Boolean" Nullable="false" />
-          <Property Name="ShelfLife" Type="Int32" />
-          <Property Name="TimeUnit" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="CreateDate" Type="DateTime" Precision="3" />
-          <Property Name="UpdateDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="SubItems" Relationship="Models.FK_SubItem_BOM" FromRole="BOM" ToRole="SubItem" />
-          <Property Name="ProductionProcessCateogry" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <Property Name="ProductionProcessDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ProductName" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
-          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
-          <NavigationProperty Name="Product" Relationship="Models.FK_BOM_Product1" FromRole="BOM" ToRole="Product" />
-          <Property Name="Unit" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="BusinessInfo">
           <Key>
@@ -2303,7 +2352,6 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
           <NavigationProperty Name="Location" Relationship="Models.FK_Product_Location" FromRole="Product" ToRole="Location" />
           <NavigationProperty Name="PODs" Relationship="Models.FK_POD_Product" FromRole="Product" ToRole="POD" />
           <NavigationProperty Name="ProductCategories" Relationship="Models.FK_ProductCategory_Product" FromRole="Product" ToRole="ProductCategory" />
-          <NavigationProperty Name="ProductDetails" Relationship="Models.FK_ProductDetail_Product" FromRole="Product" ToRole="ProductDetail" />
           <NavigationProperty Name="ProductionOrderDetails" Relationship="Models.FK_ProductionOrderDetail_Product" FromRole="Product" ToRole="ProductionOrderDetail" />
           <NavigationProperty Name="RentDetails" Relationship="Models.FK_RentDetail_Product" FromRole="Product" ToRole="RentDetail" />
           <NavigationProperty Name="ServiceDetails" Relationship="Models.FK_ServiceDetail_Product" FromRole="Product" ToRole="ServiceDetail" />
@@ -2313,8 +2361,10 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
           <Property Name="NewProductionId" Type="Int32" />
           <NavigationProperty Name="NewProduction" Relationship="Models.FK_Product_NewProduction" FromRole="Product" ToRole="NewProduction" />
           <NavigationProperty Name="FinalProductions" Relationship="Models.FK_FinalProduction_Product" FromRole="Product" ToRole="FinalProduction" />
-          <NavigationProperty Name="BOMs" Relationship="Models.FK_BOM_Product1" FromRole="Product" ToRole="BOM" />
           <Property Name="Unit" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ProductDetails" Relationship="Models.FK_ProductDetail_Product" FromRole="Product" ToRole="ProductDetail" />
+          <NavigationProperty Name="BOMs" Relationship="Models.FK_BOM_Product1" FromRole="Product" ToRole="BOM" />
+          <NavigationProperty Name="ProductTypeDetails" Relationship="Models.FK_ProductTypeDetail_Product" FromRole="Product" ToRole="ProductTypeDetail" />
         </EntityType>
         <EntityType Name="ProductCategory">
           <Key>
@@ -2324,18 +2374,6 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
           <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="Category" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Product" Relationship="Models.FK_ProductCategory_Product" FromRole="ProductCategory" ToRole="Product" />
-        </EntityType>
-        <EntityType Name="ProductDetail">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Decimal" Nullable="false" Precision="10" Scale="0" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="RentId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="RentStartDate" Type="DateTime" Precision="3" />
-          <Property Name="RentEndDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Product" Relationship="Models.FK_ProductDetail_Product" FromRole="ProductDetail" ToRole="Product" />
-          <NavigationProperty Name="Rent" Relationship="Models.FK_ProductDetail_Rent" FromRole="ProductDetail" ToRole="Rent" />
         </EntityType>
         <EntityType Name="ProductionOrder">
           <Key>
@@ -2408,7 +2446,6 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
           <Property Name="RentEndDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Customer" Relationship="Models.FK_Rent_Customer" FromRole="Rent" ToRole="Customer" />
           <NavigationProperty Name="Employee" Relationship="Models.FK_Rent_Employee" FromRole="Rent" ToRole="Employee" />
-          <NavigationProperty Name="ProductDetails" Relationship="Models.FK_ProductDetail_Rent" FromRole="Rent" ToRole="ProductDetail" />
           <NavigationProperty Name="RentDetails" Relationship="Models.FK_RentDetail_Rent" FromRole="Rent" ToRole="RentDetail" />
         </EntityType>
         <EntityType Name="RentDetail">
@@ -2567,7 +2604,6 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
           <Property Name="Quantity" Type="Int32" />
           <Property Name="BOMId" Type="Int32" />
           <Property Name="NewProductionId" Type="Int32" />
-          <NavigationProperty Name="BOM" Relationship="Models.FK_SubItem_BOM" FromRole="SubItem" ToRole="BOM" />
           <Property Name="FinalProductionId" Type="Int32" />
           <NavigationProperty Name="FinalProduction" Relationship="Models.FK_SubItem_FinalProduction" FromRole="SubItem" ToRole="FinalProduction" />
           <NavigationProperty Name="NewProduction" Relationship="Models.FK_SubItem_NewProduction1" FromRole="SubItem" ToRole="NewProduction" />
@@ -2576,6 +2612,7 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
           <Property Name="AvailableInventory" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="QuantityRequested" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="QuantitytoPrepare" Type="Decimal" Precision="18" Scale="0" />
+          <NavigationProperty Name="BOM" Relationship="Models.FK_SubItem_BOM" FromRole="SubItem" ToRole="BOM" />
         </EntityType>
         <EntityType Name="Supplier">
           <Key>
@@ -2642,18 +2679,6 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
             </Principal>
             <Dependent Role="SO">
               <PropertyRef Name="BankAccountId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SubItem_BOM">
-          <End Type="Models.BOM" Role="BOM" Multiplicity="0..1" />
-          <End Type="Models.SubItem" Role="SubItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="BOM">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="SubItem">
-              <PropertyRef Name="BOMId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2981,18 +3006,6 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ProductDetail_Product">
-          <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
-          <End Type="Models.ProductDetail" Role="ProductDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ProductDetail">
-              <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ProductionOrderDetail_Product">
           <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
           <End Type="Models.ProductionOrderDetail" Role="ProductionOrderDetail" Multiplicity="*" />
@@ -3050,18 +3063,6 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
             </Principal>
             <Dependent Role="StoreProduct">
               <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductDetail_Rent">
-          <End Type="Models.Rent" Role="Rent" Multiplicity="0..1" />
-          <End Type="Models.ProductDetail" Role="ProductDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Rent">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ProductDetail">
-              <PropertyRef Name="RentId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3198,6 +3199,79 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="ProductDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Decimal" Nullable="false" Precision="10" Scale="0" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Shape" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Weight" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="RentId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="RentStartDate" Type="DateTime" Precision="3" />
+          <Property Name="RentEndDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Product" Relationship="Models.FK_ProductDetail_Product" FromRole="ProductDetail" ToRole="Product" />
+          <NavigationProperty Name="ProductTypeDetails" Relationship="Models.FK_ProductTypeDetail_ProductDetail" FromRole="ProductDetail" ToRole="ProductTypeDetail" />
+        </EntityType>
+        <Association Name="FK_ProductDetail_Product">
+          <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="Models.ProductDetail" Role="ProductDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductDetail">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ProductTypeDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="ProductionQty" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="BOMId" Type="Int32" />
+          <Property Name="ProductDetailId" Type="Decimal" Precision="10" Scale="0" />
+          <NavigationProperty Name="ProductDetail" Relationship="Models.FK_ProductTypeDetail_ProductDetail" FromRole="ProductTypeDetail" ToRole="ProductDetail" />
+          <NavigationProperty Name="BOM" Relationship="Models.FK_ProductTypeDetail_BOM" FromRole="ProductTypeDetail" ToRole="BOM" />
+          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
+          <NavigationProperty Name="Product" Relationship="Models.FK_ProductTypeDetail_Product" FromRole="ProductTypeDetail" ToRole="Product" />
+        </EntityType>
+        <Association Name="FK_ProductTypeDetail_ProductDetail">
+          <End Type="Models.ProductDetail" Role="ProductDetail" Multiplicity="0..1" />
+          <End Type="Models.ProductTypeDetail" Role="ProductTypeDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductTypeDetail">
+              <PropertyRef Name="ProductDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="BOM">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Saleable" Type="Boolean" Nullable="false" />
+          <Property Name="Purchasable" Type="Boolean" Nullable="false" />
+          <Property Name="Manufacturable" Type="Boolean" Nullable="false" />
+          <Property Name="ShelfLife" Type="Int32" />
+          <Property Name="TimeUnit" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="3" />
+          <Property Name="ProductionProcessCateogry" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="ProductionProcessDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ProductName" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Unit" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Product" Relationship="Models.FK_BOM_Product1" FromRole="BOM" ToRole="Product" />
+          <NavigationProperty Name="ProductTypeDetails" Relationship="Models.FK_ProductTypeDetail_BOM" FromRole="BOM" ToRole="ProductTypeDetail" />
+          <NavigationProperty Name="SubItems" Relationship="Models.FK_SubItem_BOM" FromRole="BOM" ToRole="SubItem" />
+        </EntityType>
         <Association Name="FK_BOM_Product1">
           <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
           <End Type="Models.BOM" Role="BOM" Multiplicity="*" />
@@ -3206,6 +3280,42 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="BOM">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductTypeDetail_BOM">
+          <End Type="Models.BOM" Role="BOM" Multiplicity="0..1" />
+          <End Type="Models.ProductTypeDetail" Role="ProductTypeDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BOM">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductTypeDetail">
+              <PropertyRef Name="BOMId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubItem_BOM">
+          <End Type="Models.BOM" Role="BOM" Multiplicity="0..1" />
+          <End Type="Models.SubItem" Role="SubItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BOM">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubItem">
+              <PropertyRef Name="BOMId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductTypeDetail_Product">
+          <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="Models.ProductTypeDetail" Role="ProductTypeDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductTypeDetail">
               <PropertyRef Name="ProductId" />
             </Dependent>
           </ReferentialConstraint>
@@ -3443,26 +3553,6 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
                 <ScalarProperty Name="Balance" ColumnName="Balance" />
                 <ScalarProperty Name="AccountType" ColumnName="AccountType" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="BOMs">
-            <EntityTypeMapping TypeName="Models.BOM">
-              <MappingFragment StoreEntitySet="BOM">
-                <ScalarProperty Name="Unit" ColumnName="Unit" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
-                <ScalarProperty Name="ProductionProcessDescription" ColumnName="ProductionProcessDescription" />
-                <ScalarProperty Name="ProductionProcessCateogry" ColumnName="ProductionProcessCateogry" />
-                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="TimeUnit" ColumnName="TimeUnit" />
-                <ScalarProperty Name="ShelfLife" ColumnName="ShelfLife" />
-                <ScalarProperty Name="Manufacturable" ColumnName="Manufacturable" />
-                <ScalarProperty Name="Purchasable" ColumnName="Purchasable" />
-                <ScalarProperty Name="Saleable" ColumnName="Saleable" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -3804,17 +3894,6 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ProductDetails">
-            <EntityTypeMapping TypeName="Models.ProductDetail">
-              <MappingFragment StoreEntitySet="ProductDetail">
-                <ScalarProperty Name="RentEndDate" ColumnName="RentEndDate" />
-                <ScalarProperty Name="RentStartDate" ColumnName="RentStartDate" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-                <ScalarProperty Name="RentId" ColumnName="RentId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="ProductionOrders">
             <EntityTypeMapping TypeName="Models.ProductionOrder">
               <MappingFragment StoreEntitySet="ProductionOrder">
@@ -4084,6 +4163,50 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
                 <ScalarProperty Name="Unit" ColumnName="Unit" />
                 <ScalarProperty Name="ProductName" ColumnName="ProductName" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductDetails">
+            <EntityTypeMapping TypeName="Models.ProductDetail">
+              <MappingFragment StoreEntitySet="ProductDetail">
+                <ScalarProperty Name="RentEndDate" ColumnName="RentEndDate" />
+                <ScalarProperty Name="RentStartDate" ColumnName="RentStartDate" />
+                <ScalarProperty Name="RentId" ColumnName="RentId" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="Shape" ColumnName="Shape" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductTypeDetails">
+            <EntityTypeMapping TypeName="Models.ProductTypeDetail">
+              <MappingFragment StoreEntitySet="ProductTypeDetail">
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ProductDetailId" ColumnName="ProductDetailId" />
+                <ScalarProperty Name="BOMId" ColumnName="BOMId" />
+                <ScalarProperty Name="ProductionQty" ColumnName="ProductionQty" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BOMs">
+            <EntityTypeMapping TypeName="Models.BOM">
+              <MappingFragment StoreEntitySet="BOM">
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="ProductionProcessDescription" ColumnName="ProductionProcessDescription" />
+                <ScalarProperty Name="ProductionProcessCateogry" ColumnName="ProductionProcessCateogry" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="TimeUnit" ColumnName="TimeUnit" />
+                <ScalarProperty Name="ShelfLife" ColumnName="ShelfLife" />
+                <ScalarProperty Name="Manufacturable" ColumnName="Manufacturable" />
+                <ScalarProperty Name="Purchasable" ColumnName="Purchasable" />
+                <ScalarProperty Name="Saleable" ColumnName="Saleable" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

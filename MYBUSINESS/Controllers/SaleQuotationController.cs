@@ -123,7 +123,7 @@ namespace MYBUSINESS.Controllers
             dtSellDate = DateTime.ParseExact(sellDate, "d/M/yyyy", CultureInfo.InvariantCulture);
             //dtEndDate = DateTime.Parse(endDate);
 
-            selectedSOes = db.ProductDetails.Where(so => so.ProductId == intProdId && (so.RentStartDate >= dtSellDate || so.RentEndDate >= dtSellDate)).ToList();
+            //selectedSOes = db.ProductDetails.Where(so => so.ProductId == intProdId && (so.RentStartDate >= dtSellDate || so.RentEndDate >= dtSellDate)).ToList();
 
             //return PartialView("_SelectedSOSR", selectedSOes.OrderByDescending(i => i.Date).ToList());
             return PartialView("_ProductDetail", selectedSOes);//.ToList());

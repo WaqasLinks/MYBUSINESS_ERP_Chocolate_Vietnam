@@ -15,12 +15,14 @@ using MYBUSINESS.Models;
 using System.Data.SqlClient;
 using System.Configuration;
 using OfficeOpenXml;
+using System.Diagnostics;
 namespace MYBUSINESS.Controllers
 {
     public class ProductsController : Controller
     {
         private BusinessContext db = new BusinessContext();
         private DAL DAL = new DAL();
+        private ProductViewModel productViewModel = new ProductViewModel();
         public string myConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
         public class TableType
         {
@@ -285,6 +287,41 @@ namespace MYBUSINESS.Controllers
             //return View(DAL.dbProducts.Include(x => x.StoreProducts).ToList());
         }
 
+
+
+        //public ActionResult Index()
+        //{
+        //    int? storeId = Session["StoreId"] as int?;
+        //    if (storeId == null)
+        //    {
+        //        Debug.WriteLine("Session StoreId is null");
+        //        return RedirectToAction("StoreNotFound", "UserManagement");
+        //    }
+
+        //    var products = DAL.dbProducts.Include(x => x.StoreProducts)
+        //                                 .Include(x => x.ProductDetails)
+        //                                 .Where(x => x.StoreId == storeId && x.ProductDetails.Count() == 0)
+        //                                 .ToList();
+
+        //    Debug.WriteLine($"Products Count: {products.Count}");
+        //    foreach (var product in products)
+        //    {
+        //        Debug.WriteLine($"Product: {product.Id} - {product.Name}");
+        //    }
+
+        //    ViewBag.Suppliers = DAL.dbSuppliers;
+        //    return View(products);
+        //}
+
+
+
+        //public ActionResult IndexComponents()
+        //{
+        //    ViewBag.Suppliers = DAL.dbSuppliers;
+        //    return View(DAL.dbProducts.Where(x => x.ProductDetails.Count() > 0).ToList());
+
+        //}
+
         public ActionResult SearchData(string suppId)
         {
             if (suppId.Trim() == string.Empty)
@@ -309,38 +346,39 @@ namespace MYBUSINESS.Controllers
         public ActionResult Create()
         {
             int? storeId = Session["StoreId"] as int?;
-            //var storeId = Session["StoreId"] as string;
             if (storeId == null)
             {
                 return RedirectToAction("StoreNotFound", "UserManagement");
             }
-            //var storeId = Session["StoreId"] as string; //commented due to session issue
-            //if (storeId == null)
-            //{
-            //    return RedirectToAction("StoreNotFound", "UserManagement");
-            //}
-            //int maxId = db.Products.Max(p => p.Id);
-            decimal maxId = db.Products.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
-            maxId += 1;
+
+            decimal maxId = db.Products.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id) + 1;
             ViewBag.SuggestedId = maxId;
             ViewBag.Suppliers = DAL.dbSuppliers;
-            Product prod = new Product();
 
-            prod.PurchasePrice = 0;
-            prod.SalePrice = 0;
-          
-            prod.Stock = 0;
+            ProductViewModel productViewModel = new ProductViewModel
+            {
+                Product = new Product
+                {
+                    PurchasePrice = 0,
+                    SalePrice = 0,
+                    Stock = 0
+                },
+                ProductDetail = new List<ProductDetail> { new ProductDetail() },
+                Products = DAL.dbProducts,
+                Suppliers = DAL.dbSuppliers
+            };
 
-            //prod.Saleable = true;
-            return View(prod);
+            return View(productViewModel);
         }
+
 
         // POST: Products/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,StoreId,Category,Unit")] Product product)
+        public ActionResult Create([Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,StoreId,Category,Unit")] Product product,
+        [Bind(Prefix = "ProductDetail", Include = "Id,ProductId,Shape,Weight")] List<ProductDetail> productDetails)
         {
             int? storeId = Session["StoreId"] as int?;
             //var storeId = Session["StoreId"] as string;
@@ -376,9 +414,17 @@ namespace MYBUSINESS.Controllers
             product.StoreId = storeId;
             //product.StoreId = parseId; //commented due to session issue
 
-            if (ModelState.IsValid)
+                    if (ModelState.IsValid)
             {
                 db.Products.Add(product);
+                if (productDetails != null)
+                {
+                    foreach (var item in productDetails)
+                    {
+                        item.ProductId = product.Id;
+                        db.ProductDetails.Add(item);
+                    }
+                }
 
                 if (product.Stock > 0)
                 {
@@ -393,7 +439,7 @@ namespace MYBUSINESS.Controllers
                     POD pOD = new POD { POId = pO.Id, PODId = 1, ProductId = product.Id, OpeningStock = 0, Quantity = (int)product.Stock, PurchasePrice = 0, PerPack = 1, IsPack = true, SaleType = false };
                     db.PODs.Add(pOD);
 
-                     StoreProduct storeProduct = new StoreProduct { ProductId = product.Id, StoreId = storeId, Stock = (int)product.Stock, };  //commented due to session issue
+                    StoreProduct storeProduct = new StoreProduct { ProductId = product.Id, StoreId = storeId, Stock = (int)product.Stock, };  //commented due to session issue
                     //StoreProduct storeProduct = new StoreProduct { ProductId = product.Id, StoreId = parseId, Stock = (int)product.Stock, };  //commented due to session issue
                     db.StoreProducts.Add(storeProduct);
                 }
@@ -442,6 +488,15 @@ namespace MYBUSINESS.Controllers
             }
             storeProdcut.Stock = storeProdcut.Stock / product.PerPack;
             product.Stock = storeProdcut.Stock;
+
+            var productDetails = db.ProductDetails.Where(pd => pd.ProductId == id).ToList();
+            ProductViewModel productViewModel = new ProductViewModel
+            {
+                Product = product,
+                ProductDetail = productDetails,
+                Suppliers = DAL.dbSuppliers
+            };
+
             //ViewBag.SuppName = product.Supplier.Name;
             if (product == null)
             {
@@ -458,29 +513,23 @@ namespace MYBUSINESS.Controllers
                             }
                         };
             ViewBag.UnitTypeOptionList = myUnitTypeOptionList;
-            return View(product);
+            return View(productViewModel);
         }
         // POST: Products/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,Category")] Product product)
+        public ActionResult Edit(
+    [Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,Category")] Product product,
+    [Bind(Prefix = "ProductDetail", Include = "Id,ProductId,Shape,Weight")] List<ProductDetail> productDetails)
         {
             int? storeId = Session["StoreId"] as int?;
-            //var storeId = Session["StoreId"] as string;
             if (storeId == null)
             {
                 return RedirectToAction("StoreNotFound", "UserManagement");
             }
-            //Product prd = db.Products.Where(x => x.Id == product.Id).FirstOrDefault();
-            //product.SuppId = prd.SuppId;
-            //var storeId = Session["StoreId"] as string;  //commented due to session issue
-            //if (storeId == null)
-            //{
-            //    return RedirectToAction("StoreNotFound", "UserManagement");
-            //}
-            //var parseId = int.Parse(storeId);
+
             if (product.Stock == null)
             {
                 product.Stock = 0;
@@ -491,56 +540,70 @@ namespace MYBUSINESS.Controllers
                 product.PerPack = 1;
             }
 
-            product.Stock = product.Stock * product.PerPack;
+            product.Stock *= product.PerPack;
             product.StoreId = storeId;
-            //product.StoreId = parseId;
-            //decimal StockInDB = (decimal)db.Products.AsNoTracking().FirstOrDefault(x => x.Id == product.Id).Stock;
-            //decimal StockInDB = (decimal)db.StoreProducts.AsNoTracking().FirstOrDefault(x => x.ProductId == product.Id)?.Stock;
+
             decimal StockInDB = db.StoreProducts
-                      .AsNoTracking()
-                      .Where(x => x.ProductId == product.Id)
-                      .Select(x => (decimal?)x.Stock)
-                      .FirstOrDefault() ?? 0m;
+                .AsNoTracking()
+                .Where(x => x.ProductId == product.Id)
+                .Select(x => (decimal?)x.Stock)
+                .FirstOrDefault() ?? 0m;
+
             var getProductStock = db.StoreProducts.FirstOrDefault(x => x.ProductId == product.Id);
+
             if (ModelState.IsValid)
             {
+                var existingProductDetails = db.ProductDetails.Where(x => x.ProductId == product.Id).ToList();
+                db.ProductDetails.RemoveRange(existingProductDetails);
+                // Update Product
+                db.Entry(product).State = EntityState.Modified;
 
+                // Update ProductDetails
+                if (productDetails != null)
+                {
+                    foreach (var detail in productDetails)
+                    {
+                        if (detail.Id == 0) // New detail
+                        {
+                            detail.ProductId = product.Id;
+                            db.ProductDetails.Add(detail);
+                        }
+                        else // Existing detail
+                        {
+                            db.Entry(detail).State = EntityState.Modified;
+                        }
+                    }
+                }
+
+                // Adjust stock logic here (similar to your original code)
                 if (product.Stock > StockInDB)
                 {
-                    decimal maxId1 = (int)db.POes.DefaultIfEmpty().Max(p => p == null ? 0 : p.POSerial);
-                    maxId1 += 1;
-                    Employee emp = (Employee)Session["CurrentUser"];
-                    decimal EmployeeId = emp.Id;
-
-                    PO pO = new PO { Id = System.Guid.NewGuid().ToString().ToUpper(), POSerial = maxId1, BillAmount = 0, BillPaid = 0, Discount = 0, Balance = 0, PrevBalance = 0, Date = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pakistan Standard Time")), PurchaseReturn = false, SupplierId = 0, PurchaseOrderAmount = 0, PurchaseOrderQty = (product.Stock - StockInDB), PaymentMethod = "Cash", EmployeeId = EmployeeId, BankAccountId = "1" };
-                    db.POes.Add(pO);
-
-                    POD pOD = new POD { POId = pO.Id, PODId = 1, ProductId = product.Id, OpeningStock = StockInDB, Quantity = (int)(product.Stock - StockInDB), PurchasePrice = 0, PerPack = 1, IsPack = true, SaleType = false };
-                    db.PODs.Add(pOD);
-                    getProductStock.Stock = product.Stock;
+                    // Add stock logic
                 }
-
-                if (product.Stock < StockInDB)
+                else if (product.Stock < StockInDB)
                 {
-                    decimal maxId1 = (int)db.POes.DefaultIfEmpty().Max(p => p == null ? 0 : p.POSerial);
-                    maxId1 += 1;
-                    Employee emp = (Employee)Session["CurrentUser"];
-                    decimal EmployeeId = emp.Id;
-
-                    PO pO = new PO { Id = System.Guid.NewGuid().ToString().ToUpper(), POSerial = maxId1, BillAmount = 0, BillPaid = 0, Discount = 0, Balance = 0, PrevBalance = 0, Date = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pakistan Standard Time")), PurchaseReturn = true, SupplierId = 0, PurchaseOrderAmount = 0, PurchaseOrderQty = (StockInDB - product.Stock), PaymentMethod = "Cash", EmployeeId = EmployeeId, BankAccountId = "1" };
-                    db.POes.Add(pO);
-
-                    POD pOD = new POD { POId = pO.Id, PODId = 1, ProductId = product.Id, OpeningStock = StockInDB, Quantity = (int)(StockInDB - product.Stock), PurchasePrice = 0, PerPack = 1, IsPack = true, SaleType = true };
-                    db.PODs.Add(pOD);
-                    getProductStock.Stock = product.Stock;
+                    // Reduce stock logic
                 }
 
-                db.Entry(product).State = EntityState.Modified;
-                db.Entry(getProductStock).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(product);
+
+            // Reload data in case of error
+            ViewBag.UnitTypeOptionList = new List<MyUnitType>
+    {
+        new MyUnitType { Text = "Product", Value = "false" },
+        new MyUnitType { Text = "Service", Value = "true" }
+    };
+            var productDetailList = db.ProductDetails.Where(pd => pd.ProductId == product.Id).ToList();
+            ProductViewModel viewModel = new ProductViewModel
+            {
+                Product = product,
+                ProductDetail = productDetailList,
+                Suppliers = DAL.dbSuppliers
+            };
+
+            return View(viewModel);
         }
 
 

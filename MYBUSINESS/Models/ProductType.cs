@@ -12,15 +12,13 @@ namespace MYBUSINESS.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Payment
+    public partial class ProductType
     {
-        public decimal Id { get; set; }
-        public string SOId { get; set; }
-        public string PaymentMethod { get; set; }
-        public decimal PaymentAmount { get; set; }
-        public System.DateTime ReceivedDate { get; set; }
-        public string Remarks { get; set; }
+        public int Id { get; set; }
+        public Nullable<decimal> ProductionQty { get; set; }
+        public Nullable<int> BOMId { get; set; }
+        public Nullable<decimal> ProductDetailId { get; set; }
     
-        public virtual SO SO { get; set; }
+        public virtual BOM BOM { get; set; }
     }
 }

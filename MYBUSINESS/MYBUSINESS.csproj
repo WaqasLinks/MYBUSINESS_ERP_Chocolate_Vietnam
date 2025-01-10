@@ -524,6 +524,10 @@
     <Compile Include="Models\ProductionOrderDetail.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ProductTypeDetail.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ProductViewModel.cs" />
     <Compile Include="Models\PurchaseOrderViewModel.cs" />
     <Compile Include="Models\DashboardViewModel.cs" />
     <Compile Include="Models\Rent.cs">
@@ -3045,6 +3049,7 @@
     <Content Include="Content\custom\custom.css" />
     <Content Include="Content\custom\clientSOSR.js" />
     <Content Include="Content\custom\creditorPOPR.js" />
+    <Content Include="Content\custom\productdetail.js" />
     <Content Include="Content\custom\shared.js" />
     <Content Include="Content\custom\stores.js" />
     <Content Include="Content\custom\customerSOSR_SOSR_Index.js" />
@@ -3081,6 +3086,7 @@
     <Content Include="Content\custom\products.js" />
     <Content Include="Content\custom\quotationPOPR.js" />
     <Content Include="Content\custom\subItem - BOM.js" />
+    <Content Include="Content\custom\subItem - Copy.js" />
     <Content Include="Content\custom\subItem.js" />
     <Content Include="Content\custom\subItem_BOM.js" />
     <Content Include="Content\custom\supplierPOPR.js" />
@@ -3720,7 +3726,7 @@
     <Content Include="Reports\Sale_Receipt - Copy 1.rdlc" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="bin\" />
+    <Folder Include="bin\app.publish\" />
     <Folder Include="Resources\" />
     <Folder Include="Views\Report\" />
   </ItemGroup>

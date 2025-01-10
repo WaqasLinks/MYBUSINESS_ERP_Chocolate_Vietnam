@@ -74,7 +74,7 @@ namespace MYBUSINESS.Controllers
                 dtStartDate = DateTime.Parse(startDate);
                 dtEndDate = DateTime.Parse(endDate);
             
-            selectedSOes = db.ProductDetails.Where(so => so.ProductId == intProdId && ((dtStartDate >= so.RentStartDate && dtStartDate <= so.RentEndDate) || (dtEndDate >= so.RentStartDate && dtEndDate <= so.RentEndDate))).ToList(); 
+            //selectedSOes = db.ProductDetails.Where(so => so.ProductId == intProdId && ((dtStartDate >= so.RentStartDate && dtStartDate <= so.RentEndDate) || (dtEndDate >= so.RentStartDate && dtEndDate <= so.RentEndDate))).ToList(); 
             
             //return PartialView("_SelectedSOSR", selectedSOes.OrderByDescending(i => i.Date).ToList());
             return PartialView("_ProductDetail", selectedSOes);//.ToList());
@@ -713,7 +713,7 @@ namespace MYBUSINESS.Controllers
                             }
 
                         }
-                        db.ProductDetails.Add(new ProductDetail() { RentId=sO.Id, ProductId = product.Id, RentStartDate = sO.RentStartDate, RentEndDate = sO.RentEndDate });
+                        //db.ProductDetails.Add(new ProductDetail() { RentId=sO.Id, ProductId = product.Id, RentStartDate = sO.RentStartDate, RentEndDate = sO.RentEndDate });
 
                     }
 
@@ -1155,7 +1155,7 @@ namespace MYBUSINESS.Controllers
                 }
 
                 db.RentDetails.RemoveRange(oldSODs);
-                db.ProductDetails.RemoveRange(db.ProductDetails.Where(x => x.RentId == sO.Id));
+                //db.ProductDetails.RemoveRange(db.ProductDetails.Where(x => x.RentId == sO.Id));
                 //////////////////////////////////////////////////////////////////////////////
 
                 sO.SaleOrderAmount = 0;
@@ -1225,7 +1225,7 @@ namespace MYBUSINESS.Controllers
                             }
 
                         }
-                        db.ProductDetails.Add(new ProductDetail() {RentId=sO.Id, ProductId = product.Id, RentStartDate = sO.RentStartDate, RentEndDate = sO.RentEndDate });
+                        //db.ProductDetails.Add(new ProductDetail() {RentId=sO.Id, ProductId = product.Id, RentStartDate = sO.RentStartDate, RentEndDate = sO.RentEndDate });
                     }
                     sO.Profit -= (decimal)sO.Discount;
                     db.Entry(sO).State = EntityState.Modified;
