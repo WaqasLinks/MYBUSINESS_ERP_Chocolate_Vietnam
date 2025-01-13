@@ -14,7 +14,7 @@
 
 
 <link href="@Url.Content("~/Content/custom/custom.css")" rel="stylesheet" type="text/css" />
-<script src="~/Content/custom/subItem.js"></script>
+<script src="~/Content/custom/newProduction.js"></script>
 <script src="~/Content/custom/downloads/jquery.mcautocomplete.js"></script>
 <script src="~/Content/custom/downloads/jquery.scannerdetection.js"></script>
 @using (Html.BeginForm())
@@ -135,16 +135,17 @@
                                             <td style="display:none;"><input type="hidden" name="SubItem.Index" value="@sNo" /></td>
                                             <td style="display:none;"><input type="text" value=@item.ProductId readonly class="form-control classBGcolor" name="SubItem[@sNo].ProductId" id="idn@(sNo)"></td>
                                             <td><input type="text" autocomplete="off" value="@(item.Product.Name)" class="form-control" name="SubItem[@sNo].Product.Name" id="name@(sNo)" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name"></td>
-
+                                            <td><input type="text" autocomplete="off" value="@(item.QuantitytoPrepare)" class="form-control" name="SubItem[@sNo].Shape" id="shape@(sNo)" placeholder="" data-toggle="tooltip" data-placement="top" title=""></td>
                                             <td><input type="text" autocomplete="off" value=@item.Quantity class="form-control" name="SubItem[@sNo].Quantity" id="quantity@(sNo)"></td>
-                                            <td>
-                                                <select class="form-control" name="SubItem[0].BOM.Unit" id="unit0">
-                                                    <option value="Kg" selected>Kg</option>
-                                                    <option value="Gram">Gram</option>
-                                                </select>
-                                            </td>
-                                            <td><input type="text" autocomplete="off" value=@item.AvailableInventory class="form-control" name="SubItem[@sNo].AvailableInventory" id="availableinventory@(sNo)"></td>
-                                            <td><input type="text" autocomplete="off" value=@item.QuantitytoPrepare class="form-control" name="SubItem[@sNo].QuantitytoPrepare" id="quantitytoprepare@(sNo)"></td>
+                                            <td><input type="text" autocomplete="off" value=@item.Unit class="form-control" name="SubItem[@sNo].Unit" id="unit@(sNo)"></td>
+                                            @*<td>
+            <select class="form-control" name="SubItem[0].BOM.Unit" id="unit0">
+                <option value="Kg" selected>Kg</option>
+                <option value="Gram">Gram</option>
+            </select>
+        </td>*@
+                                            @*<td><input type="text" autocomplete="off" value=@item.AvailableInventory class="form-control" name="SubItem[@sNo].AvailableInventory" id="availableinventory@(sNo)"></td>
+                                            <td><input type="text" autocomplete="off" value=@item.QuantitytoPrepare class="form-control" name="SubItem[@sNo].QuantitytoPrepare" id="quantitytoprepare@(sNo)"></td>*@
 
                                             <td>
 
@@ -203,15 +204,15 @@
         {
             carton = (int)(d.Stock / d.PerPack);
             piece = (int)(d.Stock % d.PerPack);
-            if (piece == 0)
-            {
-                @:products.push(["@d.Id", "@d.Name", "@d.SalePrice", "@carton"]);
-            }
-            else
-            {
-                @:products.push(["@d.Id", "@d.Name", "@d.SalePrice", "@carton,@piece"]);
-            }
-            @:productsBarcodes.push(["@d.Id", "@d.BarCode"]);
+           if (piece == 0)
+ {
+    @:products.push([ "@d.Id", "@d.Name", "@d.Unit", "@d.Unit", "@carton" ]);
+ }
+ else
+ {
+     @:products.push(["@d.Id", "@d.Name", "@d.SalePrice", "@carton,@piece"]);
+ }
+ @:productsBarcodes.push(["@d.Id", "@d.BarCode"]);
 
         }
      }

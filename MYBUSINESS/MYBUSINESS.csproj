@@ -3049,7 +3049,8 @@
     <Content Include="Content\custom\custom.css" />
     <Content Include="Content\custom\clientSOSR.js" />
     <Content Include="Content\custom\creditorPOPR.js" />
-    <Content Include="Content\custom\productdetail.js" />
+    <Content Include="Content\custom\newProduction.js" />
+    <Content Include="Content\custom\productDetail.js" />
     <Content Include="Content\custom\shared.js" />
     <Content Include="Content\custom\stores.js" />
     <Content Include="Content\custom\customerSOSR_SOSR_Index.js" />
@@ -3085,8 +3086,6 @@
     <Content Include="Content\custom\downloads\jquery.scannerdetection.js" />
     <Content Include="Content\custom\products.js" />
     <Content Include="Content\custom\quotationPOPR.js" />
-    <Content Include="Content\custom\subItem - BOM.js" />
-    <Content Include="Content\custom\subItem - Copy.js" />
     <Content Include="Content\custom\subItem.js" />
     <Content Include="Content\custom\subItem_BOM.js" />
     <Content Include="Content\custom\supplierPOPR.js" />

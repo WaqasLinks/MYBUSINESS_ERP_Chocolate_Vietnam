@@ -19,6 +19,7 @@ namespace MYBUSINESS.Models
         public Nullable<int> BOMId { get; set; }
         public Nullable<decimal> ProductDetailId { get; set; }
         public Nullable<decimal> ProductId { get; set; }
+        public string Shape { get; set; }
     
         public virtual ProductDetail ProductDetail { get; set; }
         public virtual BOM BOM { get; set; }

@@ -272,7 +272,7 @@
                             <tbody>
 
                                 <tr>
-                                    <td id="Pr0">1</td>
+                                    <td id="SNo0">1</td>
                                     <td style="display:none;">
                                         <input type="hidden" name="ProductTypeDetail.Index" value="0" />
                                     </td>
@@ -310,73 +310,7 @@
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <!-- general form elements -->
-                <!-- general form elements -->
-                <div class="box box-primary">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Product Details</h3>
-                    </div>
-
-
-                    <div class="box-body">
-
-
-
-                        <table id="selectedProducts" class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <!--<th style="width:5%;">#</th>-->
-                                    @*<th>Index</th>
-                                <th>pId</th>*@
-                                    <!--<th style="width:60%;">Name</th>
-
-
-                            <th style="width:20%;">Unit</th>
-                            <th></th>-->
-                                    <th style="width: 5%;">#</th>
-                                    <th style="width: 50%;">Shape</th>
-                                    @*<th style="width: 12%;">Qty</th>*@
-                                    <th style="width: 20%;">Weight</th>
-                                    <th style="width: 12%;"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-
-                                    <td id="Pr0">1</td>
-
-                                    <td style="display:none;"><input type="hidden" name="ProductDetail.Index" value="0" /></td>
-                                    <td style="display:none;"><input type="text" readonly class="form-control classBGcolor" name="ProductDetail[0].ProductId" id="idn0"></td>
-                                    <td><input type="text" autocomplete="off" class="form-control" name="ProductDetail[0].Shape" id="shape0" placeholder="" data-toggle="tooltip" data-placement="top" title=""></td>
-                                    <td><input type="text" autocomplete="off" class="form-control" name="ProductDetail[0].Weight" id="weight0"></td>
-                                    <td>
-                                        <button type="button" id="delete0" class="delete btn btn-default add-new"><a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button>
-                                    </td>
-
-
-                                </tr>
-
-                            </tbody>
-
-                        </table>
-
-
-                        <div class="table-title">
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-
-
-
-                </div>
-            </div>
+            
         </div>
 
     </section>
@@ -424,8 +358,55 @@
             }
         });
 
+   $('#productDropdown').change(function () {
+    var productId = $(this).val(); // Get the selected product ID
 
-    $('#productDropdown').change(function () {
+    if (productId) {
+        $.ajax({
+            url: '@Url.Action("GetProductDetails", "BOM")',
+            type: 'GET',
+            data: { productId: productId },
+            success: function (data) {
+                if (data && data.length > 0) {
+                    // Clear existing rows in the Production Output table
+                    $('#selectedProduct tbody').empty();
+
+                    // Loop through the product details and create rows
+                    data.forEach((detail, index) => {
+                        const newRow = `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td style="display:none;">
+                                    <input type="hidden" name="ProductTypeDetail.Index" value="${index}" />
+                                </td>
+                                <td>
+                                    <input type="text" readonly class="form-control" name="ProductTypeDetail[${index}].Shape" value="${detail.Shape}" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" name="ProductTypeDetail[${index}].ProductionQty" />
+                                </td>
+                            </tr>`;
+                        $('#selectedProduct tbody').append(newRow); // Append only to Production Output table
+                    });
+                } else {
+                    // Clear the table if no data is found
+                    $('#selectedProduct tbody').empty();
+                    alert('No product details found.');
+                }
+            },
+            error: function () {
+                alert('Failed to fetch product details.');
+            }
+        });
+    } else {
+        // Clear the table if no product is selected
+        $('#selectedProduct tbody').empty();
+    }
+});
+
+
+
+    @*$('#productDropdown').change(function () {
     var productId = $(this).val(); // Get the selected product ID
 
     if (productId) {
@@ -452,7 +433,7 @@
                                 <td>
                                     <input type="text" class="form-control" name="" />
                                 </td>
-                               
+
                             </tr>`;
                         $('#selectedProduct tbody').append(newRow);  // Append only to Production Output table
                     });
@@ -470,7 +451,7 @@
         // Clear the table if no product is selected
         $('#selectedProduct tbody').empty();
     }
-});
+});*@
 
 
 

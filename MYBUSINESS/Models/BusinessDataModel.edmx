@@ -269,6 +269,7 @@
           <Property Name="ProductName" Type="nvarchar" MaxLength="100" />
           <Property Name="Unit" Type="nvarchar" MaxLength="10" />
           <Property Name="QuantityToProduce" Type="int" />
+          <Property Name="Shape" Type="nchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Payment">
           <Key>
@@ -420,11 +421,12 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProductionQty" Type="decimal" Precision="18" Scale="0" />
           <Property Name="BOMId" Type="int" />
           <Property Name="ProductDetailId" Type="decimal" Precision="10" Scale="0" />
           <Property Name="ProductId" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Shape" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Rent">
           <Key>
@@ -2257,6 +2259,7 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
           <Property Name="QuantityToProduce" Type="Int32" />
           <NavigationProperty Name="SubItems" Relationship="Models.FK_SubItem_NewProduction1" FromRole="NewProduction" ToRole="SubItem" />
           <NavigationProperty Name="Products" Relationship="Models.FK_Product_NewProduction" FromRole="NewProduction" ToRole="Product" />
+          <Property Name="Shape" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
         </EntityType>
         <EntityType Name="Payment">
           <Key>
@@ -3237,6 +3240,7 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
           <NavigationProperty Name="BOM" Relationship="Models.FK_ProductTypeDetail_BOM" FromRole="ProductTypeDetail" ToRole="BOM" />
           <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
           <NavigationProperty Name="Product" Relationship="Models.FK_ProductTypeDetail_Product" FromRole="ProductTypeDetail" ToRole="Product" />
+          <Property Name="Shape" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_ProductTypeDetail_ProductDetail">
           <End Type="Models.ProductDetail" Role="ProductDetail" Multiplicity="0..1" />
@@ -3788,6 +3792,7 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
           <EntitySetMapping Name="NewProductions">
             <EntityTypeMapping TypeName="Models.NewProduction">
               <MappingFragment StoreEntitySet="NewProduction">
+                <ScalarProperty Name="Shape" ColumnName="Shape" />
                 <ScalarProperty Name="QuantityToProduce" ColumnName="QuantityToProduce" />
                 <ScalarProperty Name="Unit" ColumnName="Unit" />
                 <ScalarProperty Name="ProductName" ColumnName="ProductName" />
@@ -4183,6 +4188,7 @@ warning 6035: The relationship 'FK_BOM_Product' has columns that are not part of
           <EntitySetMapping Name="ProductTypeDetails">
             <EntityTypeMapping TypeName="Models.ProductTypeDetail">
               <MappingFragment StoreEntitySet="ProductTypeDetail">
+                <ScalarProperty Name="Shape" ColumnName="Shape" />
                 <ScalarProperty Name="ProductId" ColumnName="ProductId" />
                 <ScalarProperty Name="ProductDetailId" ColumnName="ProductDetailId" />
                 <ScalarProperty Name="BOMId" ColumnName="BOMId" />

@@ -11,10 +11,9 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-sliderAccess.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.js"></script>
 @*<link href="@Url.Content("~/Content/custom/custom.css")" rel="stylesheet" type="text/css" />*@
-@*<script src="~/Content/custom/products.js"></script>*@
 <script src="~/Content/custom/downloads/jquery.mcautocomplete.js"></script>
 <script src="~/Content/custom/downloads/jquery.scannerdetection.js"></script>
-<script src="~/Content/custom/subItem - Copy.js"></script>
+<script src="~/Content/custom/productDetail.js"></script>
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -79,7 +78,7 @@
                                 <div class="form-group">
                                     @*@Html.LabelFor(model => model.Saleable, htmlAttributes: new { @class = "control-label" })*@
                                     <label>Supplier </label>
-                                    <input type="text" autocomplete="off" class="form-control" name="Supplier.Name" id="supplier" value="" placeholder="Supplier" data-toggle="tooltip" data-placement="top" title="Supplier">
+                                    <input type="text" autocomplete="off" class="form-control" name="Name0" id="supplier" value="" placeholder="Supplier" data-toggle="tooltip" data-placement="top" title="Supplier">
                                 </div>
 
                                 <div class="form-group">
@@ -251,14 +250,19 @@
                                 <tbody>
                                     <tr>
 
-                                        <td id="Pr0">1</td>
+                                        <td id="SNo0">1</td>
 
                                         <td style="display:none;"><input type="hidden" name="ProductDetail.Index" value="0" /></td>
                                         <td style="display:none;"><input type="text" readonly class="form-control classBGcolor" name="ProductDetail[0].ProductId" id="idn0"></td>
                                         <td><input type="text" autocomplete="off" class="form-control" name="ProductDetail[0].Shape" id="shape0" placeholder="" data-toggle="tooltip" data-placement="top" title=""></td>
                                         <td><input type="text" autocomplete="off" class="form-control" name="ProductDetail[0].Weight" id="weight0"></td>
                                         <td>
-                                            <button type="button" id="delete0" class="delete btn btn-default add-new"><a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button>
+                                            <button type="button" id="delete0" class="delete btn btn-default add-new">
+                                                <a class="delete" title="Delete" data-toggle="tooltip">
+                                                    <i class="material-icons">&#xE872;</i>
+                                                </a>
+                                            </button>
+
                                         </td>
 
 

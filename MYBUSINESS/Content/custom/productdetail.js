@@ -30,7 +30,7 @@ function OnTypeCustomerName(param) {
             $('#PreviousBalance').val(ui.item ? ui.item[3] : '');
             //document.getElementById(clickedTextboxId).focus();
             update_itemTotal();
-            
+
             return false;
         }
 
@@ -103,7 +103,7 @@ function OnTypeName(param) {
 
 //    alert('cus');
 //    ConfigDialogueCreateCustomer();
-    
+
 //});
 
 var _keybuffer = "";
@@ -111,7 +111,7 @@ var _keybuffer = "";
 
 $(document).ready(function () {
     //alert(products);
- 
+
     if (IsReturn == 'true') {
         $('#saleOrder').hide();
         $('#saleReturn').show();
@@ -120,7 +120,7 @@ $(document).ready(function () {
         $('#saleReturn').hide();
         $('#saleOrder').show();
     }
-   
+
     $('#abc').scannerDetection({
 
         //https://github.com/kabachello/jQuery-Scanner-Detection
@@ -202,7 +202,7 @@ $(document).ready(function () {
             //document.getElementById(clickedTextboxId).focus();
             update_itemTotal();
             $('#addNewRow').trigger('click');
-            
+
         } // main callback function	,
         //,
         //onError: function (string, qty) {
@@ -227,16 +227,16 @@ $(document).ready(function () {
     //$('[data-toggle="tooltip"]').tooltip();
     var actions = $("table td:last-child").html();
     // Append table with add row form on add new button click
-   
+
     $('#addNewRow').keydown(function (event) {
-        
+
         if (event.keyCode == 13) {
             $('#addNewRow').trigger('click');
         }
     });
- 
+
     $("#addNewRow").click(function (e) {
-       
+
         //var key = e.which;
         //if (key !== 13)  // the enter key code
         //{
@@ -250,10 +250,14 @@ $(document).ready(function () {
         var index = $("table tbody tr:last-child").index();
         //var rowCount = 
         var row = '<tr>' +
-            '<td id="Pr0' + txtSerialNum + '">' + $('#selectedProducts tr').length + '</td>' +
+            '<td id="SNo' + txtSerialNum + '">' + $('#selectedProducts tr').length + '</td>' +
             '<td style="display:none;"><input type="hidden" name="ProductDetail.Index" value="' + txtSerialNum + '" /></td>' +
             '<td style="display:none;"><input type="text" readonly class="form-control classBGcolor" name="ProductDetail[' + txtSerialNum + '].ProductId" id="idn' + txtSerialNum + '"></td>' +
-            '<td><input type="text" class="form-control" autocomplete="off" name="ProductDetail[' + txtSerialNum + '].Shape" id="shape' + txtSerialNum + '"></td>' +
+            '<td><input type="text" class="form-control" autocomplete="off" name="ProductDetail[' + txtSerialNum + '].Shape" id="name' + txtSerialNum + '"></td>' +
+
+            '<td><input type="text" class="form-control" autocomplete="off" name="ProductDetail[' + txtSerialNum + '].Weight" id="quantity' + txtSerialNum + '"></td>' +
+
+          
             '<td><button type="button" id="delete' + txtSerialNum + '" class="delete btn btn-default add-new"> <a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button></td>' +
             '</tr>';
 
@@ -387,7 +391,7 @@ $(document).ready(function () {
         var idx = 0;
 
 
-        
+
         $('#selectedProducts > tbody  > tr').each(function () {
             idx += 1;
             //var name = $(this).find("[id^='name']").val();
@@ -396,7 +400,7 @@ $(document).ready(function () {
                 InvalidproductQty += $(this).find("[id^='quantity']").val() + ", ";
                 ErrorFound = 2;
             }
-            
+
             if ($(this).find("[id^='idn']").val().trim() == "") {
                 //alert($(this).find("[id^='name']").val().trim());
                 InvalidproductName += $(this).find("[id^='name']").val() + ", ";
@@ -405,7 +409,7 @@ $(document).ready(function () {
                 //return false;
 
             }
-          
+
         });
 
         if (ErrorFound == 1) {
@@ -567,9 +571,9 @@ function barcodeEntered(value) {
 }
 
 function TriggerBodyEvents() {
-    
+
     OnTypeName('#name' + txtSerialNum);
-    
+
     $('#name' + txtSerialNum).on("keyup", function (e) {
         //alert('#name' + txtSerialNum);
         //if (e.keyCode === 13)
@@ -577,7 +581,7 @@ function TriggerBodyEvents() {
         //    alert('enter');
         //}
         var code = e.keyCode || e.which;
-        
+
         _keybuffer += String.fromCharCode(code).trim();
 
         // trim to last 13 characters
@@ -610,7 +614,7 @@ function TriggerBodyEvents() {
             $('#' + document.activeElement.id).trigger('click');
         }
     });
-    
+
     $('#delete' + txtSerialNum).click(function () {
         //alert(txtSerialNum);
         $(this).parents("tr").remove();
@@ -622,7 +626,7 @@ function TriggerBodyEvents() {
     //    alert("fff");
     //    update_itemTotal();
     //});
-    
+
     $('#quantity' + txtSerialNum).keydown(function (e) {
         // Allow: backspace, delete, tab, escape, enter and .
         if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
@@ -681,7 +685,7 @@ function TriggerFooterEvents() {
         }
         //
     });
-    
+
 }
 
 function ConfigDialogueCreateCustomer() {
@@ -752,13 +756,13 @@ function checkAvaiableStock() {
             return false;
         }
     });
-    
+
 }
 
 function update_itemTotal() {
 
 
-   
+
     var ItemsTotal = 0;
 
     var orderQty = 0;
@@ -991,5 +995,5 @@ function update_itemTotal() {
     //$('#ItemsTotal > tbody > tr > td').val(ItemsTotal);
     //just update the total to sum
     //$('.total').text(ItemsTotal);
-   
+
 }

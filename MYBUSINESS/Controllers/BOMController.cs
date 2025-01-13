@@ -168,9 +168,7 @@ namespace MYBUSINESS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Name,Remarks,Saleable,Purchasable,Manufacturable,ShelfLife,TimeUnit,ProductionProcessCateogry,ProductionProcessDescription,ProductId,CreateDate,UpdateDate,Unit")] BOM bom,
                                    [Bind(Prefix = "SubItem", Include = "Id,ProductId,Quantity,Unit")] List<SubItem> subItems,
-                                   [Bind(Prefix = "ProductTypeDetail", Include = "Id,ProductionQty,BOMId,ProductDetailId")] List<ProductTypeDetail> productTypeDetails,
-            [Bind(Prefix = "ProductDetail", Include = "Id,ProductId,Shape,Weight")]
-        List<ProductDetail> productDetails)
+                                   [Bind(Prefix = "ProductTypeDetail", Include = "Id,ProductionQty,BOMId,ProductDetailId,Shape,ProductId")] List<ProductTypeDetail> productTypeDetails)
 
 
 
@@ -189,14 +187,7 @@ namespace MYBUSINESS.Controllers
                     item.ParentProductId = bom.Id;
                     db.SubItems.Add(item);
                 }
-                if (productDetails != null)
-                {
-                    foreach (var item in productDetails)
-                    {
-                        item.ProductId = bom.Id;
-                        db.ProductDetails.Add(item);
-                    }
-                }
+              
                 if (productTypeDetails!=null)
                 {
                     foreach (var item in productTypeDetails)
@@ -246,11 +237,11 @@ namespace MYBUSINESS.Controllers
 
 
             var subItems = db.SubItems.Where(x => x.ParentProductId == bom.Id).ToList();
-            var producttypeDetails = db.ProductTypeDetails.Where(x => x.BOMId == bom.Id).ToList();
+            var producttypeDetails = db.ProductTypeDetails.Where(x => x.ProductId == bom.Id).ToList();
             bomViewModel.BOM = bom;
             bomViewModel.Products = DAL.dbProducts;
             bomViewModel.SubItem = db.SubItems.Where(x => x.ParentProductId == bom.Id).ToList();
-            bomViewModel.ProductTypeDetail = db.ProductTypeDetails.Where(x => x.BOMId == bom.Id).ToList();
+            bomViewModel.ProductTypeDetail = db.ProductTypeDetails.Where(x => x.ProductId == bom.Id).ToList();
             return View(bomViewModel);
             //return View(product);
         }
@@ -297,30 +288,38 @@ namespace MYBUSINESS.Controllers
         public ActionResult Edit(
     [Bind(Prefix = "BOM", Include = "Id,Name,Remarks,Saleable,Purchasable,Manufacturable,ShelfLife,TimeUnit,ProductionProcessCateogry,ProductionProcessDescription,Unit,CreateDate,UpdateDate")] BOM bom,
     [Bind(Prefix = "SubItem", Include = "Id,ProductId,Quantity,Unit")] List<SubItem> subItems,
-    [Bind(Prefix = "ProductTypeDetail", Include = "Id,ProductionQty,BOMId,ProductDetailId")] List<ProductTypeDetail> productTypeDetails)
+    [Bind(Prefix = "ProductTypeDetail", Include = "Id,ProductionQty,BOMId,ProductDetailId,Shape,ProductId")] List<ProductTypeDetail> productTypeDetails)
         {
             if (ModelState.IsValid)
             {
                 // Remove existing SubItems for the BOM
                 var existingSubItems = db.SubItems.Where(x => x.ParentProductId == bom.Id).ToList();
-                var existingProductTypeDetails = db.ProductTypeDetails.Where(x => x.BOMId == bom.Id).ToList();
+                var existingProductTypeDetails = db.ProductTypeDetails.Where(x => x.ProductId == bom.Id).ToList();
                 db.SubItems.RemoveRange(existingSubItems);
                 db.ProductTypeDetails.RemoveRange(existingProductTypeDetails);
                 // Update the BOM record
                 db.Entry(bom).State = EntityState.Modified;
                 
+                if (subItems != null)
+                {
+                    foreach (var item in subItems)
+                    {
+                        item.ParentProductId = bom.Id;
+                        db.SubItems.Add(item);
+                    }
+                }
                 // Add the new SubItems
-                foreach (var item in subItems)
-                {
-                    item.ParentProductId = bom.Id;
-                    db.SubItems.Add(item);
-                }
+                
 
-                foreach (var item in productTypeDetails)
+                if (productTypeDetails != null)
                 {
-                    item.BOMId = bom.Id;
-                    db.ProductTypeDetails.Add(item);
+                    foreach (var item in productTypeDetails)
+                    {
+                        item.ProductId = bom.Id;
+                        db.ProductTypeDetails.Add(item);
+                    }
                 }
+                
 
                 // Save changes
                 db.SaveChanges();

@@ -267,7 +267,7 @@ new { @class = "form-control" }
                                 @{
                                     if (Model.ProductTypeDetail != null && Model.ProductTypeDetail.Count > 0)
                                     {
-                                        int sNo = 0; // Start index
+                                        int sNo = 0;
                                         foreach (var item in Model.ProductTypeDetail)
                                         {
                                             <tr>
@@ -276,25 +276,25 @@ new { @class = "form-control" }
                                                     <input type="hidden" name="ProductTypeDetail.Index" value="@sNo" />
                                                 </td>
                                                 <td style="display:none;">
-                                                    <input type="text" value="@item.ProductId" readonly class="form-control classBGcolor"
-                                                           name="ProductTypeDetail[@sNo].ProductId" id="idn@(sNo)">
+                                                    <input type="text" value="@item.BOMId" readonly class="form-control classBGcolor"
+                                                           name="ProductDetail[@sNo].BOMId" id="idn@(sNo)">
                                                 </td>
                                                 <td>
-                                                    <input type="text" autocomplete="off" value="@item.Shape" class="form-control"
-                                                           name="ProductTypeDetail[@sNo].Shape" id="shape@(sNo)" placeholder="Type shape"
+                                                    <input type="text" autocomplete="off" class="form-control"
+                                                           name="ProductDetail[@sNo].Shape" id="shape@(sNo)" placeholder="Type shape"
                                                            data-toggle="tooltip" data-placement="top" title="Type shape">
                                                 </td>
                                                 <td>
-                                                    <input type="text" autocomplete="off" value="@item.ProductionQty" class="form-control"
-                                                           name="ProductTypeDetail[@sNo].ProductionQty" id="productionqty@(sNo)" placeholder="Type weight"
+                                                    <input type="text" autocomplete="off" value="@(item.ProductionQty)" class="form-control"
+                                                           name="ProductDetail[@sNo].ProductionQty" id="productionqty@(sNo)" placeholder="Type weight"
                                                            data-toggle="tooltip" data-placement="top" title="Type weight">
                                                 </td>
+                                                <!-- No delete button for Production Output -->
                                             </tr>
-                                            sNo++; // Increment index
+
                                         }
                                     }
                                 }
-
                             </tbody>
 
                         </table>
@@ -335,108 +335,24 @@ new { @class = "form-control" }
 });
 
       $('#productDropdown').change(function () {
-    var productId = $(this).val(); // Get the selected product ID
-
-    if (productId) {
-        $.ajax({
-            url: '@Url.Action("GetProductDetails", "BOM")', // Server-side action
-            type: 'GET',
-            data: { productId: productId }, // Send the product ID as a parameter
-            success: function (data) {
-                if (data && data.length > 0) {
-                    let existingRowCount = $('#selectedProduct tbody tr').length; // Get current row count
-
-                    // Populate the table with Shape and ProductionQty values
-                    data.forEach((detail, index) => {
-                        let newIndex = existingRowCount + index; // Ensure unique indexing for new rows
-                        const newRow = `
-                <tr>
-                    <td>${newIndex + 1}</td>
-                    <td style="display:none;">
-                        <input type="hidden" name="ProductTypeDetail.Index" value="${newIndex}" />
-                    </td>
-                    <td style="display:none;">
-                        <input type="text" readonly class="form-control classBGcolor"
-                               name="ProductTypeDetail[${newIndex}].ProductId" 
-                               value="${detail.ProductId}" />
-                    </td>
-                    <td>
-                        <input type="text" class="form-control"
-                               name="ProductTypeDetail[${newIndex}].Shape"
-                               value="${detail.Shape}" />
-                    </td>
-                    <td>
-                        <input type="text" class="form-control"
-                               name="ProductTypeDetail[${newIndex}].ProductionQty"
-                               value="${detail.ProductionQty}" />
-                    </td>
-                </tr>`;
-                        $('#selectedProduct tbody').append(newRow);
-                    });
-                } else {
-                    alert('No product details found.');
-                }
-            }
-
-            error: function () {
-                alert('Failed to fetch product details.');
-            }
-        });
-    } else {
-        $('#selectedProduct tbody').empty(); // Clear the table if no product is selected
-    }
-});
-
-
-               @*$('#productDropdown').change(function () {
-    var productId = $(this).val(); // Get the selected product ID
-
-    if (productId) {
-        $.ajax({
-            url: '@Url.Action("GetProductDetails", "BOM")',
-            type: 'GET',
-            data: { productId: productId },
-            success: function (data) {
-                if (data && data.length > 0) {
-                    // Clear existing rows in the Production Output table
-                    $('#selectedProduct tbody').empty();
-
-                    // Loop through the product details and create rows
-                    data.forEach((detail, index) => {
-                        const newRow = `
-                            <tr>
-                                <td>${index + 1}</td>
-                                <td style="display:none;">
-                                    <input type="hidden" name="ProductTypeDetail.Index" value="${index}" />
-                                </td>
-                                <td>
-                                    <input type="text" readonly class="form-control" name="ProductTypeDetail[${index}].Shape" value="${detail.Shape}" />
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control" name="ProductTypeDetail[${index}].ProductionQty" />
-                                </td>
-                            </tr>`;
-                        $('#selectedProduct tbody').append(newRow); // Append only to Production Output table
-                    });
-                } else {
-                    // Clear the table if no data is found
-                    $('#selectedProduct tbody').empty();
-                    alert('No product details found.');
-                }
-            },
-            error: function () {
-                alert('Failed to fetch product details.');
-            }
-        });
-    } else {
-        // Clear the table if no product is selected
-        $('#selectedProduct tbody').empty();
-    }
-});*@
-
-
-
-
+          var productId = $(this).val(); // Get selected product ID
+          alert('hi');
+          if (productId) {
+              $.ajax({
+                  url: '@Url.Action("GetProductUnit", "BOM")',
+                  type: 'GET',
+                  data: { id: productId },
+                  success: function (data) {
+                      $('#unitField').val(data.unit); // Update the unit field
+                  },
+                  error: function () {
+                      alert('Failed to fetch unit details.');
+                  }
+              });
+          } else {
+              $('#unitField').val(''); // Clear the unit field if no product selected
+          }
+      });
 
     @{
         var carton = 0; //= (d.Stock / d.PerPack);
@@ -446,14 +362,14 @@ new { @class = "form-control" }
             carton = (int)(d.Stock / d.PerPack);
             piece = (int)(d.Stock % d.PerPack);
             if (piece == 0)
- {
-    @:products.push([ "@d.Id", "@d.Name", "@d.Unit", "@d.Unit", "@carton" ]);
- }
- else
- {
-     @:products.push(["@d.Id", "@d.Name", "@d.Unit", "@carton,@piece"]);
- }
- @:productsBarcodes.push(["@d.Id", "@d.BarCode"]);
+            {
+                @:products.push(["@d.Id", "@d.Name", "@d.SalePrice", "@carton"]);
+            }
+            else
+            {
+                @:products.push(["@d.Id", "@d.Name", "@d.SalePrice", "@carton,@piece"]);
+            }
+            @:productsBarcodes.push(["@d.Id", "@d.BarCode"]);
 
         }
      }
