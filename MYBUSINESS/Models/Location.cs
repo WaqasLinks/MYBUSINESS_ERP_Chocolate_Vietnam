@@ -14,12 +14,6 @@ namespace MYBUSINESS.Models
     
     public partial class Location
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Location()
-        {
-            this.Products = new HashSet<Product>();
-        }
-    
         public decimal Id { get; set; }
         public string Name { get; set; }
         public string Remarks { get; set; }
@@ -29,7 +23,5 @@ namespace MYBUSINESS.Models
         public Nullable<int> StoreId { get; set; }
     
         public virtual BusinessInfo BusinessInfo { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Product> Products { get; set; }
     }
 }

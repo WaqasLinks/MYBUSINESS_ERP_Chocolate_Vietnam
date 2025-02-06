@@ -12,7 +12,7 @@ namespace MYBUSINESS.Models
         public IQueryable<Product> Products { get; set; }
         //public List<SubItem> SubItem { get; set; }
         public IEnumerable<Supplier> Suppliers { get; set; } // Assuming you have a Supplier model
-
+        public bool VariableProduct { get; set; } // Checkbox value
 
 
     }

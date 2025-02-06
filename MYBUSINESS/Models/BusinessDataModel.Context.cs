@@ -28,6 +28,7 @@ namespace MYBUSINESS.Models
         }
     
         public virtual DbSet<BankAccount> BankAccounts { get; set; }
+        public virtual DbSet<BOM> BOMs { get; set; }
         public virtual DbSet<BusinessInfo> BusinessInfoes { get; set; }
         public virtual DbSet<Currency> Currencies { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
@@ -36,6 +37,7 @@ namespace MYBUSINESS.Models
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<Expense> Expenses { get; set; }
         public virtual DbSet<ExpenseDetail> ExpenseDetails { get; set; }
+        public virtual DbSet<FinalProduction> FinalProductions { get; set; }
         public virtual DbSet<Loan> Loans { get; set; }
         public virtual DbSet<LoanDetail> LoanDetails { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
@@ -45,8 +47,8 @@ namespace MYBUSINESS.Models
         public virtual DbSet<Payment> Payments { get; set; }
         public virtual DbSet<PO> POes { get; set; }
         public virtual DbSet<POD> PODs { get; set; }
-        public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<ProductCategory> ProductCategories { get; set; }
+        public virtual DbSet<ProductDetail> ProductDetails { get; set; }
         public virtual DbSet<ProductionOrder> ProductionOrders { get; set; }
         public virtual DbSet<ProductionOrderDetail> ProductionOrderDetails { get; set; }
         public virtual DbSet<Rent> Rents { get; set; }
@@ -61,10 +63,9 @@ namespace MYBUSINESS.Models
         public virtual DbSet<Supplier> Suppliers { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<UserAuthorization> UserAuthorizations { get; set; }
-        public virtual DbSet<FinalProduction> FinalProductions { get; set; }
-        public virtual DbSet<ProductDetail> ProductDetails { get; set; }
-        public virtual DbSet<ProductTypeDetail> ProductTypeDetails { get; set; }
-        public virtual DbSet<BOM> BOMs { get; set; }
+        public virtual DbSet<QuantityToProduce> QuantityToProduces { get; set; }
+        public virtual DbSet<ProductType> ProductTypes { get; set; }
+        public virtual DbSet<Product> Products { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {

@@ -17,7 +17,7 @@ namespace MYBUSINESS.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ProductDetail()
         {
-            this.ProductTypeDetails = new HashSet<ProductTypeDetail>();
+            this.QuantityToProduces = new HashSet<QuantityToProduce>();
         }
     
         public decimal Id { get; set; }
@@ -27,9 +27,11 @@ namespace MYBUSINESS.Models
         public string RentId { get; set; }
         public Nullable<System.DateTime> RentStartDate { get; set; }
         public Nullable<System.DateTime> RentEndDate { get; set; }
+        public Nullable<int> ProductionId { get; set; }
     
-        public virtual Product Product { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProductTypeDetail> ProductTypeDetails { get; set; }
+        public virtual ICollection<QuantityToProduce> QuantityToProduces { get; set; }
+        public virtual NewProduction NewProduction { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

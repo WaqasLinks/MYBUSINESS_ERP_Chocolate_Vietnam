@@ -255,7 +255,7 @@ $(document).ready(function () {
             '<td style="display:none;"><input type="text" readonly class="form-control classBGcolor" name="SubItem[' + txtSerialNum + '].ProductId" id="idn' + txtSerialNum + '"></td>' +
             '<td><input type="text" class="form-control" autocomplete="off" name="SubItem[' + txtSerialNum + '].Product.Name" id="name' + txtSerialNum + '"></td>' +
             
-            '<td><input type="text" class="form-control" autocomplete="off" name="SubItem[' + txtSerialNum + '].Quantity" id="quantity' + txtSerialNum + '"></td>' +         
+            '<td><input type="number" step="0.1" class="form-control" autocomplete="off" name="SubItem[' + txtSerialNum + '].Quantity" id="quantity' + txtSerialNum + '"></td>' +
 
            /* '<td><select class="form-control" name="SubItem[' + txtSerialNum + '].Unit" id="unit' + txtSerialNum + '"><option value="Kg" selected>Kg</option><option value="Gram">Gram</option></select></td>' +*/
             '<td><input type="text" class="form-control" autocomplete="off" name="SubItem[' + txtSerialNum + '].AvailableInventory" id="avaibleinventory' + txtSerialNum + '"></td>' + 

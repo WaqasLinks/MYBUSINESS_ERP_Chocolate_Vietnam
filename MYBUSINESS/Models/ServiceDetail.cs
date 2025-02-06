@@ -28,7 +28,7 @@ namespace MYBUSINESS.Models
         public Nullable<decimal> Profit { get; set; }
         public string Remarks { get; set; }
     
-        public virtual Product Product { get; set; }
         public virtual Service Service { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

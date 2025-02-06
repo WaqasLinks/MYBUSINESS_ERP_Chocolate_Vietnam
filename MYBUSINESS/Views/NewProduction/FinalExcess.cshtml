@@ -1,6 +1,6 @@
 ﻿@model MYBUSINESS.Models.NewProductionViewModel
 @{
-    ViewBag.Title = "Create NewProduction";
+    ViewBag.Title = "FinalExcess";
 }
 
 <!-- Content Wrapper. Contains page content -->
@@ -15,7 +15,7 @@
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Create NewProduction</h3>
+                        <h3 class="box-title">Final Excess</h3>
                     </div>
 
                     <div class="box-body">
@@ -29,24 +29,24 @@
 
 
                         @*<div class="form-group">
-                                @Html.Label("BOM Name", new { @class = "control-label" })
-                                @Html.DropDownList(
-                                    "SelectedRemark",
-                                    (SelectList)ViewBag.Remarks,
-                                    "Select a BOM Name",
-                                    new
-                                    {
-                                        @class = "form-control",
-                                        id = "remarksDropdown",
-                                        data_remarks = @Html.Raw(Json.Encode(ViewBag.RemarksData))
-                                    }
-                                )
-                            </div>
+                        @Html.Label("BOM Name", new { @class = "control-label" })
+                        @Html.DropDownList(
+                            "SelectedRemark",
+                            (SelectList)ViewBag.Remarks,
+                            "Select a BOM Name",
+                            new
+                            {
+                                @class = "form-control",
+                                id = "remarksDropdown",
+                                data_remarks = @Html.Raw(Json.Encode(ViewBag.RemarksData))
+                            }
+                        )
+                    </div>
 
-                            <div class="form-group">
-                                <label for="unitField" class="control-label">Unit</label>
-                                <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
-                            </div>*@
+                    <div class="form-group">
+                        <label for="unitField" class="control-label">Unit</label>
+                        <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
+                    </div>*@
                         <div class="form-group">
                             @Html.LabelFor(model => Model.NewProduction.ProductId, "Select Product", new { @class = "control-label" })
                             @Html.DropDownListFor(
@@ -58,153 +58,83 @@ new { @class = "form-control product-dropdown", @id = "productDropdown" }
                             @Html.ValidationMessageFor(model => model.NewProduction.ProductId, "", new { @class = "text-danger" })
                         </div>
 
-                        <div class="form-group">
-                            @Html.Label("Unit", new { @class = "control-label" })
-                            <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
-                            @Html.HiddenFor(model => model.NewProduction.Unit, new { @id = "unitHiddenField" })
-                            @Html.ValidationMessageFor(model => model.NewProduction.Unit, "", new { @class = "text-danger" })
-                        </div>
-
-
-
+                        @*<div class="form-group">
+                        @Html.Label("Unit", new { @class = "control-label" })
+                        <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
+                        @Html.HiddenFor(model => model.NewProduction.Unit, new { @id = "unitHiddenField" })
+                        @Html.ValidationMessageFor(model => model.NewProduction.Unit, "", new { @class = "text-danger" })
+                    </div>*@
 
                         <div class="form-group">
-                            @Html.LabelFor(model => Model.NewProduction.ProductionDate, htmlAttributes: new { @class = "control-label" })
-                            @Html.TextBoxFor(model => Model.NewProduction.ProductionDate, new { @class = "form-control", type = "date" })
-                            @Html.ValidationMessageFor(model => Model.NewProduction.ProductionDate, "", new { @class = "text-danger" })
-                        </div>
-
-
-
-                        <div class="box box-primary">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">Quantity To Produce</h3>
-                            </div>
-
-
-                            <div class="box-body">
-
-
-                                <table id="selectedProduct" class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <!--<th style="width:5%;">#</th>-->
-                                            @*<th>Index</th>
-                                                <th>pId</th>*@
-                                            <!--<th style="width:60%;">Name</th>
-
-
-                                            <th style="width:20%;">Unit</th>
-                                            <th></th>-->
-                                            <th style="width: 5%;">#</th>
-                                            <th style="width: 50%;">Shape</th>
-                                            @*<th style="width: 12%;">Qty</th>*@
-                                            <th style="width: 20%;">Production Qty</th>
-                                            <th style="width: 20%;">Calculated Weight</th>
-                                            @*<th style="width: 12%;"></th>*@
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                        <tr>
-                                            <td id="SNo0">1</td>
-                                            <td style="display:none;">
-                                                <input type="hidden" name="QuantityToProduce.Index" value="0" />
-                                            </td>
-                                            <td style="display:none;">
-                                                <input type="text" readonly class="form-control classBGcolor" name="QuantityToProduce[0].ProductId" id="idn0">
-                                            </td>
-                                            <td>
-                                                <input type="text" id="shape0" name="QuantityToProduce[0].Shape" class="form-control" readonly />
-                                            </td>
-                                            <td>
-                                                <input type="text" id="ProductionQty" class="form-control production-qty" data-weight="2.5" name="QuantityToProduce[0].ProductionQty" />
-                                            </td>
-                                            <td>
-                                                <input type="text" readonly class="form-control calculated-weight" name="QuantityToProduce[0].CalculatedWeight" />
-                                            </td>
-
-
-                                            @*<td>
-                                                    <input type="text" readonly class="form-control calculated-weight" name="QuantityToProduce[0].CalculatedWeight" />
-                                                </td>*@
-                                            <!-- No delete button for Production Output -->
-                                        </tr>
-
-
-                                    </tbody>
-
-                                </table>
-
-
-                                @*<div class="table-title">
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
-                                            </div>
-                                        </div>
-                                    </div>*@
-
-                            </div>
-
-
-
+                            @Html.LabelFor(model => Model.NewProduction.Quantity, htmlAttributes: new { @class = "control-label" })
+                            @Html.EditorFor(model => Model.NewProduction.Quantity, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => Model.NewProduction.Quantity, "", new { @class = "text-danger" })
 
                         </div>
 
-                        <div class="total-weight-container">
-                            <p><strong>Total Weight: </strong><span id="totalWeightDisplay">0.00</span></p>
-                        </div>
+
+
                         @*<div class="form-group">
-                                @Html.Label("BOM Name", new { @class = "control-label" })
-                                @Html.DropDownList(
-                                    "SelectedRemark",
-                                    (SelectList)ViewBag.Remarks,
-                                    "Select a Remark",
-                                    new
-                                    {
-                                        @class = "form-control",
-                                        id = "remarksDropdown",
-                                        data_remarks = @Html.Raw(Json.Encode(ViewBag.RemarksData))
-                                    }
-                                )
-                            </div>
+                        @Html.LabelFor(model => Model.NewProduction.ProductionDate, htmlAttributes: new { @class = "control-label" })
+                        @Html.TextBoxFor(model => Model.NewProduction.ProductionDate, new { @class = "form-control", type = "date" })
+                        @Html.ValidationMessageFor(model => Model.NewProduction.ProductionDate, "", new { @class = "text-danger" })
+                    </div>*@
 
-                            <div class="form-group">
-                                <label for="unitField" class="control-label">Unit</label>
-                                <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
-                            </div>*@
 
 
 
 
 
                         @*<div class="form-group">
-                                @Html.LabelFor(model => Model.Product.Id, "Select Product", new { @class = "control-label" })
-                                @Html.DropDownListFor(
-                                    model => Model.NewProduction.ProductName,
-                                    (SelectList)ViewBag.ProductList,
-                                    "Select a Product",
-                                    new { @class = "form-control" }
-                                )
-                                @Html.ValidationMessageFor(model => Model.NewProduction.ProductName, "", new { @class = "text-danger" })
-                            </div>
+                        @Html.Label("BOM Name", new { @class = "control-label" })
+                        @Html.DropDownList(
+                            "SelectedRemark",
+                            (SelectList)ViewBag.Remarks,
+                            "Select a Remark",
+                            new
+                            {
+                                @class = "form-control",
+                                id = "remarksDropdown",
+                                data_remarks = @Html.Raw(Json.Encode(ViewBag.RemarksData))
+                            }
+                        )
+                    </div>
 
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.NewProduction.Unit, htmlAttributes: new { @class = "control-label" })
-                                @Html.DropDownListFor(
-                                    model => model.NewProduction.Unit,
-                                    new SelectList(new List<string> { "Kg", "Gram", "Square", "Bar" }),
-                                    new { @class = "form-control" }
-                                )
-                                @Html.ValidationMessageFor(model => model.NewProduction.Unit, "", new { @class = "text-danger" })
-                            </div>*@
+                    <div class="form-group">
+                        <label for="unitField" class="control-label">Unit</label>
+                        <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
+                    </div>*@
+
+
+
+
 
                         @*<div class="form-group">
-                                @Html.LabelFor(model => Model.NewProduction.QuantityToProduce, htmlAttributes: new { @class = "control-label" })
-                                @Html.EditorFor(model => Model.NewProduction.QuantityToProduce, new { htmlAttributes = new { @class = "form-control" } })
-                                @Html.ValidationMessageFor(model => Model.NewProduction.QuantityToProduce, "", new { @class = "text-danger" })
-                            </div>*@
+                        @Html.LabelFor(model => Model.Product.Id, "Select Product", new { @class = "control-label" })
+                        @Html.DropDownListFor(
+                            model => Model.NewProduction.ProductName,
+                            (SelectList)ViewBag.ProductList,
+                            "Select a Product",
+                            new { @class = "form-control" }
+                        )
+                        @Html.ValidationMessageFor(model => Model.NewProduction.ProductName, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.NewProduction.Unit, htmlAttributes: new { @class = "control-label" })
+                        @Html.DropDownListFor(
+                            model => model.NewProduction.Unit,
+                            new SelectList(new List<string> { "Kg", "Gram", "Square", "Bar" }),
+                            new { @class = "form-control" }
+                        )
+                        @Html.ValidationMessageFor(model => model.NewProduction.Unit, "", new { @class = "text-danger" })
+                    </div>*@
+
+                        @*<div class="form-group">
+                        @Html.LabelFor(model => Model.NewProduction.QuantityToProduce, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => Model.NewProduction.QuantityToProduce, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => Model.NewProduction.QuantityToProduce, "", new { @class = "text-danger" })
+                    </div>*@
                     </div>
 
                     <div class="box-footer">
@@ -248,17 +178,17 @@ new { @class = "form-control product-dropdown", @id = "productDropdown" }
                                     <td><input type="text" readonly class="form-control" name="SubItem[0].Unit" id="unit0"></td>
 
                                     @*<td>
-                                            <input type="text" readonly class="form-control calculated-weight" name="QuantityToProduce[${index}].CalculatedWeight" />
-                                        </td>*@
+                                    <input type="text" readonly class="form-control calculated-weight" name="QuantityToProduce[${index}].CalculatedWeight" />
+                                </td>*@
                                     <!-- New Calculated Weight Field -->
                                     @*<td>
-                                            <input type="text" readonly class="form-control calculated-weight" name="QuantityToProduce[0].CalculatedWeight" />
-                                        </td>*@
+                                    <input type="text" readonly class="form-control calculated-weight" name="QuantityToProduce[0].CalculatedWeight" />
+                                </td>*@
                                     @*<td>
-                                            <button type="button" class="delete btn btn-default add-new">
-                                                <i class="material-icons">&#xE872;</i>
-                                            </button>
-                                        </td>*@
+                                    <button type="button" class="delete btn btn-default add-new">
+                                        <i class="material-icons">&#xE872;</i>
+                                    </button>
+                                </td>*@
                                 </tr>
                             </tbody>
 
@@ -267,12 +197,12 @@ new { @class = "form-control product-dropdown", @id = "productDropdown" }
 
 
                         @*<div class="table-title">
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
-                                    </div>
-                                </div>
-                            </div>*@
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
+                            </div>
+                        </div>
+                    </div>*@
 
                     </div>
 
@@ -312,35 +242,35 @@ new { @class = "form-control product-dropdown", @id = "productDropdown" }
                                     <td style="display:none;"><input type="hidden" name="SubItem.Index" value="0" /></td>
                                     <td style="display:none;"><input type="text" readonly class="form-control" name="SubItem[0].ProductId" id="idn0"></td>
                                     <td><input type="text" readonly class="form-control" name="SubItem[0].Product.Name" id="name0" placeholder="Type product name"></td>
-                                    <td><input type="text"  class="form-control" name="SubItem[0].Quantity" id="quantity0"></td>
+                                    <td><input type="text" class="form-control" name="SubItem[0].Quantity" id="quantity0"></td>
                                     <td><input type="text" readonly class="form-control" name="SubItem[0].Unit" id="unit0"></td>
                                     <td><input type="text" readonly class="form-control" name="SubItem[0].Product.PType" id="ptype0" placeholder=""></td>
                                     @*<td>
-                                            <input type="text" readonly class="form-control calculated-weight" name="QuantityToProduce[${index}].CalculatedWeight" />
-                                        </td>*@
+                                    <input type="text" readonly class="form-control calculated-weight" name="QuantityToProduce[${index}].CalculatedWeight" />
+                                </td>*@
                                     <!-- New Calculated Weight Field -->
                                     @*<td>
-                                            <input type="text" readonly class="form-control calculated-weight" name="QuantityToProduce[0].CalculatedWeight" />
-                                        </td>*@
+                                    <input type="text" readonly class="form-control calculated-weight" name="QuantityToProduce[0].CalculatedWeight" />
+                                </td>*@
                                     @*<td>
-                                            <button type="button" class="delete btn btn-default add-new">
-                                                <i class="material-icons">&#xE872;</i>
-                                            </button>
-                                        </td>*@
+                                    <button type="button" class="delete btn btn-default add-new">
+                                        <i class="material-icons">&#xE872;</i>
+                                    </button>
+                                </td>*@
                                 </tr>
-                            </tbody>    
+                            </tbody>
 
 
                         </table>
 
 
                         @*<div class="table-title">
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
-                                    </div>
-                                </div>
-                            </div>*@
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
+                            </div>
+                        </div>
+                    </div>*@
 
                     </div>
 
@@ -352,10 +282,12 @@ new { @class = "form-control product-dropdown", @id = "productDropdown" }
 
 
 
+
+
         </div>
     </section>
     @*@Html.ActionLink("Validate", "ValidateStock", null, new { @class = "btn btn-secondary" })*@
-    <button id="validateBtn" class="btn btn-primary">Validate</button>
+    @*<button id="validateBtn" class="btn btn-primary">Validate</button>*@
 }
 
 <!-- Your existing form content -->
@@ -478,7 +410,7 @@ $('#productDropdown').change(function () {
 
         // ✅ Update only the rows that match variableProductId
         $('#selectedProducts > tbody > tr').each(function () {
-            let variableProdId = $(this).find("input[name$='ProductId']").val(); 
+            let variableProdId = $(this).find("input[name$='ProductId']").val();
             if (variableProdId) {
                 variableProdId = variableProdId.toString().trim();  // Ensure it's a clean string
             }
@@ -692,7 +624,7 @@ $('#productDropdown').change(function () {
                             newRow += `
                             <td>
                                 <input type="text" class="form-control production-qty1"
-                                    data-variable-product-id="${subItem.VariableProduct}"        
+                                    data-variable-product-id="${subItem.VariableProduct}"
                                     name="SubItem[${index}].Quantity"
                                     value="${subItem.Quantity}"
                                     placeholder="Quantity" />
@@ -747,9 +679,9 @@ $('#productDropdown').change(function () {
     }
 });
 
-   
 
-  
+
+
 
     @*$(document).ready(function () {
         $('#validateBtn').click(function () {

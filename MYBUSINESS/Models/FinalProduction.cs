@@ -14,21 +14,13 @@ namespace MYBUSINESS.Models
     
     public partial class FinalProduction
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public FinalProduction()
-        {
-            this.SubItems = new HashSet<SubItem>();
-        }
-    
-        public int Id { get; set; }
+        public decimal Id { get; set; }
         public System.DateTime Date { get; set; }
         public string ProductName { get; set; }
         public string Unit { get; set; }
         public int QuantityToProduce { get; set; }
         public Nullable<decimal> ProductId { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SubItem> SubItems { get; set; }
         public virtual Product Product { get; set; }
     }
 }

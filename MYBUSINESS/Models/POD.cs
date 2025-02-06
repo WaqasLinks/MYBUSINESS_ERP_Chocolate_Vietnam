@@ -25,6 +25,9 @@ namespace MYBUSINESS.Models
         public Nullable<bool> IsPack { get; set; }
         public Nullable<bool> SaleType { get; set; }
         public string Remarks { get; set; }
+        public Nullable<System.DateTime> ExpiryDate { get; set; }
+        public Nullable<System.DateTime> PurchasingDate { get; set; }
+        public string Unit { get; set; }
     
         public virtual PO PO { get; set; }
         public virtual Product Product { get; set; }

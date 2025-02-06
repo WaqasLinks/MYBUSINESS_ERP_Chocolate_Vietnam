@@ -350,11 +350,9 @@ namespace MYBUSINESS.Controllers
             {
                 return RedirectToAction("StoreNotFound", "UserManagement");
             }
-
             decimal maxId = db.Products.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id) + 1;
             ViewBag.SuggestedId = maxId;
             ViewBag.Suppliers = DAL.dbSuppliers;
-
             ProductViewModel productViewModel = new ProductViewModel
             {
                 Product = new Product
@@ -367,7 +365,24 @@ namespace MYBUSINESS.Controllers
                 Products = DAL.dbProducts,
                 Suppliers = DAL.dbSuppliers
             };
+            //  var products = db.Products
+            //.Where(p => p.Manufacturable == true)
+            //.Select(p => new SelectListItem
+            //{
+            //    Value = p.Id.ToString(),  // ID of the product
+            //    Text = p.Name            // Name of the product
+            //})
+            //.ToList();
+            //  ViewBag.ProductList = products; // Use List<SelectListItem>
+            var products = db.Products
+      .Select(p => new SelectListItem
+      {
+          Value = p.Id.ToString(),  // ID of the product
+          Text = p.Name             // Name of the product
+      })
+      .ToList();
 
+            ViewBag.ProductList = products;
             return View(productViewModel);
         }
 
@@ -377,9 +392,25 @@ namespace MYBUSINESS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,StoreId,Category,Unit")] Product product,
+        public ActionResult Create([Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,StoreId,Category,Unit,Variable,Excess,ByProduct,PType,VariableProductId")] Product product,
         [Bind(Prefix = "ProductDetail", Include = "Id,ProductId,Shape,Weight")] List<ProductDetail> productDetails)
         {
+            int productType = 0;
+
+            if (Request.Form["VariableProduct"] != null)
+            {
+                productType |= 1;
+                product.Variable = true;
+            }
+            else
+            {
+                product.Variable = false;
+            }
+
+            if (Request.Form["ExcessProduct"] != null) product.PType |= 2;
+            if (Request.Form["ByProduct"] != null) product.PType |= 4;
+
+            product.PType = (byte)productType;
             int? storeId = Session["StoreId"] as int?;
             //var storeId = Session["StoreId"] as string;
             if (storeId == null)
@@ -451,7 +482,7 @@ namespace MYBUSINESS.Controllers
             maxId += 1;
             ViewBag.SuggestedId = maxId;
             ViewBag.Suppliers = DAL.dbSuppliers;
-            return View(product);
+            return View(productViewModel);
         }
 
         // GET: Products/Edit/5
@@ -474,6 +505,13 @@ namespace MYBUSINESS.Controllers
             //}
             //var parseId = int.Parse(storeId);
             Product product = db.Products.Find(id);
+            ViewBag.ProductList = db.Products
+        .Select(p => new SelectListItem
+        {
+            Value = p.Id.ToString(),
+            Text = p.Name
+        })
+        .ToList();
             StoreProduct storeProdcut = db.StoreProducts.FirstOrDefault(x => x.ProductId == id);
             if (storeProdcut == null)
             {
@@ -494,6 +532,7 @@ namespace MYBUSINESS.Controllers
             {
                 Product = product,
                 ProductDetail = productDetails,
+              
                 Suppliers = DAL.dbSuppliers
             };
 
@@ -513,6 +552,15 @@ namespace MYBUSINESS.Controllers
                             }
                         };
             ViewBag.UnitTypeOptionList = myUnitTypeOptionList;
+            var products = db.Products
+        .Where(p => p.Manufacturable == true)
+        .Select(p => new SelectListItem
+        {
+            Value = p.Id.ToString(),  // ID of the product
+            Text = p.Name            // Name of the product
+        })
+        .ToList();
+            ViewBag.ProductList = products; // Use List<SelectListItem>
             return View(productViewModel);
         }
         // POST: Products/Edit/5
@@ -521,9 +569,25 @@ namespace MYBUSINESS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(
-    [Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,Category")] Product product,
+    [Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,Category,Unit,Variable,Excess,ByProduct,PType,VariableProductId")] Product product,
     [Bind(Prefix = "ProductDetail", Include = "Id,ProductId,Shape,Weight")] List<ProductDetail> productDetails)
         {
+            int productType = 0;
+
+            if (Request.Form["VariableProduct"] != null)
+            {
+                productType |= 1;
+                product.Variable = true;
+            }
+            else
+            {
+                product.Variable = false;
+            }
+
+            if (Request.Form["ExcessProduct"] != null) product.PType |= 2;
+            if (Request.Form["ByProduct"] != null) product.PType |= 4;
+
+            product.PType = (byte)productType;
             int? storeId = Session["StoreId"] as int?;
             if (storeId == null)
             {

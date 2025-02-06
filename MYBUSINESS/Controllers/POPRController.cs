@@ -327,7 +327,7 @@ namespace MYBUSINESS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Prefix = "Supplier", Include = "Name,Address")] Supplier Supplier, [Bind(Prefix = "PurchaseOrder", Include = "BillAmount,Balance,PrevBalance,BillPaid,Discount,SupplierId,Remarks,Remarks2,PaymentMethod,PaymentDetail,PurchaseReturn,FundingSourceId,BankAccountId,Date")] PO pO, [Bind(Prefix = "PurchaseOrderDetail", Include = "ProductId,Quantity,SaleType,PerPack,IsPack,PurchasePrice")] List<POD> pOD)
+        public ActionResult Create([Bind(Prefix = "Supplier", Include = "Name,Address")] Supplier Supplier, [Bind(Prefix = "PurchaseOrder", Include = "BillAmount,Balance,PrevBalance,BillPaid,Discount,SupplierId,Remarks,Remarks2,PaymentMethod,PaymentDetail,PurchaseReturn,FundingSourceId,BankAccountId,Date")] PO pO, [Bind(Prefix = "PurchaseOrderDetail", Include = "ProductId,Quantity,SaleType,PerPack,IsPack,PurchasePrice,ExpiryDate,PurchasingDate")] List<POD> pOD)
         {
             //PO pO = new PO();
             if (ModelState.IsValid)
@@ -469,7 +469,7 @@ namespace MYBUSINESS.Controllers
                     db.PODs.AddRange(pOD);
                 }
                 db.SaveChanges();
-
+                return RedirectToAction("Index");
 
                 //SqlParameter param1 = new SqlParameter("@PurchaseOrderID", pO.Id);
                 ////var result = db.Database.ExecuteSqlCommand("spSOReceipt @PurchaseOrderID", param1);
@@ -650,7 +650,7 @@ namespace MYBUSINESS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //public ActionResult Edit([Bind(Prefix = "PurchaseOrder", Include = "BillAmount,Balance,BillPaid,Discount")] PO pO, [Bind(Prefix = "PurchaseOrderDetail", Include = "ProductId,Quantity")] List<POD> pOD)
+        //public ActionResult Edit([Bind(Prefix = "PurchaseOrder", Include = "BillAmount,Balance,BillPaid,Discount")] PO pO, [Bind(Prefix = "PurchaseOrderDetail", Include = "ProductId,Quantity,ExpiryDate,PurchasingDate")] List<POD> pOD)
         public ActionResult Edit(PurchaseOrderViewModel purchaseOrderViewModel1)
         {
             PO newPO = purchaseOrderViewModel1.PurchaseOrder;

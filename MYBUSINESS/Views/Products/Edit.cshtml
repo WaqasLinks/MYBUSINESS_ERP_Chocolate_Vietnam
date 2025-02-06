@@ -89,39 +89,36 @@
 
                                 <div class="form-group">
                                     <label><b>Category</b></label>
-                                    @Html.DropDownListFor(model => model.Product.Category, new SelectList(new[]
-            {
-                                        new { Value = "Select", Text = "Select" },
-                                        new { Value = "Box", Text = "Box" },
-                                        new { Value = "Bar", Text = "Bar" },
-                                        new { Value = "Bag", Text = "Bag" },
-                                        new { Value = "Miscellaneous", Text = "Miscellaneous" }
-                                    }, "Value", "Text", Model.Product.Category), new { @class = "form-control" })
+                                    <select class="form-control" name="Product.Category" id="selectCategory">
+                                        <option value="" @(Model.Product.Category == null ? "selected" : "")>Select</option>
+                                        <option value="Box" @(Model.Product.Category == "Box" ? "selected" : "")>Box</option>
+                                        <option value="Bar" @(Model.Product.Category == "Bar" ? "selected" : "")>Bar</option>
+                                        <option value="Bag" @(Model.Product.Category == "Bag" ? "selected" : "")>Bag</option>
+                                        <option value="Miscellaneous" @(Model.Product.Category == "Miscellaneous" ? "selected" : "")>Miscellaneous</option>
+                                    </select>
                                 </div>
                                 @*<div class="form-group">
-                                        <lebel>
-                                            <b>Category</b>
-                                        </lebel>
-                                        <select class="form-control" id="selectCategory" name="Category">
-                                            <option>Select</option>
-                                            <option>Box</option>
-                                            <option>Bar</option>
-                                            <option>Bag</option>
-                                            <option>Miscellanous</option>
-                                        </select>
+            <lebel>
+                <b>Category</b>
+            </lebel>
+            <select class="form-control" id="selectCategory" name="Category">
+                <option>Select</option>
+                <option>Box</option>
+                <option>Bar</option>
+                <option>Bag</option>
+                <option>Miscellanous</option>
+            </select>
 
-                                    </div>*@
+        </div>*@
                                 <div class="form-group">
-                                    <lebel>
-                                        <b>Unit</b>
-                                    </lebel>
-                                    <select class="form-control">
-                                        <option>Select</option>
-                                        <option>Box</option>
-                                        <option>Kg</option>
-                                        <option>Liter</option>
+                                    <label><b>Unit</b><span style="color: red;"> *</span></label>
+                                    <select class="form-control" name="Product.Unit" id="selectUnit">
+                                        <option value="" @(Model.Product.Unit == null ? "selected" : "")>Select</option>
+                                        <option value="Box" @(Model.Product.Unit == "Box" ? "selected" : "")>Box</option>
+                                        <option value="Kg" @(Model.Product.Unit == "Kg" ? "selected" : "")>Kg</option>
+                                        <option value="Gram" @(Model.Product.Unit == "Gram" ? "selected" : "")>Gram</option>
+                                        <option value="Liter" @(Model.Product.Unit == "Liter" ? "selected" : "")>Liter</option>
                                     </select>
-
                                 </div>
 
                                 <div id="pprice" class="form-group">
@@ -188,17 +185,17 @@
                                 </div>
 
                                 <!--<div style="display:none;" class="form-group">
-                                @Html.LabelFor(model => model.Product.Saleable, htmlAttributes: new { @class = "control-label" })
+    @Html.LabelFor(model => model.Product.Saleable, htmlAttributes: new { @class = "control-label" })
 
 
 
-                                @Html.EditorFor(model => model.Product.Saleable)-->
+    @Html.EditorFor(model => model.Product.Saleable)-->
                                 @*@Html.EditorFor(model => model.Saleable, new[] { new SelectListItem { Text = "Yes", Value = "True", Selected = true }, new SelectListItem { Text = "No", Value = "False" } })*@
 
                                 @*@Html.CheckBoxFor(m => m.Saleable, new { @value = "true" })*@
 
                                 <!--@Html.ValidationMessageFor(model => model.Product.Saleable, "", new { @class = "text-danger" })
-                                </div>-->
+    </div>-->
 
                                 <div class="form-group">
                                     <!-- Purchasable Checkbox -->
@@ -225,7 +222,42 @@
                                     @Html.CheckBoxFor(model => model.Product.Saleable, new { @class = "form-check-input" })
                                     @Html.ValidationMessageFor(model => model.Product.Saleable, "", new { @class = "text-danger" })
                                 </div>
+                                <div class="form-group">
+                                    <!-- Purchasable Checkbox -->
+                                    <label>Variable Product</label>
+                                    <input type="checkbox" class="form-check-input" id="variableProductCheckbox" name="VariableProduct" value="1"
+                                           @(Model.Product.PType == 1 ? "checked" : "") />
 
+
+
+
+
+                                    <!-- Product Dropdown -->
+                                    <div class="form-group" id="productDropdownContainer" style="display: @(Model.Product.PType == 1 ? "block" : "none");">
+                                        @Html.LabelFor(model => model.Product.VariableProductId, "Select Product", new { @class = "control-label" })
+                                        @Html.DropDownListFor(
+                                            model => model.Product.VariableProductId,
+                                            ViewBag.ProductList as List<SelectListItem>,
+                                            "Select a Product",
+                                            new { @class = "form-control", @id = "productDropdown" }
+                                        )
+                                    </div>
+
+                                    <!-- Manufacturable Checkbox -->
+                                    <label>Excess Product</label>
+                                    &nbsp;
+                                    @Html.CheckBoxFor(model => model.Product.Excess, new { @class = "form-check-input" })
+                                    @Html.ValidationMessageFor(model => model.Product.Excess, "", new { @class = "text-danger" })
+                                    &nbsp;
+                                    &nbsp;
+                                    &nbsp;
+
+                                    <!-- Saleable Checkbox -->
+                                    <label>ByProduct</label>
+                                    &nbsp;
+                                    @Html.CheckBoxFor(model => model.Product.ByProduct, new { @class = "form-check-input" })
+                                    @Html.ValidationMessageFor(model => model.Product.ByProduct, "", new { @class = "text-danger" })
+                                </div>
                             </div>
                             <div class="box-footer">
                                 <input type="submit" value="Update" id="CreateProduct" class="btn btn-primary" />
@@ -327,8 +359,24 @@
   $(document).ready(function () {
   document.getElementById('SOCreate').reset(); // has to be handle
 });
+    
+        function toggleDropdown() {
+            if ($('#variableProductCheckbox').is(':checked')) {
+                $('#productDropdownContainer').slideDown();
+            } else {
+                $('#productDropdownContainer').slideUp();
+            }
+        }
 
-      $('#productDropdown').change(function () {
+        // Check initial state on page load
+        toggleDropdown();
+
+        // Attach event listener to checkbox
+        $('#variableProductCheckbox').change(function () {
+            toggleDropdown();
+        });
+    
+      @*$('#productDropdown').change(function () {
           var productId = $(this).val(); // Get selected product ID
           alert('hi');
           if (productId) {
@@ -346,7 +394,7 @@
           } else {
               $('#unitField').val(''); // Clear the unit field if no product selected
           }
-      });
+      });*@
 
     @{
         var carton = 0; //= (d.Stock / d.PerPack);

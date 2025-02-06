@@ -11,9 +11,14 @@ namespace MYBUSINESS.Models
         //public Customer Customer { get; set; }
         //public SO SaleOrder { get; set; }
         public virtual ICollection<SubItem> SubItems { get; set; } = new List<SubItem>();
+        public List<QuantityToProduce> QuantityToProduce { get; set; } = new List<QuantityToProduce>();
+        public List<ProductDetail> ProductDetail { get; set; } = new List<ProductDetail>();
         public IQueryable<Product> Products { get; set; }
         public SubItem SubItem { get; set; }
         public Product Product { get; set; }
-        public NewProduction NewProduction {  get; set; } 
+       
+        public NewProduction NewProduction { get; set; }
+        public decimal TotalWeight { get; set; }
+        public decimal CalculatedValue { get; set; }
     }
 }

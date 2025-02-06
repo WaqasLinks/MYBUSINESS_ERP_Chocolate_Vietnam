@@ -1013,3 +1013,28 @@ function update_itemTotal() {
     //$('.total').text(ItemsTotal);
    
 }
+$(document).on('input', '.production-qty', function () {
+    const productionQty = parseFloat($(this).val()) || 0;
+    const weight = parseFloat($(this).data('weight')) || 0;
+
+    // Calculate the weight and update the corresponding field
+    const calculatedWeight = productionQty * weight;
+    $(this).closest('tr').find('.calculated-weight').val(calculatedWeight.toFixed(2));
+
+    // Recalculate the total weight
+    calculateTotalWeight();
+});
+function calculateTotalWeight() {
+    
+    let totalWeight = 0;
+
+    $('.calculated-weight').each(function () {
+        const weight = parseFloat($(this).val()) || 0;
+        totalWeight += weight;
+    });
+    alert("Calculated");
+    console.log('Total Weight:', totalWeight);
+    multiplyTotalWithSubItems(totalWeight);
+
+    return totalWeight;
+}

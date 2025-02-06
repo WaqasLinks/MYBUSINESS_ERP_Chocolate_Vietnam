@@ -15,10 +15,13 @@ namespace MYBUSINESS.Models
     public partial class ProductType
     {
         public int Id { get; set; }
-        public Nullable<decimal> ProductionQty { get; set; }
+        public Nullable<decimal> ParentProductId { get; set; }
+        public Nullable<decimal> ProductId { get; set; }
+        public Nullable<decimal> Quantity { get; set; }
         public Nullable<int> BOMId { get; set; }
-        public Nullable<decimal> ProductDetailId { get; set; }
+        public string Unit { get; set; }
     
         public virtual BOM BOM { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

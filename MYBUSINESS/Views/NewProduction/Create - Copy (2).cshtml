@@ -406,6 +406,8 @@ new { @class = "form-control product-dropdown", @id = "productDropdown" }
 });
 
 
+
+
     // Trigger when the product dropdown changes
 $('#productDropdown').change(function () {
     var productId = $(this).val(); // Get the selected product ID
@@ -459,10 +461,8 @@ $('#productDropdown').change(function () {
         let $row = $(this).closest('tr');
         let newProductionQty = parseFloat($(this).val()) || 0;
         let weightPerUnit = parseFloat($(this).data('weight')) || 5;
-        let variableProductId = $(this).attr('data-variable-product-id'); // Ensure it's correctly retrieved
+        let variableProductId = $(this).data('variable-product-id');
         let variableConsumptionRate = parseFloat($(this).data('consumption-rate')) || 1;
-
-        console.log(variableProductId, "Variable Product ID from Input Field"); // Debugging log
 
         // Get the previous weight stored in the row
         let previousWeight = parseFloat($row.find('.calculated-weight').data('previous-weight')) || 0;
@@ -474,38 +474,35 @@ $('#productDropdown').change(function () {
         $row.find('.calculated-weight').val(newWeight.toFixed(2)).data('previous-weight', newWeight);
 
         // Update the total weight dynamically
-        //updateTotalWeight(newWeight, previousWeight);
+        updateTotalWeight(newWeight, previousWeight);
+        $('#selectedProducts > tbody  > tr').each(function () {
+            const variableProdId = $(this).find("[name$='Product.VariableProductId']").val();
 
-        // ✅ Update only the rows that match variableProductId
-        $('#selectedProducts > tbody > tr').each(function () {
-            let variableProdId = $(this).find("input[name$='ProductId']").val(); 
-            if (variableProdId) {
-                variableProdId = variableProdId.toString().trim();  // Ensure it's a clean string
-            }
-            if (variableProductId) {
-                variableProductId = variableProductId.toString().trim();
-            }
-
-            console.log(`Checking: ${variableProdId} == ${variableProductId}`);
-
-            // ✅ Convert to string for accurate comparison
-            if (variableProdId && variableProductId && variableProdId === variableProductId) {
+            // Check if this row matches the VariableProductId you want to update
+            if (variableProductId === subItem.VariableProduct) {
+                // Get the quantity value for the current row
                 const quantity = parseFloat($(this).find("[name$='Quantity']").val()) || 0;
-                console.log(quantity, 'quantity');
-                // Get total weight (Make sure gtotalWeight is updated before use)
-                let totalWeight = parseFloat($('#gtotalWeight').text()) || 0;
-                console.log(totalWeight, 'totalWeight');
-                // Calculate new result
-                const calculatedValue = quantity * totalWeight;
-                const result = gtotalWeight - newProductionQty;
 
-                // Update only matching row
+                // Calculate the value based on the global total weight
+                const calculatedValue = quantity * gtotalWeight;
+
+                // Subtract the new production quantity if necessary
+                const result = calculatedValue - newProductionQty;
+
+                // Update the .calculated-subitem field in this specific row
                 $(this).find('.calculated-subitem').text(result.toFixed(2));
-                console.log(`✅ Updated row with ProductId: ${variableProductId}, New Result: ${result}`);
             }
         });
-    });
 
+        // Update the corresponding Variable Product row
+        //$('#productTypeTable > tbody > tr').each(function () {
+        //    let rowProductId = $(this).find("[name$='Product.Id']").val();
+        //    if (rowProductId == variableProductId) {
+        //        let newVariableProductQty = newProductionQty * variableConsumptionRate;
+        //        $(this).find('.calculated-subitem').text(newVariableProductQty.toFixed(2));
+        //    }
+        //});
+    });
 
     // ✅ Unified function to update total weight correctly
     // Unified function to update total weight correctly
@@ -657,9 +654,9 @@ $('#productDropdown').change(function () {
                         <tr>
                             <td>${index + 1}</td>
 
-                             <td  style="display:none;">
-                                <input type="hidden"  name="SubItem[${index}].ProductId" value="${subItem.ProductId}" />
-                            </td>
+                            // <td style="display:none;">
+                            //    <input type="hidden" name="SubItem[${index}].ProductId" value="${subItem.ProductId}" />
+                            //</td>
 
                             <td>
                                 <input type="text" readonly class="form-control"
@@ -692,10 +689,10 @@ $('#productDropdown').change(function () {
                             newRow += `
                             <td>
                                 <input type="text" class="form-control production-qty1"
-                                    data-variable-product-id="${subItem.VariableProduct}"        
-                                    name="SubItem[${index}].Quantity"
-                                    value="${subItem.Quantity}"
-                                    placeholder="Quantity" />
+                                 data-variable-product-id="${subItem.ProductId}"        
+                                       name="SubItem[${index}].Quantity"
+                                       value="${subItem.Quantity}"
+                                       placeholder="Quantity" />
                             </td>
                             <td>
                                 <input type="text" readonly class="form-control"
@@ -710,7 +707,8 @@ $('#productDropdown').change(function () {
                                        placeholder="Product Type" />
                             </td>
                             <td>
-                            <input type="hidden"
+                            <input type="text"
+                                id="Variable${subItem.VariableProduct}"
                                 name="SubItem[${index}].Product.VariableProductId"
                                 value="${subItem.VariableProduct}" />
                         </td>

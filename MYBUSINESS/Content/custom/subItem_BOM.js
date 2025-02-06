@@ -52,52 +52,183 @@ function OnTypeName(param) {
     });
 
 
+    //$(param).mcautocomplete({
+    //    showHeader: true,
+    //    columns: productColumns,
+    //    source: products,
+    //    select: function (event, ui) {
+    //        var pfound = 0;
+
+    //        // Check if the product already exists in the table
+    //        $('#selectedProducts > tbody > tr').each(function () {
+    //            if ($(this).find("[id^='idn']").val() == ui.item[0]) {
+    //                // If the product exists, update the quantity
+    //                var num = +$(this).find("[id^='quantity']").val() + 1;
+    //                $(this).find("[id^='quantity']").val(num);
+    //                update_itemTotal(); // Update the item total
+    //                pfound = 1; // Mark as found
+    //                return false; // Exit loop
+    //            }
+    //        });
+
+    //        if (pfound == 0) {
+    //            // Validate that the product data is present before adding a new row
+    //            if (!ui.item || !ui.item[0]) {
+    //                console.warn("Invalid product selection");
+    //                return false; // Do not create a row if no product is selected
+    //            }
+
+    //            // Add the product details to the form
+    //            this.value = ui.item[1] || ''; // Product Name
+    //            productName = this.value;
+
+    //            // Set product fields only if data exists
+    //            $('#perPack' + clickedIdNum).val(ui.item[4] || ''); // PerPack
+    //            $('#salePrice' + clickedIdNum).val(ui.item[2] || ''); // Sale Price
+    //            $('#quantity' + clickedIdNum).val(1); // Default quantity to 1
+    //            $('#idn' + clickedIdNum).val(ui.item[0] || ''); // Product ID
+
+    //            // Handle unit field safely
+    //            $('#unit' + clickedIdNum).val(ui.item[3] || ''); // Unit (e.g., Kg, Gram)
+
+    //            // Update the item total
+    //            update_itemTotal();
+    //            return false; // Prevent default action
+    //        }
+    //    }
+    //});
+
     $(param).mcautocomplete({
         showHeader: true,
         columns: productColumns,
         source: products,
         select: function (event, ui) {
             var pfound = 0;
+            var selectedProductId = ui.item[0]; // Selected Product ID
 
             // Check if the product already exists in the table
             $('#selectedProducts > tbody > tr').each(function () {
-                if ($(this).find("[id^='idn']").val() == ui.item[0]) {
-                    // If the product exists, update the quantity
+                if ($(this).find("[id^='idn']").val() == selectedProductId) {
                     var num = +$(this).find("[id^='quantity']").val() + 1;
                     $(this).find("[id^='quantity']").val(num);
-                    update_itemTotal(); // Update the item total
-                    pfound = 1; // Mark as found
-                    return false; // Exit loop
+                    update_itemTotal();
+                    pfound = 1;
+                    return false;
                 }
             });
 
             if (pfound == 0) {
-                // Validate that the product data is present before adding a new row
                 if (!ui.item || !ui.item[0]) {
                     console.warn("Invalid product selection");
-                    return false; // Do not create a row if no product is selected
+                    return false;
                 }
 
-                // Add the product details to the form
+                // Assign selected product details
                 this.value = ui.item[1] || ''; // Product Name
-                productName = this.value;
-
-                // Set product fields only if data exists
                 $('#perPack' + clickedIdNum).val(ui.item[4] || ''); // PerPack
                 $('#salePrice' + clickedIdNum).val(ui.item[2] || ''); // Sale Price
-                $('#quantity' + clickedIdNum).val(1); // Default quantity to 1
-                $('#idn' + clickedIdNum).val(ui.item[0] || ''); // Product ID
+                $('#quantity' + clickedIdNum).val(1);
+                $('#idn' + clickedIdNum).val(selectedProductId); // Product ID
+                $('#unit' + clickedIdNum).val(ui.item[3] || ''); // Unit
 
-                // Handle unit field safely
-                $('#unit' + clickedIdNum).val(ui.item[3] || ''); // Unit (e.g., Kg, Gram)
+                // Fetch Variable Product ID
+                //$.ajax({
+                //    url: '/BOM/GetVariableProduct',
+                //    type: 'GET',
+                //    data: { productId: selectedProductId },
+                //    beforeSend: function () {
+                //        alert("Fetching Variable Product for ID: " + selectedProductId);
+                //    },
+                //    success: function (response) {
+                //        console.log("Variable Product Response:", response);
+                //        alert("Response received: " + JSON.stringify(response));
 
-                // Update the item total
+                //        // Ensure response keys match JavaScript conventions
+                //        let productId = response.id || response.Id; // Handle both cases
+                //        let productName = response.name || response.Name;
+                //        let productUnit = response.unit || response.Unit;
+
+                //        if (productId) {
+                //            $('#variableProductId' + clickedIdNum).val(productId);
+                //            $('#variableProductName' + clickedIdNum).val(productName);
+
+                //            // Log the unit value to verify it's correct
+                //            console.log("Product Unit:", productUnit);
+
+                //            if ($('#unit' + clickedIdNum).length > 0) {
+                //                // Alert for the unit field value before updating it
+                //                alert("Setting Unit Field: " + productUnit);
+
+                //                // Set the unit value and trigger change
+                //                $('#unit' + clickedIdNum).val(productUnit).change();
+
+                //                console.log("Unit field updated to:", productUnit);
+                //            } else {
+                //                console.warn("Unit field not found: #unit" + clickedIdNum);
+                //            }
+                //        } else {
+                //            alert("Invalid Response Data");
+                //        }
+                //    },
+                //    error: function (xhr, status, error) {
+                //        console.error("Error fetching variable product:", error);
+                //        alert("AJAX Error: " + error);
+                //    }
+                //});
+                $.ajax({
+                    url: '/BOM/GetVariableProduct',
+                    type: 'GET',
+                    data: { productId: selectedProductId },
+                    beforeSend: function () {
+                        alert("Fetching Variable Products for ID: " + selectedProductId);
+                    },
+                    success: function (response) {
+                        console.log("Variable Products Response:", response);
+                        alert("Response received: " + JSON.stringify(response));
+
+                        if (response.error) {
+                            alert(response.error);
+                            return;
+                        }
+
+                        // Find the select dropdown and clear previous options
+                        let $dropdown = $('#variableProductDropdown' + clickedIdNum);
+                        $dropdown.empty(); // Clear previous options
+                        $dropdown.append('<option value="">Select Variable Product</option>'); // Default option
+
+                        // Add new options from response
+                        response.forEach(function (product) {
+                            $dropdown.append(
+                                `<option value="${product.Id}" data-unit="${product.Unit}">${product.Name}</option>`
+                            );
+                        });
+
+                        // Show the dropdown if hidden
+                        $dropdown.show();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error fetching variable products:", error);
+                        alert("AJAX Error: " + error);
+                    }
+                });
+
+
                 update_itemTotal();
-                return false; // Prevent default action
+                return false;
             }
         }
     });
 
+    $(document).on("change", ".product-dropdown", function () {
+        let selectedOption = $(this).find(":selected");
+        let unitValue = selectedOption.data("unit"); // Get the unit from the selected option
+
+        let dropdownId = $(this).attr("id"); // Get the dropdown ID
+        let idNumber = dropdownId.replace("variableProductDropdown", ""); // Extract the numeric part
+
+        // Update the corresponding unit input field
+        $("#unit" + idNumber).val(unitValue);
+    });
 
 
 

@@ -45,45 +45,177 @@
                         </div>
 
                         <div class="form-group">
-                            @Html.LabelFor(model => Model.NewProduction.ProductionDate, htmlAttributes: new { @class = "control-label" })
-
-                            @Html.TextBoxFor(
-                                model => Model.NewProduction.ProductionDate,
-                                new { @class = "form-control", type = "date" }
-                            )
-                            @Html.ValidationMessageFor(model => Model.NewProduction.ProductionDate, "", new { @class = "text-danger" })
+                            @Html.LabelFor(model => Model.NewProduction.ProductId, "Select Product", new { @class = "control-label" })
+                            @Html.DropDownListFor(
+model => model.NewProduction.ProductId,
+(SelectList)ViewBag.ProductList,
+"Select a Product",
+new { @class = "form-control product-dropdown", @id = "productDropdown" }
+)
+                            @Html.ValidationMessageFor(model => model.NewProduction.ProductId, "", new { @class = "text-danger" })
                         </div>
 
                         <div class="form-group">
-                            @Html.LabelFor(model => Model.NewProduction.ProductName, "Select Product", new { @class = "control-label" })
-
-                            @Html.DropDownListFor(
-                                model => Model.NewProduction.ProductName,  // Bind selected value to ProductName
-                                (SelectList)ViewBag.ProductList,            // Populate dropdown options from ViewBag
-                                "Select a Product",                         // Placeholder option
-                                new { @class = "form-control" }             // CSS class for styling
-                            )
-
-                            @Html.ValidationMessageFor(model => model.NewProduction.ProductName, "", new { @class = "text-danger" })
-                        </div>
-
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.NewProduction.Unit, htmlAttributes: new { @class = "control-label" })
-
-                            @Html.DropDownListFor(
-                                model => model.NewProduction.Unit,
-                                new SelectList(new List<string> { "Kg", "Gram", "Square", "Bar" }, Model.NewProduction.Unit),
-                                new { @class = "form-control" }
-                            )
-
+                            @Html.Label("Unit", new { @class = "control-label" })
+                            <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
+                            @Html.HiddenFor(model => model.NewProduction.Unit, new { @id = "unitHiddenField" })
                             @Html.ValidationMessageFor(model => model.NewProduction.Unit, "", new { @class = "text-danger" })
                         </div>
 
                         <div class="form-group">
-                            @Html.LabelFor(model => Model.NewProduction.QuantityToProduce, htmlAttributes: new { @class = "control-label" })
-                            @Html.EditorFor(model => Model.NewProduction.QuantityToProduce)
-                            @Html.ValidationMessageFor(model => Model.NewProduction.QuantityToProduce, "", new { @class = "text-danger" })
+                            @Html.LabelFor(model => model.NewProduction.ProductionDate, htmlAttributes: new { @class = "control-label" })
+                            @Html.TextBoxFor(model => model.NewProduction.ProductionDate, new { @class = "form-control", type = "date" })
+                            @Html.ValidationMessageFor(model => model.NewProduction.ProductionDate, "", new { @class = "text-danger" })
                         </div>
+
+
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Production Output</h3>
+                            </div>
+
+
+                            <div class="box-body">
+
+
+                                <table id="selectedProduct" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <!--<th style="width:5%;">#</th>-->
+                                            @*<th>Index</th>
+                            <th>pId</th>*@
+                                            <!--<th style="width:60%;">Name</th>
+
+
+                        <th style="width:20%;">Unit</th>
+                        <th></th>-->
+                                            <th style="width: 5%;">#</th>
+                                            <th style="width: 50%;">Shape</th>
+                                            @*<th style="width: 12%;">Qty</th>*@
+                                            <th style="width: 20%;">Production Qty</th>
+                                            <th style="width: 20%;">Calculated Weight</th>
+                                            @*<th style="width: 12%;"></th>*@
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            if (Model.QuantityToProduce != null && Model.QuantityToProduce.Count > 0)
+                                            {
+                                                int sNo = 0; // Start index
+                                                foreach (var item in Model.QuantityToProduce)
+                                                {
+                                                    <tr>
+                                                        <td id="Pr@(sNo)">@(sNo + 1)</td>
+                                                        <td style="display:none;">
+                                                            <input type="hidden" name="ProductTypeDetail.Index" value="@sNo" />
+                                                        </td>
+                                                        <td style="display:none;">
+                                                            <input type="text" value="@item.ProductId" readonly class="form-control classBGcolor"
+                                                                   name="QuantityToProduce[@sNo].ProductId" id="idn@(sNo)">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" autocomplete="off" value="@item.Shape" class="form-control"
+                                                                   name="QuantityToProduce[@sNo].Shape" id="shape@(sNo)" placeholder="Type shape"
+                                                                   data-toggle="tooltip" data-placement="top" title="Type shape">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" autocomplete="off" value="@item.ProductionQty"
+                                                                   class="form-control production-qty"
+                                                                   name="QuantityToProduce[@sNo].ProductionQty" id="productionqty@(sNo)"
+                                                                   data-weight="@item.CalculatedWeight@*ProductDetail?.Weight ?? 0*@">
+                                                        </td>
+
+
+                                                        <td>
+                                                            <input type="text" autocomplete="off" value="@item.CalculatedWeight"
+                                                                   class="form-control calculated-weight"
+                                                                   name="QuantityToProduce[@sNo].CalculatedWeight" id="calculatedWeight@(sNo)"
+                                                                   placeholder="Calculated weight" readonly
+                                                                   data-toggle="tooltip" data-placement="top" title="Calculated weight">
+                                                        </td>
+
+                                                    </tr>
+                                                    sNo++; // Increment index
+                                                }
+                                            }
+                                        }
+
+                                    </tbody>
+
+                                </table>
+
+
+                                @*<div class="table-title">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
+                        </div>
+                    </div>
+                </div>*@
+
+                            </div>
+
+
+
+
+                        </div>
+                        <div class="total-weight-container">
+                            <p><strong>Total Weight: </strong><span id="totalWeightDisplay">@Model.TotalWeight.ToString("0.00")</span></p>
+                        </div>
+
+
+
+
+
+
+
+
+                        @*<div class="form-group">
+            @Html.LabelFor(model => Model.NewProduction.ProductionDate, htmlAttributes: new { @class = "control-label" })
+
+            @Html.TextBoxFor(
+                model => Model.NewProduction.ProductionDate,
+                new { @class = "form-control", type = "date" }
+            )
+            @Html.ValidationMessageFor(model => Model.NewProduction.ProductionDate, "", new { @class = "text-danger" })
+        </div>*@
+
+                        @*<div class="form-group">
+            @Html.LabelFor(model => Model.NewProduction.ProductName, "Select Product", new { @class = "control-label" })
+
+            @Html.DropDownListFor(
+                model => Model.NewProduction.ProductName,  // Bind selected value to ProductName
+                (SelectList)ViewBag.ProductList,            // Populate dropdown options from ViewBag
+                "Select a Product",                         // Placeholder option
+                new { @class = "form-control" }             // CSS class for styling
+            )
+
+            @Html.ValidationMessageFor(model => model.NewProduction.ProductName, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NewProduction.Unit, htmlAttributes: new { @class = "control-label" })
+
+            @Html.DropDownListFor(
+                model => model.NewProduction.Unit,
+                new SelectList(new List<string> { "Kg", "Gram", "Square", "Bar" }, Model.NewProduction.Unit),
+                new { @class = "form-control" }
+            )
+
+            @Html.ValidationMessageFor(model => model.NewProduction.Unit, "", new { @class = "text-danger" })
+        </div>*@
+                        @*<div class="form-group">
+            @Html.LabelFor(model => Model.NewProduction.QuantityToProduce, htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => Model.NewProduction.QuantityToProduce, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => Model.NewProduction.QuantityToProduce, "", new { @class = "text-danger" })
+        </div>*@
+
+
+                        @*<div class="form-group">
+            @Html.LabelFor(model => Model.NewProduction.QuantityToProduce, htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => Model.NewProduction.QuantityToProduce)
+            @Html.ValidationMessageFor(model => Model.NewProduction.QuantityToProduce, "", new { @class = "text-danger" })
+        </div>*@
 
                     </div>
 
@@ -104,7 +236,7 @@
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Sub Items</h3>
+                        <h3 class="box-title">Ingredients</h3>
                     </div>
 
 
@@ -117,11 +249,11 @@
                                 <tr>
                                     <th style="width: 5%;">#</th>
                                     <th style="width: 12%;">Name</th>
-                                    <th style="width: 8%;">Qty</th>
+                                    <th style="width: 10%;">Qty</th>
                                     <th style="width: 10%;">Unit</th>
-                                    <th style="width: 10%;">AvailableIn</th>
-                                    <th style="width: 8%;">QtyP</th>
-                                    <th style="width: 8%;"></th>
+                                    @*<th style="width: 10%;">AvailableIn</th>*@
+                                    @*<th style="width: 8%;">Unit</th>*@
+                                <th style="width: 8%;"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -130,28 +262,27 @@
                                     int sNo = 0;
                                     foreach (var item in Model.SubItems)
                                     {
+                                        if (item.Product.Manufacturable == false)
+                                        {
                                         <tr>
                                             <td id="SNo0">@(sNo + 1)</td>
-                                            <td style="display:none;"><input type="hidden" name="SubItem.Index" value="@sNo" /></td>
-                                            <td style="display:none;"><input type="text" value=@item.ProductId readonly class="form-control classBGcolor" name="SubItem[@sNo].ProductId" id="idn@(sNo)"></td>
-                                            <td><input type="text" autocomplete="off" value="@(item.Product.Name)" class="form-control" name="SubItem[@sNo].Product.Name" id="name@(sNo)" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name"></td>
-                                            <td><input type="text" autocomplete="off" value="@(item.QuantitytoPrepare)" class="form-control" name="SubItem[@sNo].Shape" id="shape@(sNo)" placeholder="" data-toggle="tooltip" data-placement="top" title=""></td>
-                                            <td><input type="text" autocomplete="off" value=@item.Quantity class="form-control" name="SubItem[@sNo].Quantity" id="quantity@(sNo)"></td>
-                                            <td><input type="text" autocomplete="off" value=@item.Unit class="form-control" name="SubItem[@sNo].Unit" id="unit@(sNo)"></td>
-                                            @*<td>
-            <select class="form-control" name="SubItem[0].BOM.Unit" id="unit0">
-                <option value="Kg" selected>Kg</option>
-                <option value="Gram">Gram</option>
-            </select>
-        </td>*@
-                                            @*<td><input type="text" autocomplete="off" value=@item.AvailableInventory class="form-control" name="SubItem[@sNo].AvailableInventory" id="availableinventory@(sNo)"></td>
-                                            <td><input type="text" autocomplete="off" value=@item.QuantitytoPrepare class="form-control" name="SubItem[@sNo].QuantitytoPrepare" id="quantitytoprepare@(sNo)"></td>*@
-
+                                            <td style="display:none;"><input type="hidden" readonly name="SubItem.Index" value="@sNo" /></td>
+                                            <td style="display:none;"><input type="text" readonly value=@item.ParentProductId readonly class="form-control classBGcolor" name="SubItem[@sNo].ParentProductId" id="idn@(sNo)"></td>
+                                            <td><input type="text" readonly autocomplete="off" value="@(item.Product.Name)" class="form-control" name="SubItem[@sNo].Product.Name" id="name@(sNo)" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name"></td>
+                                            @*<td><input type="text" autocomplete="off" value="@(item.QuantitytoPrepare)" class="form-control" name="SubItem[@sNo].Shape" id="shape@(sNo)" placeholder="" data-toggle="tooltip" data-placement="top" title=""></td>*@
+                                            <td><input type="text" readonly autocomplete="off" value=@item.Quantity class="form-control" name="SubItem[@sNo].Quantity" id="quantity@(sNo)"></td>
+                                            <td><input type="text" readonly autocomplete="off" value=@item.Unit class="form-control" name="SubItem[@sNo].Unit" id="unit@(sNo)"></td>
                                             <td>
-
-                                                <button type="button" id="delete@(sNo)" class="delete btn btn-default add-new"><a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button>
+                                                <span class="calculated-subitem">@Model.TotalWeight.ToString("0.00")</span>
+                                                <input type="hidden" name="SubItem[@sNo].CalculatedValue" class="calculated-value-hidden" value="0.00">
                                             </td>
+
+                                            @*<td>
+
+            <button type="button" id="delete@(sNo)" class="delete btn btn-default add-new"><a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button>
+        </td>*@
                                         </tr>
+                                        }
                                         sNo += 1;
                                     }
 
@@ -162,13 +293,13 @@
                         </table>
 
 
-                        <div class="table-title">
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
-                                </div>
+                        @*<div class="table-title">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
                             </div>
                         </div>
+                    </div>*@
 
                     </div>
 
@@ -177,6 +308,91 @@
 
                 </div>
             </div>
+            <div class="col-md-6">
+                <!-- general form elements -->
+                <!-- general form elements -->
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Product Type</h3>
+                    </div>
+
+
+                    <div class="box-body">
+
+
+
+                        <table id="productTypeTable" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th style="width: 5%;">#</th>
+                                    <th style="width: 12%;">Name</th>
+                                    <th style="width: 10%;">Qty</th>
+                                    <th style="width: 10%;">Unit</th>
+                                    <th style="width: 20%;">P.Type</th>
+                                    @*<th style="width: 10%;">AvailableIn</th>*@
+                                    @*<th style="width: 8%;">Unit</th>
+        <th style="width: 8%;"></th>*@
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.SubItems != null && Model.SubItems.Count > 0)
+                                {
+                                    int sNo = 0;
+                                    foreach (var item in Model.SubItems)
+                                    {
+                                        if (item.Product.Manufacturable == true)
+                                        {
+                                        <tr>
+                                            <td id="SNo0">@(sNo + 1)</td>
+                                            <td style="display:none;"><input type="hidden" readonly name="SubItem.Index" value="@sNo" /></td>
+                                            <td style="display:none;"><input type="text" readonly value=@item.ParentProductId readonly class="form-control classBGcolor" name="SubItem[@sNo].ParentProductId" id="idn@(sNo)"></td>
+                                            <td><input type="text" readonly autocomplete="off" value="@(item.Product.Name)" class="form-control" name="SubItem[@sNo].Product.Name" id="name@(sNo)" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name"></td>
+                                            @*<td><input type="text" autocomplete="off" value="@(item.QuantitytoPrepare)" class="form-control" name="SubItem[@sNo].Shape" id="shape@(sNo)" placeholder="" data-toggle="tooltip" data-placement="top" title=""></td>*@
+                                            <td><input type="text" autocomplete="off" value=@item.Quantity class="form-control" name="SubItem[@sNo].Quantity" id="quantity@(sNo)"></td>
+                                            <td><input type="text" readonly autocomplete="off" value=@item.Unit class="form-control" name="SubItem[@sNo].Unit" id="unit@(sNo)"></td>
+                                            <td><input type="text" readonly autocomplete="off" value=@item.ProductType class="form-control" name="SubItem[@sNo].ProductType" id="ptype@(sNo)"></td>
+                                            @*<td>
+            <select class="form-control" name="SubItem[0].BOM.Unit" id="unit0">
+                <option value="Kg" selected>Kg</option>
+                <option value="Gram">Gram</option>
+            </select>
+        </td>*@
+                                            @*<td><input type="text" autocomplete="off" value=@item.AvailableInventory class="form-control" name="SubItem[@sNo].AvailableInventory" id="availableinventory@(sNo)"></td>
+        <td><input type="text" autocomplete="off" value=@item.QuantitytoPrepare class="form-control" name="SubItem[@sNo].QuantitytoPrepare" id="quantitytoprepare@(sNo)"></td>*@
+
+                                            @*<td>
+
+            <button type="button" id="delete@(sNo)" class="delete btn btn-default add-new"><a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button>
+        </td>*@
+                                        </tr>
+                                        }
+                                        sNo += 1;
+                                    }
+
+
+                                }
+                            </tbody>
+
+                        </table>
+
+
+                        @*<div class="table-title">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
+                            </div>
+                        </div>
+                    </div>*@
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+
+
         </div>
     </section>
 
@@ -186,9 +402,391 @@
 
 <script>
 
-  //$(document).ready(function () {
-  //  document.getElementById('SOCreate').reset(); // has to be handle
-  //});
+       $(document).ready(function () {
+    document.getElementById('SOCreate').reset(); // has to be handle
+  });
+  $('#productDropdown').change(function () {
+    var productId = $(this).val(); // Get selected product ID
+
+    if (productId) {
+        $.ajax({
+            url: '@Url.Action("GetProductUnit", "BOM")',
+            type: 'GET',
+            data: { id: productId },
+            success: function (data) {
+                $('#unitField').val(data.unit); // Update the visible unit field
+                $('#unitHiddenField').val(data.unit); // Update the hidden unit field
+            },
+            error: function () {
+                alert('Failed to fetch unit details.');
+            }
+        });
+    } else {
+        $('#unitField').val(''); // Clear the unit field if no product is selected
+        $('#unitHiddenField').val(''); // Clear the hidden unit field
+    }
+});
+
+
+
+
+    // Trigger when the product dropdown changes
+$('#productDropdown').change(function () {
+    var productId = $(this).val(); // Get the selected product ID
+
+    if (productId) {
+        $.ajax({
+            url: '@Url.Action("GetProductDetails", "BOM")',
+            type: 'GET',
+            data: { productId: productId },
+            success: function (data) {
+                if (data && data.length > 0) {
+                    // Clear existing rows in the Production Output table
+                    $('#selectedProduct tbody').empty();
+
+                    // Loop through the product details and create rows
+                    data.forEach((detail, index) => {
+                        const newRow = `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td style="display:none;">
+                                <input type="hidden" name="QuantityToProduce.Index" value="${index}" />
+                            </td>
+                            <td>
+                                <input type="text" readonly class="form-control" name="QuantityToProduce[${index}].Shape" value="${detail.Shape}" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control production-qty" data-weight="${detail.Weight}" name="QuantityToProduce[${index}].ProductionQty" />
+                            </td>
+                            <td>
+                                <input type="text" readonly class="form-control calculated-weight" name="QuantityToProduce[${index}].CalculatedWeight" />
+                            </td>
+                        </tr>`;
+                        $('#selectedProduct tbody').append(newRow); // Append rows
+                    });
+                } else {
+                    $('#selectedProduct tbody').empty();
+                    alert('No product details found.');
+                }
+            },
+            error: function () {
+                alert('Failed to fetch product details.');
+            }
+        });
+    } else {
+        $('#selectedProduct tbody').empty();
+    }
+});
+
+// Calculate the calculated weight on production quantity input
+$(document).on('input', '.production-qty', function () {
+    const productionQty = parseFloat($(this).val()) || 0;
+    const weight = parseFloat($(this).data('weight')) || 0;
+
+    // Calculate the weight and update the corresponding field
+    const calculatedWeight = productionQty * weight;
+    $(this).closest('tr').find('.calculated-weight').val(calculatedWeight.toFixed(2));
+
+    // Recalculate the total weight
+    calculateTotalWeight();
+});
+
+let gtotalWeight = 0;
+
+// Function to calculate the total weight
+function calculateTotalWeight() {
+    let totalWeight = 0;
+
+    // Sum up all the calculated weights
+    $('.calculated-weight').each(function () {
+        const weight = parseFloat($(this).val()) || 0;
+        totalWeight += weight;
+    });
+
+    // Update global total weight
+    gtotalWeight = totalWeight;
+
+    // Display the total weight
+    $('#totalWeightDisplay').text(totalWeight.toFixed(2));
+
+    // Update the sub-items with the total weight multiplied by quantity
+    updateSubItemCalculations();
+}
+
+// Function to update sub-item calculations
+function updateSubItemCalculations() {
+    $('#selectedProducts > tbody  > tr').each(function () {
+        const quantity = parseFloat($(this).find("[name$='Quantity']").val()) || 0; // Get quantity value
+        const calculatedValue = quantity * gtotalWeight; // Multiply quantity by total weight
+        $(this).find('.calculated-subitem').text(calculatedValue.toFixed(2)); // Update calculated value
+    });
+}
+
+// Trigger sub-item details fetch and update rows
+$('#productDropdown').change(function () {
+    var productId = $(this).val(); // Get the selected product ID
+
+    if (productId) {
+        $.ajax({
+            url: '@Url.Action("GetSubItemDetails", "NewProduction")', // Replace with your actual action name
+            type: 'GET',
+            data: { productId: productId },
+            success: function (data) {
+                if (data && data.length > 0) {
+                    // Clear existing rows in both tables
+                    $('#selectedProducts tbody').empty();
+                    $('#productTypeTable tbody').empty();
+
+                    // Loop through sub-items and append rows to the respective table
+                    data.forEach((subItem, index) => {
+                        let newRow = `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>
+                                <input type="text" readonly class="form-control"
+                                       name="SubItem[${index}].Product.Name"
+                                       value="${subItem.ProductName}"
+                                       placeholder="Product Name" />
+                            </td>`;
+
+                        if (!subItem.manufacturable) {
+                            // Add Quantity (readonly), Unit, and Calculated Subitem for non-manufacturable
+                            newRow += `
+                            <td>
+                                <input type="text" readonly class="form-control"
+                                       name="SubItem[${index}].Quantity"
+                                       value="${subItem.Quantity}"
+                                       placeholder="Quantity" />
+                            </td>
+                            <td>
+                                <input type="text" readonly class="form-control"
+                                       name="SubItem[${index}].Unit"
+                                       value="${subItem.Unit}"
+                                       placeholder="Unit" />
+                            </td>
+                            <td>
+                                <span class="calculated-subitem">0.00</span>
+                            </td>`;
+                        } else {
+                            // Add editable Quantity and Unit (readonly) for manufacturable
+                            newRow += `
+                            <td>
+                                <input type="text" class="form-control"
+                                       name="SubItem[${index}].Quantity"
+                                       value="${subItem.Quantity}"
+                                       placeholder="Quantity" />
+                            </td>
+                            <td>
+                                <input type="text" readonly class="form-control"
+                                       name="SubItem[${index}].Unit"
+                                       value="${subItem.Unit}"
+                                       placeholder="Unit" />
+                            </td>
+
+
+
+                            `;
+                        }
+
+                        newRow += `</tr>`;
+
+                        // Append the row to the appropriate table
+                        if (!subItem.manufacturable) {
+                            $('#selectedProducts tbody').append(newRow); // Append to Manufacturable table
+                        } else {
+                            $('#productTypeTable tbody').append(newRow); // Append to Product Type table
+                        }
+                    });
+
+                    // Update calculations after adding rows
+                    updateSubItemCalculations();
+                } else {
+                    // If no data, clear tables and show alert
+                    $('#selectedProducts tbody').empty();
+                    $('#productTypeTable tbody').empty();
+                    alert('No sub-item details found.');
+                }
+            },
+            error: function () {
+                alert('Failed to fetch sub-item details.');
+            }
+        });
+    } else {
+        // If no product selected, clear both tables
+        $('#selectedProducts tbody').empty();
+        $('#productTypeTable tbody').empty();
+    }
+});
+    function updateSubItemCalculations() {
+        $('#selectedProducts > tbody  > tr').each(function () {
+            const quantity = parseFloat($(this).find("[name$='Quantity']").val()) || 0; // Get quantity value
+            const calculatedValue = quantity * gtotalWeight; // Multiply quantity by total weight
+            $(this).find('.calculated-subitem').text(calculatedValue.toFixed(2)); // Update displayed value
+        });
+    }
+
+    // Trigger calculation on page load and whenever quantity changes
+    $(document).ready(function () {
+        updateSubItemCalculations();
+
+        // Attach event to update calculations when quantity changes
+        $(document).on('input', "[name$='Quantity']", function () {
+            updateSubItemCalculations();
+        });
+    });
+
+    @*$('#productDropdown').change(function () {
+        var productId = $(this).val(); // Get the selected product ID from dropdown
+
+        if (productId) {
+        $.ajax({
+            url: '@Url.Action("GetSubItemDetails", "NewProduction")', // Replace with your actual action name
+            type: 'GET',
+            data: { productId: productId },
+            success: function (data) {
+                if (data && data.length > 0) {
+                    // Clear existing rows in the SubItems table
+                    $('#selectedProducts tbody').empty();
+
+                    // Loop through the sub-item details and create rows
+                    data.forEach((subItem, index) => {
+                        const newRow = `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td style="display:none;">
+                                <input type="hidden" name="SubItem.Index" value="${index}" />
+                            </td>
+                            <td>
+                                <input type="text" readonly class="form-control"
+                                       name="SubItem[${index}].Product.Name"
+                                       value="${subItem.ProductName}"
+                                       placeholder="Product Name" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control"
+                                       name="SubItem[${index}].Quantity"
+                                       value="${subItem.Quantity}"
+                                       placeholder="Quantity" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control"
+                                       name="SubItem[${index}].Unit"
+                                       value="${subItem.Unit}"
+                                       placeholder="Unit" />
+                            </td>
+                            <td>
+                                <button type="button" id="delete${index}"
+                                        class="delete btn btn-default add-new">
+                                    <a class="delete" title="Delete" data-toggle="tooltip">
+                                        <i class="material-icons">&#xE872;</i>
+                                    </a>
+                                </button>
+                            </td>
+                        </tr>`;
+                        $('#selectedProducts tbody').append(newRow); // Append new row to SubItems table
+                    });
+                } else {
+                    // Clear the table if no sub-item details are found
+                    $('#selectedProducts tbody').empty();
+                    alert('No sub-item details found.');
+                }
+            },
+            error: function () {
+                alert('Failed to fetch sub-item details.');
+            }
+        });
+    } else {
+        // Clear the table if no product is selected
+        $('#selectedProducts tbody').empty();
+    }
+});*@
+
+  // Wait until the DOM is ready
+@*$(document).ready(function () {
+
+    // Handle adding a new row
+    $('#addNewRow').click(function () {
+        var newRow = $('#selectedProducts tbody tr:first').clone(); // Clone the first row
+        var rowCount = $('#selectedProducts tbody tr').length; // Get the current row count
+
+        // Update the row with unique IDs for new fields
+        newRow.find('td').each(function (index) {
+            var input = $(this).find('input');
+            var id = input.attr('id').replace(/\d+$/, rowCount); // Update the ID to a new one
+            var name = input.attr('name').replace(/\[\d+\]/, '[' + rowCount + ']'); // Update the name attribute
+            input.attr('id', id).attr('name', name).val(''); // Set the new ID, name, and reset the value
+        });
+
+        // Set the new row number
+        newRow.find('td:first').text(rowCount + 1); // Update serial number
+
+        // Append the new row to the table body
+        $('#selectedProducts tbody').append(newRow);
+    });
+
+    // Handle deleting a row
+    $(document).on('click', '.delete', function () {
+        $(this).closest('tr').remove(); // Remove the row
+        // Update the serial numbers of the remaining rows
+        $('#selectedProducts tbody tr').each(function (index) {
+            $(this).find('td:first').text(index + 1);
+        });
+    });
+
+});
+
+     $('#productDropdown').change(function () {
+        var productId = $(this).val(); // Get the selected product ID
+
+        if (productId) {
+            $.ajax({
+                url: '@Url.Action("GetProductDetails", "BOM")', // Server-side action
+                type: 'GET',
+                data: { productId: productId }, // Send the product ID as a parameter
+                success: function (data) {
+                    if (data && data.length > 0) {
+                        let existingRowCount = $('#selectedProduct tbody tr').length; // Get current row count
+
+                        // Populate the table with Shape and ProductionQty values
+                        data.forEach((detail, index) => {
+                            let newIndex = existingRowCount + index; // Ensure unique indexing for new rows
+                            const newRow = `
+                <tr>
+                    <td>${newIndex + 1}</td>
+                    <td style="display:none;">
+                        <input type="hidden" name="QuantityToProduce.Index" value="${newIndex}" />
+                    </td>
+                    <td style="display:none;">
+                        <input type="text" readonly class="form-control classBGcolor"
+                               name="QuantityToProduce[${newIndex}].ProductId"
+                               value="${detail.ProductId}" />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control"
+                               name="QuantityToProduce[${newIndex}].Shape"
+                               value="${detail.Shape}" />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control"
+                               name="QuantityToProduce[${newIndex}].ProductionQty"
+                               value="${detail.ProductionQty}" />
+                    </td>
+                </tr>`;
+                            $('#selectedProduct tbody').append(newRow);
+                        });
+                    } else {
+                        alert('No product details found.');
+                    }
+                }
+
+            error: function () {
+                    alert('Failed to fetch product details.');
+                }
+            });
+        } else {
+            $('#selectedProduct tbody').empty(); // Clear the table if no product is selected
+        }
+    });*@
 
 
 

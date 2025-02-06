@@ -20,7 +20,7 @@
                                     <th>@Html.DisplayNameFor(model => model.ProductionDate)</th>
                                     <th>@Html.DisplayNameFor(model => model.ProductName)</th>
                                     <th>@Html.DisplayNameFor(model => model.Unit)</th>
-                                    <th>@Html.DisplayNameFor(model => model.QuantityToProduce)</th>
+                                    @*<th>@Html.DisplayNameFor(model => model.QuantityToProduce)</th>*@
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -32,7 +32,6 @@
                                         <td>@Html.DisplayFor(modelItem => item.ProductionDate)</td>
                                         <td>@Html.DisplayFor(modelItem => item.ProductName)</td>
                                         <td>@Html.DisplayFor(modelItem => item.Unit)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.QuantityToProduce)</td>
                                         <td>
                                             @Html.ActionLink("Update", "Edit", new { id = item.Id }, new { @class = "btn btn-info" }) |
                                             @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })

@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using MYBUSINESS.CustomClasses;
 using MYBUSINESS.Models;
 
@@ -22,13 +24,18 @@ namespace MYBUSINESS.Controllers
         public ActionResult Index()
         {
             ViewBag.Suppliers = DAL.dbSuppliers;
-
-            return View(DAL.dbBOMs.Where(x => x.SubItems.Count() == 0).ToList());
+            var bom = db.BOMs.OrderByDescending(p => p.Id) // Sorting by Id in descending order
+                           .ToList().ToList();
+            return View(bom);
+            //return View(DAL.dbBOMs.Where(x => x.SubItems.Count() == 0).ToList());
         }
         public ActionResult IndexComponents()
         {
             ViewBag.Suppliers = DAL.dbSuppliers;
-            return View(DAL.dbBOMs.Where(x => x.SubItems.Count() > 0).ToList());
+            var bom = db.BOMs.OrderByDescending(p => p.Id) // Sorting by Id in descending order
+                           .ToList();
+            return View(bom);
+            //return View(DAL.dbBOMs.Where(x => x.SubItems.Count() > 0).ToList());
 
         }
 
@@ -59,23 +66,17 @@ namespace MYBUSINESS.Controllers
             // Get the next available BOM ID (if needed)
             decimal maxId = db.BOMs.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
             maxId += 1;
-            ViewBag.SuggestedId = maxId;  // Passing the suggested BOM ID to the view
-            ViewBag.Suppliers = DAL.dbSuppliers;  // Assuming this contains the supplier list
+            ViewBag.SuggestedId = maxId; // Pass the suggested BOM ID to the view
+            ViewBag.Suppliers = DAL.dbSuppliers; // Assuming this contains the supplier list
 
-            var products = db.Products
-        .Where(p => p.Manufacturable == true)
-        .Select(p => new
-        {
-            Value = p.Id.ToString(),  // ID of the product
-            Text = p.Name            // Name of the product
-        })
-        .ToList();
+            // Get products without BOM
+            var productsWithoutBOM = db.Products
+                .Where(p => p.Manufacturable == true && !db.BOMs.Any(b => b.ProductId == p.Id)) // Filter out products with existing BOMs
+                .Select(p => new { Value = p.Id.ToString(), Text = p.Name }) // Prepare for SelectList
+                .ToList();
 
-            ViewBag.ProductList = new SelectList(products, "Value", "Text"); // Pass as a SelectList
-
-            var productDetails = db.ProductDetails.ToList();
-
-
+            // Pass the filtered product list to the view
+            ViewBag.ProductList = new SelectList(productsWithoutBOM, "Value", "Text");
 
 
             // Initialize the BOM and SubItem list in the ViewModel
@@ -88,18 +89,80 @@ namespace MYBUSINESS.Controllers
                     Manufacturable = true
                 },
                 SubItem = new List<SubItem> { new SubItem() }, // Initialize SubItem list with one SubItem object
-                ProductTypeDetail = new List<ProductTypeDetail> { new ProductTypeDetail() },
-                ProductDetail = new List<ProductDetail> { new ProductDetail() },
-                Products = DAL.dbProducts, // Assuming this contains product data
-                //ProductList = new SelectList(products, "Id", "Name"),
-                //ProductDetail = new List<ProductDetail>()
+                ProductType = new List<ProductType> { new ProductType() },
+                ProductDetail = new List<ProductDetail> { new ProductDetail() }, // Initialize ProductDetail if needed
+                Products = DAL.dbProducts // Assuming this contains product data
             };
 
-
-            return View(bomViewModel);  // Passing the ViewModel to the view
-
-
+            return View(bomViewModel); // Passing the ViewModel to the view
         }
+
+
+        // public ActionResult Create()
+        // {
+        //     // Get the next available BOM ID (if needed)
+        //     decimal maxId = db.BOMs.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
+        //     maxId += 1;
+        //     ViewBag.SuggestedId = maxId;  // Passing the suggested BOM ID to the view
+        //     ViewBag.Suppliers = DAL.dbSuppliers;  // Assuming this contains the supplier list
+
+
+        //     var productsWithoutBOM = db.Products
+        //.Where(p => p.Manufacturable == true && !db.BOMs.Any(b => b.ProductId == p.Id))
+        //.Select(p => new { Value = p.Id.ToString(), Text = p.Name })
+        //.ToList();
+
+        //     // Pass to the view
+        //     ViewBag.ProductList = new SelectList(productsWithoutBOM, "Value", "Text");
+        //     //    var products = db.Products
+        //     //.Where(p => p.Manufacturable == true)
+        //     //.Select(p => new
+        //     //{
+        //     //    Value = p.Id.ToString(),  // ID of the product
+        //     //    Text = p.Name            // Name of the product
+        //     //})
+        //     //.ToList();
+
+        //     //    ViewBag.ProductList = new SelectList(products, "Value", "Text"); // Pass as a SelectList
+
+        //     var productDetails = db.ProductDetails.ToList();
+
+        //     var productList = db.Products
+        //                            .Select(p => new
+        //                            {
+        //                                p.Id,
+        //                                p.Name,
+        //                                p.Stock,
+        //                                p.Remarks, // Fetch remarks from BOM
+        //                                p.Category,   // Fetch stock for AvailableInventory
+        //                            })
+        //                            .ToList();
+
+        //     ViewBag.ProductList = new SelectList(productList, "Id", "Name");
+
+
+        //     // Initialize the BOM and SubItem list in the ViewModel
+        //     BOMViewModel bomViewModel = new BOMViewModel
+        //     {
+        //         BOM = new BOM
+        //         {
+        //             Saleable = true,
+        //             Purchasable = true,
+        //             Manufacturable = true
+        //         },
+        //         SubItem = new List<SubItem> { new SubItem() }, // Initialize SubItem list with one SubItem object
+        //         //ProductTypeDetail = new List<ProductTypeDetail> { new ProductTypeDetail() },
+        //         ProductDetail = new List<ProductDetail> { new ProductDetail() },
+        //         Products = DAL.dbProducts, // Assuming this contains product data
+        //         //ProductList = new SelectList(products, "Id", "Name"),
+        //         //ProductDetail = new List<ProductDetail>()
+        //     };
+
+
+        //     return View(bomViewModel);  // Passing the ViewModel to the view
+
+
+        // }
 
 
 
@@ -166,16 +229,21 @@ namespace MYBUSINESS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Remarks,Saleable,Purchasable,Manufacturable,ShelfLife,TimeUnit,ProductionProcessCateogry,ProductionProcessDescription,ProductId,CreateDate,UpdateDate,Unit")] BOM bom,
-                                   [Bind(Prefix = "SubItem", Include = "Id,ProductId,Quantity,Unit")] List<SubItem> subItems,
-                                   [Bind(Prefix = "ProductTypeDetail", Include = "Id,ProductionQty,BOMId,ProductDetailId,Shape,ProductId")] List<ProductTypeDetail> productTypeDetails)
+        public ActionResult Create([Bind(Include = "Id,Name,Remarks,Saleable,Purchasable,Manufacturable,ShelfLife,TimeUnit,ProductionProcessCateogry,ProductionProcessDescription,ProductId,ProductName,CreateDate,UpdateDate,Unit")] BOM bom,
+                                   [Bind(Prefix = "SubItem", Include = "Id,ProductId,Quantity,Unit,ProductType")] List<SubItem> subItems)
+        //[Bind(Prefix = "ProductType", Include = "Id,ParentProductId,ProductId,Quantity,BOMId,Unit")] List<ProductType> productTypes)
 
-
-
-                                       
+        //[Bind(Prefix = "ProductTypeDetail", Include = "Id,ProductionQty,BOMId,ProductDetailId,Shape,ProductId")] List<ProductTypeDetail> productTypeDetails)
         {
             if (ModelState.IsValid)
             {
+
+                var product = db.Products.FirstOrDefault(p => p.Id == bom.ProductId);
+                
+                if (product != null)
+                {
+                    bom.ProductName = product.Name; // Assign the ProductName
+                }
                 // Debugging output
                 Console.WriteLine($"BOM Unit: {bom.Unit}");
 
@@ -184,19 +252,25 @@ namespace MYBUSINESS.Controllers
 
                 foreach (var item in subItems)
                 {
-                    item.ParentProductId = bom.Id;
+                    item.ParentProductId = bom.ProductId;
+                    item.BOMId = bom.Id;
                     db.SubItems.Add(item);
                 }
-              
-                if (productTypeDetails!=null)
-                {
-                    foreach (var item in productTypeDetails)
-                    {
-                        item.ProductId = bom.Id;
-                        db.ProductTypeDetails.Add(item);
-                        
-                    }
-                }
+                //foreach (var item in productTypes)
+                //{
+                //    item.ParentProductId = bom.ProductId;
+                //    item.BOMId = bom.Id;
+                //    db.ProductTypes.Add(item);
+                //}
+                //if (productTypeDetails!=null)
+                //{
+                //    foreach (var item in productTypeDetails)
+                //    {
+                //        item.ProductId = bom.Id;
+                //        db.ProductTypeDetails.Add(item);
+
+                //    }
+                //}
 
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -218,7 +292,7 @@ namespace MYBUSINESS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-       
+
 
 
             BOM bom = db.BOMs.Find(id);
@@ -227,24 +301,114 @@ namespace MYBUSINESS.Controllers
             {
                 return HttpNotFound();
             }
+            var productsWithoutBOM = db.Products
+          .Where(p => p.Manufacturable == true &&
+              (!db.BOMs.Any(b => b.ProductId == p.Id) || p.Id == bom.ProductId)) // Include the current product
+          .Select(p => new { Value = p.Id.ToString(), Text = p.Name })
+          .ToList();
 
-            ViewBag.ProductList = new SelectList(
- db.Products,           // Source collection
- "Id",                  // Value field (ProductId)
- "Name",                // Display field (ProductName)
- bom.ProductId          // Selected value (current ProductId)
-);
+            // Pass the filtered product list to the view, pre-select the current product
+            ViewBag.ProductList = new SelectList(productsWithoutBOM, "Value", "Text", bom.ProductId);
+            var products = db.Products
+        .Where(p => p.Manufacturable == true)
+        .Select(p => new { Value = p.Id.ToString(), Text = p.Name })
+        .ToList();
+
+            // Populate ViewBag with products for the dropdown
+            ViewBag.ProductList = products;
+
+            // Fetch SubItems for the BOM
+            var subItems = db.SubItems
+                .Where(s => s.BOMId == bom.Id)
+                .ToList();
+
+            var productsWithSubItem = db.SubItems
+                .Where(s => s.BOMId == bom.Id && s.ProductId != null)  // Filter out NULL ProductId
+                .Include(s => s.Product) // Eager load related Product
+                .Select(s => new { Value = s.ProductId.ToString(), Text = s.Product.Name }) // Select Product Name
+                .ToList();
 
 
-            var subItems = db.SubItems.Where(x => x.ParentProductId == bom.Id).ToList();
-            var producttypeDetails = db.ProductTypeDetails.Where(x => x.ProductId == bom.Id).ToList();
+            // Pass the filtered product list to the view, pre-select the current product
+            ViewBag.ProductList = new SelectList(productsWithSubItem, "Value", "Text", bom.ProductId);
+
+            //            var products = db.Products
+            //        .Where(p => p.Manufacturable == true)
+            //        .Select(p => new
+            //        {
+            //            Value = p.Id.ToString(),
+            //            Text = p.Name
+            //        })
+            //        .ToList();
+            //            ViewBag.ProductList = new SelectList(db.Products, "Id", "Name", bom.ProductId);
+            //            ViewBag.ProductList = new SelectList(products, "Value", "Text", bom.ProductId); // Pre-select the current product
+
+            //            ViewBag.ProductList = new SelectList(
+            // db.Products,           // Source collection
+            // "Id",                  // Value field (ProductId)
+            // "Name",                // Display field (ProductName)
+            // bom.ProductId          // Selected value (current ProductId)
+            //);
+
+
+            //var subItems = db.SubItems.Where(x => x.BOMId == bom.Id).ToList();
+
+            var productTypes = db.ProductTypes.Where(x => x.BOMId == bom.Id).ToList();
+            //var producttypeDetails = db.ProductTypeDetails.Where(x => x.ProductId == bom.Id).ToList();
             bomViewModel.BOM = bom;
             bomViewModel.Products = DAL.dbProducts;
-            bomViewModel.SubItem = db.SubItems.Where(x => x.ParentProductId == bom.Id).ToList();
-            bomViewModel.ProductTypeDetail = db.ProductTypeDetails.Where(x => x.ProductId == bom.Id).ToList();
+            bomViewModel.SubItem = db.SubItems.Where(x => x.BOMId == bom.Id).ToList();
+            bomViewModel.ProductType = db.ProductTypes.Where(x => x.BOMId == bom.Id).ToList();
+            //bomViewModel.ProductTypeDetail = db.ProductTypeDetails.Where(x => x.ProductId == bom.Id).ToList();
             return View(bomViewModel);
             //return View(product);
         }
+
+
+        //public ActionResult Edit(decimal id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+
+        //    // Fetch the BOM record
+        //    BOM bom = db.BOMs.Find(id);
+        //    if (bom == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+
+        //    // Fetch the list of products with manufacturable = true
+        //    var products = db.Products
+        //        .Where(p => p.Manufacturable == true)
+        //        .Select(p => new
+        //        {
+        //            Value = p.Id.ToString(), // Ensure ID is a string
+        //            Text = p.Name
+        //        })
+        //        .ToList();
+
+        //    // Pass the products to ViewBag with bom.ProductId pre-selected
+        //    ViewBag.ProductList = new SelectList(products, "Value", "Text", bom.ProductId.ToString());
+
+        //    // Create and populate the BOMViewModel
+        //    BOMViewModel bomViewModel = new BOMViewModel
+        //    {
+        //        BOM = bom,
+        //        Products = DAL.dbProducts,
+        //        SubItem = db.SubItems.Where(x => x.ParentProductId == bom.Id).ToList(),
+        //        //ProductTypeDetail = db.ProductTypeDetails.Where(x => x.ProductId == bom.Id).ToList()
+        //    };
+
+        //    // Debugging information
+        //    Debug.WriteLine($"Selected Product ID: {bom.ProductId}");
+        //    Debug.WriteLine($"ViewBag.ProductList: {ViewBag.ProductList}");
+
+        //    return View(bomViewModel);
+        //}
+
+
 
         // POST: Products/Edit/5
         //[HttpPost]
@@ -283,46 +447,99 @@ namespace MYBUSINESS.Controllers
         //    return View(bomViewModel);
         //}
 
+        //    [HttpPost]
+        //    [ValidateAntiForgeryToken]
+        //    public ActionResult Edit(
+        //[Bind(Prefix = "BOM", Include = "Id,Name,Remarks,Saleable,Purchasable,Manufacturable,ShelfLife,TimeUnit,ProductionProcessCateogry,ProductionProcessDescription,Unit,CreateDate,UpdateDate")] BOM bom,
+        //[Bind(Prefix = "SubItem", Include = "Id,ProductId,Quantity,Unit")] List<SubItem> subItems)
+        ////[Bind(Prefix = "ProductTypeDetail", Include = "Id,ProductionQty,BOMId,ProductDetailId,Shape,ProductId")] List<ProductTypeDetail> productTypeDetails)
+        //    {
+        //        if (ModelState.IsValid)
+        //        {
+        //            // Remove existing SubItems for the BOM
+        //            var existingSubItems = db.SubItems.Where(x => x.ParentProductId == bom.Id).ToList();
+        //            //var existingProductTypeDetails = db.ProductTypeDetails.Where(x => x.ProductId == bom.Id).ToList();
+        //            db.SubItems.RemoveRange(existingSubItems);
+        //            //db.ProductTypeDetails.RemoveRange(existingProductTypeDetails);
+        //            // Update the BOM record
+        //            db.Entry(bom).State = EntityState.Modified;
+
+        //            if (subItems != null)
+        //            {
+        //                foreach (var item in subItems)
+        //                {
+        //                    item.ParentProductId = bom.ProductId;
+        //                    item.BOMId = bom.Id;
+        //                    db.SubItems.Add(item);
+        //                }
+        //            }
+        //            // Add the new SubItems
+
+
+        //            //if (productTypeDetails != null)
+        //            //{
+        //            //    foreach (var item in productTypeDetails)
+        //            //    {
+        //            //        item.ProductId = bom.Id;
+        //            //        db.ProductTypeDetails.Add(item);
+        //            //    }
+        //            //}
+
+
+        //            // Save changes
+        //            db.SaveChanges();
+        //            return RedirectToAction("Index");
+        //        }
+
+        //        // Reinitialize view data for the dropdowns and other dependencies
+        //        ViewBag.Suppliers = DAL.dbSuppliers;
+        //        ViewBag.ProductList = new SelectList(db.Products, "Id", "Name", bom.ProductId);
+        //        return View(bom);
+        //    }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(
-    [Bind(Prefix = "BOM", Include = "Id,Name,Remarks,Saleable,Purchasable,Manufacturable,ShelfLife,TimeUnit,ProductionProcessCateogry,ProductionProcessDescription,Unit,CreateDate,UpdateDate")] BOM bom,
+    [Bind(Prefix = "BOM", Include = "Id,Name,Remarks,Saleable,Purchasable,Manufacturable,ShelfLife,TimeUnit,ProductionProcessCateogry,ProductionProcessDescription,ProductName,ProductId,Unit,CreateDate,UpdateDate")] BOM bom,
     [Bind(Prefix = "SubItem", Include = "Id,ProductId,Quantity,Unit")] List<SubItem> subItems,
-    [Bind(Prefix = "ProductTypeDetail", Include = "Id,ProductionQty,BOMId,ProductDetailId,Shape,ProductId")] List<ProductTypeDetail> productTypeDetails)
+    [Bind(Prefix = "ProductType", Include = "Id,ParentProductId,ProductId,Quantity,BOMId,Unit")] List<ProductType> productTypes)
         {
             if (ModelState.IsValid)
             {
+                var product = db.Products.FirstOrDefault(p => p.Id == bom.ProductId);
+                if (product != null)
+                {
+                    bom.ProductName = product.Name; // Assign the ProductName
+                }
                 // Remove existing SubItems for the BOM
-                var existingSubItems = db.SubItems.Where(x => x.ParentProductId == bom.Id).ToList();
-                var existingProductTypeDetails = db.ProductTypeDetails.Where(x => x.ProductId == bom.Id).ToList();
+                var existingSubItems = db.SubItems.Where(x => x.BOMId == bom.Id).ToList();
+                var existingProductType = db.ProductTypes.Where(x => x.BOMId == bom.Id).ToList();
                 db.SubItems.RemoveRange(existingSubItems);
-                db.ProductTypeDetails.RemoveRange(existingProductTypeDetails);
+                db.ProductTypes.RemoveRange(existingProductType);
                 // Update the BOM record
                 db.Entry(bom).State = EntityState.Modified;
-                
-                if (subItems != null)
+
+                if (subItems != null && subItems.Count > 0)
                 {
+                    // Add new SubItems
                     foreach (var item in subItems)
                     {
-                        item.ParentProductId = bom.Id;
+                        item.ParentProductId = bom.ProductId; // Set ParentProductId for each SubItem
+                        item.BOMId = bom.Id;                  // Set BOMId for each SubItem
                         db.SubItems.Add(item);
                     }
                 }
-                // Add the new SubItems
-                
-
-                if (productTypeDetails != null)
+                if (productTypes != null && productTypes.Count > 0)
                 {
-                    foreach (var item in productTypeDetails)
+                    // Add new SubItems
+                    foreach (var item in productTypes)
                     {
-                        item.ProductId = bom.Id;
-                        db.ProductTypeDetails.Add(item);
+                        item.ParentProductId = bom.ProductId; // Set ParentProductId for each SubItem
+                        item.BOMId = bom.Id;                  // Set BOMId for each SubItem
+                        db.ProductTypes.Add(item);
                     }
                 }
-                
-
-                // Save changes
-                db.SaveChanges();
+                db.SaveChanges(); // Commit the changes to the database
                 return RedirectToAction("Index");
             }
 
@@ -384,15 +601,61 @@ namespace MYBUSINESS.Controllers
             }
             base.Dispose(disposing);
         }
+        //public JsonResult GetProductUnit(int id)
+        //{
+        //    var product = db.Products.FirstOrDefault(p => p.Id == id);
+        //    if (product != null)
+        //    {
+        //        return Json(new { unit = product.Unit }, JsonRequestBehavior.AllowGet);
+        //    }
+        //    return Json(new { unit = "N/A" }, JsonRequestBehavior.AllowGet);
+        //}
+        //public JsonResult GetProductUnit(int id)
+        //{
+        //    var product = db.Products.FirstOrDefault(p => p.Id == id);
+
+        //    if (product != null)
+        //    {
+        //        // Fetch the related product's name using VariableProductId
+        //        var variableProductName = db.Products
+        //            .Where(p => p.Id == product.VariableProductId)  // Find the product by ID
+        //            .Select(p => p.Name)  // Select its Name
+        //            .FirstOrDefault() ?? "N/A"; // If not found, return "N/A"
+
+        //        return Json(new
+        //        {
+        //            unit = product.Unit,
+        //            variableProductName = variableProductName // Return the product name instead of ID
+        //        }, JsonRequestBehavior.AllowGet);
+        //    }
+
+        //    return Json(new { unit = "N/A", variableProductName = "N/A" }, JsonRequestBehavior.AllowGet);
+        //}
         public JsonResult GetProductUnit(int id)
         {
             var product = db.Products.FirstOrDefault(p => p.Id == id);
+
             if (product != null)
             {
-                return Json(new { unit = product.Unit }, JsonRequestBehavior.AllowGet);
+                // Fetch the related product's details using VariableProductId
+                var variableProduct = db.Products
+                    .Where(p => p.Id == product.VariableProductId)  // Find the product by ID
+                    .Select(p => new { p.Name, p.Unit })  // Select Name and Unit
+                    .FirstOrDefault();
+
+                return Json(new
+                {
+                    unit = product.Unit, // Unit of selected product
+                    variableProductName = variableProduct?.Name ?? "N/A", // Name of the variable product
+                    variableProductUnit = variableProduct?.Unit ?? "N/A" // Unit of the variable product
+                }, JsonRequestBehavior.AllowGet);
             }
-            return Json(new { unit = "N/A" }, JsonRequestBehavior.AllowGet);
+
+            return Json(new { unit = "N/A", variableProductName = "N/A", variableProductUnit = "N/A" }, JsonRequestBehavior.AllowGet);
         }
+
+
+
         //[HttpGet]
         //public JsonResult GetProductDetails(int productId)
         //{
@@ -435,6 +698,34 @@ namespace MYBUSINESS.Controllers
                 return Json(new { error = ex.Message }, JsonRequestBehavior.AllowGet);
             }
         }
+        [HttpGet]
+        //public JsonResult GetVariableProduct(int productId)
+        //{
+        //    var variableProduct = db.Products // Change `Product` to `Products`
+        //        .Where(p => p.VariableProductId == productId)
+        //        .Select(p => new { p.Id, p.Name, p.Unit})
+        //        .FirstOrDefault();
+
+        //    if (variableProduct != null)
+        //    {
+        //        return Json(variableProduct, JsonRequestBehavior.AllowGet);
+        //    }
+        //    return Json(new { error = "No variable product found" }, JsonRequestBehavior.AllowGet);
+        //}
+        public JsonResult GetVariableProduct(int productId)
+        {
+            var variableProducts = db.Products // Change `Product` to `Products`
+                .Where(p => p.VariableProductId == productId)
+                .Select(p => new { p.Id, p.Name, p.Unit })
+                .ToList(); // Convert to List
+
+            if (variableProducts.Any()) // Check if there are any products
+            {
+                return Json(variableProducts, JsonRequestBehavior.AllowGet);
+            }
+            return Json(new { error = "No variable products found" }, JsonRequestBehavior.AllowGet);
+        }
+
 
         //[HttpGet]
         //public JsonResult GetProductDetails(int productId)

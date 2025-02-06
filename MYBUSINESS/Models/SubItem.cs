@@ -17,18 +17,15 @@ namespace MYBUSINESS.Models
         public decimal Id { get; set; }
         public Nullable<decimal> ParentProductId { get; set; }
         public Nullable<decimal> ProductId { get; set; }
-        public Nullable<int> Quantity { get; set; }
+        public Nullable<decimal> Quantity { get; set; }
         public Nullable<int> BOMId { get; set; }
-        public Nullable<int> NewProductionId { get; set; }
-        public Nullable<int> FinalProductionId { get; set; }
         public string Unit { get; set; }
         public Nullable<decimal> AvailableInventory { get; set; }
         public Nullable<decimal> QuantityRequested { get; set; }
         public Nullable<decimal> QuantitytoPrepare { get; set; }
+        public Nullable<byte> ProductType { get; set; }
     
-        public virtual FinalProduction FinalProduction { get; set; }
-        public virtual NewProduction NewProduction { get; set; }
-        public virtual Product Product { get; set; }
         public virtual BOM BOM { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

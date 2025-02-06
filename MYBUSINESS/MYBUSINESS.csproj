@@ -368,7 +368,6 @@
     <Compile Include="Controllers\BOMController.cs" />
     <Compile Include="Controllers\CustomerLedgerController.cs" />
     <Compile Include="Controllers\CurrenciesController.cs" />
-    <Compile Include="Controllers\FinalProductionController.cs" />
     <Compile Include="Controllers\NewProductionController.cs" />
     <Compile Include="Controllers\StoresController.cs" />
     <Compile Include="Controllers\PurchaseQuotationController.cs" />
@@ -524,12 +523,16 @@
     <Compile Include="Models\ProductionOrderDetail.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ProductTypeDetail.cs">
+    <Compile Include="Models\ProductType.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ProductUpdateModel.cs" />
     <Compile Include="Models\ProductViewModel.cs" />
     <Compile Include="Models\PurchaseOrderViewModel.cs" />
     <Compile Include="Models\DashboardViewModel.cs" />
+    <Compile Include="Models\QuantityToProduce.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Rent.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -570,6 +573,12 @@
     <Compile Include="Models\spTest_Result.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_helpdiagramdefinition_Result.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_helpdiagrams_Result.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Store.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -579,12 +588,6 @@
     <Compile Include="Models\StoreViewModel.cs" />
     <Compile Include="Models\ServiceViewModel.cs" />
     <Compile Include="Models\SaleOrderViewModel.cs" />
-    <Compile Include="Models\sp_helpdiagramdefinition_Result.cs">
-      <DependentUpon>BusinessDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\sp_helpdiagrams_Result.cs">
-      <DependentUpon>BusinessDataModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\SubItem.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -3696,6 +3699,7 @@
     <Content Include="Views\FinalProduction\Index - Copy.cshtml" />
     <Content Include="Views\FinalProduction\Index.cshtml" />
     <Content Include="Views\FinalProduction\IndexComponents.cshtml" />
+    <Content Include="Views\NewProduction\FinalExcess.cshtml" />
     <None Include="Web.Debug.Config">
       <DependentUpon>Web.Config</DependentUpon>
     </None>

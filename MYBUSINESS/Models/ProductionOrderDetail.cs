@@ -25,7 +25,7 @@ namespace MYBUSINESS.Models
         public Nullable<int> ShortFall { get; set; }
         public Nullable<int> Remarks { get; set; }
     
-        public virtual Product Product { get; set; }
         public virtual ProductionOrder ProductionOrder { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

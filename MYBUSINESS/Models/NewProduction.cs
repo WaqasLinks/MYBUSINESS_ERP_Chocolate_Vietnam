@@ -17,20 +17,21 @@ namespace MYBUSINESS.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public NewProduction()
         {
-            this.SubItems = new HashSet<SubItem>();
-            this.Products = new HashSet<Product>();
+            this.QuantityToProduces = new HashSet<QuantityToProduce>();
+            this.ProductDetails = new HashSet<ProductDetail>();
         }
     
         public int Id { get; set; }
         public Nullable<System.DateTime> ProductionDate { get; set; }
         public string ProductName { get; set; }
         public string Unit { get; set; }
-        public Nullable<int> QuantityToProduce { get; set; }
-        public string Shape { get; set; }
+        public Nullable<decimal> ProductId { get; set; }
+        public Nullable<decimal> Quantity { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SubItem> SubItems { get; set; }
+        public virtual ICollection<QuantityToProduce> QuantityToProduces { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Product> Products { get; set; }
+        public virtual ICollection<ProductDetail> ProductDetails { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

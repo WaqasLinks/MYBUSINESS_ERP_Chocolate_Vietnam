@@ -12,17 +12,18 @@ namespace MYBUSINESS.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class ProductTypeDetail
+    public partial class QuantityToProduce
     {
         public int Id { get; set; }
         public Nullable<decimal> ProductionQty { get; set; }
-        public Nullable<int> BOMId { get; set; }
         public Nullable<decimal> ProductDetailId { get; set; }
         public Nullable<decimal> ProductId { get; set; }
         public string Shape { get; set; }
+        public Nullable<int> NewProductionId { get; set; }
+        public Nullable<decimal> CalculatedWeight { get; set; }
     
+        public virtual NewProduction NewProduction { get; set; }
         public virtual ProductDetail ProductDetail { get; set; }
-        public virtual BOM BOM { get; set; }
         public virtual Product Product { get; set; }
     }
 }
