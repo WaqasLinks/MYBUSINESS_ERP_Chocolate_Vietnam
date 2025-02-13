@@ -17,7 +17,10 @@ namespace MYBUSINESS.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public NewProduction()
         {
+            this.PostProductions = new HashSet<PostProduction>();
+            this.ProductionDetails = new HashSet<ProductionDetail>();
             this.QuantityToProduces = new HashSet<QuantityToProduce>();
+            this.SubItemProductions = new HashSet<SubItemProduction>();
             this.ProductDetails = new HashSet<ProductDetail>();
         }
     
@@ -27,11 +30,18 @@ namespace MYBUSINESS.Models
         public string Unit { get; set; }
         public Nullable<decimal> ProductId { get; set; }
         public Nullable<decimal> Quantity { get; set; }
+        public Nullable<bool> Validate { get; set; }
     
+        public virtual Product Product { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PostProduction> PostProductions { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductionDetail> ProductionDetails { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<QuantityToProduce> QuantityToProduces { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SubItemProduction> SubItemProductions { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductDetail> ProductDetails { get; set; }
-        public virtual Product Product { get; set; }
     }
 }

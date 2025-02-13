@@ -18,6 +18,7 @@ namespace MYBUSINESS.Models
         public PO()
         {
             this.PODs = new HashSet<POD>();
+            this.PODRecivers = new HashSet<PODReciver>();
         }
     
         public string Id { get; set; }
@@ -48,5 +49,7 @@ namespace MYBUSINESS.Models
         public virtual Supplier Supplier { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<POD> PODs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PODReciver> PODRecivers { get; set; }
     }
 }

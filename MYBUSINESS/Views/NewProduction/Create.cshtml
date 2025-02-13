@@ -210,6 +210,7 @@ new { @class = "form-control product-dropdown", @id = "productDropdown" }
                     <div class="box-footer">
                         <input type="submit" id="CreateSO" value="Create" class="btn btn-primary" />
                         @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-secondary" })
+                        <button id="validateBtn" class="btn btn-primary" style="margin-left:250px;">Validate</button>
                     </div>
                 </div>
             </div>
@@ -355,7 +356,7 @@ new { @class = "form-control product-dropdown", @id = "productDropdown" }
         </div>
     </section>
     @*@Html.ActionLink("Validate", "ValidateStock", null, new { @class = "btn btn-secondary" })*@
-    <button id="validateBtn" class="btn btn-primary">Validate</button>
+    @*<button id="validateBtn" class="btn btn-primary">Validate</button>*@
 }
 
 <!-- Your existing form content -->
@@ -572,7 +573,7 @@ $('#productDropdown').change(function () {
         const variableConsumptionRate = parseFloat($(this).data('consumption-rate')) || 1; // Get consumption rate per unit
 
         // Alert to check input values
-        alert(`Production Qty Changed: ${productionQty}, Weight: ${weight}, Variable Product ID: ${variableProductId}, Consumption Rate: ${variableConsumptionRate}`);
+        /*alert(`Production Qty Changed: ${productionQty}, Weight: ${weight}, Variable Product ID: ${variableProductId}, Consumption Rate: ${variableConsumptionRate}`);*/
 
         // Calculate the weight and update the corresponding field
         const calculatedWeight = productionQty * weight;
@@ -587,7 +588,7 @@ $('#productDropdown').change(function () {
 
             if (rowProductId == variableProductId) {
                 let newVariableProductQty = productionQty * variableConsumptionRate;
-                alert(`Updating Variable Product ID ${variableProductId}: New Quantity = ${newVariableProductQty}`);
+              /*  alert(`Updating Variable Product ID ${variableProductId}: New Quantity = ${newVariableProductQty}`);*/
                 $(this).find('.calculated-subitem').text(newVariableProductQty.toFixed(2)); // Update quantity
             }
         });
@@ -612,7 +613,7 @@ $('#productDropdown').change(function () {
         $('#totalWeightDisplay').text(totalWeight.toFixed(2));
 
         // Alert to check updated total weight
-        alert(`Total Weight Updated: ${gtotalWeight}`);
+    /*    alert(`Total Weight Updated: ${gtotalWeight}`);*/
 
         // Update the sub-items with the total weight multiplied by quantity
         updateSubItemCalculations();
@@ -627,7 +628,7 @@ $('#productDropdown').change(function () {
         });
 
         // Alert to check updated sub-item values
-        alert(`Sub-Item Calculations Updated`);
+       /* alert(`Sub-Item Calculations Updated`);*/
     }
 
 
@@ -658,14 +659,14 @@ $('#productDropdown').change(function () {
                             <td>${index + 1}</td>
 
                              <td  style="display:none;">
-                                <input type="hidden"  name="SubItem[${index}].ProductId" value="${subItem.ProductId}" />
+                             <input type="hidden" name="SubItemProduction[${index}].ProductId" value="${subItem.ProductId}" />
+                            
                             </td>
 
                             <td>
                                 <input type="text" readonly class="form-control"
-                                       name="SubItem[${index}].Product.Name"
-                                       value="${subItem.ProductName}"
-                                       placeholder="Product Name" />
+                                   name="SubItemProduction[${index}].Product.Name"
+                                   value="${subItem.ProductName}" />
                             </td>
                             `;
 
@@ -674,13 +675,13 @@ $('#productDropdown').change(function () {
                             newRow += `
                             <td>
                                 <input type="text" readonly class="form-control"
-                                       name="SubItem[${index}].Quantity"
+                                       name="SubItemProduction[${index}].Quantity"
                                        value="${subItem.Quantity}"
                                        placeholder="Quantity" />
                             </td>
                             <td>
                                 <input type="text" readonly class="form-control"
-                                       name="SubItem[${index}].Unit"
+                                       name="SubItemProduction[${index}].Unit"
                                        value="${subItem.Unit}"
                                        placeholder="Unit" />
                             </td>
@@ -693,27 +694,30 @@ $('#productDropdown').change(function () {
                             <td>
                                 <input type="text" class="form-control production-qty1"
                                     data-variable-product-id="${subItem.VariableProduct}"        
-                                    name="SubItem[${index}].Quantity"
+                                    name="SubItemProduction[${index}].Quantity"
                                     value="${subItem.Quantity}"
                                     placeholder="Quantity" />
                             </td>
                             <td>
                                 <input type="text" readonly class="form-control"
-                                       name="SubItem[${index}].Unit"
+                                       name="SubItemProduction[${index}].Unit"
                                        value="${subItem.Unit}"
                                        placeholder="Unit" />
                             </td>
-                            <td>
-                                <input type="text" readonly class="form-control"
-                                       name="SubItem[${index}].Product.PType"
-                                       value="${subItem.PType}"
-                                       placeholder="Product Type" />
-                            </td>
-                            <td>
-                            <input type="hidden"
-                                name="SubItem[${index}].Product.VariableProductId"
-                                value="${subItem.VariableProduct}" />
+                          <td>
+                            <input type="text" readonly class="form-control"
+                                   name="SubItemProduction[${index}].Product.PType"
+                                   value="${subItem.PType}"
+                                   placeholder="Product Type" />
                         </td>
+
+                        <!-- Hidden input to ensure ProductType is submitted -->
+                        <td>
+                            <input type="hidden"
+                                   name="SubItemProduction[${index}].ProductType"
+                                   value="${subItem.PType}" />
+                        </td>
+
                             `;
                         }
 
@@ -888,25 +892,32 @@ $('#productDropdown').change(function () {
 
         let productUpdates = [];
 
-        $('#selectedProducts > tbody > tr').each(function () {
-            let productId = $(this).find("[name*='ProductId']").val() ||
-                            $(this).find("[name*='Product.id']").val() ||
-                            $(this).find("[name*='Product.Id']").val() || "";
-            let productName = $(this).find("[name*='Product.Name']").val() || "";
-            let quantity = parseFloat($(this).find("[name*='Quantity']").val()) || 0;
-            let gtotalWeight = 15;
-            let calculatedValue = quantity * gtotalWeight;
-            let stock = parseFloat($(this).find("[name*='Stock']").val()) || 0;
-            let subtractValue = stock - calculatedValue;
+          $('#selectedProducts > tbody > tr').each(function () {
+              let productionId = $("#NewProduction_Id").val();
+              let productId = $(this).find("[name*='ProductId']").val() ||
+                  $(this).find("[name*='Product.id']").val() ||
+                  $(this).find("[name*='Product.Id']").val() || "";
 
-            productUpdates.push({
-                productId: productId,
-                productName: productName,
-                calculatedValue: calculatedValue,
-                stock: stock,
-                subtractValue: subtractValue
-            });
-        });
+            
+
+              let productName = $(this).find("[name*='Product.Name']").val() || "";
+              let quantity = parseFloat($(this).find("[name*='Quantity']").val()) || 0;
+
+        /*      let gtotalWeight = 15; // Ensure this value is set correctly*/
+              let calculatedValue = quantity * gtotalWeight;
+              let stock = parseFloat($(this).find("[name*='Stock']").val()) || 0;
+              let subtractValue = stock - calculatedValue;
+
+              productUpdates.push({
+                  productionId: productionId, 
+                  productId: productId,
+                  productName: productName,
+                  calculatedValue: calculatedValue,
+                  stock: stock,
+                  subtractValue: subtractValue
+              });
+          });
+
 
         console.log("Final Product Updates List:", productUpdates);
 
@@ -914,7 +925,7 @@ $('#productDropdown').change(function () {
 
             alert("Sending AJAX Request..."); // Debugging alert
             $.ajax({
-                url: '@Url.Action("ValidateStock", "NewProduction")',
+                url: '@Url.Action("ValidateCStock", "NewProduction")',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ updates: productUpdates }),

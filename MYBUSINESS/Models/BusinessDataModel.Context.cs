@@ -43,12 +43,10 @@ namespace MYBUSINESS.Models
         public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<MetaDetaDescription> MetaDetaDescriptions { get; set; }
         public virtual DbSet<MyBusinessInfo> MyBusinessInfoes { get; set; }
-        public virtual DbSet<NewProduction> NewProductions { get; set; }
         public virtual DbSet<Payment> Payments { get; set; }
         public virtual DbSet<PO> POes { get; set; }
         public virtual DbSet<POD> PODs { get; set; }
         public virtual DbSet<ProductCategory> ProductCategories { get; set; }
-        public virtual DbSet<ProductDetail> ProductDetails { get; set; }
         public virtual DbSet<ProductionOrder> ProductionOrders { get; set; }
         public virtual DbSet<ProductionOrderDetail> ProductionOrderDetails { get; set; }
         public virtual DbSet<Rent> Rents { get; set; }
@@ -66,6 +64,12 @@ namespace MYBUSINESS.Models
         public virtual DbSet<QuantityToProduce> QuantityToProduces { get; set; }
         public virtual DbSet<ProductType> ProductTypes { get; set; }
         public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<PODReciver> PODRecivers { get; set; }
+        public virtual DbSet<ProductionDetail> ProductionDetails { get; set; }
+        public virtual DbSet<PostProduction> PostProductions { get; set; }
+        public virtual DbSet<SubItemProduction> SubItemProductions { get; set; }
+        public virtual DbSet<NewProduction> NewProductions { get; set; }
+        public virtual DbSet<ProductDetail> ProductDetails { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {

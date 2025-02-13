@@ -87,10 +87,10 @@
                         <th>
                             Item Total
                         </th>
-                        <th>
+                        <th style="display:none;">
                             Purchasing Date
                         </th>
-                        <th>
+                        <th style="display:none;">
 
                             ExpiryDate
                         </th>
@@ -141,20 +141,20 @@
                                     @Html.DropDownList("PurchaseOrderDetail[" + sNo + "].SaleType", new SelectList(ViewBag.OptionLst, "Value", "Text", item.SaleType),
                                         new { @class = "form-control", id = "saleType" + sNo })
                                 </td>
-                                <td>
-                                    <input type="datetime-local"
+                                @*<td>
+                                    <input  type="datetime-local"
                                            class="form-control classBGcolor"
                                            value="@(item.PurchasingDate?.ToString("yyyy-MM-ddTHH:mm"))"
                                            name="PurchaseOrderDetail[@(sNo)].PurchasingDate"
                                            id="purchasingdate@(sNo)">
-                                </td>
-                                <td>
+                                </td>*@
+                                @*<td>
                                     <input type="datetime-local"
                                            class="form-control classBGcolor"
                                            value="@(item.ExpiryDate?.ToString("yyyy-MM-ddTHH:mm"))"
                                            name="PurchaseOrderDetail[@(sNo)].ExpiryDate"
                                            id="expirydate@(sNo)">
-                                </td>
+                                </td>*@
 
                                 <td>
                                     <button type="button" id="delete@(sNo)" class="delete btn btn-default add-new"> <a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button>
@@ -284,7 +284,8 @@
 
                     </table>
                     </div>
-                    <div class="table-title">
+                <div class="table-title">
+                    <div style="display:none;" class="table-title">
                         <div class="row">
                             @*<div class="col-sm-8"><h2>Purchase <b>Order</b></h2></div>*@
                             <div class="col-sm-3">
@@ -333,16 +334,16 @@
 
                         </div>
 
-
+                        </div>
                         <div class="row">
                             @*<div class="col-sm-8"><h2>Purchase <b>Order</b></h2></div>*@
                             <div class="col-sm-3">
 
                             </div>
-                            <div class="col-sm-7">
+                            <div style="display:none;" class="col-sm-7">
                                 <textarea name="PurchaseOrder.Remarks2" rows="1" cols="100" class="form-control" placeholder="These remarks will not print on bill">@Model.PurchaseOrder.Remarks2</textarea>
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-sm-9">
                                 <button type="submit" id="CreatePO" class="btn btn-info add-new">Save</button>
                             </div>
 
@@ -413,11 +414,11 @@
                 piece = (int)(d.Stock % d.PerPack);
                 if (piece == 0)
                 {
-                    @:products.push(["@d.Id", "@d.Name", "@d.PurchasePrice", "@carton", "@d.PerPack"]);
+                    @:products.push(["@d.Id", "@d.Name", "@d.PurchasePrice", "@carton", "@d.PerPack", "@d.Unit"]);
                 }
                 else
                 {
-                    @:products.push(["@d.Id", "@d.Name", "@d.PurchasePrice", "@carton,@piece","@d.PerPack"]);
+                    @:products.push(["@d.Id", "@d.Name", "@d.PurchasePrice", "@carton,@piece","@d.PerPack", "@d.Unit"]);
                 }
                 @:productsBarcodes.push(["@d.Id", "@d.BarCode"]);
             }

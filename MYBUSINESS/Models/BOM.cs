@@ -19,6 +19,7 @@ namespace MYBUSINESS.Models
         {
             this.SubItems = new HashSet<SubItem>();
             this.ProductTypes = new HashSet<ProductType>();
+            this.SubItemProductions = new HashSet<SubItemProduction>();
         }
     
         public int Id { get; set; }
@@ -41,5 +42,7 @@ namespace MYBUSINESS.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductType> ProductTypes { get; set; }
         public virtual Product Product { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SubItemProduction> SubItemProductions { get; set; }
     }
 }

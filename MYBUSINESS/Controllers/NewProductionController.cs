@@ -265,23 +265,33 @@ namespace MYBUSINESS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(
      [Bind(Prefix = "NewProduction", Include = "Id,ProductionDate,ProductName,Unit,ProductId")] NewProduction newProduction,
-     [Bind(Prefix = "SubItem", Include = "Id,ParentProductId,ProductId,Quantity,Unit,AvailableInventory,QuantitytoPrepare,QuantityRequested")] List<SubItem> subItems,
+     //[Bind(Prefix = "SubItem", Include = "Id,ParentProductId,ProductId,Quantity,Unit,AvailableInventory,QuantitytoPrepare,QuantityRequested")] List<SubItem> subItems,
+     [Bind(Prefix = "SubItemProduction", Include = "Id,ParentProductId,ProductId,Quantity,Unit,AvailableInventory,QuantitytoPrepare,QuantityRequested")] List<SubItemProduction> subItemProductions,
      [Bind(Prefix = "QuantityToProduce", Include = "Id,ProductionQty,BOMId,ProductDetailId,Shape,CalculatedWeight,ProductId")] List<QuantityToProduce> quantityToProduces)
         {
             if (ModelState.IsValid)
             {
-                
+
 
                 // Save the BOM and its SubItems
                 db.NewProductions.Add(newProduction);
 
-                //foreach (var item in subItems)
-                //{
-                //    item.ParentProductId = newProduction.ProductId;
-                //    db.SubItems.Add(item);
-                //}
+                if (subItemProductions != null)
+                {
+                    foreach (var item in subItemProductions)
+                    {
+                        item.ParentProductId = newProduction.ProductId;
+                        item.NewProductionId = newProduction.Id;
+                        db.SubItemProductions.Add(item);
+                    }
+                }
+                    //foreach (var item in subItems)
+                    //{
+                    //    item.ParentProductId = newProduction.ProductId;
+                    //    db.SubItems.Add(item);
+                    //}
 
-                if (quantityToProduces != null)
+                    if (quantityToProduces != null)
                 {
                     foreach (var item in quantityToProduces)
                     {
@@ -355,7 +365,7 @@ namespace MYBUSINESS.Controllers
 
         //     return View(viewModel);
         // }
-        public ActionResult Edit(decimal? id)
+        public ActionResult Edit(decimal? id, bool readonlyMode = false)
         {
             if (id == null)
             {
@@ -373,7 +383,7 @@ namespace MYBUSINESS.Controllers
                 return HttpNotFound();
             }
             var quantityToProduce = db.QuantityToProduces
-.Where(x => x.NewProductionId == id)
+.Where(x => x.NewProductionId == newProduction.Id)
 .ToList();
 
             var totalWeight = quantityToProduce.Sum(x => x.CalculatedWeight) ?? 0;
@@ -381,7 +391,8 @@ namespace MYBUSINESS.Controllers
 
 
 
-            var subItems = db.SubItems.Where(s => s.ParentProductId == newProduction.ProductId).ToList();
+            //var subItems = db.SubItems.Where(s => s.ParentProductId == newProduction.ProductId).ToList();
+            var subItemProductions = db.SubItemProductions.Where(s => s.NewProductionId == newProduction.Id).ToList();
             Console.WriteLine(newProduction.ProductionDate); // Debugging line
             // Get the list of products
             var products = db.Products
@@ -391,19 +402,17 @@ namespace MYBUSINESS.Controllers
 
             // Pre-select the current product in the dropdown
             ViewBag.ProductList = new SelectList(products, "Value", "Text", newProduction.ProductId);
-
+            ViewBag.ReadonlyMode = readonlyMode;
             // Prepare ViewModel (including SubItems if needed)
             var viewModel = new NewProductionViewModel
             {
-                SubItems = subItems,
+                //SubItems = subItems,
+                SubItemProduction = db.SubItemProductions.Where(x => x.NewProductionId == newProduction.Id).ToList(),
                 NewProduction = newProduction,
                 Products = db.Products, // Include all products
                 /* SubItems = db.SubItems.Where(x => x.ParentProductId == newProduction.Id).ToList(), */// Get SubItems associated with this NewProduction
                 TotalWeight = totalWeight,                                                                                    //QuantityToProduce = db.QuantityToProduces.Where(x => x.ProductId == newProduction.Id).ToList()
-                QuantityToProduce = db.QuantityToProduces
-    .Where(x => x.NewProductionId == newProduction.Id)
-    .ToList()
-
+                QuantityToProduce = quantityToProduce
             };
 
             return View(viewModel);
@@ -529,8 +538,10 @@ namespace MYBUSINESS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(
     NewProductionViewModel model,
-    [Bind(Prefix = "NewProduction", Include = "Id,ProductionDate,ProductName,Unit,ProductId")] NewProduction newProduction,
-    [Bind(Prefix = "QuantityToProduce", Include = "Id,ProductionQty,BOMId,ProductDetailId,Shape,CalculatedWeight,ProductId")] List<QuantityToProduce> quantityToProduces)
+   [Bind(Prefix = "NewProduction", Include = "Id,ProductionDate,ProductName,Unit,ProductId,Quantity,Validate")] NewProduction newProduction,
+    [Bind(Prefix = "QuantityToProduce", Include = "Id,ProductionQty,BOMId,ProductDetailId,Shape,CalculatedWeight,ProductId")] List<QuantityToProduce> quantityToProduces,
+    [Bind(Prefix = "SubItemProduction", Include = "Id,ParentProductId,ProductId,Quantity,Unit,AvailableInventory,QuantitytoPrepare,QuantityRequested")] List<SubItemProduction> subItemProductions)
+
         {
             if (ModelState.IsValid)
             {
@@ -548,13 +559,13 @@ namespace MYBUSINESS.Controllers
                 existingProduction.ProductName = db.Products.FirstOrDefault(p => p.Id == model.NewProduction.ProductId)?.Name;
                 existingProduction.Unit = model.NewProduction.Unit;
                 existingProduction.ProductId = model.NewProduction.ProductId;
-
+             
                 // Remove existing QuantityToProduce entries for the current NewProduction
                 var existingQuantityToProduces = db.QuantityToProduces
                     .Where(x => x.NewProductionId == existingProduction.Id)
                     .ToList();
                 db.QuantityToProduces.RemoveRange(existingQuantityToProduces);
-
+              
                 // Add new QuantityToProduce entries
                 if (quantityToProduces != null && quantityToProduces.Count > 0)
                 {
@@ -565,9 +576,10 @@ namespace MYBUSINESS.Controllers
                         db.QuantityToProduces.Add(item);
                     }
                 }
-
+               
                 // Save the changes to the database
                 db.Entry(existingProduction).State = EntityState.Modified;
+              
                 db.SaveChanges();
 
                 // Redirect to the index page after saving changes
@@ -689,7 +701,80 @@ namespace MYBUSINESS.Controllers
         //}
 
         [HttpPost]
-        public JsonResult ValidateStock(List<FinalProductionViewModel> updates)
+        public JsonResult ValidateStock(List<FinalProductionViewModel> LstProductionVM)
+        {
+            if (LstProductionVM == null || !LstProductionVM.Any())
+            {
+                return Json(new { message = "No updates received.", success = false });
+            }
+
+            foreach (FinalProductionViewModel productionVM in LstProductionVM.ToList())
+            {
+                Product product = db.Products.FirstOrDefault(p => p.Id == productionVM.ProductId);
+                product.Stock -= productionVM.CalculatedValue;
+                db.Entry(product).Property(x => x.Stock).IsModified = true;
+                
+                //var production = db.NewProductions.FirstOrDefault(n => n.Id == productionVM.ProductionId);
+            }
+            db.SaveChanges();
+            //FinalProductionViewModel production= new FinalProductionViewModel ();
+            foreach (FinalProductionViewModel productionVM in LstProductionVM.ToList())
+            {
+                //Console.WriteLine($"Received Update - ProductId: {production.ProductId}, Name: {production.Name}, CalculatedValue: {production.CalculatedValue}");
+
+                // Find the product by ProductId
+                var product = db.Products.FirstOrDefault(p => p.Id == productionVM.ProductId);
+                var production = db.NewProductions.FirstOrDefault(n => n.Id == productionVM.ProductionId);
+
+                if (product != null && production != null)
+                {
+                    Console.WriteLine($"Before Update - Product: {product.Name}, Stock: {product.Stock}");
+
+                    // ✅ Attach Product and Production to track changes
+                    db.Products.Attach(product);
+                    db.NewProductions.Attach(production);
+
+                    // Perform stock subtraction (Stock - CalculatedValue)
+                    product.Stock -= productionVM.CalculatedValue;
+
+                    // Ensure stock does not go negative
+                    if (product.Stock < 0)
+                    {
+                        product.Stock = 0;
+                    }
+
+                    // ✅ Explicitly mark properties as modified
+                    db.Entry(product).Property(x => x.Stock).IsModified = true;
+
+                    Console.WriteLine($"After Update - Product: {product.Name}, Stock: {product.Stock}");
+
+                    // ✅ Mark the production as validated
+                    production.Validate = true;
+                    db.Entry(production).Property(x => x.Validate).IsModified = true;
+                }
+                else
+                {
+                    Console.WriteLine($"Product '{productionVM.Name}' not found in the database.");
+                    return Json(new { message = $"Product '{productionVM.Name}' not found.", success = false });
+                }
+            }
+
+            // ✅ Save all changes at once
+            var changes = db.SaveChanges();
+            Console.WriteLine($"Changes Saved: {changes}");
+
+            if (changes > 0)
+            {
+                return Json(new { message = "Stock updated & Production validated successfully.", success = true });
+            }
+            else
+            {
+                return Json(new { message = "No changes detected in the database.", success = false });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult ValidateCStock(List<FinalProductionViewModel> updates)
         {
             if (updates == null || !updates.Any())
             {
@@ -708,7 +793,52 @@ namespace MYBUSINESS.Controllers
                     Console.WriteLine($"Before Update - Product: {product.Name}, Stock: {product.Stock}");
 
                     // Perform stock subtraction (Stock - CalculatedValue)
-                    product.Stock -= prod.CalculatedValue;
+                    product.Stock += prod.CalculatedValue;
+
+                    // Ensure stock does not go negative
+                    if (product.Stock < 0)
+                    {
+                        product.Stock = 0;
+                    }
+
+                    // Mark property as modified
+                    db.Entry(product).Property(x => x.Stock).IsModified = true;
+
+                    Console.WriteLine($"After Update - Product: {product.Name}, Stock: {product.Stock}");
+                }
+                else
+                {
+                    Console.WriteLine($"Product '{prod.Name}' not found in the database.");
+                    return Json(new { message = $"Product '{prod.Name}' not found.", success = false });
+                }
+            }
+
+            // Save all changes at once
+            db.SaveChanges();
+
+            return Json(new { message = "Stock updated successfully.", success = true });
+        }
+        [HttpPost]
+        public JsonResult IncreasedStock(List<FinalProductionViewModel> updates)
+        {
+            if (updates == null || !updates.Any())
+            {
+                return Json(new { message = "No updates received.", success = false });
+            }
+
+            foreach (var prod in updates)
+            {
+                Console.WriteLine($"Received Update - ProductId: {prod.ProductId}, Name: {prod.Name}, CalculatedValue: {prod.CalculatedValue}");
+
+                // Find the product by ProductId
+                var product = db.Products.FirstOrDefault(p => p.Id == prod.ProductId);
+
+                if (product != null)
+                {
+                    Console.WriteLine($"Before Update - Product: {product.Name}, Stock: {product.Stock}");
+
+                    // Perform stock subtraction (Stock - CalculatedValue)
+                    product.Stock += prod.CalculatedValue;
 
                     // Ensure stock does not go negative
                     if (product.Stock < 0)
@@ -734,7 +864,52 @@ namespace MYBUSINESS.Controllers
             return Json(new { message = "Stock updated successfully.", success = true });
         }
 
+        [HttpPost]
+        public JsonResult EIncreasedStock(List<FinalProductionViewModel> updates)
+        {
+            if (updates == null || !updates.Any())
+            {
+                return Json(new { message = "No updates received.", success = false });
+            }
 
+            foreach (var prod in updates)
+            {
+                Console.WriteLine($"Received Update - ProductId: {prod.ProductId}, Name: {prod.Name}, CalculatedValue: {prod.CalculatedValue}");
+
+                // Find the product by ProductId
+                var product = db.Products.FirstOrDefault(p => p.Id == prod.ProductId);
+                var production = db.PostProductions.FirstOrDefault(n => n.Id == prod.ProductionId);
+                if (product != null && production != null)
+                {
+                    Console.WriteLine($"Before Update - Product: {product.Name}, Stock: {product.Stock}");
+
+                    // Perform stock subtraction (Stock - CalculatedValue)
+                    product.Stock += prod.CalculatedValue;
+
+                    // Ensure stock does not go negative
+                    if (product.Stock < 0)
+                    {
+                        product.Stock = 0;
+                    }
+
+                    // Mark property as modified
+                    db.Entry(product).Property(x => x.Stock).IsModified = true;
+                    production.Validate = true;
+                    db.Entry(production).Property(x => x.Validate).IsModified = true;
+                    Console.WriteLine($"After Update - Product: {product.Name}, Stock: {product.Stock}");
+                }
+                else
+                {
+                    Console.WriteLine($"Product '{prod.Name}' not found in the database.");
+                    return Json(new { message = $"Product '{prod.Name}' not found.", success = false });
+                }
+            }
+
+            // Save all changes at once
+            db.SaveChanges();
+
+            return Json(new { message = "Stock updated successfully.", success = true });
+        }
 
         //public JsonResult GetSubItemDetails(int productId)
         //{

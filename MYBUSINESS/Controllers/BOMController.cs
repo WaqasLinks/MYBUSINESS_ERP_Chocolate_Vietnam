@@ -699,6 +699,35 @@ namespace MYBUSINESS.Controllers
             }
         }
         [HttpGet]
+        public JsonResult GetQuantityToProduction(int productId)
+        {
+            try
+            {
+                var productDetails = db.QuantityToProduces
+                    .Where(pd => pd.ProductId == productId)
+                    .Select(pd => new
+                    {
+                        pd.Id,
+                        pd.Shape,
+                        pd.ProductionQty,
+                        pd.CalculatedWeight
+                    }).ToList();
+
+                if (!productDetails.Any())
+                {
+                    return Json(new { message = "No product details found" }, JsonRequestBehavior.AllowGet);
+                }
+
+                return Json(productDetails, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                // Log exception
+                return Json(new { error = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
         //public JsonResult GetVariableProduct(int productId)
         //{
         //    var variableProduct = db.Products // Change `Product` to `Products`

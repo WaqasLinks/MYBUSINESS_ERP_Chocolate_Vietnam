@@ -100,10 +100,10 @@
                         <th>
                             Item Total
                         </th>
-                        <th>
+                        <th style="display:none;">
                             Purchasing Date
                         </th>
-                        <th>
+                        <th style="display:none;">
 
                             ExpiryDate
                         </th>
@@ -144,10 +144,10 @@
                                 <option value="true">Return</option>
                             </select>
                         </td>
-                        <td>
+                        <td style="display:none;">
                             <input type="datetime-local" autocomplete="off" class="form-control" name="PurchaseOrderDetail[0].PurchasingDate" id="purchasingdate0">
                         </td>
-                        <td>
+                        <td style="display:none;">
                             <input type="datetime-local" autocomplete="off" class="form-control" name="PurchaseOrderDetail[0].ExpiryDate" id="expirydate0">
                         </td>
 
@@ -278,79 +278,79 @@
 
 
                 <div class="table-title">
+                    <div style="display:none;" class="table-title">
+                        <div class="row">
+                            @*<div class="col-sm-8"><h2>Purchase <b>Order</b></h2></div>*@
+                            <div class="col-sm-3">
 
-                    <div class="row">
-                        @*<div class="col-sm-8"><h2>Purchase <b>Order</b></h2></div>*@
-                        <div class="col-sm-3">
-
-                        </div>
-                        <div class="col-sm-7">
-                            @*@Html.DropDownList("PurchaseOrder.FundingSourceId", (IEnumerable<SelectListItem>)ViewBag.FundingSources, null, new { @class = "form-control" })*@
-                            @Html.DropDownList("PurchaseOrder.BankAccountId", (IEnumerable<SelectListItem>)ViewBag.BankAccounts, null, new { @class = "form-control", @style = "display:none" })
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        @*<div class="col-sm-8"><h2>Purchase <b>Order</b></h2></div>*@
-                        <div class="col-sm-3">
-
-                        </div>
-                        <div class="col-sm-7">
-                            @*<textarea name="PurchaseOrder.PaymentMethod" rows="1" cols="100" class="form-control" placeholder="Payment method..."></textarea>*@
-                            <select class="form-control" name="PurchaseOrder.PaymentMethod" id="PurchaseOrder.PaymentMethod" data-toggle="tooltip" data-placement="top" title="Select Payment method">
-                                <option value="Cash" selected>Cash</option>
-                                <option value="Online">Online</option>
-                                <option value="Cheque">Cheque</option>
-                                <option value="Other">Other</option>
-                            </select>
+                            </div>
+                            <div class="col-sm-7">
+                                @*@Html.DropDownList("PurchaseOrder.FundingSourceId", (IEnumerable<SelectListItem>)ViewBag.FundingSources, null, new { @class = "form-control" })*@
+                                @Html.DropDownList("PurchaseOrder.BankAccountId", (IEnumerable<SelectListItem>)ViewBag.BankAccounts, null, new { @class = "form-control", @style = "display:none" })
+                            </div>
                         </div>
 
+                        <div class="row">
+                            @*<div class="col-sm-8"><h2>Purchase <b>Order</b></h2></div>*@
+                            <div class="col-sm-3">
 
-                    </div>
+                            </div>
+                            <div class="col-sm-7">
+                                @*<textarea name="PurchaseOrder.PaymentMethod" rows="1" cols="100" class="form-control" placeholder="Payment method..."></textarea>*@
+                                <select class="form-control" name="PurchaseOrder.PaymentMethod" id="PurchaseOrder.PaymentMethod" data-toggle="tooltip" data-placement="top" title="Select Payment method">
+                                    <option value="Cash" selected>Cash</option>
+                                    <option value="Online">Online</option>
+                                    <option value="Cheque">Cheque</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
 
-                    <div class="row">
-                        @*<div class="col-sm-8"><h2>Purchase <b>Order</b></h2></div>*@
-                        <div class="col-sm-3">
-
-                        </div>
-                        <div class="col-sm-7">
-                            <input type="text" autocomplete="off" class="form-control" name="PurchaseOrder.PaymentDetail" id="PurchaseOrder.PaymentDetail" value="" placeholder="Cheque No./Online payment No./etc..." data-toggle="tooltip" data-placement="top" title="Enter any details you want">
-                        </div>
-
-
-                    </div>
-
-
-
-                    <div class="row">
-                        @*<div class="col-sm-8"><h2>Purchase <b>Order</b></h2></div>*@
-
-                        <div class="col-sm-3">
 
                         </div>
-                        <div class="col-sm-7">
-                            <textarea name="PurchaseOrder.Remarks" rows="1" cols="100" class="form-control" placeholder="These remarks will print on bill" data-toggle="tooltip" data-placement="top" title="These remarks will print on bill"></textarea>
+
+                        <div class="row">
+                            @*<div class="col-sm-8"><h2>Purchase <b>Order</b></h2></div>*@
+                            <div class="col-sm-3">
+
+                            </div>
+                            <div class="col-sm-7">
+                                <input type="text" autocomplete="off" class="form-control" name="PurchaseOrder.PaymentDetail" id="PurchaseOrder.PaymentDetail" value="" placeholder="Cheque No./Online payment No./etc..." data-toggle="tooltip" data-placement="top" title="Enter any details you want">
+                            </div>
+
+
                         </div>
 
 
 
-                    </div>
+                        <div class="row">
+                            @*<div class="col-sm-8"><h2>Purchase <b>Order</b></h2></div>*@
 
-                    <div class="row">
-                        @*<div class="col-sm-8"><h2>Purchase <b>Order</b></h2></div>*@
-                        <div class="col-sm-3">
+                            <div class="col-sm-3">
+
+                            </div>
+                            <div class="col-sm-7">
+                                <textarea name="PurchaseOrder.Remarks" rows="1" cols="100" class="form-control" placeholder="These remarks will print on bill" data-toggle="tooltip" data-placement="top" title="These remarks will print on bill"></textarea>
+                            </div>
+
+
 
                         </div>
-                        <div class="col-sm-7">
-                            <textarea name="PurchaseOrder.Remarks2" rows="1" cols="100" class="form-control" placeholder="These remarks will not print on bill" data-toggle="tooltip" data-placement="top" title="These remarks will not print on bill"></textarea>
                         </div>
+                        <div class="row">
+                            @*<div class="col-sm-8"><h2>Purchase <b>Order</b></h2></div>*@
+                            <div class="col-sm-3">
 
-                        <div class="col-sm-2">
-                            <button type="submit" id="CreatePO" class="btn btn-info add-new">Save & Print</button>
+                            </div>
+                            <div style="display:none;" class="col-sm-7">
+                                <textarea name="PurchaseOrder.Remarks2" rows="1" cols="100" class="form-control" placeholder="These remarks will not print on bill" data-toggle="tooltip" data-placement="top" title="These remarks will not print on bill"></textarea>
+                            </div>
+
+                            <div class="col-sm-9">
+                                <button type="submit" id="CreatePO" class="btn btn-info add-new">Save & Print</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
     </div>
 }

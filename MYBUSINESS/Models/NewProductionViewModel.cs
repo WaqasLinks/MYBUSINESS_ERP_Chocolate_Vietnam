@@ -15,6 +15,8 @@ namespace MYBUSINESS.Models
         public List<ProductDetail> ProductDetail { get; set; } = new List<ProductDetail>();
         public IQueryable<Product> Products { get; set; }
         public SubItem SubItem { get; set; }
+        public virtual ICollection<SubItemProduction> SubItemProduction { get; set; } = new List<SubItemProduction>();
+        public SubItemProduction SubItemProductions { get; set; }
         public Product Product { get; set; }
        
         public NewProduction NewProduction { get; set; }

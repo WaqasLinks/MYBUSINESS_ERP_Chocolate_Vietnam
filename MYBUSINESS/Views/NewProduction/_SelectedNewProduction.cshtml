@@ -33,9 +33,26 @@
                                         <td>@Html.DisplayFor(modelItem => item.ProductName)</td>
                                         <td>@Html.DisplayFor(modelItem => item.Unit)</td>
                                         <td>
-                                            @Html.ActionLink("Update", "Edit", new { id = item.Id }, new { @class = "btn btn-info" }) |
+                                            @if (item.Validate ?? false)
+                                            {
+                                                @Html.ActionLink("View", "Edit", new { id = item.Id, readonlyMode = true }, new { @class = "btn btn-secondary" })
+
+                                            }
+                                            else
+                                            {
+                                                @Html.ActionLink("Update", "Edit", new { id = item.Id }, new { @class = "btn btn-info" })
+                                            }
+                                            |
+                                            @Html.ActionLink("Post Production", "Create", "PostProduction", new { id = item.Id }, new { @class = "btn btn-light text-dark" })
                                             @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
                                         </td>
+
+
+                                        @*<td>
+            @Html.ActionLink("Update", "Edit", new { id = item.Id }, new { @class = "btn btn-info" }) |
+            @Html.ActionLink("Post Production", "Create", "PostProduction", new { id = item.Id }, new { @class = "btn btn-light text-dark" })
+            @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+        </td>*@
                                     </tr>
                                 }
                             </tbody>

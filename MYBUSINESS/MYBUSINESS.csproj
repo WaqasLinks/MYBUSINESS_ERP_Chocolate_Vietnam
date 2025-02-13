@@ -369,6 +369,8 @@
     <Compile Include="Controllers\CustomerLedgerController.cs" />
     <Compile Include="Controllers\CurrenciesController.cs" />
     <Compile Include="Controllers\NewProductionController.cs" />
+    <Compile Include="Controllers\POPRReciverController.cs" />
+    <Compile Include="Controllers\PostProductionController.cs" />
     <Compile Include="Controllers\StoresController.cs" />
     <Compile Include="Controllers\PurchaseQuotationController.cs" />
     <Compile Include="Controllers\SaleQuotationController.cs" />
@@ -508,6 +510,13 @@
     <Compile Include="Models\POD.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\PODReciver.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PostProduction.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PostProductionViewModel.cs" />
     <Compile Include="Models\Product.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -515,6 +524,9 @@
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ProductDetail.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ProductionDetail.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ProductionOrder.cs">
@@ -530,6 +542,7 @@
     <Compile Include="Models\ProductViewModel.cs" />
     <Compile Include="Models\PurchaseOrderViewModel.cs" />
     <Compile Include="Models\DashboardViewModel.cs" />
+    <Compile Include="Models\PurchaseReceiverOrderViewModel.cs" />
     <Compile Include="Models\QuantityToProduce.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -589,6 +602,9 @@
     <Compile Include="Models\ServiceViewModel.cs" />
     <Compile Include="Models\SaleOrderViewModel.cs" />
     <Compile Include="Models\SubItem.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SubItemProduction.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Supplier.cs">
@@ -3155,6 +3171,7 @@
     <Content Include="Content\custom\downloads\jquery.mcautocomplete.js" />
     <Content Include="Content\custom\customerSOSR.js" />
     <Content Include="Content\custom\icon.css" />
+    <Content Include="Content\custom\supplierReciever.js" />
     <Content Include="Content\custom\treeView.css" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\Site1.css" />
@@ -3700,6 +3717,43 @@
     <Content Include="Views\FinalProduction\Index.cshtml" />
     <Content Include="Views\FinalProduction\IndexComponents.cshtml" />
     <Content Include="Views\NewProduction\FinalExcess.cshtml" />
+    <Content Include="Views\Payments\Create.cshtml" />
+    <Content Include="Views\Payments\Create1.cshtml" />
+    <Content Include="Views\Payments\Delete.cshtml" />
+    <Content Include="Views\Payments\Details.cshtml" />
+    <Content Include="Views\Payments\Edit.cshtml" />
+    <Content Include="Views\Payments\Index.cshtml" />
+    <Content Include="Views\POPRReciver\Create - Copy.cshtml" />
+    <Content Include="Views\POPRReciver\Create.cshtml" />
+    <Content Include="Views\POPRReciver\Delete.cshtml" />
+    <Content Include="Views\POPRReciver\Details.cshtml" />
+    <Content Include="Views\POPRReciver\Edit - Copy.cshtml" />
+    <Content Include="Views\POPRReciver\Edit.cshtml" />
+    <Content Include="Views\POPRReciver\Index.cshtml" />
+    <Content Include="Views\POPRReciver\PerMonthPurchase.cshtml" />
+    <Content Include="Views\POPRReciver\_SelectedPOPR.cshtml" />
+    <Content Include="Views\POPRReciver\_SelectedSOSR - Copy.cshtml" />
+    <Content Include="Views\PostProduction\BOMEdit.cshtml" />
+    <Content Include="Views\PostProduction\Create - Copy %282%29.cshtml" />
+    <Content Include="Views\PostProduction\Create - Copy %283%29 - Copy.cshtml" />
+    <Content Include="Views\PostProduction\Create - Copy %283%29.cshtml" />
+    <Content Include="Views\PostProduction\Create - Copy.cshtml" />
+    <Content Include="Views\PostProduction\Create.cshtml" />
+    <Content Include="Views\PostProduction\CreateService.cshtml" />
+    <Content Include="Views\PostProduction\Delete.cshtml" />
+    <Content Include="Views\PostProduction\DeleteBOM.cshtml" />
+    <Content Include="Views\PostProduction\Details.cshtml" />
+    <Content Include="Views\PostProduction\Edit - Copy.cshtml" />
+    <Content Include="Views\PostProduction\Edit.cshtml" />
+    <Content Include="Views\PostProduction\EditBOM.cshtml" />
+    <Content Include="Views\PostProduction\EditService.cshtml" />
+    <Content Include="Views\PostProduction\FinalExcess.cshtml" />
+    <Content Include="Views\PostProduction\Index - Copy.cshtml" />
+    <Content Include="Views\PostProduction\Index.cshtml" />
+    <Content Include="Views\PostProduction\IndexComponents.cshtml" />
+    <Content Include="Views\PostProduction\_IndexComponents.cshtml" />
+    <Content Include="Views\PostProduction\_SelectedNewProduction.cshtml" />
+    <Content Include="Views\PostProduction\_SelectedProducts1.cshtml" />
     <None Include="Web.Debug.Config">
       <DependentUpon>Web.Config</DependentUpon>
     </None>

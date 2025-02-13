@@ -12,5 +12,8 @@ namespace MYBUSINESS.Models
         public decimal SubtractValue { get; set; }
         public decimal CurrentStock { get; set; }
         public decimal CalculatedValue { get; set; }
+        public int ProductionId { get; set; }
+        public int PostProductionId { get; set; }
+
     }
 }

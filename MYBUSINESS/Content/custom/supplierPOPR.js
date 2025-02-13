@@ -160,8 +160,7 @@ $(document).ready(function () {
 
             '<td><input type="text" readonly class="form-control classBGcolor" name="itemTotal' + txtSerialNum + '" id="itemTotal' + txtSerialNum + '"tabindex="-1"></td>' +
             '<td style="display:none;"><select class="form-control" name="PurchaseOrderDetail[' + txtSerialNum + '].SaleType" id="saleType' + txtSerialNum + '"><option value="false" selected>Order</option><option value="true">Return</option></select></td>' +
-            '<td><input type="datetime-local" class="form-control" autocomplete="off" name="PurchaseOrderDetail[' + txtSerialNum + '].PurchasingDate" id="purchasingdate' + txtSerialNum + '"></td>' +
-            '<td><input type="datetime-local" class="form-control" autocomplete="off" name="PurchaseOrderDetail[' + txtSerialNum + '].ExpiryDate" id="expirydate' + txtSerialNum + '"></td>' +
+        
             '<td><button type="button" id="delete' + txtSerialNum + '" class="delete btn btn-default add-new"> <a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button></td>' +
             '</tr>';
         

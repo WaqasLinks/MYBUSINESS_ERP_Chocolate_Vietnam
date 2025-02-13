@@ -218,23 +218,23 @@
                                             </td>
                                             <td>
                                                 @Html.ActionLink("Update", "Edit", new { id = item.Id }, new { @class = "btn btn-info" })
-
+                                                @Html.ActionLink("Post Production", "Edit", new { id = item.Id }, new { @class = "btn btn-light" })
                                                 @*@{
-                if (item.IsService == false)
-                {
-                    @Html.ActionLink("Update", "Edit", new { id = item.Id })
-                }
-                else
-                {
-                    @Html.ActionLink("Update", "EditService", new { id = item.Id })
-                }
-            }*@
+            if (item.IsService == false)
+            {
+                @Html.ActionLink("Update", "Edit", new { id = item.Id })
+            }
+            else
+            {
+                @Html.ActionLink("Update", "EditService", new { id = item.Id })
+            }
+        }*@
 
                                                 |
 
                                                 @*<a href="@Url.Action("ProductWiseSale","SOSR", new { productId = item.Id })" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Search this product">Product Wise Sale</a>
 
-            |*@
+        |*@
                                                 @*@Html.ActionLink("Details", "Details", new { id=item.Id }) |*@
                                                 @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
                                             </td>
