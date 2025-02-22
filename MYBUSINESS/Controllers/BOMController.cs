@@ -71,12 +71,24 @@ namespace MYBUSINESS.Controllers
 
             // Get products without BOM
             var productsWithoutBOM = db.Products
-                .Where(p => p.Manufacturable == true && !db.BOMs.Any(b => b.ProductId == p.Id)) // Filter out products with existing BOMs
+                .Where(p => p.FinishedProduct == true && !db.BOMs.Any(b => b.ProductId == p.Id)) // Filter out products with existing BOMs
                 .Select(p => new { Value = p.Id.ToString(), Text = p.Name }) // Prepare for SelectList
                 .ToList();
 
             // Pass the filtered product list to the view
             ViewBag.ProductList = new SelectList(productsWithoutBOM, "Value", "Text");
+            var excessProducts = db.Products
+        .Where(p => p.PType == 2)
+        .Select(p => new { Value = p.Id.ToString(), Text = p.Name })
+        .ToList();
+            ViewBag.ExcessProductList = new SelectList(excessProducts, "Value", "Text");
+
+            // Get Products with PType = 3 (ByProduct)
+            var byProducts = db.Products
+                .Where(p => p.PType == 3)
+                .Select(p => new { Value = p.Id.ToString(), Text = p.Name })
+                .ToList();
+            ViewBag.ByProductList = new SelectList(byProducts, "Value", "Text");
 
 
             // Initialize the BOM and SubItem list in the ViewModel
@@ -302,7 +314,7 @@ namespace MYBUSINESS.Controllers
                 return HttpNotFound();
             }
             var productsWithoutBOM = db.Products
-          .Where(p => p.Manufacturable == true &&
+          .Where(p => p.FinishedProduct == true &&
               (!db.BOMs.Any(b => b.ProductId == p.Id) || p.Id == bom.ProductId)) // Include the current product
           .Select(p => new { Value = p.Id.ToString(), Text = p.Name })
           .ToList();
@@ -310,7 +322,7 @@ namespace MYBUSINESS.Controllers
             // Pass the filtered product list to the view, pre-select the current product
             ViewBag.ProductList = new SelectList(productsWithoutBOM, "Value", "Text", bom.ProductId);
             var products = db.Products
-        .Where(p => p.Manufacturable == true)
+        .Where(p => p.FinishedProduct == true)
         .Select(p => new { Value = p.Id.ToString(), Text = p.Name })
         .ToList();
 

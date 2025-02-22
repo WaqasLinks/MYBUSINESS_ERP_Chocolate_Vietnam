@@ -17,8 +17,8 @@ namespace MYBUSINESS.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public PostProduction()
         {
-            this.SubItemProductions = new HashSet<SubItemProduction>();
             this.QuantityToProduces = new HashSet<QuantityToProduce>();
+            this.SubItemProductions = new HashSet<SubItemProduction>();
         }
     
         public int Id { get; set; }
@@ -31,11 +31,11 @@ namespace MYBUSINESS.Models
         public string Note { get; set; }
         public Nullable<bool> Validate { get; set; }
     
-        public virtual Product Product { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SubItemProduction> SubItemProductions { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<QuantityToProduce> QuantityToProduces { get; set; }
         public virtual NewProduction NewProduction { get; set; }
+        public virtual Product Product { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SubItemProduction> SubItemProductions { get; set; }
     }
 }

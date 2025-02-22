@@ -261,7 +261,7 @@
 
                         @Html.ActionLink("Back to List", "Index")
 
-                        <button id="validateBtn" class="btn btn-primary" style="margin-left:280px;" @(isReadonly ? "disabled='disabled'" : "")>Validate</button>
+                        <button id="validateBtn" class="btn btn-primary" style="margin-left:260px;" @(isReadonly ? "disabled='disabled'" : "")>Validate</button>
 
                     </div>
 
@@ -303,27 +303,18 @@
                                     int sNo = 0;
                                     foreach (var item in Model.SubItemProduction)
                                     {
-                                        if (item.Product != null && item.Product.Ingredient == true)
+                                        if (item.Product.Manufacturable == false)
                                         {
                                             <tr>
                                                 <td id="SNo0">@(sNo + 1)</td>
                                                 <td style="display:none;"><input type="hidden" readonly name="SubItemProduction.Index" value="@sNo" / @(isReadonly ? "readonly='readonly'" : "")></td>
                                                 <td style="display:none;"><input type="text" readonly value=@item.ParentProductId readonly class="form-control classBGcolor" name="SubItemProduction[@sNo].ParentProductId" id="idn@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>
                                                 <td><input type="text" readonly autocomplete="off" value="@(item.Product.Name)" class="form-control" name="SubItemProduction[@sNo].Product.Name" id="name@(sNo)" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name" @(isReadonly ? "readonly='readonly'" : "")></td>
-                                                <td style="display:none;"><input type="text" readonly autocomplete="off" value="@(item.Product.Id)" class="form-control" name="SubItemProduction[@sNo].Product.Id" id="id@(sNo)" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name" @(isReadonly ? "readonly='readonly'" : "")></td>
+                                                <td style="display:none;"><input type="text" readonly autocomplete="off" value="@(item.Product.Id)" class="form-control" name="SubItemProduction[@sNo].ProductId" id="id@(sNo)" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name" @(isReadonly ? "readonly='readonly'" : "")></td>
                                                 @*<td><input type="text" autocomplete="off" value="@(item.QuantitytoPrepare)" class="form-control" name="SubItem[@sNo].Shape" id="shape@(sNo)" placeholder="" data-toggle="tooltip" data-placement="top" title=""></td>*@
-                                                @*<td><input type="text" readonly autocomplete="off" value=@item.Quantity class="form-control" name="SubItemProduction[@sNo].Quantity" id="quantity@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>*@
                                                 <td style="display:none;"><input type="text" readonly autocomplete="off" value=@item.Quantity class="form-control" name="SubItemProduction[@sNo].Quantity" id="quantity@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>
                                                 <td>
-                                                    <input type="text" readonly autocomplete="off" value="@item.SubItemQty"
-                                                           class="form-control calculated-subitem"
-                                                           name="SubItemProduction[@sNo].SubItemQty"
-                                                           id="subitemqty@(sNo)"
-                                                           data-index="@sNo" />
-                                                </td>
-
-                                                <td style="display:none;">
-                                                    <span class=".calculated-subitem">@Model.TotalWeight.ToString("0.00")</span>
+                                                    <span class="calculated-subitem">@Model.TotalWeight.ToString("0.00")</span>
                                                     <input type="hidden" name="SubItemProduction[@sNo].CalculatedValue"
                                                            class="calculated-value-hidden"
                                                            value="@Model.TotalWeight.ToString("0.00")"
@@ -335,12 +326,12 @@
             <input type="hidden" name="SubItemProduction[@sNo].CalculatedValue" class="calculated-value-hidden" value="0.00" @(isReadonly ? "readonly='readonly'" : "")>
         </td>*@
                                                 @*<td>
-            <span class="calculated-subitem">@Model.TotalWeight.ToString("0.00")</span>
-            <input type="hidden" name="SubItemProduction[@sNo].CalculatedValue"
-                   class="calculated-value-hidden"
-                   value="@Model.TotalWeight.ToString("0.00")"
-                   @(isReadonly ? "readonly='readonly'" : "")>
-        </td>*@
+                                                    <span class="calculated-subitem">@Model.TotalWeight.ToString("0.00")</span>
+                                                    <input type="hidden" name="SubItemProduction[@sNo].CalculatedValue"
+                                                           class="calculated-value-hidden"
+                                                           value="@Model.TotalWeight.ToString("0.00")"
+                                                           @(isReadonly ? "readonly='readonly'" : "")>
+                                                </td>*@
 
                                                 @*<td>
 
@@ -405,12 +396,13 @@
                                     int sNo = 0;
                                     foreach (var item in Model.SubItemProduction)
                                     {
-                                        if (item.Product != null && item.Product.FinishedProduct == true || item.Product.PType == 1)
+                                        if (item.Product.Manufacturable == true)
                                         {
                                             <tr>
                                                 <td id="SNo0">@(sNo + 1)</td>
                                                 <td style="display:none;"><input type="hidden" readonly name="SubItemProduction.Index" value="@sNo" /></td>
                                                 <td style="display:none;"><input type="text" readonly value=@item.ParentProductId readonly class="form-control classBGcolor" name="SubItemProduction[@sNo].ParentProductId" id="idn@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>
+                                                <td style="display:none;"><input type="text" readonly autocomplete="off" value="@(item.Product.Id)" class="form-control" name="SubItemProduction[@sNo].ProductId" id="id@(sNo)" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name" @(isReadonly ? "readonly='readonly'" : "")></td>
                                                 <td><input type="text" readonly autocomplete="off" value="@(item.Product.Name)" class="form-control" name="SubItemProduction[@sNo].Product.Name" id="name@(sNo)" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name" @(isReadonly ? "readonly='readonly'" : "")></td>
                                                 @*<td><input type="text" autocomplete="off" value="@(item.QuantitytoPrepare)" class="form-control" name="SubItem[@sNo].Shape" id="shape@(sNo)" placeholder="" data-toggle="tooltip" data-placement="top" title=""></td>*@
                                                 @*<td><input type="text" autocomplete="off" value=@item.Quantity class="form-control production-qty" name="SubItemProduction[@sNo].Quantity" id="quantity@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>*@
@@ -423,22 +415,18 @@
                                                            @(isReadonly || item.Product.PType == 3 ? "readonly='readonly'" : "")>
                                                 </td>
                                                 <td><input type="text" readonly autocomplete="off" value=@item.Unit class="form-control" name="SubItemProduction[@sNo].Unit" id="unit@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>
-                                                @*<td><input type="text" readonly autocomplete="off" value=@item.ProductType class="form-control" name="SubItemProduction[@sNo].Product.PType" id="ptype@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>*@
-                                                <td><input type="text" readonly autocomplete="off" value=@item.Product.PType class="form-control" name="SubItemProduction[@sNo].Product.PType" id="ptype@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>
-                                                
-
-
-
-                                                @*<td>
-            <input type="text" readonly autocomplete="off"
-                   value="@(item.Product.PType == 1 ? "Variable Product" :
+                                                @*<td><input type="text" readonly autocomplete="off" value=@item.Product.PType class="form-control" name="SubItemProduction[@sNo].Product.PType" id="ptype@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>*@
+                                                <td>
+                                                    <input type="text" readonly autocomplete="off"
+                                                           value="@(item.Product.PType == 1 ? "Variable Product" :
                     item.Product.PType == 2 ? "Excess Product" :
                     item.Product.PType == 3 ? "ByProduct" : "Unknown")"
-                   class="form-control"
-                   name="SubItemProduction[@sNo].Product.PType"
-                   id="ptype@(sNo)"
-                   @(isReadonly ? "readonly='readonly'" : "")>
-        </td>*@
+                                                           class="form-control"
+                                                           name="SubItemProduction[@sNo].Product.PType"
+                                                           id="ptype@(sNo)"
+                                                           @(isReadonly ? "readonly='readonly'" : "")>
+                                                </td>
+
                                                 @*<td>
             <select class="form-control" name="SubItem[0].BOM.Unit" id="unit0">
                 <option value="Kg" selected>Kg</option>
@@ -506,7 +494,7 @@
                 $('#unitHiddenField').val(data.unit); // Update the hidden unit field
             },
             error: function () {
-                /*alert('Failed to fetch unit details.');*/
+                alert('Failed to fetch unit details.');
             }
         });
     } else {
@@ -554,11 +542,11 @@ $('#productDropdown').change(function () {
                     });
                 } else {
                     $('#selectedProduct tbody').empty();
-                    /*alert('No product details found.');*/
+                    alert('No product details found.');
                 }
             },
             error: function () {
-                /*alert('Failed to fetch product details.');*/
+                alert('Failed to fetch product details.');
             }
         });
     } else {
@@ -697,7 +685,7 @@ $('#productDropdown').change(function () {
 
             if (rowProductId == variableProductId) {
                 let newVariableProductQty = productionQty * variableConsumptionRate;
-                /*alert(`Updating Variable Product ID ${variableProductId}: New Quantity = ${newVariableProductQty}`);*/
+                alert(`Updating Variable Product ID ${variableProductId}: New Quantity = ${newVariableProductQty}`);
                 $(this).find('.calculated-subitem').text(newVariableProductQty.toFixed(2)); // Update quantity
             }
         });
@@ -722,7 +710,7 @@ $('#productDropdown').change(function () {
         $('#totalWeightDisplay').text(totalWeight.toFixed(2));
 
         // Alert to check updated total weight
-        /*alert(`Total Weight Updated: ${gtotalWeight}`);*/
+        alert(`Total Weight Updated: ${gtotalWeight}`);
 
         // Update the sub-items with the total weight multiplied by quantity
         updateSubItemCalculations();
@@ -736,8 +724,8 @@ $('#productDropdown').change(function () {
             $(this).find('.calculated-subitem').text(calculatedValue.toFixed(2)); // Update calculated value
         });
 
-        //// Alert to check updated sub-item values
-        //alert(`Sub-Item Calculations Updated`);
+        // Alert to check updated sub-item values
+        alert(`Sub-Item Calculations Updated`);
     }
 
 
@@ -840,14 +828,14 @@ $('#productDropdown').change(function () {
                     // Update calculations after adding rows
                     updateSubItemCalculations();
                 } else {
-                    // If no data, clear tables and show 
+                    // If no data, clear tables and show alert
                     $('#selectedProducts tbody').empty();
                     $('#productTypeTable tbody').empty();
-                    ('No sub-item details found.');
+                    alert('No sub-item details found.');
                 }
             },
             error: function () {
-                ('Failed to fetch sub-item details.');
+                alert('Failed to fetch sub-item details.');
             }
         });
     } else {
@@ -860,7 +848,7 @@ $('#productDropdown').change(function () {
 
   $('#validateBtn').click(function (event) {
     event.preventDefault();
-    /*alert("Button Clicked!");*/ // Debugging alert
+    alert("Button Clicked!"); // Debugging alert
 
     let productUpdates = [];
 
@@ -914,7 +902,7 @@ $('#productDropdown').change(function () {
     console.log("Final Product Updates List:", productUpdates);
 
     if (productUpdates.length > 0) {
-        /*alert("Sending AJAX Request...");*/ // Debugging alert
+        alert("Sending AJAX Request..."); // Debugging alert
         $.ajax({
             url: '@Url.Action("ValidateStock", "NewProduction")',
             type: 'POST',
@@ -924,18 +912,18 @@ $('#productDropdown').change(function () {
                 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
             },
             success: function (response) {
-                /*alert(response.message);*/
+                alert(response.message);
                 if (response.success) {
                     $("#newProductionForm").submit();
                 }
             },
             error: function (xhr, status, error) {
-             /*   alert("An error occurred while updating the stock.");*/
+                alert("An error occurred while updating the stock.");
                 console.error("Error:", error);
             }
         });
     } else {
-        /*alert("No products to validate.");*/
+        alert("No products to validate.");
     }
 });
 

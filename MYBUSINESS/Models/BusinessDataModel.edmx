@@ -395,8 +395,12 @@
           <Property Name="Unit" Type="nvarchar" MaxLength="255" />
           <Property Name="Excess" Type="bit" Nullable="false" />
           <Property Name="ByProduct" Type="bit" Nullable="false" />
-          <Property Name="PType" Type="tinyint" Nullable="false" />
+          <Property Name="PType" Type="tinyint" />
           <Property Name="VariableProductId" Type="int" />
+          <Property Name="Ingredient" Type="bit" Nullable="false" />
+          <Property Name="FinishedProduct" Type="bit" Nullable="false" />
+          <Property Name="Merchandise" Type="bit" Nullable="false" />
+          <Property Name="IntermediaryIngredient" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="ProductCategory">
           <Key>
@@ -658,7 +662,7 @@
           <Property Name="Id" Type="decimal" Precision="18" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ParentProductId" Type="decimal" Precision="18" Scale="0" />
           <Property Name="ProductId" Type="decimal" Precision="18" Scale="0" />
-          <Property Name="Quantity" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="Quantity" Type="decimal" Precision="18" Scale="6" />
           <Property Name="BOMId" Type="int" />
           <Property Name="Unit" Type="nvarchar" MaxLength="50" />
           <Property Name="AvailableInventory" Type="decimal" Precision="18" Scale="0" />
@@ -682,6 +686,7 @@
           <Property Name="ProductType" Type="tinyint" />
           <Property Name="NewProductionId" Type="int" />
           <Property Name="PostProductionId" Type="int" />
+          <Property Name="SubItemQty" Type="decimal" Precision="18" Scale="4" />
         </EntityType>
         <EntityType Name="Supplier">
           <Key>
@@ -1882,7 +1887,6 @@
           <EntitySet Name="SODs" EntityType="Models.SOD" />
           <EntitySet Name="Stores" EntityType="Models.Store" />
           <EntitySet Name="StoreProducts" EntityType="Models.StoreProduct" />
-          <EntitySet Name="SubItems" EntityType="Models.SubItem" />
           <EntitySet Name="Suppliers" EntityType="Models.Supplier" />
           <EntitySet Name="sysdiagrams" EntityType="Models.sysdiagram" />
           <EntitySet Name="UserAuthorizations" EntityType="Models.UserAuthorization" />
@@ -1893,10 +1897,6 @@
           <AssociationSet Name="FK_SO_Account" Association="Models.FK_SO_Account">
             <End Role="BankAccount" EntitySet="BankAccounts" />
             <End Role="SO" EntitySet="SOes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SubItem_BOM" Association="Models.FK_SubItem_BOM">
-            <End Role="BOM" EntitySet="BOMs" />
-            <End Role="SubItem" EntitySet="SubItems" />
           </AssociationSet>
           <AssociationSet Name="FK_Customer_Business" Association="Models.FK_Customer_Business">
             <End Role="BusinessInfo" EntitySet="BusinessInfoes" />
@@ -2012,6 +2012,44 @@
             <End Role="BOM" EntitySet="BOMs" />
             <End Role="ProductType" EntitySet="ProductTypes" />
           </AssociationSet>
+          <EntitySet Name="PODRecivers" EntityType="Models.PODReciver" />
+          <AssociationSet Name="FK_PODReciver_PO" Association="Models.FK_PODReciver_PO">
+            <End Role="PO" EntitySet="POes" />
+            <End Role="PODReciver" EntitySet="PODRecivers" />
+          </AssociationSet>
+          <EntitySet Name="ProductionDetails" EntityType="Models.ProductionDetail" />
+          <EntitySet Name="PostProductions" EntityType="Models.PostProduction" />
+          <AssociationSet Name="FK_QuantityToProduce_PostProduction" Association="Models.FK_QuantityToProduce_PostProduction">
+            <End Role="PostProduction" EntitySet="PostProductions" />
+            <End Role="QuantityToProduce" EntitySet="QuantityToProduces" />
+          </AssociationSet>
+          <EntitySet Name="NewProductions" EntityType="Models.NewProduction" />
+          <AssociationSet Name="FK_PostProduction_NewProduction" Association="Models.FK_PostProduction_NewProduction">
+            <End Role="NewProduction" EntitySet="NewProductions" />
+            <End Role="PostProduction" EntitySet="PostProductions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductionDetail_NewProduction" Association="Models.FK_ProductionDetail_NewProduction">
+            <End Role="NewProduction" EntitySet="NewProductions" />
+            <End Role="ProductionDetail" EntitySet="ProductionDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_QuantityToProduce_NewProduction1" Association="Models.FK_QuantityToProduce_NewProduction1">
+            <End Role="NewProduction" EntitySet="NewProductions" />
+            <End Role="QuantityToProduce" EntitySet="QuantityToProduces" />
+          </AssociationSet>
+          <EntitySet Name="ProductDetails" EntityType="Models.ProductDetail" />
+          <AssociationSet Name="FK_ProductDetail_NewProduction" Association="Models.FK_ProductDetail_NewProduction">
+            <End Role="NewProduction" EntitySet="NewProductions" />
+            <End Role="ProductDetail" EntitySet="ProductDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_QuantityToProduce_ProductDetail" Association="Models.FK_QuantityToProduce_ProductDetail">
+            <End Role="ProductDetail" EntitySet="ProductDetails" />
+            <End Role="QuantityToProduce" EntitySet="QuantityToProduces" />
+          </AssociationSet>
+          <EntitySet Name="SubItems" EntityType="Models.SubItem" />
+          <AssociationSet Name="FK_SubItem_BOM" Association="Models.FK_SubItem_BOM">
+            <End Role="BOM" EntitySet="BOMs" />
+            <End Role="SubItem" EntitySet="SubItems" />
+          </AssociationSet>
           <EntitySet Name="Products" EntityType="Models.Product" />
           <AssociationSet Name="FK_BOM_Product1" Association="Models.FK_BOM_Product1">
             <End Role="Product" EntitySet="Products" />
@@ -2029,13 +2067,33 @@
             <End Role="Product" EntitySet="Products" />
             <End Role="LoanDetail" EntitySet="LoanDetails" />
           </AssociationSet>
+          <AssociationSet Name="FK_NewProduction_Product1" Association="Models.FK_NewProduction_Product1">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="NewProduction" EntitySet="NewProductions" />
+          </AssociationSet>
           <AssociationSet Name="FK_POD_Product" Association="Models.FK_POD_Product">
             <End Role="Product" EntitySet="Products" />
             <End Role="POD" EntitySet="PODs" />
           </AssociationSet>
+          <AssociationSet Name="FK_PODReciver_Product" Association="Models.FK_PODReciver_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="PODReciver" EntitySet="PODRecivers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PostProduction_Product" Association="Models.FK_PostProduction_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="PostProduction" EntitySet="PostProductions" />
+          </AssociationSet>
           <AssociationSet Name="FK_ProductCategory_Product" Association="Models.FK_ProductCategory_Product">
             <End Role="Product" EntitySet="Products" />
             <End Role="ProductCategory" EntitySet="ProductCategories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductDetail_Product" Association="Models.FK_ProductDetail_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="ProductDetail" EntitySet="ProductDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductionDetail_Product" Association="Models.FK_ProductionDetail_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="ProductionDetail" EntitySet="ProductionDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_ProductionOrderDetail_Product" Association="Models.FK_ProductionOrderDetail_Product">
             <End Role="Product" EntitySet="Products" />
@@ -2069,28 +2127,13 @@
             <End Role="Product" EntitySet="Products" />
             <End Role="SubItem" EntitySet="SubItems" />
           </AssociationSet>
-          <EntitySet Name="PODRecivers" EntityType="Models.PODReciver" />
-          <AssociationSet Name="FK_PODReciver_PO" Association="Models.FK_PODReciver_PO">
-            <End Role="PO" EntitySet="POes" />
-            <End Role="PODReciver" EntitySet="PODRecivers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PODReciver_Product" Association="Models.FK_PODReciver_Product">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="PODReciver" EntitySet="PODRecivers" />
-          </AssociationSet>
-          <EntitySet Name="ProductionDetails" EntityType="Models.ProductionDetail" />
-          <AssociationSet Name="FK_ProductionDetail_Product" Association="Models.FK_ProductionDetail_Product">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="ProductionDetail" EntitySet="ProductionDetails" />
-          </AssociationSet>
-          <EntitySet Name="PostProductions" EntityType="Models.PostProduction" />
-          <AssociationSet Name="FK_PostProduction_Product" Association="Models.FK_PostProduction_Product">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="PostProduction" EntitySet="PostProductions" />
-          </AssociationSet>
           <EntitySet Name="SubItemProductions" EntityType="Models.SubItemProduction" />
           <AssociationSet Name="FK_SubItemProduction_BOM" Association="Models.FK_SubItemProduction_BOM">
             <End Role="BOM" EntitySet="BOMs" />
+            <End Role="SubItemProduction" EntitySet="SubItemProductions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubItemProduction_NewProduction" Association="Models.FK_SubItemProduction_NewProduction">
+            <End Role="NewProduction" EntitySet="NewProductions" />
             <End Role="SubItemProduction" EntitySet="SubItemProductions" />
           </AssociationSet>
           <AssociationSet Name="FK_SubItemProduction_PostProduction" Association="Models.FK_SubItemProduction_PostProduction">
@@ -2100,44 +2143,6 @@
           <AssociationSet Name="FK_SubItemProduction_Product" Association="Models.FK_SubItemProduction_Product">
             <End Role="Product" EntitySet="Products" />
             <End Role="SubItemProduction" EntitySet="SubItemProductions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_QuantityToProduce_PostProduction" Association="Models.FK_QuantityToProduce_PostProduction">
-            <End Role="PostProduction" EntitySet="PostProductions" />
-            <End Role="QuantityToProduce" EntitySet="QuantityToProduces" />
-          </AssociationSet>
-          <EntitySet Name="NewProductions" EntityType="Models.NewProduction" />
-          <AssociationSet Name="FK_NewProduction_Product1" Association="Models.FK_NewProduction_Product1">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="NewProduction" EntitySet="NewProductions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PostProduction_NewProduction" Association="Models.FK_PostProduction_NewProduction">
-            <End Role="NewProduction" EntitySet="NewProductions" />
-            <End Role="PostProduction" EntitySet="PostProductions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductionDetail_NewProduction" Association="Models.FK_ProductionDetail_NewProduction">
-            <End Role="NewProduction" EntitySet="NewProductions" />
-            <End Role="ProductionDetail" EntitySet="ProductionDetails" />
-          </AssociationSet>
-          <AssociationSet Name="FK_QuantityToProduce_NewProduction1" Association="Models.FK_QuantityToProduce_NewProduction1">
-            <End Role="NewProduction" EntitySet="NewProductions" />
-            <End Role="QuantityToProduce" EntitySet="QuantityToProduces" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SubItemProduction_NewProduction" Association="Models.FK_SubItemProduction_NewProduction">
-            <End Role="NewProduction" EntitySet="NewProductions" />
-            <End Role="SubItemProduction" EntitySet="SubItemProductions" />
-          </AssociationSet>
-          <EntitySet Name="ProductDetails" EntityType="Models.ProductDetail" />
-          <AssociationSet Name="FK_ProductDetail_NewProduction" Association="Models.FK_ProductDetail_NewProduction">
-            <End Role="NewProduction" EntitySet="NewProductions" />
-            <End Role="ProductDetail" EntitySet="ProductDetails" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductDetail_Product" Association="Models.FK_ProductDetail_Product">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="ProductDetail" EntitySet="ProductDetails" />
-          </AssociationSet>
-          <AssociationSet Name="FK_QuantityToProduce_ProductDetail" Association="Models.FK_QuantityToProduce_ProductDetail">
-            <End Role="ProductDetail" EntitySet="ProductDetails" />
-            <End Role="QuantityToProduce" EntitySet="QuantityToProduces" />
           </AssociationSet>
           </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
@@ -2349,8 +2354,8 @@
           <Property Name="ProductName" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
           <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="Unit" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="SubItems" Relationship="Models.FK_SubItem_BOM" FromRole="BOM" ToRole="SubItem" />
           <NavigationProperty Name="ProductTypes" Relationship="Models.FK_ProductType_BOM" FromRole="BOM" ToRole="ProductType" />
+          <NavigationProperty Name="SubItems" Relationship="Models.FK_SubItem_BOM" FromRole="BOM" ToRole="SubItem" />
           <NavigationProperty Name="Product" Relationship="Models.FK_BOM_Product1" FromRole="BOM" ToRole="Product" />
           <NavigationProperty Name="SubItemProductions" Relationship="Models.FK_SubItemProduction_BOM" FromRole="BOM" ToRole="SubItemProduction" />
         </EntityType>
@@ -2671,9 +2676,9 @@
           <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="PO" Relationship="Models.FK_POD_PO" FromRole="POD" ToRole="PO" />
           <Property Name="ExpiryDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Product" Relationship="Models.FK_POD_Product" FromRole="POD" ToRole="Product" />
           <Property Name="PurchasingDate" Type="DateTime" Precision="3" />
           <Property Name="Unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Product" Relationship="Models.FK_POD_Product" FromRole="POD" ToRole="Product" />
         </EntityType>
         <EntityType Name="ProductCategory">
           <Key>
@@ -2903,23 +2908,6 @@
           <NavigationProperty Name="Store" Relationship="Models.FK_StoreProduct_Store" FromRole="StoreProduct" ToRole="Store" />
           <NavigationProperty Name="Product" Relationship="Models.FK_StoreProduct_Product" FromRole="StoreProduct" ToRole="Product" />
         </EntityType>
-        <EntityType Name="SubItem">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Decimal" Nullable="false" Precision="18" Scale="0" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ParentProductId" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="Quantity" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="BOMId" Type="Int32" />
-          <Property Name="Unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="AvailableInventory" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="QuantityRequested" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="QuantitytoPrepare" Type="Decimal" Precision="18" Scale="0" />
-          <NavigationProperty Name="BOM" Relationship="Models.FK_SubItem_BOM" FromRole="SubItem" ToRole="BOM" />
-          <Property Name="ProductType" Type="Byte" />
-          <NavigationProperty Name="Product" Relationship="Models.FK_SubItem_Product" FromRole="SubItem" ToRole="Product" />
-        </EntityType>
         <EntityType Name="Supplier">
           <Key>
             <PropertyRef Name="Id" />
@@ -2985,18 +2973,6 @@
             </Principal>
             <Dependent Role="SO">
               <PropertyRef Name="BankAccountId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SubItem_BOM">
-          <End Type="Models.BOM" Role="BOM" Multiplicity="0..1" />
-          <End Type="Models.SubItem" Role="SubItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="BOM">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="SubItem">
-              <PropertyRef Name="BOMId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3335,11 +3311,11 @@
           <Property Name="Shape" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="NewProductionId" Type="Int32" />
           <Property Name="CalculatedWeight" Type="Decimal" Precision="18" Scale="0" />
-          <NavigationProperty Name="Product" Relationship="Models.FK_QuantityToProduce_Product" FromRole="QuantityToProduce" ToRole="Product" />
           <Property Name="PostProductionId" Type="Int32" />
           <NavigationProperty Name="PostProduction" Relationship="Models.FK_QuantityToProduce_PostProduction" FromRole="QuantityToProduce" ToRole="PostProduction" />
           <NavigationProperty Name="NewProduction" Relationship="Models.FK_QuantityToProduce_NewProduction1" FromRole="QuantityToProduce" ToRole="NewProduction" />
           <NavigationProperty Name="ProductDetail" Relationship="Models.FK_QuantityToProduce_ProductDetail" FromRole="QuantityToProduce" ToRole="ProductDetail" />
+          <NavigationProperty Name="Product" Relationship="Models.FK_QuantityToProduce_Product" FromRole="QuantityToProduce" ToRole="Product" />
         </EntityType>
         <EntityType Name="ProductType">
           <Key>
@@ -3362,6 +3338,207 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="ProductType">
+              <PropertyRef Name="BOMId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="PODReciver">
+          <Key>
+            <PropertyRef Name="Auto" />
+          </Key>
+          <Property Name="Auto" Type="Decimal" Nullable="false" Precision="18" Scale="0" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="POId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PODReciverId" Type="Int32" />
+          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="OpeningStock" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="PurchasePrice" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="PerPack" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="IsPack" Type="Boolean" />
+          <Property Name="SaleType" Type="Boolean" />
+          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ExpiryDate" Type="DateTime" Precision="3" />
+          <Property Name="PurchasingDate" Type="DateTime" Precision="3" />
+          <Property Name="Unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="PO" Relationship="Models.FK_PODReciver_PO" FromRole="PODReciver" ToRole="PO" />
+          <NavigationProperty Name="Product" Relationship="Models.FK_PODReciver_Product" FromRole="PODReciver" ToRole="Product" />
+        </EntityType>
+        <Association Name="FK_PODReciver_PO">
+          <End Type="Models.PO" Role="PO" Multiplicity="0..1" />
+          <End Type="Models.PODReciver" Role="PODReciver" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PO">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PODReciver">
+              <PropertyRef Name="POId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ProductionDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="ProdctuionId" Type="Int32" />
+          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="ShapeId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ShapePrdnQty" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="VarProd" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ExcessProd" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ByProd" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="NewProduction" Relationship="Models.FK_ProductionDetail_NewProduction" FromRole="ProductionDetail" ToRole="NewProduction" />
+          <NavigationProperty Name="Product" Relationship="Models.FK_ProductionDetail_Product" FromRole="ProductionDetail" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="PostProduction">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="ProductionDate" Type="DateTime" Precision="0" />
+          <Property Name="ProductName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Unit" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Quantity" Type="Decimal" Precision="38" Scale="30" />
+          <Property Name="ProductionId" Type="Int32" />
+          <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="QuantityToProduces" Relationship="Models.FK_QuantityToProduce_PostProduction" FromRole="PostProduction" ToRole="QuantityToProduce" />
+          <NavigationProperty Name="NewProduction" Relationship="Models.FK_PostProduction_NewProduction" FromRole="PostProduction" ToRole="NewProduction" />
+          <Property Name="Validate" Type="Boolean" />
+          <NavigationProperty Name="Product" Relationship="Models.FK_PostProduction_Product" FromRole="PostProduction" ToRole="Product" />
+          <NavigationProperty Name="SubItemProductions" Relationship="Models.FK_SubItemProduction_PostProduction" FromRole="PostProduction" ToRole="SubItemProduction" />
+        </EntityType>
+        <Association Name="FK_QuantityToProduce_PostProduction">
+          <End Type="Models.PostProduction" Role="PostProduction" Multiplicity="0..1" />
+          <End Type="Models.QuantityToProduce" Role="QuantityToProduce" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PostProduction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="QuantityToProduce">
+              <PropertyRef Name="PostProductionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="NewProduction">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="ProductionDate" Type="DateTime" Precision="0" />
+          <Property Name="ProductName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Unit" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Quantity" Type="Decimal" Precision="38" Scale="30" />
+          <Property Name="Validate" Type="Boolean" />
+          <NavigationProperty Name="PostProductions" Relationship="Models.FK_PostProduction_NewProduction" FromRole="NewProduction" ToRole="PostProduction" />
+          <NavigationProperty Name="ProductionDetails" Relationship="Models.FK_ProductionDetail_NewProduction" FromRole="NewProduction" ToRole="ProductionDetail" />
+          <NavigationProperty Name="QuantityToProduces" Relationship="Models.FK_QuantityToProduce_NewProduction1" FromRole="NewProduction" ToRole="QuantityToProduce" />
+          <NavigationProperty Name="ProductDetails" Relationship="Models.FK_ProductDetail_NewProduction" FromRole="NewProduction" ToRole="ProductDetail" />
+          <NavigationProperty Name="Product" Relationship="Models.FK_NewProduction_Product1" FromRole="NewProduction" ToRole="Product" />
+          <NavigationProperty Name="SubItemProductions" Relationship="Models.FK_SubItemProduction_NewProduction" FromRole="NewProduction" ToRole="SubItemProduction" />
+        </EntityType>
+        <Association Name="FK_PostProduction_NewProduction">
+          <End Type="Models.NewProduction" Role="NewProduction" Multiplicity="0..1" />
+          <End Type="Models.PostProduction" Role="PostProduction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NewProduction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PostProduction">
+              <PropertyRef Name="ProductionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductionDetail_NewProduction">
+          <End Type="Models.NewProduction" Role="NewProduction" Multiplicity="0..1" />
+          <End Type="Models.ProductionDetail" Role="ProductionDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NewProduction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductionDetail">
+              <PropertyRef Name="ProdctuionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_QuantityToProduce_NewProduction1">
+          <End Type="Models.NewProduction" Role="NewProduction" Multiplicity="0..1" />
+          <End Type="Models.QuantityToProduce" Role="QuantityToProduce" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NewProduction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="QuantityToProduce">
+              <PropertyRef Name="NewProductionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ProductDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Decimal" Nullable="false" Precision="10" Scale="0" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Shape" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Weight" Type="Decimal" Precision="18" Scale="6" />
+          <Property Name="RentId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="RentStartDate" Type="DateTime" Precision="3" />
+          <Property Name="RentEndDate" Type="DateTime" Precision="3" />
+          <Property Name="ProductionId" Type="Int32" />
+          <NavigationProperty Name="NewProduction" Relationship="Models.FK_ProductDetail_NewProduction" FromRole="ProductDetail" ToRole="NewProduction" />
+          <NavigationProperty Name="QuantityToProduces" Relationship="Models.FK_QuantityToProduce_ProductDetail" FromRole="ProductDetail" ToRole="QuantityToProduce" />
+          <NavigationProperty Name="Product" Relationship="Models.FK_ProductDetail_Product" FromRole="ProductDetail" ToRole="Product" />
+        </EntityType>
+        <Association Name="FK_ProductDetail_NewProduction">
+          <End Type="Models.NewProduction" Role="NewProduction" Multiplicity="0..1" />
+          <End Type="Models.ProductDetail" Role="ProductDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NewProduction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductDetail">
+              <PropertyRef Name="ProductionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_QuantityToProduce_ProductDetail">
+          <End Type="Models.ProductDetail" Role="ProductDetail" Multiplicity="0..1" />
+          <End Type="Models.QuantityToProduce" Role="QuantityToProduce" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="QuantityToProduce">
+              <PropertyRef Name="ProductDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="SubItem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Decimal" Nullable="false" Precision="18" Scale="0" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ParentProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Quantity" Type="Decimal" Precision="18" Scale="6" />
+          <Property Name="BOMId" Type="Int32" />
+          <Property Name="Unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AvailableInventory" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="QuantityRequested" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="QuantitytoPrepare" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="ProductType" Type="Byte" />
+          <NavigationProperty Name="BOM" Relationship="Models.FK_SubItem_BOM" FromRole="SubItem" ToRole="BOM" />
+          <NavigationProperty Name="Product" Relationship="Models.FK_SubItem_Product" FromRole="SubItem" ToRole="Product" />
+        </EntityType>
+        <Association Name="FK_SubItem_BOM">
+          <End Type="Models.BOM" Role="BOM" Multiplicity="0..1" />
+          <End Type="Models.SubItem" Role="SubItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BOM">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubItem">
               <PropertyRef Name="BOMId" />
             </Dependent>
           </ReferentialConstraint>
@@ -3399,13 +3576,23 @@
           <Property Name="Unit" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Excess" Type="Boolean" Nullable="false" />
           <Property Name="ByProduct" Type="Boolean" Nullable="false" />
-          <Property Name="PType" Type="Byte" Nullable="false" />
+          <Property Name="PType" Type="Byte" />
+          <Property Name="VariableProductId" Type="Int32" />
+          <Property Name="Ingredient" Type="Boolean" Nullable="false" />
+          <Property Name="FinishedProduct" Type="Boolean" Nullable="false" />
+          <Property Name="Merchandise" Type="Boolean" Nullable="false" />
+          <Property Name="IntermediaryIngredient" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="BOMs" Relationship="Models.FK_BOM_Product1" FromRole="Product" ToRole="BOM" />
           <NavigationProperty Name="ExpenseDetails" Relationship="Models.FK_ExpenseDetail_Product" FromRole="Product" ToRole="ExpenseDetail" />
           <NavigationProperty Name="FinalProductions" Relationship="Models.FK_FinalProduction_Product" FromRole="Product" ToRole="FinalProduction" />
           <NavigationProperty Name="LoanDetails" Relationship="Models.FK_LoanDetail_Product" FromRole="Product" ToRole="LoanDetail" />
+          <NavigationProperty Name="NewProductions" Relationship="Models.FK_NewProduction_Product1" FromRole="Product" ToRole="NewProduction" />
           <NavigationProperty Name="PODs" Relationship="Models.FK_POD_Product" FromRole="Product" ToRole="POD" />
+          <NavigationProperty Name="PODRecivers" Relationship="Models.FK_PODReciver_Product" FromRole="Product" ToRole="PODReciver" />
+          <NavigationProperty Name="PostProductions" Relationship="Models.FK_PostProduction_Product" FromRole="Product" ToRole="PostProduction" />
           <NavigationProperty Name="ProductCategories" Relationship="Models.FK_ProductCategory_Product" FromRole="Product" ToRole="ProductCategory" />
+          <NavigationProperty Name="ProductDetails" Relationship="Models.FK_ProductDetail_Product" FromRole="Product" ToRole="ProductDetail" />
+          <NavigationProperty Name="ProductionDetails" Relationship="Models.FK_ProductionDetail_Product" FromRole="Product" ToRole="ProductionDetail" />
           <NavigationProperty Name="ProductionOrderDetails" Relationship="Models.FK_ProductionOrderDetail_Product" FromRole="Product" ToRole="ProductionOrderDetail" />
           <NavigationProperty Name="ProductTypes" Relationship="Models.FK_ProductType_Product" FromRole="Product" ToRole="ProductType" />
           <NavigationProperty Name="QuantityToProduces" Relationship="Models.FK_QuantityToProduce_Product" FromRole="Product" ToRole="QuantityToProduce" />
@@ -3414,13 +3601,7 @@
           <NavigationProperty Name="SODs" Relationship="Models.FK_SOD_Product" FromRole="Product" ToRole="SOD" />
           <NavigationProperty Name="StoreProducts" Relationship="Models.FK_StoreProduct_Product" FromRole="Product" ToRole="StoreProduct" />
           <NavigationProperty Name="SubItems" Relationship="Models.FK_SubItem_Product" FromRole="Product" ToRole="SubItem" />
-          <Property Name="VariableProductId" Type="Int32" />
-          <NavigationProperty Name="PODRecivers" Relationship="Models.FK_PODReciver_Product" FromRole="Product" ToRole="PODReciver" />
-          <NavigationProperty Name="ProductionDetails" Relationship="Models.FK_ProductionDetail_Product" FromRole="Product" ToRole="ProductionDetail" />
-          <NavigationProperty Name="PostProductions" Relationship="Models.FK_PostProduction_Product" FromRole="Product" ToRole="PostProduction" />
           <NavigationProperty Name="SubItemProductions" Relationship="Models.FK_SubItemProduction_Product" FromRole="Product" ToRole="SubItemProduction" />
-          <NavigationProperty Name="NewProductions" Relationship="Models.FK_NewProduction_Product1" FromRole="Product" ToRole="NewProduction" />
-          <NavigationProperty Name="ProductDetails" Relationship="Models.FK_ProductDetail_Product" FromRole="Product" ToRole="ProductDetail" />
         </EntityType>
         <Association Name="FK_BOM_Product1">
           <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
@@ -3470,6 +3651,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_NewProduction_Product1">
+          <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="Models.NewProduction" Role="NewProduction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="NewProduction">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_POD_Product">
           <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
           <End Type="Models.POD" Role="POD" Multiplicity="*" />
@@ -3482,6 +3675,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_PODReciver_Product">
+          <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="Models.PODReciver" Role="PODReciver" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PODReciver">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PostProduction_Product">
+          <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="Models.PostProduction" Role="PostProduction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PostProduction">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ProductCategory_Product">
           <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
           <End Type="Models.ProductCategory" Role="ProductCategory" Multiplicity="*" />
@@ -3490,6 +3707,30 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="ProductCategory">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductDetail_Product">
+          <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="Models.ProductDetail" Role="ProductDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductDetail">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductionDetail_Product">
+          <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="Models.ProductionDetail" Role="ProductionDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductionDetail">
               <PropertyRef Name="ProductId" />
             </Dependent>
           </ReferentialConstraint>
@@ -3590,108 +3831,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="PODReciver">
-          <Key>
-            <PropertyRef Name="Auto" />
-          </Key>
-          <Property Name="Auto" Type="Decimal" Nullable="false" Precision="18" Scale="0" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="POId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="PODReciverId" Type="Int32" />
-          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="OpeningStock" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="Quantity" Type="Int32" />
-          <Property Name="PurchasePrice" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="PerPack" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="IsPack" Type="Boolean" />
-          <Property Name="SaleType" Type="Boolean" />
-          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ExpiryDate" Type="DateTime" Precision="3" />
-          <Property Name="PurchasingDate" Type="DateTime" Precision="3" />
-          <Property Name="Unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="PO" Relationship="Models.FK_PODReciver_PO" FromRole="PODReciver" ToRole="PO" />
-          <NavigationProperty Name="Product" Relationship="Models.FK_PODReciver_Product" FromRole="PODReciver" ToRole="Product" />
-        </EntityType>
-        <Association Name="FK_PODReciver_PO">
-          <End Type="Models.PO" Role="PO" Multiplicity="0..1" />
-          <End Type="Models.PODReciver" Role="PODReciver" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PO">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="PODReciver">
-              <PropertyRef Name="POId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PODReciver_Product">
-          <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
-          <End Type="Models.PODReciver" Role="PODReciver" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="PODReciver">
-              <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="ProductionDetail">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
-          <Property Name="ProdctuionId" Type="Int32" />
-          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="ShapeId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ShapePrdnQty" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="VarProd" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ExcessProd" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ByProd" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Product" Relationship="Models.FK_ProductionDetail_Product" FromRole="ProductionDetail" ToRole="Product" />
-          <NavigationProperty Name="NewProduction" Relationship="Models.FK_ProductionDetail_NewProduction" FromRole="ProductionDetail" ToRole="NewProduction" />
-        </EntityType>
-        <Association Name="FK_ProductionDetail_Product">
-          <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
-          <End Type="Models.ProductionDetail" Role="ProductionDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ProductionDetail">
-              <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="PostProduction">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
-          <Property Name="ProductionDate" Type="DateTime" Precision="0" />
-          <Property Name="ProductName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Unit" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="Quantity" Type="Decimal" Precision="38" Scale="30" />
-          <Property Name="ProductionId" Type="Int32" />
-          <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Product" Relationship="Models.FK_PostProduction_Product" FromRole="PostProduction" ToRole="Product" />
-          <NavigationProperty Name="SubItemProductions" Relationship="Models.FK_SubItemProduction_PostProduction" FromRole="PostProduction" ToRole="SubItemProduction" />
-          <NavigationProperty Name="QuantityToProduces" Relationship="Models.FK_QuantityToProduce_PostProduction" FromRole="PostProduction" ToRole="QuantityToProduce" />
-          <NavigationProperty Name="NewProduction" Relationship="Models.FK_PostProduction_NewProduction" FromRole="PostProduction" ToRole="NewProduction" />
-          <Property Name="Validate" Type="Boolean" />
-        </EntityType>
-        <Association Name="FK_PostProduction_Product">
-          <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
-          <End Type="Models.PostProduction" Role="PostProduction" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="PostProduction">
-              <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="SubItemProduction">
           <Key>
             <PropertyRef Name="Id" />
@@ -3708,10 +3847,11 @@
           <Property Name="ProductType" Type="Byte" />
           <Property Name="NewProductionId" Type="Int32" />
           <Property Name="PostProductionId" Type="Int32" />
+          <Property Name="SubItemQty" Type="Decimal" Precision="18" Scale="4" />
           <NavigationProperty Name="BOM" Relationship="Models.FK_SubItemProduction_BOM" FromRole="SubItemProduction" ToRole="BOM" />
+          <NavigationProperty Name="NewProduction" Relationship="Models.FK_SubItemProduction_NewProduction" FromRole="SubItemProduction" ToRole="NewProduction" />
           <NavigationProperty Name="PostProduction" Relationship="Models.FK_SubItemProduction_PostProduction" FromRole="SubItemProduction" ToRole="PostProduction" />
           <NavigationProperty Name="Product" Relationship="Models.FK_SubItemProduction_Product" FromRole="SubItemProduction" ToRole="Product" />
-          <NavigationProperty Name="NewProduction" Relationship="Models.FK_SubItemProduction_NewProduction" FromRole="SubItemProduction" ToRole="NewProduction" />
         </EntityType>
         <Association Name="FK_SubItemProduction_BOM">
           <End Type="Models.BOM" Role="BOM" Multiplicity="0..1" />
@@ -3722,6 +3862,18 @@
             </Principal>
             <Dependent Role="SubItemProduction">
               <PropertyRef Name="BOMId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubItemProduction_NewProduction">
+          <End Type="Models.NewProduction" Role="NewProduction" Multiplicity="0..1" />
+          <End Type="Models.SubItemProduction" Role="SubItemProduction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NewProduction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubItemProduction">
+              <PropertyRef Name="NewProductionId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3746,148 +3898,6 @@
             </Principal>
             <Dependent Role="SubItemProduction">
               <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_QuantityToProduce_PostProduction">
-          <End Type="Models.PostProduction" Role="PostProduction" Multiplicity="0..1" />
-          <End Type="Models.QuantityToProduce" Role="QuantityToProduce" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PostProduction">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="QuantityToProduce">
-              <PropertyRef Name="PostProductionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="NewProduction">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
-          <Property Name="ProductionDate" Type="DateTime" Precision="0" />
-          <Property Name="ProductName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Unit" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="Quantity" Type="Decimal" Precision="38" Scale="30" />
-          <Property Name="Validate" Type="Boolean" />
-          <NavigationProperty Name="Product" Relationship="Models.FK_NewProduction_Product1" FromRole="NewProduction" ToRole="Product" />
-          <NavigationProperty Name="PostProductions" Relationship="Models.FK_PostProduction_NewProduction" FromRole="NewProduction" ToRole="PostProduction" />
-          <NavigationProperty Name="ProductionDetails" Relationship="Models.FK_ProductionDetail_NewProduction" FromRole="NewProduction" ToRole="ProductionDetail" />
-          <NavigationProperty Name="QuantityToProduces" Relationship="Models.FK_QuantityToProduce_NewProduction1" FromRole="NewProduction" ToRole="QuantityToProduce" />
-          <NavigationProperty Name="SubItemProductions" Relationship="Models.FK_SubItemProduction_NewProduction" FromRole="NewProduction" ToRole="SubItemProduction" />
-          <NavigationProperty Name="ProductDetails" Relationship="Models.FK_ProductDetail_NewProduction" FromRole="NewProduction" ToRole="ProductDetail" />
-        </EntityType>
-        <Association Name="FK_NewProduction_Product1">
-          <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
-          <End Type="Models.NewProduction" Role="NewProduction" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="NewProduction">
-              <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PostProduction_NewProduction">
-          <End Type="Models.NewProduction" Role="NewProduction" Multiplicity="0..1" />
-          <End Type="Models.PostProduction" Role="PostProduction" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="NewProduction">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="PostProduction">
-              <PropertyRef Name="ProductionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductionDetail_NewProduction">
-          <End Type="Models.NewProduction" Role="NewProduction" Multiplicity="0..1" />
-          <End Type="Models.ProductionDetail" Role="ProductionDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="NewProduction">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ProductionDetail">
-              <PropertyRef Name="ProdctuionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_QuantityToProduce_NewProduction1">
-          <End Type="Models.NewProduction" Role="NewProduction" Multiplicity="0..1" />
-          <End Type="Models.QuantityToProduce" Role="QuantityToProduce" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="NewProduction">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="QuantityToProduce">
-              <PropertyRef Name="NewProductionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SubItemProduction_NewProduction">
-          <End Type="Models.NewProduction" Role="NewProduction" Multiplicity="0..1" />
-          <End Type="Models.SubItemProduction" Role="SubItemProduction" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="NewProduction">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="SubItemProduction">
-              <PropertyRef Name="NewProductionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="ProductDetail">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Decimal" Nullable="false" Precision="10" Scale="0" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="Shape" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Weight" Type="Decimal" Precision="18" Scale="6" />
-          <Property Name="RentId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="RentStartDate" Type="DateTime" Precision="3" />
-          <Property Name="RentEndDate" Type="DateTime" Precision="3" />
-          <Property Name="ProductionId" Type="Int32" />
-          <NavigationProperty Name="NewProduction" Relationship="Models.FK_ProductDetail_NewProduction" FromRole="ProductDetail" ToRole="NewProduction" />
-          <NavigationProperty Name="Product" Relationship="Models.FK_ProductDetail_Product" FromRole="ProductDetail" ToRole="Product" />
-          <NavigationProperty Name="QuantityToProduces" Relationship="Models.FK_QuantityToProduce_ProductDetail" FromRole="ProductDetail" ToRole="QuantityToProduce" />
-        </EntityType>
-        <Association Name="FK_ProductDetail_NewProduction">
-          <End Type="Models.NewProduction" Role="NewProduction" Multiplicity="0..1" />
-          <End Type="Models.ProductDetail" Role="ProductDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="NewProduction">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ProductDetail">
-              <PropertyRef Name="ProductionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductDetail_Product">
-          <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
-          <End Type="Models.ProductDetail" Role="ProductDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ProductDetail">
-              <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_QuantityToProduce_ProductDetail">
-          <End Type="Models.ProductDetail" Role="ProductDetail" Multiplicity="0..1" />
-          <End Type="Models.QuantityToProduce" Role="QuantityToProduce" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ProductDetail">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="QuantityToProduce">
-              <PropertyRef Name="ProductDetailId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -4662,22 +4672,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="SubItems">
-            <EntityTypeMapping TypeName="Models.SubItem">
-              <MappingFragment StoreEntitySet="SubItem">
-                <ScalarProperty Name="ProductType" ColumnName="ProductType" />
-                <ScalarProperty Name="QuantitytoPrepare" ColumnName="QuantitytoPrepare" />
-                <ScalarProperty Name="QuantityRequested" ColumnName="QuantityRequested" />
-                <ScalarProperty Name="AvailableInventory" ColumnName="AvailableInventory" />
-                <ScalarProperty Name="Unit" ColumnName="Unit" />
-                <ScalarProperty Name="BOMId" ColumnName="BOMId" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-                <ScalarProperty Name="ParentProductId" ColumnName="ParentProductId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Suppliers">
             <EntityTypeMapping TypeName="Models.Supplier">
               <MappingFragment StoreEntitySet="Supplier">
@@ -4743,43 +4737,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Products">
-            <EntityTypeMapping TypeName="Models.Product">
-              <MappingFragment StoreEntitySet="Product">
-                <ScalarProperty Name="VariableProductId" ColumnName="VariableProductId" />
-                <ScalarProperty Name="PType" ColumnName="PType" />
-                <ScalarProperty Name="ByProduct" ColumnName="ByProduct" />
-                <ScalarProperty Name="Excess" ColumnName="Excess" />
-                <ScalarProperty Name="Unit" ColumnName="Unit" />
-                <ScalarProperty Name="NewProductionId" ColumnName="NewProductionId" />
-                <ScalarProperty Name="Category" ColumnName="Category" />
-                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="ShowIn" ColumnName="ShowIn" />
-                <ScalarProperty Name="IsService" ColumnName="IsService" />
-                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="LocationId" ColumnName="LocationId" />
-                <ScalarProperty Name="ReOrder" ColumnName="ReOrder" />
-                <ScalarProperty Name="BarCode" ColumnName="BarCode" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="Image" ColumnName="Image" />
-                <ScalarProperty Name="RackPosition" ColumnName="RackPosition" />
-                <ScalarProperty Name="Variable" ColumnName="Variable" />
-                <ScalarProperty Name="Manufacturable" ColumnName="Manufacturable" />
-                <ScalarProperty Name="Purchasable" ColumnName="Purchasable" />
-                <ScalarProperty Name="Saleable" ColumnName="Saleable" />
-                <ScalarProperty Name="totalPiece" ColumnName="totalPiece" />
-                <ScalarProperty Name="PerPack" ColumnName="PerPack" />
-                <ScalarProperty Name="Stock" ColumnName="Stock" />
-                <ScalarProperty Name="WholeSalePrice" ColumnName="WholeSalePrice" />
-                <ScalarProperty Name="SalePrice" ColumnName="SalePrice" />
-                <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="PODRecivers">
             <EntityTypeMapping TypeName="Models.PODReciver">
               <MappingFragment StoreEntitySet="PODReciver">
@@ -4829,24 +4786,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="SubItemProductions">
-            <EntityTypeMapping TypeName="Models.SubItemProduction">
-              <MappingFragment StoreEntitySet="SubItemProduction">
-                <ScalarProperty Name="PostProductionId" ColumnName="PostProductionId" />
-                <ScalarProperty Name="NewProductionId" ColumnName="NewProductionId" />
-                <ScalarProperty Name="ProductType" ColumnName="ProductType" />
-                <ScalarProperty Name="QuantitytoPrepare" ColumnName="QuantitytoPrepare" />
-                <ScalarProperty Name="QuantityRequested" ColumnName="QuantityRequested" />
-                <ScalarProperty Name="AvailableInventory" ColumnName="AvailableInventory" />
-                <ScalarProperty Name="Unit" ColumnName="Unit" />
-                <ScalarProperty Name="BOMId" ColumnName="BOMId" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-                <ScalarProperty Name="ParentProductId" ColumnName="ParentProductId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="NewProductions">
             <EntityTypeMapping TypeName="Models.NewProduction">
               <MappingFragment StoreEntitySet="NewProduction">
@@ -4870,6 +4809,82 @@
                 <ScalarProperty Name="Weight" ColumnName="Weight" />
                 <ScalarProperty Name="Shape" ColumnName="Shape" />
                 <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SubItems">
+            <EntityTypeMapping TypeName="Models.SubItem">
+              <MappingFragment StoreEntitySet="SubItem">
+                <ScalarProperty Name="ProductType" ColumnName="ProductType" />
+                <ScalarProperty Name="QuantitytoPrepare" ColumnName="QuantitytoPrepare" />
+                <ScalarProperty Name="QuantityRequested" ColumnName="QuantityRequested" />
+                <ScalarProperty Name="AvailableInventory" ColumnName="AvailableInventory" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="BOMId" ColumnName="BOMId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ParentProductId" ColumnName="ParentProductId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="Models.Product">
+              <MappingFragment StoreEntitySet="Product">
+                <ScalarProperty Name="IntermediaryIngredient" ColumnName="IntermediaryIngredient" />
+                <ScalarProperty Name="Merchandise" ColumnName="Merchandise" />
+                <ScalarProperty Name="FinishedProduct" ColumnName="FinishedProduct" />
+                <ScalarProperty Name="Ingredient" ColumnName="Ingredient" />
+                <ScalarProperty Name="VariableProductId" ColumnName="VariableProductId" />
+                <ScalarProperty Name="PType" ColumnName="PType" />
+                <ScalarProperty Name="ByProduct" ColumnName="ByProduct" />
+                <ScalarProperty Name="Excess" ColumnName="Excess" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="NewProductionId" ColumnName="NewProductionId" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ShowIn" ColumnName="ShowIn" />
+                <ScalarProperty Name="IsService" ColumnName="IsService" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="LocationId" ColumnName="LocationId" />
+                <ScalarProperty Name="ReOrder" ColumnName="ReOrder" />
+                <ScalarProperty Name="BarCode" ColumnName="BarCode" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="Image" ColumnName="Image" />
+                <ScalarProperty Name="RackPosition" ColumnName="RackPosition" />
+                <ScalarProperty Name="Variable" ColumnName="Variable" />
+                <ScalarProperty Name="Manufacturable" ColumnName="Manufacturable" />
+                <ScalarProperty Name="Purchasable" ColumnName="Purchasable" />
+                <ScalarProperty Name="Saleable" ColumnName="Saleable" />
+                <ScalarProperty Name="totalPiece" ColumnName="totalPiece" />
+                <ScalarProperty Name="PerPack" ColumnName="PerPack" />
+                <ScalarProperty Name="Stock" ColumnName="Stock" />
+                <ScalarProperty Name="WholeSalePrice" ColumnName="WholeSalePrice" />
+                <ScalarProperty Name="SalePrice" ColumnName="SalePrice" />
+                <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SubItemProductions">
+            <EntityTypeMapping TypeName="Models.SubItemProduction">
+              <MappingFragment StoreEntitySet="SubItemProduction">
+                <ScalarProperty Name="SubItemQty" ColumnName="SubItemQty" />
+                <ScalarProperty Name="PostProductionId" ColumnName="PostProductionId" />
+                <ScalarProperty Name="NewProductionId" ColumnName="NewProductionId" />
+                <ScalarProperty Name="ProductType" ColumnName="ProductType" />
+                <ScalarProperty Name="QuantitytoPrepare" ColumnName="QuantitytoPrepare" />
+                <ScalarProperty Name="QuantityRequested" ColumnName="QuantityRequested" />
+                <ScalarProperty Name="AvailableInventory" ColumnName="AvailableInventory" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="BOMId" ColumnName="BOMId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ParentProductId" ColumnName="ParentProductId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

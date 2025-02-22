@@ -10,17 +10,18 @@ namespace MYBUSINESS.Models
     {
         public int? tchat { get; set; }
         public int? stt_rec0 { get; set; }
-        public string inv_itemCode { get; set; }
-        public string inv_itemName { get; set; }
-        public string inv_unitCode { get; set; }
-        public int? inv_quantity { get; set; }
-        public decimal? inv_unitPrice { get; set; }
-        public decimal inv_discountPercentage { get; set; }
-        public decimal inv_discountAmount { get; set; }
-        public decimal inv_TotalAmountWithoutVat { get; set; }
-        public int ma_thue { get; set; }
-        public decimal inv_vatAmount { get; set; }
-        public decimal inv_TotalAmount { get; set; }
+        public string ma { get; set; }
+        public string ten { get; set; }
+        public string dvtinh { get; set; }
+        public int? sluong { get; set; }
+        public decimal? dgia { get; set; }
+        public decimal tlckhau { get; set; }
+        public decimal stckhau { get; set; }
+        public decimal thtien { get; set; }
+        public int tsuat { get; set; }
+        public decimal tthue { get; set; }
+        //public decimal tgtien { get; set; }
+        public decimal tgtttbso { get; set; }
     }
     public class InvoiceDetailsWrapper
     {
@@ -28,22 +29,22 @@ namespace MYBUSINESS.Models
     }
     public class Invoice
     {
-        public string inv_invoiceSeries { get; set; }
-        public string inv_invoiceIssuedDate { get; set; }
-        public string inv_currencyCode { get; set; }
-        public decimal inv_exchangeRate { get; set; }
-        public string so_benh_an { get; set; }
-        public string inv_buyerDisplayName { get; set; }
-        public string inv_buyerLegalName { get; set; }
-        public string inv_buyerTaxCode { get; set; }
-        public string inv_buyerAddressLine { get; set; }
-        public string inv_buyerEmail { get; set; }
-        public string inv_paymentMethodName { get; set; }
-        public decimal? inv_discountAmount { get; set; }
-        public decimal inv_TotalAmountWithoutVat { get; set; }
-        public decimal inv_vatAmount { get; set; }
-        public decimal inv_TotalAmount { get; set; }
-        public string key_api { get; set; }
+        public string khieu { get; set; }
+        public string tdlap { get; set; }
+        public string dvtte { get; set; }
+        public decimal tgia { get; set; }
+        public string sdhang { get; set; }
+        public string tnmua { get; set; }
+        public string ten { get; set; }
+        public string mst { get; set; }
+        public string dchi { get; set; }
+        public string Email { get; set; }
+        public string htttoan { get; set; }
+        public decimal? stckhau { get; set; }
+        public decimal thtien { get; set; }
+        public decimal tthue { get; set; }
+        public decimal tgtttbso { get; set; }
+        public string key_API { get; set; }
         public List<InvoiceDetailsWrapper> details { get; set; }
     }
 

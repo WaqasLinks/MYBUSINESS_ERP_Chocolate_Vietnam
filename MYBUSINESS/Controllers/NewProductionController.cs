@@ -158,7 +158,7 @@ namespace MYBUSINESS.Controllers
                 ViewBag.Suppliers = DAL.dbSuppliers;  // Assuming this contains the supplier list
 
             var products = db.Products
-       .Where(p => p.Manufacturable == true)
+       .Where(p => p.FinishedProduct == true)
        .Select(p => new
        {
            Value = p.Id.ToString(),  // ID of the product
@@ -266,7 +266,7 @@ namespace MYBUSINESS.Controllers
         public ActionResult Create(
      [Bind(Prefix = "NewProduction", Include = "Id,ProductionDate,ProductName,Unit,ProductId")] NewProduction newProduction,
      //[Bind(Prefix = "SubItem", Include = "Id,ParentProductId,ProductId,Quantity,Unit,AvailableInventory,QuantitytoPrepare,QuantityRequested")] List<SubItem> subItems,
-     [Bind(Prefix = "SubItemProduction", Include = "Id,ParentProductId,ProductId,Quantity,Unit,AvailableInventory,QuantitytoPrepare,QuantityRequested")] List<SubItemProduction> subItemProductions,
+     [Bind(Prefix = "SubItemProduction", Include = "Id,ParentProductId,ProductId,Quantity,Unit,AvailableInventory,QuantitytoPrepare,QuantityRequested,SubItemQty")] List<SubItemProduction> subItemProductions,
      [Bind(Prefix = "QuantityToProduce", Include = "Id,ProductionQty,BOMId,ProductDetailId,Shape,CalculatedWeight,ProductId")] List<QuantityToProduce> quantityToProduces)
         {
             if (ModelState.IsValid)
@@ -382,6 +382,23 @@ namespace MYBUSINESS.Controllers
             {
                 return HttpNotFound();
             }
+            string productType;
+            switch (newProduction.Product.PType)
+            {
+                case 1:
+                    productType = "Variable";
+                    break;
+                case 2:
+                    productType = "Excess";
+                    break;
+                case 3:
+                    productType = "ByProduct";
+                    break;
+                default:
+                    productType = "Unknown";
+                    break;
+            }
+
             var quantityToProduce = db.QuantityToProduces
 .Where(x => x.NewProductionId == newProduction.Id)
 .ToList();
@@ -668,27 +685,49 @@ namespace MYBUSINESS.Controllers
         public JsonResult GetSubItemDetails(int productId)
         {
             // Retrieve sub-item details for the given product ID
+            //var subItems = db.SubItems
+            //    .Where(s => s.ParentProductId == productId)
+
+            //    .Select(s => new
+            //    {
+            //        s.Id,
+            //        ProductId = s.Product.Id,
+            //        ProductName = s.Product.Name, // Assuming a navigation property for Product
+            //        //s.Product.PType,
+            //        s.Quantity,
+            //        s.Unit,
+
+
+            //        //s.Product.Manufacturable
+            //        manufacturable = s.Product.Manufacturable, // Include the Manufacturable property from the Product table
+            //        PType = s.Product.PType == 1 ? "Variable" :
+            //        s.Product.PType == 2 ? "Excess" :
+            //        s.Product.PType == 3 ? "ByProduct" : "Unknown", // Default case
+            //        VariableProduct = s.Product.VariableProductId,
+            //    })
+            //    .ToList();
             var subItems = db.SubItems
-                .Where(s => s.ParentProductId == productId)
-                
-                .Select(s => new
-                {
-                    s.Id,
-                    ProductId = s.Product.Id,
-                    ProductName = s.Product.Name, // Assuming a navigation property for Product
-                    //s.Product.PType,
-                    s.Quantity,
-                    s.Unit,
-                    
-                    
-                    //s.Product.Manufacturable
-                    manufacturable = s.Product.Manufacturable, // Include the Manufacturable property from the Product table
-                    PType = s.Product.PType == 1 ? "Variable" :
-                    s.Product.PType == 2 ? "Excess" :
-                    s.Product.PType == 3 ? "ByProduct" : "Unknown", // Default case
-                    VariableProduct = s.Product.VariableProductId,
-                })
-                .ToList();
+    .Include(s => s.Product) // Ensure Product is loaded
+    .Where(s => s.ParentProductId == productId)
+    .Select(s => new
+    {
+        s.Id,
+        ProductId = s.Product != null ? s.Product.Id : 0, // Prevent null reference errors
+        ProductName = s.Product != null ? s.Product.Name : "Unknown",
+        s.Quantity,
+        s.Unit,
+        manufacturable = s.Product != null && s.Product.Manufacturable, // Prevent null reference errors
+        Ingredient = s.Product != null && s.Product.Ingredient,
+        FinalProduct = s.Product != null && s.Product.FinishedProduct,
+        PType = s.Product != null ?
+            (s.Product.PType == 1 ? "Variable" :
+             s.Product.PType == 2 ? "Excess" :
+             s.Product.PType == 3 ? "ByProduct" : "Unknown")
+            : "Unknown",
+        VariableProduct = s.Product != null ? s.Product.VariableProductId : (int?)null,
+    })
+    .ToList();
+
 
             return Json(subItems, JsonRequestBehavior.AllowGet);
         }

@@ -49,15 +49,25 @@
 
 
                         <div class="form-group">
+            @Html.LabelFor(model => Model.BOM.ProductId, "Select Product", new { @class = "control-label" })
+            @Html.DropDownListFor(
+                model => Model.BOM.ProductId,
+                (SelectList)ViewBag.ProductList,
+                "Select a Product",
+                new { @class = "form-control", @id = "productDropdown" }
+            )
+            @Html.ValidationMessageFor(model => Model.BOM.ProductId, "", new { @class = "text-danger" })
+        </div>
+                        @*<div class="form-group">
                             @Html.LabelFor(model => model.BOM.ProductId, "Select Product", new { @class = "control-label" })
                             @Html.DropDownListFor(
                                 model => model.BOM.ProductId,
-                                (SelectList)ViewBag.ProductList,
+                                ViewBag.ProductList as SelectList, // Ensure correct casting
                                 "Select a Product",
                                 new { @class = "form-control", @id = "productDropdown" }
                             )
                             @Html.ValidationMessageFor(model => model.BOM.ProductId, "", new { @class = "text-danger" })
-                        </div>
+                        </div>*@
 
 
 
@@ -78,10 +88,10 @@
 
                         @*@Html.HiddenFor(model => model.IsService, new { Value = "false" })*@
                         @*@Html.HiddenFor(model => Model.BOM.ShowIn, new { Value = "P" })
-                                       <div style="display:none;" class="form-group">
-                                           @Html.DropDownList("IsService", new SelectList(ViewBag.UnitTypeOptionList, "Value", "Text", Model.BOM.IsService),
-                    new { @class = "form-control", id = "isService" })
-                                       </div>*@
+                           <div style="display:none;" class="form-group">
+                               @Html.DropDownList("IsService", new SelectList(ViewBag.UnitTypeOptionList, "Value", "Text", Model.BOM.IsService),
+        new { @class = "form-control", id = "isService" })
+                           </div>*@
                         <div class="form-group">
                             @Html.LabelFor(model => Model.BOM.Remarks, htmlAttributes: new { @class = "control-label" })
 
@@ -92,27 +102,27 @@
 
 
                         <!--<div class="form-group">
-                @Html.LabelFor(model => Model.BOM.Saleable, htmlAttributes: new { @class = "control-label" })
-                @Html.EditorFor(model => Model.BOM.Saleable)-->
+    @Html.LabelFor(model => Model.BOM.Saleable, htmlAttributes: new { @class = "control-label" })
+    @Html.EditorFor(model => Model.BOM.Saleable)-->
                         @*@Html.EditorFor(model => model.Saleable, new[] { new SelectListItem { Text = "Yes", Value = "True", Selected = true }, new SelectListItem { Text = "No", Value = "False" } })*@
                         @*@Html.CheckBoxFor(m => m.Saleable, new { @value = "true" })*@
                         <!--@Html.ValidationMessageFor(model => Model.BOM.Saleable, "", new { @class = "text-danger" })
-                </div>
+    </div>
 
-                <div class="form-group">
-                    @Html.LabelFor(model => Model.BOM.Purchasable, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => Model.BOM.Purchasable)-->
+    <div class="form-group">
+        @Html.LabelFor(model => Model.BOM.Purchasable, htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => Model.BOM.Purchasable)-->
                         @*@Html.EditorFor(model => model.Saleable, new[] { new SelectListItem { Text = "Yes", Value = "True", Selected = true }, new SelectListItem { Text = "No", Value = "False" } })*@
                         @*@Html.CheckBoxFor(m => m.Saleable, new { @value = "true" })*@
                         <!--@Html.ValidationMessageFor(model => Model.BOM.Purchasable, "", new { @class = "text-danger" })
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => Model.BOM.Manufacturable, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => Model.BOM.Manufacturable)-->
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => Model.BOM.Manufacturable, htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => Model.BOM.Manufacturable)-->
                         @*@Html.EditorFor(model => model.Saleable, new[] { new SelectListItem { Text = "Yes", Value = "True", Selected = true }, new SelectListItem { Text = "No", Value = "False" } })*@
                         @*@Html.CheckBoxFor(m => m.Saleable, new { @value = "true" })*@
                         <!--@Html.ValidationMessageFor(model => Model.BOM.Manufacturable, "", new { @class = "text-danger" })
-                </div>-->
+    </div>-->
 
                         <div class="form-group">
                             @Html.LabelFor(model => Model.BOM.ProductionProcessCateogry, htmlAttributes: new { @class = "control-label" })
@@ -151,12 +161,12 @@ new { @class = "form-control" }
 
                         </div>
                         @*<div class="form-group">
-                        @Html.LabelFor(model => Model.BOM.TimeUnit, htmlAttributes: new { @class = "control-label" })
+            @Html.LabelFor(model => Model.BOM.TimeUnit, htmlAttributes: new { @class = "control-label" })
 
-                        @Html.EditorFor(model => Model.BOM.TimeUnit, new { htmlAttributes = new { @class = "form-control", @id = "stock" } })
-                        @Html.ValidationMessageFor(model => Model.BOM.TimeUnit, "", new { @class = "text-danger" })
+            @Html.EditorFor(model => Model.BOM.TimeUnit, new { htmlAttributes = new { @class = "form-control", @id = "stock" } })
+            @Html.ValidationMessageFor(model => Model.BOM.TimeUnit, "", new { @class = "text-danger" })
 
-                    </div>*@
+        </div>*@
 
                     </div>
 
@@ -189,8 +199,8 @@ new { @class = "form-control" }
                             <thead>
                                 <tr>
                                     <th style="width: 5%;">#</th>
-                                    <th style="width: 60%;">Name</th>
-                                    <th style="width: 12%;">Qty</th>
+                                    <th style="width: 25%;">Name</th>
+                                    <th style="width: 20%;">Qty</th>
                                     <th style="width: 20%;">Unit</th>
                                     <th style="width: 15%;"></th>
                                 </tr>
@@ -201,7 +211,7 @@ new { @class = "form-control" }
                                     int sNo = 0;
                                     foreach (var item in Model.SubItem)
                                     {
-                                        if (item.Product.Manufacturable == false)
+                                        if (item.Product != null && item.Product.Ingredient == true)
                                         {
                                             <tr>
                                                 <td id="SNo0">@(sNo + 1)</td>
@@ -256,7 +266,7 @@ new { @class = "form-control" }
                             <thead>
                                 <tr>
                                     <th style="width: 5%;">#</th>
-                                    <th style="width: 60%;">Name</th>
+                                    <th style="width: 50%;">Name</th>
                                     <th style="width: 12%;">Qty</th>
                                     <th style="width: 20%;">Unit</th>
                                 </tr>
@@ -267,7 +277,8 @@ new { @class = "form-control" }
                                     int sNo = 0;
                                     foreach (var item in Model.SubItem)
                                     {
-                                        if (item.Product.Manufacturable == true)
+                                        // Ensure item.Product is not null before accessing its properties
+                                        if (item.Product != null && (item.Product.FinishedProduct == true || item.Product.PType == 1))
                                         {
                                             <tr>
                                                 <td>@(sNo + 1)</td>
@@ -284,16 +295,29 @@ new { @class = "form-control" }
                                                      )
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="SubItem[@sNo].Quantity" value="@item.Quantity" class="form-control" />
+                                                    <input type="text" name="SubItem[@sNo].Quantity" value="@item.Quantity"
+                                                           class="form-control"
+                                                           @(item.Product?.PType == 1 || item.Product?.PType == 3 ? "readonly" : "") />
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="SubItem[@sNo].Unit" value="@item.Unit" class="form-control" />
+                                                    <input readonly type="text" name="SubItem[@sNo].Unit" value="@item.Unit" class="form-control" />
+                                                </td>
+                                                <td style="display:none;">
+                                                    <input type="hidden" readonly autocomplete="off" value="@item.Product?.PType"
+                                                           class="form-control" name="SubItem[@sNo].Product.PType" id="ptype@(sNo)">
                                                 </td>
                                             </tr>
                                         }
                                         sNo++;
                                     }
                                 }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="5" class="text-center">No items available.</td>
+                                    </tr>
+                                }
+
                             </tbody>
                         </table>
                     </div>

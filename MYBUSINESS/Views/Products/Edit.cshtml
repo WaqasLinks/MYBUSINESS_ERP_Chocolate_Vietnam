@@ -197,31 +197,38 @@
                                 <!--@Html.ValidationMessageFor(model => model.Product.Saleable, "", new { @class = "text-danger" })
     </div>-->
 
-                                <div class="form-group">
-                                    <!-- Purchasable Checkbox -->
-                                    <label>Purchasable</label>
-                                    &nbsp;
-                                    @Html.CheckBoxFor(model => model.Product.Purchasable, new { @class = "form-check-input" })
-                                    @Html.ValidationMessageFor(model => model.Product.Purchasable, "", new { @class = "text-danger" })
-                                    &nbsp;
-                                    &nbsp;
-                                    &nbsp;
+                            <div class="form-group">
+                                <!-- Purchasable Checkbox -->
+                                <label>Ingredient</label>
+                                &nbsp;
+                                @Html.CheckBoxFor(model => Model.Product.Ingredient, new { @class = "form-check-input", @id = "ingredients" })
+                                @Html.ValidationMessageFor(model => model.Product.Ingredient, "", new { @class = "text-danger" })
+                                &nbsp;
+                                &nbsp;
+                                &nbsp;
 
-                                    <!-- Manufacturable Checkbox -->
-                                    <label>Manufacturable</label>
-                                    &nbsp;
-                                    @Html.CheckBoxFor(model => model.Product.Manufacturable, new { @class = "form-check-input" })
-                                    @Html.ValidationMessageFor(model => model.Product.Manufacturable, "", new { @class = "text-danger" })
-                                    &nbsp;
-                                    &nbsp;
-                                    &nbsp;
+                                <!-- Manufacturable Checkbox -->
+                            <label>FinishedProduct</label>
+                                &nbsp;
+                                @Html.CheckBoxFor(model => Model.Product.FinishedProduct, new { @class = "form-check-input", @id = "finishedproduct" })
+                                @Html.ValidationMessageFor(model => model.Product.FinishedProduct, "", new { @class = "text-danger" })
+                                &nbsp;
+                                &nbsp;
+                                &nbsp;
 
-                                    <!-- Saleable Checkbox -->
-                                    <label>Saleable</label>
-                                    &nbsp;
-                                    @Html.CheckBoxFor(model => model.Product.Saleable, new { @class = "form-check-input" })
-                                    @Html.ValidationMessageFor(model => model.Product.Saleable, "", new { @class = "text-danger" })
-                                </div>
+                                <!-- Saleable Checkbox -->
+                                <label>Merchandise</label>
+                                &nbsp;
+                                @Html.CheckBoxFor(model => Model.Product.Merchandise, new { @class = "form-check-input", @id = "merchandise" })
+                                @Html.ValidationMessageFor(model => model.Product.Merchandise, "", new { @class = "text-danger" })
+                                &nbsp;
+                                &nbsp;
+                                &nbsp;
+                            <label>Intermediary ingredient </label>
+                                &nbsp;
+                                @Html.CheckBoxFor(model => Model.Product.IntermediaryIngredient, new { @class = "form-check-input", @id = "intermediaryingredient" })
+                                @Html.ValidationMessageFor(model => model.Product.IntermediaryIngredient, "", new { @class = "text-danger" })
+                            </div>
                                 <div class="form-group">
                                     <!-- Purchasable Checkbox -->
                                     <label>Variable Product</label>
@@ -311,7 +318,7 @@
                                                            data-toggle="tooltip" data-placement="top" title="Type shape">
                                                 </td>
                                                 <td>
-                                                    <input type="text" autocomplete="off" value="@(item.Weight)" class="form-control"
+                                                    <input type="number" step="any" autocomplete="off" value="@(item.Weight)" class="form-control"
                                                            name="ProductDetail[@sNo].Weight" id="weight@(sNo)" placeholder="Type weight"
                                                            data-toggle="tooltip" data-placement="top" title="Type weight">
                                                 </td>
@@ -356,9 +363,37 @@
   //$(document).ready(function () {
   //  document.getElementById('SOCreate').reset(); // has to be handle
   //});
-  $(document).ready(function () {
-  document.getElementById('SOCreate').reset(); // has to be handle
-});
+    $(document).ready(function () {
+        setTimeout(function () {
+            document.getElementById('SOCreate').reset();
+        }, 500);
+
+        $(document).on("change", "#ingredients, #finishedproduct, #merchandise, #intermediaryingredient", function () {
+            if ($(this).is(":checked")) {
+                $("#ingredients, #finishedproduct, #merchandise, #intermediaryingredient").not(this).prop("checked", false);
+                $('#productDropdownContainer').slideUp();
+
+                if (!$("#finishedproduct").is(":checked")) {
+                    $("#variableProduct, #excessProduct, #byProduct").prop("checked", false);
+                }
+            }
+        });
+
+        $(document).on("change", "#variableProduct, #excessProduct, #byProduct", function () {
+            if ($(this).is(":checked")) {
+                $("#purchasable, #saleable").prop("checked", false);
+
+                if (this.id === "variableProduct") {
+                    $("#excessProduct, #byProduct").prop("checked", false);
+                }
+                if (this.id === "excessProduct" || this.id === "byProduct") {
+                    $('#productDropdownContainer').slideUp();
+                    $("#variableProduct, #excessProduct, #byProduct").not(this).prop("checked", false);
+                }
+            }
+        });
+    });
+
     
         function toggleDropdown() {
             if ($('#variableProductCheckbox').is(':checked')) {

@@ -20,8 +20,8 @@ namespace MYBUSINESS.Models
             this.PostProductions = new HashSet<PostProduction>();
             this.ProductionDetails = new HashSet<ProductionDetail>();
             this.QuantityToProduces = new HashSet<QuantityToProduce>();
-            this.SubItemProductions = new HashSet<SubItemProduction>();
             this.ProductDetails = new HashSet<ProductDetail>();
+            this.SubItemProductions = new HashSet<SubItemProduction>();
         }
     
         public int Id { get; set; }
@@ -32,7 +32,6 @@ namespace MYBUSINESS.Models
         public Nullable<decimal> Quantity { get; set; }
         public Nullable<bool> Validate { get; set; }
     
-        public virtual Product Product { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PostProduction> PostProductions { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -40,8 +39,9 @@ namespace MYBUSINESS.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<QuantityToProduce> QuantityToProduces { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SubItemProduction> SubItemProductions { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductDetail> ProductDetails { get; set; }
+        public virtual Product Product { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SubItemProduction> SubItemProductions { get; set; }
     }
 }

@@ -246,8 +246,8 @@
 
                                     <td style="display:none;"><input type="hidden" name="SubItem.Index" value="0" /></td>
                                     <td style="display:none;"><input type="text" readonly class="form-control classBGcolor" name="SubItem[0].ProductId" id="idn0"></td>
-                                    <td><input type="text" autocomplete="off" class="form-control" name="SubItem[0].Product.Name" id="name0" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name"></td>
-                                    <td><input type="number" step="0.1" autocomplete="off" class="form-control" name="SubItem[0].Quantity" id="quantity0"></td>
+                                    <td><input style="background-color: #f8f9fa;" type="text" autocomplete="off" class="form-control .bg-light" name="SubItem[0].Product.Name" id="name0" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name"></td>
+                                    <td><input type="number" step="0.00001" min="0"  autocomplete="off" class="form-control" name="SubItem[0].Quantity" id="quantity0"></td>
 
                                     @*<td>
             <select class="form-control" name="SubItem[@i].Unit" id="SubItem_@(i)_Unit">
@@ -331,31 +331,37 @@
 
                                     @*<td><input type="text" autocomplete="off" class="form-control" name="SubItem[0].Product.Name" id="name0" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name"></td>*@
                                     @*<td>
-            @Html.DropDownListFor(
-                model => model.SubItem[30].ProductId,
-                (SelectList)ViewBag.ProductList,
-                "Select Variable Product",
-                new { @class = "form-control product-dropdown", id = "idn30" }
-            )
-        </td>*@
+                @Html.DropDownListFor(
+                    model => model.SubItem[30].ProductId,
+                    (SelectList)ViewBag.ProductList,
+                    "Select Variable Product",
+                    new { @class = "form-control product-dropdown", id = "idn30" }
+                )
+            </td>*@
+                                    @*<td>
+                <select id="variableProductDropdown0" class="form-control" name="SubItem[30].ProductId">
+                    <option value="">Select Variable Product</option>
+                </select>
+            </td>*@
                                     <td>
-                                        <select id="variableProductDropdown0" class="form-control" name="SubItem[30].ProductId">
+                                        <select style="" background-color: #f8f9fa;" id="variableProductDropdown0" class="form-control bg-light " name="SubItem[30].ProductId">
                                             <option value="">Select Variable Product</option>
                                         </select>
                                     </td>
 
+
                                     @*<td>
-            <input type="text" id="variableProductName0" class="form-control" readonly placeholder="Variable Product Name">
-            <input type="hidden" name="SubItem[30].ProductId" id="variableProductId0" value="0">
-        </td>*@
+                <input type="text" id="variableProductName0" class="form-control" readonly placeholder="Variable Product Name">
+                <input type="hidden" name="SubItem[30].ProductId" id="variableProductId0" value="0">
+            </td>*@
 
 
                                     <td>
-                                        <input type="number" step="0.1" autocomplete="off" class="form-control" name="SubItem[30].Quantity" id="quantity30">
+                                        <input readonly type="number" step="0.000001" autocomplete="off" class="form-control" name="SubItem[30].Quantity" id="quantity30">
                                     </td>
 
                                     <td>
-                                        <input type="text" autocomplete="off" class="form-control unit-field" name="SubItem[30].Unit" id="unit30">
+                                        <input readonly type="text" autocomplete="off" class="form-control unit-field" name="SubItem[30].Unit" id="unit30">
                                     </td>
 
 
@@ -370,7 +376,7 @@
                                     <td>
                                         @Html.DropDownListFor(
                                             model => model.SubItem[31].ProductId,
-                                            (SelectList)ViewBag.ProductList,
+                                            (SelectList)ViewBag.ExcessProductList, // Updated to use Excess Product List
                                             "Select Excess Product",
                                             new { @class = "form-control product-dropdown", id = "idn31" }
                                         )
@@ -383,8 +389,6 @@
                                     <td>
                                         <input type="text" autocomplete="off" class="form-control unit-field" name="SubItem[31].Unit" id="unit31" readonly>
                                     </td>
-
-                                    @*@Html.HiddenFor(model => model.SubItem[31].Unit, new { id = "unitHiddenField31" })*@
                                 </tr>
 
                                 <tr>
@@ -395,20 +399,21 @@
                                     <td>
                                         @Html.DropDownListFor(
                                             model => model.SubItem[32].ProductId,
-                                            (SelectList)ViewBag.ProductList,
+                                            (SelectList)ViewBag.ByProductList, // Updated to use ByProduct List
                                             "Select ByProduct",
                                             new { @class = "form-control product-dropdown", id = "idn32" }
                                         )
                                     </td>
 
                                     <td>
-                                        <input type="number" step="0.1" autocomplete="off" class="form-control" name="SubItem[32].Quantity" id="quantity32">
+                                        <input readonly type="number" step="0.1" autocomplete="off" class="form-control" name="SubItem[32].Quantity" id="quantity32">
                                     </td>
 
                                     <td>
                                         <input type="text" autocomplete="off" class="form-control unit-field" name="SubItem[32].Unit" id="unit32" readonly>
                                     </td>
-                                    </tr>
+                                </tr>
+
 
                             </tbody>
 

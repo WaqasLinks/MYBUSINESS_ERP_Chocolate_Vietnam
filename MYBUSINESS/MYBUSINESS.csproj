@@ -3809,6 +3809,7 @@
     <Content Include="Reports\Sale_Receipt.rdlc" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Reports\Report1.rdlc" />
     <EmbeddedResource Include="Reports\Sale_Receipt009.rdlc" />
   </ItemGroup>
   <PropertyGroup>

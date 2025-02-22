@@ -20,7 +20,7 @@
 @{
     bool isReadonly = ViewBag.ReadonlyMode ?? false;
 }
-@using (Html.BeginForm())
+@using (Html.BeginForm(Html.BeginForm("Edit", "PostProduction", FormMethod.Post, new { id = "newProductionForm" })))
 {
     @Html.AntiForgeryToken()
     <section class="content">
@@ -235,18 +235,23 @@
 
 
                     <div class="box-footer">
-                        <input type="submit" id="CreateSO" value="Update" class="btn btn-primary" @(isReadonly ? "disabled='disabled'" : "")/>
-                        @Html.ActionLink("Back to List", "Index")
-                        <button id="validateBtn" class="btn btn-primary" style="margin-left:280px;" @(isReadonly ? "disabled='disabled'" : "")>Validate</button>
-                    </div>
+                        @*<input type="submit" id="CreateSO" value="Update" class="btn btn-primary"  @(isReadonly ? "readonly='readonly'" : "")/>
+        @Html.ActionLink("Back to List", "Index")
+        <button id="validateBtn" class="btn btn-primary" style="margin-left:280px;"  @(isReadonly ? "readonly='readonly'" : "")>Validate</button>*@
+                        <input type="submit" id="CreateSO" value="Update" class="btn btn-primary" @(isReadonly ? "disabled='disabled'" : "") />
 
+                        @Html.ActionLink("Back to List", "Index")
+
+                        <button id="validateBtn" class="btn btn-primary" style="margin-left:280px;" @(isReadonly ? "disabled='disabled'" : "")>Validate</button>
+
+                    </div>
 
 
 
 
                 </div>
             </div>
-            <div class="col-md-6">
+            <div style="display:none;" class="col-md-6">
                 <!-- general form elements -->
                 <!-- general form elements -->
                 <div class="box box-primary">
@@ -278,7 +283,7 @@
                                     int sNo = 0;
                                     foreach (var item in Model.SubItemProduction)
                                     {
-                                        if (item.Product.Manufacturable == false)
+                                        if (item.Product.Ingredient == true)
                                         {
                                             <tr>
                                                 <td id="SNo0">@(sNo + 1)</td>
@@ -357,7 +362,7 @@
                                     int sNo = 0;
                                     foreach (var item in Model.SubItemProduction)
                                     {
-                                        if (item.Product.Manufacturable == true)
+                                        if (item.Product.FinishedProduct == true && item.Product.PType != 1)
                                         {
                                             <tr>
                                                 <td id="SNo0">@(sNo + 1)</td>
@@ -367,7 +372,7 @@
                                                 @*<td><input type="text" autocomplete="off" value="@(item.QuantitytoPrepare)" class="form-control" name="SubItem[@sNo].Shape" id="shape@(sNo)" placeholder="" data-toggle="tooltip" data-placement="top" title=""></td>*@
                                                 <td><input type="text" autocomplete="off" value=@item.Quantity class="form-control production-qty" name="SubItemProduction[@sNo].Quantity" id="quantity@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>
                                                 <td><input type="text" readonly autocomplete="off" value=@item.Unit class="form-control" name="SubItemProduction[@sNo].Unit" id="unit@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>
-                                                <td><input type="text" readonly autocomplete="off" value=@item.ProductType class="form-control" name="SubItemProduction[@sNo].ProductType" id="ptype@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>
+                                                <td><input type="text" readonly autocomplete="off" value=@item.Product.PType class="form-control" name="SubItemProduction[@sNo].Product.PType" id="ptype@(sNo)"></td>
                                                 @*<td>
                                                         <select class="form-control" name="SubItem[0].BOM.Unit" id="unit0">
                                                             <option value="Kg" selected>Kg</option>

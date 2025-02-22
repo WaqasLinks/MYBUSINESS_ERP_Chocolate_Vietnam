@@ -106,11 +106,10 @@ function OnTypeName(param) {
             var pfound = 0;
             var selectedProductId = ui.item[0]; // Selected Product ID
 
-            // Check if the product already exists in the table
             $('#selectedProducts > tbody > tr').each(function () {
                 if ($(this).find("[id^='idn']").val() == selectedProductId) {
                     var num = +$(this).find("[id^='quantity']").val() + 1;
-                    $(this).find("[id^='quantity']").val(num);
+                    $(this).find("[id^='quantity']").val(num.toFixed(6));
                     update_itemTotal();
                     pfound = 1;
                     return false;
@@ -123,58 +122,13 @@ function OnTypeName(param) {
                     return false;
                 }
 
-                // Assign selected product details
                 this.value = ui.item[1] || ''; // Product Name
                 $('#perPack' + clickedIdNum).val(ui.item[4] || ''); // PerPack
                 $('#salePrice' + clickedIdNum).val(ui.item[2] || ''); // Sale Price
-                $('#quantity' + clickedIdNum).val(1);
+                $('#quantity' + clickedIdNum).val(parseFloat(1).toFixed(6));
                 $('#idn' + clickedIdNum).val(selectedProductId); // Product ID
                 $('#unit' + clickedIdNum).val(ui.item[3] || ''); // Unit
 
-                // Fetch Variable Product ID
-                //$.ajax({
-                //    url: '/BOM/GetVariableProduct',
-                //    type: 'GET',
-                //    data: { productId: selectedProductId },
-                //    beforeSend: function () {
-                //        alert("Fetching Variable Product for ID: " + selectedProductId);
-                //    },
-                //    success: function (response) {
-                //        console.log("Variable Product Response:", response);
-                //        alert("Response received: " + JSON.stringify(response));
-
-                //        // Ensure response keys match JavaScript conventions
-                //        let productId = response.id || response.Id; // Handle both cases
-                //        let productName = response.name || response.Name;
-                //        let productUnit = response.unit || response.Unit;
-
-                //        if (productId) {
-                //            $('#variableProductId' + clickedIdNum).val(productId);
-                //            $('#variableProductName' + clickedIdNum).val(productName);
-
-                //            // Log the unit value to verify it's correct
-                //            console.log("Product Unit:", productUnit);
-
-                //            if ($('#unit' + clickedIdNum).length > 0) {
-                //                // Alert for the unit field value before updating it
-                //                alert("Setting Unit Field: " + productUnit);
-
-                //                // Set the unit value and trigger change
-                //                $('#unit' + clickedIdNum).val(productUnit).change();
-
-                //                console.log("Unit field updated to:", productUnit);
-                //            } else {
-                //                console.warn("Unit field not found: #unit" + clickedIdNum);
-                //            }
-                //        } else {
-                //            alert("Invalid Response Data");
-                //        }
-                //    },
-                //    error: function (xhr, status, error) {
-                //        console.error("Error fetching variable product:", error);
-                //        alert("AJAX Error: " + error);
-                //    }
-                //});
                 $.ajax({
                     url: '/BOM/GetVariableProduct',
                     type: 'GET',
@@ -191,19 +145,17 @@ function OnTypeName(param) {
                             return;
                         }
 
-                        // Find the select dropdown and clear previous options
                         let $dropdown = $('#variableProductDropdown' + clickedIdNum);
-                        $dropdown.empty(); // Clear previous options
-                        $dropdown.append('<option value="">Select Variable Product</option>'); // Default option
+                        $dropdown.empty();
+                        $dropdown.append('<option value="">Select Variable Product</option>');
 
-                        // Add new options from response
                         response.forEach(function (product) {
+                            let unitValue = product.Unit || ""; // Ensure it's not null
                             $dropdown.append(
-                                `<option value="${product.Id}" data-unit="${product.Unit}">${product.Name}</option>`
+                                `<option value="${product.Id}" data-unit="${unitValue}">${product.Name}</option>`
                             );
                         });
 
-                        // Show the dropdown if hidden
                         $dropdown.show();
                     },
                     error: function (xhr, status, error) {
@@ -212,24 +164,26 @@ function OnTypeName(param) {
                     }
                 });
 
-
                 update_itemTotal();
                 return false;
             }
         }
     });
 
-    $(document).on("change", ".product-dropdown", function () {
-        let selectedOption = $(this).find(":selected");
-        let unitValue = selectedOption.data("unit"); // Get the unit from the selected option
+    // Ensure the unit updates when selecting a product
+    
+        document.addEventListener("DOMContentLoaded", function () {
+            // Ensure the unit updates when selecting a product from dropdown
+            document.getElementById("variableProductDropdown0").addEventListener("change", function () {
+                var selectedOption = this.options[this.selectedIndex]; // Get selected option
+                var unitValue = selectedOption.getAttribute("data-unit") || ""; // Get unit from data attribute
 
-        let dropdownId = $(this).attr("id"); // Get the dropdown ID
-        let idNumber = dropdownId.replace("variableProductDropdown", ""); // Extract the numeric part
+                console.log("Selected Unit:", unitValue); // Debugging output
 
-        // Update the corresponding unit input field
-        $("#unit" + idNumber).val(unitValue);
+                document.getElementById("unit30").value = unitValue; // Set unit value
+            });
     });
-
+    
 
 
 
@@ -396,7 +350,7 @@ $(document).ready(function () {
             '<td style="display:none;"><input type="text" readonly class="form-control classBGcolor" name="SubItem[' + txtSerialNum + '].ProductId" id="idn' + txtSerialNum + '"></td>' +
             '<td><input type="text" class="form-control" autocomplete="off" name="SubItem[' + txtSerialNum + '].Product.Name" id="name' + txtSerialNum + '"></td>' +
             
-            '<td><input type="text" class="form-control" autocomplete="off" name="SubItem[' + txtSerialNum + '].Quantity" id="quantity' + txtSerialNum + '"></td>' +         
+            '<td><input type="number" step="0.000001" class="form-control" autocomplete="off" name="SubItem[' + txtSerialNum + '].Quantity" id="quantity' + txtSerialNum + '"></td>' +
             '<td><input type="text" class="form-control" autocomplete="off" name="SubItem[' + txtSerialNum + '].Unit" id="unit' + txtSerialNum + '"></td>' +         
         //'<td><select class="form-control" name="SubItem[' + txtSerialNum + '].Unit" id="unit' + txtSerialNum + '"></td>' +
         //    //'<td><input type="text" class="form-control" autocomplete="off" name="SubItem[' + txtSerialNum + '].AvailableInventory" id="avaibleinventory' + txtSerialNum + '"></td>' + 

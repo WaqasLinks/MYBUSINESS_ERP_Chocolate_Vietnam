@@ -26,10 +26,11 @@ namespace MYBUSINESS.Models
         public Nullable<byte> ProductType { get; set; }
         public Nullable<int> NewProductionId { get; set; }
         public Nullable<int> PostProductionId { get; set; }
+        public Nullable<decimal> SubItemQty { get; set; }
     
         public virtual BOM BOM { get; set; }
+        public virtual NewProduction NewProduction { get; set; }
         public virtual PostProduction PostProduction { get; set; }
         public virtual Product Product { get; set; }
-        public virtual NewProduction NewProduction { get; set; }
     }
 }

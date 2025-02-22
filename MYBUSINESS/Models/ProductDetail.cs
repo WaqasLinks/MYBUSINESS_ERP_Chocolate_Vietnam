@@ -30,8 +30,8 @@ namespace MYBUSINESS.Models
         public Nullable<int> ProductionId { get; set; }
     
         public virtual NewProduction NewProduction { get; set; }
-        public virtual Product Product { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<QuantityToProduce> QuantityToProduces { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

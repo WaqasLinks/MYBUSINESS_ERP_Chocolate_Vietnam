@@ -392,7 +392,7 @@ namespace MYBUSINESS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,StoreId,Category,Unit,Variable,Excess,ByProduct,PType,VariableProductId")] Product product,
+        public ActionResult Create([Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,StoreId,Category,Unit,Variable,Excess,ByProduct,PType,VariableProductId,Ingredient,FinishedProduct,Merchandise,IntermediaryIngredient")] Product product,
         [Bind(Prefix = "ProductDetail", Include = "Id,ProductId,Shape,Weight")] List<ProductDetail> productDetails)
         {
             int productType = 0;
@@ -406,11 +406,23 @@ namespace MYBUSINESS.Controllers
             {
                 product.Variable = false;
             }
+            if (Request.Form["ExcessProduct"] != null)
+            {
+                productType |= 2;
+            }
 
-            if (Request.Form["ExcessProduct"] != null) product.PType |= 2;
-            if (Request.Form["ByProduct"] != null) product.PType |= 4;
+            // Handle ByProduct
+            if (Request.Form["ByProduct"] != null)
+            {
+                productType |= 3;
+            }
 
+            // Set final PType
             product.PType = (byte)productType;
+            //if (Request.Form["ExcessProduct"] != null) product.PType |= 2;
+            //if (Request.Form["ByProduct"] != null) product.PType |= 4;
+
+            //product.PType = (byte)productType;
             int? storeId = Session["StoreId"] as int?;
             //var storeId = Session["StoreId"] as string;
             if (storeId == null)
@@ -569,7 +581,7 @@ namespace MYBUSINESS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(
-    [Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,Category,Unit,Variable,Excess,ByProduct,PType,VariableProductId")] Product product,
+    [Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,Category,Unit,Variable,Excess,ByProduct,PType,VariableProductId,Ingredient,FinishedProduct,Merchandise,IntermediaryIngredient")] Product product,
     [Bind(Prefix = "ProductDetail", Include = "Id,ProductId,Shape,Weight")] List<ProductDetail> productDetails)
         {
             int productType = 0;

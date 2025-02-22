@@ -23,7 +23,7 @@ namespace MYBUSINESS.Models
         public string ExcessProd { get; set; }
         public string ByProd { get; set; }
     
-        public virtual Product Product { get; set; }
         public virtual NewProduction NewProduction { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

@@ -21,6 +21,11 @@ namespace MYBUSINESS.Models
        
         public NewProduction NewProduction { get; set; }
         public decimal TotalWeight { get; set; }
+        public Dictionary<int, decimal> CalculatedSubitems { get; set; } = new Dictionary<int, decimal>();
+        //public decimal calculatedsubitem { get; set; }
+
         public decimal CalculatedValue { get; set; }
+        public string ProductType { get; set; } // ✅ New Property for PType
+
     }
 }

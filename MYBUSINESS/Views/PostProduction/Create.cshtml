@@ -5,8 +5,10 @@
 
 <!-- Content Wrapper. Contains page content -->
 @*@using (Html.BeginForm(Html.BeginForm("Create", "NewProduction", FormMethod.Post, new { id = "newProductionForm" })))*@
+
 @using (Html.BeginForm())
 {
+
     @Html.AntiForgeryToken()
 
     <section class="content">
@@ -231,7 +233,7 @@ new { @class = "form-control product-dropdown", @id = "productDropdown" }
             </div>
 
             <!-- Right column for Sub Items -->
-            <div class="col-md-6">
+            <div class="col-md-6" style="display:none;">
                 <!-- general form elements -->
                 <!-- general form elements -->
                 <div class="box box-primary">
@@ -263,7 +265,7 @@ new { @class = "form-control product-dropdown", @id = "productDropdown" }
                                     int sNo = 0;
                                     foreach (var item in Model.SubItemProduction)
                                     {
-                                        if (item.Product.Manufacturable == false)
+                                        if (item.Product.Ingredient == true)
                                         {
                                             <tr>
                                                 <td id="SNo0">@(sNo + 1)</td>
@@ -350,7 +352,7 @@ new { @class = "form-control product-dropdown", @id = "productDropdown" }
                                     int sNo = 0;
                                     foreach (var item in Model.SubItemProduction)
                                     {
-                                        if (item.Product.Manufacturable == true)
+                                        if (item.Product.FinishedProduct == true && item.Product.PType != 1)
                                         {
                                             <tr>
                                                 <td id="SNo0">@(sNo + 1)</td>
@@ -369,8 +371,8 @@ new { @class = "form-control product-dropdown", @id = "productDropdown" }
                                                 </td>
 
                                                 <td><input type="text" readonly autocomplete="off" value=@item.Unit class="form-control" name="SubItemProduction[@sNo].Unit" id="unit@(sNo)"></td>
-                                                <td><input type="text" readonly autocomplete="off" value=@item.ProductType class="form-control" name="SubItemProduction[@sNo].ProductType" id="ptype@(sNo)"></td>
-
+                                                @*<td><input type="text" readonly autocomplete="off" value=@item.ProductType class="form-control" name="SubItemProduction[@sNo].ProductType" id="ptype@(sNo)"></td>*@
+                                                <td><input type="text" readonly autocomplete="off" value=@item.Product.PType class="form-control" name="SubItemProduction[@sNo].Product.PType" id="ptype@(sNo)"></td>
 
 
 

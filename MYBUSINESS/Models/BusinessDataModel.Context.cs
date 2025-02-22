@@ -57,19 +57,19 @@ namespace MYBUSINESS.Models
         public virtual DbSet<SOD> SODs { get; set; }
         public virtual DbSet<Store> Stores { get; set; }
         public virtual DbSet<StoreProduct> StoreProducts { get; set; }
-        public virtual DbSet<SubItem> SubItems { get; set; }
         public virtual DbSet<Supplier> Suppliers { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<UserAuthorization> UserAuthorizations { get; set; }
         public virtual DbSet<QuantityToProduce> QuantityToProduces { get; set; }
         public virtual DbSet<ProductType> ProductTypes { get; set; }
-        public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<PODReciver> PODRecivers { get; set; }
         public virtual DbSet<ProductionDetail> ProductionDetails { get; set; }
         public virtual DbSet<PostProduction> PostProductions { get; set; }
-        public virtual DbSet<SubItemProduction> SubItemProductions { get; set; }
         public virtual DbSet<NewProduction> NewProductions { get; set; }
         public virtual DbSet<ProductDetail> ProductDetails { get; set; }
+        public virtual DbSet<SubItem> SubItems { get; set; }
+        public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<SubItemProduction> SubItemProductions { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {
