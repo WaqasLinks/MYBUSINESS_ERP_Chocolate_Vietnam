@@ -20,6 +20,7 @@ namespace MYBUSINESS.Models
         public decimal thtien { get; set; }
         public int tsuat { get; set; }
         public decimal tthue { get; set; }
+        public decimal tgtien { get; set; }
         public decimal tgtttbso { get; set; }
     }
     public class InvoiceDetailsWrapper
@@ -42,7 +43,7 @@ namespace MYBUSINESS.Models
         public decimal? stckhau { get; set; }
         public decimal thtien { get; set; }
         public decimal tthue { get; set; }
-        //public decimal tgtien { get; set; }
+        public decimal tgtien { get; set; }
         public decimal tgtttbso { get; set; }
         public string key_api { get; set; }
         public List<InvoiceDetailsWrapper> details { get; set; }

@@ -134,11 +134,11 @@ function OnTypeName(param) {
                     type: 'GET',
                     data: { productId: selectedProductId },
                     beforeSend: function () {
-                        alert("Fetching Variable Products for ID: " + selectedProductId);
+                      /*  alert("Fetching Variable Products for ID: " + selectedProductId);*/
                     },
                     success: function (response) {
                         console.log("Variable Products Response:", response);
-                        alert("Response received: " + JSON.stringify(response));
+                        /*alert("Response received: " + JSON.stringify(response));*/
 
                         if (response.error) {
                             alert(response.error);
@@ -160,7 +160,7 @@ function OnTypeName(param) {
                     },
                     error: function (xhr, status, error) {
                         console.error("Error fetching variable products:", error);
-                        alert("AJAX Error: " + error);
+                        /*alert("AJAX Error: " + error);*/
                     }
                 });
 

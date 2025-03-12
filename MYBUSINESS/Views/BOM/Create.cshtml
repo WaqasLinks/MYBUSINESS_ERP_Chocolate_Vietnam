@@ -88,7 +88,7 @@
                         @*<div class="form-group">
                             @Html.Label("Variable Product ID", new { @class = "control-label" })
                             <input type="text" id="variableProductIdField" class="form-control" readonly placeholder="Variable Product ID will be displayed here" />
-                            @Html.HiddenFor(model => Model.Product.VariableProductId, new { @id = "variableProductIdHiddenField" })
+                            @Html.HiddenFor(model => Model.Product.VarProdParentId, new { @id = "variableProductIdHiddenField" })
                         </div>*@
 
 
@@ -232,8 +232,8 @@
                                     <th style="width:20%;">Unit</th>
                                     <th></th>-->
                                     <th style="width: 5%;">#</th>
-                                    <th style="width: 40%;">Name</th>
-                                    <th style="width: 20%;">Qty</th>
+                                    <th style="width: 35%;">Name</th>
+                                    <th style="width: 25%;">Qty</th>
                                     <th style="width: 20%;">Unit</th>
                                     <th style="width: 20%;"></th>
                                 </tr>
@@ -315,8 +315,8 @@
                                     <th style="width:20%;">Unit</th>
                                     <th></th>-->
                                     <th style="width: 5%;">#</th>
-                                    <th style="width: 50%;">Name</th>
-                                    <th style="width: 20%;">Qty</th>
+                                    <th style="width: 35%;">Name</th>
+                                    <th style="width: 25%;">Qty</th>
                                     <th style="width: 20%;">Unit</th>
                                     @*<th style="width: 12%;"></th>*@
                                 </tr>
@@ -480,7 +480,7 @@
                 //$('#variableProductIdHiddenField').val(data.variableProductName);
             },
             error: function () {
-                alert('Failed to fetch product details.');
+              /*  alert('Failed to fetch product details.');*/
             }
         });
     } else {
@@ -530,7 +530,7 @@
                 $(hiddenUnitFieldId).val(data.unit); // Update the hidden unit field
             },
             error: function () {
-                alert('Failed to fetch unit details.');
+              /*  alert('Failed to fetch unit details.');*/
             }
         });
     } else {
@@ -790,7 +790,7 @@
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     //$('#lblCommentsNotification').text("Error encountered while saving the comments.");
-                    alert('Data provided was not valid');
+                   /* alert('Data provided was not valid');*/
                 }
             });
         }

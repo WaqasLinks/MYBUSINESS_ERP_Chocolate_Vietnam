@@ -439,22 +439,31 @@
                     <div class="col-md-6">
                         @Html.DropDownList("SaleOrder.BankAccountId", (IEnumerable<SelectListItem>)ViewBag.BankAccounts, null, new { @class = "form-control", @style = "display:none" })
                         @*<select class="form-control" name="SaleOrder.PaymentMethod" id="SaleOrder.PaymentMethod" data-toggle="tooltip" data-placement="top" title="Select Payment method">
-                                <option value="Cash" selected>Cash</option>
-                                <option value="Online">Online</option>
-                                <option value="Cheque">Cheque</option>
-                                <option value="Other">Other</option>
-                            </select>*@
+            <option value="Cash" selected>Cash</option>
+            <option value="Online">Online</option>
+            <option value="Cheque">Cheque</option>
+            <option value="Other">Other</option>
+        </select>*@
                         @*<input type="text" autocomplete="off" class="form-control" name="SaleOrder.PaymentDetail" id="SaleOrder.PaymentDetail" value="" placeholder="Cheque No./Online payment No./etc..." data-toggle="tooltip" data-placement="top" title="Enter any details you want">
-                            <input type="text" autocomplete="off" class="form-control" name="SaleOrder.PaymentDetail" id="SaleOrder.PaymentDetail" value="" placeholder="Cheque No./Online payment No./etc..." data-toggle="tooltip" data-placement="top" title="Enter any details you want">
-                            <textarea name="SaleOrder.Remarks" rows="1" cols="100" class="form-control" placeholder="These remarks will print on bill" data-toggle="tooltip" data-placement="top" title="These remarks will print on bill"></textarea>
-                            <textarea name="SaleOrder.Remarks2" rows="1" cols="100" class="form-control" placeholder="These remarks will not print on bill" data-toggle="tooltip" data-placement="top" title="These remarks will not print on bill"></textarea>*@
+        <input type="text" autocomplete="off" class="form-control" name="SaleOrder.PaymentDetail" id="SaleOrder.PaymentDetail" value="" placeholder="Cheque No./Online payment No./etc..." data-toggle="tooltip" data-placement="top" title="Enter any details you want">
+        <textarea name="SaleOrder.Remarks" rows="1" cols="100" class="form-control" placeholder="These remarks will print on bill" data-toggle="tooltip" data-placement="top" title="These remarks will print on bill"></textarea>
+        <textarea name="SaleOrder.Remarks2" rows="1" cols="100" class="form-control" placeholder="These remarks will not print on bill" data-toggle="tooltip" data-placement="top" title="These remarks will not print on bill"></textarea>*@
 
+                        @*<select class="form-control" name="SaleOrder.PaymentMethod" id="SaleOrder.PaymentMethod" data-toggle="tooltip" data-placement="top" title="Select Payment method" style="display:none;">
+            <option value="TM" selected>TM</option>
+            <option value="TM/CK" selected>TM/CK</option>
+            <option value="Online">Online</option>
+            <option value="Cheque">Cheque</option>
+            <option value="Other">Other</option>
+        </select>*@
                         <select class="form-control" name="SaleOrder.PaymentMethod" id="SaleOrder.PaymentMethod" data-toggle="tooltip" data-placement="top" title="Select Payment method" style="display:none;">
-                            <option value="Cash" selected>Cash</option>
+                            <option value="TM">TM</option>
+                            <option value="TM/CK">TM/CK</option>
                             <option value="Online">Online</option>
                             <option value="Cheque">Cheque</option>
                             <option value="Other">Other</option>
                         </select>
+
 
                         <input type="text" autocomplete="off" class="form-control" name="SaleOrder.PaymentDetail" id="SaleOrder.PaymentDetail" value="" placeholder="Cheque No./Online payment No./etc..." data-toggle="tooltip" data-placement="top" title="Enter any details you want" style="display:none;">
                         <input type="text" autocomplete="off" class="form-control" name="SaleOrder.PaymentDetail" id="SaleOrder.PaymentDetail" value="" placeholder="Cheque No./Online payment No./etc..." data-toggle="tooltip" data-placement="top" title="Enter any details you want" style="display:none;">
@@ -1006,6 +1015,20 @@
     //    $("#addNewRow").removeAttr("disabled");
     //    update_itemTotal();
     //});
+    $('#SaleOrder\\.PaymentMethod').on('change', function () {
+        var selectedPayment = $(this).val(); // Get selected value
+
+        // Check if TM/CK is selected
+        if (selectedPayment === "TM/CK") {
+            $('#cardvnd').attr('name', 'SaleOrder.BillPaid'); // Assign name to this field
+            $('#cashvnd').removeAttr('name'); // Remove name from cash field
+        } else if (selectedPayment === "TM") {
+            $('#cashvnd').attr('name', 'SaleOrder.BillPaid'); // Assign name to cash field
+            $('#cardvnd').removeAttr('name'); // Remove name from card field
+        } else {
+            $('#cardvnd, #cashvnd').removeAttr('name'); // Remove names if not TM or TM/CK
+        }
+    });
     txtSerialNum = 0;
     TriggerBodyEvents();
     var productsBarcodesList = [];

@@ -820,13 +820,7 @@ namespace MYBUSINESS.Controllers
             ViewBag.MalaysiaTime = DateTime.UtcNow.AddHours(8);
             SaleOrderViewModel saleOrderViewModel = new SaleOrderViewModel();
             saleOrderViewModel.Customers = DAL.dbCustomers;
-            saleOrderViewModel.Products = DAL.dbProducts.Where(x => x.PType == 4 || x.PType == 7);
-
-
-
-
-
-
+            saleOrderViewModel.Products = DAL.dbProducts.Where(x => x.Saleable == true);
 
             //New Code to get Products by Category
             var productsByCategory = db.Products
@@ -871,11 +865,9 @@ namespace MYBUSINESS.Controllers
             TempData["_POSPhoneNumber"] = TempData["POSPhoneNumber"] as string;
             TempData["_CustomerVatNumber"] = TempData["CustomerVatNumber"] as string;
             TempData["_InvoiceSeries"] = TempData["InvoiceSeries"] as string;
-            //TempData["_InvoiceNumber"] = TempData["InvoiceNumber"] as string;
-            TempData["_InvoiceNumber"] = TempData["InvoiceNumber"] as string ?? "INV-DEFAULT-001";
-
+            TempData["_InvoiceNumber"] = TempData["InvoiceNumber"] as string;
             TempData["_Macqt"] = TempData["Macqt"] as string;
-            TempData["_Sobaomat"] = TempData["sbmat"] as string ?? "873D78E28D2B193E";
+            TempData["_Sobaomat"] = TempData["Sobaomat"] as string;
 
 
             //var jsonResponseWebservicess1 = TempData["JsonResponseWebservice"] as string;
@@ -893,7 +885,7 @@ namespace MYBUSINESS.Controllers
         //{
         //public ActionResult Create(
         public async Task<ActionResult> Create(
-    [Bind(Prefix = "SaleOrder", Include = "Id,BillAmount,Balance,PrevBalance,BillPaid,BillPaidByCash,Discount,CustomerId,Remarks,Remarks2,PaymentMethod,PaymentDetail,SaleReturn,BankAccountId,Date,SaleOrderAmountWithVaT")] SO sO,
+    [Bind(Prefix = "SaleOrder", Include = "Id,BillAmount,Balance,PrevBalance,BillPaid,BillPaidByCash,Discount,CustomerId,Remarks,Remarks2,PaymentMethod,PaymentDetail,SaleReturn,BankAccountId,Date")] SO sO,
     [Bind(Prefix = "SaleOrderDetail", Include = "ProductId,SalePrice,PurchasePrice,Quantity,SaleType,PerPack,IsPack,Product.Name,Product")] List<SOD> sOD,
     [Bind(Prefix = "Customer", Include = "Id,Name,Address,Email,Vat,CompanyName")] Customer Customer,
     FormCollection collection
@@ -973,9 +965,6 @@ namespace MYBUSINESS.Controllers
                 ////////////////////////////////////////
                 //int maxId = db.SOes.Max(p => p.Auto);
                 decimal maxId1 = (int)db.SOes.DefaultIfEmpty().Max(p => p == null ? 0 : p.SOSerial);
-                // Get the VAT tax percentage safely
-                decimal vatTaxPercent = db.MyBusinessInfoes.FirstOrDefault()?.TaxInPercent ?? 0m;
-
                 maxId1 += 1;
                 sO.SOSerial = maxId1;
 
@@ -988,7 +977,7 @@ namespace MYBUSINESS.Controllers
                 //sO.SaleReturn = false;
                 //sO.Id = System.Guid.NewGuid().ToString().ToUpper(); //Commented due to Bill Number
                 sO.SaleOrderAmount = 0;
-                sO.SaleOrderAmountWithVaT = 0;
+
                 sO.SaleOrderQty = 0;
 
                 sO.Profit = 0;
@@ -1043,7 +1032,7 @@ namespace MYBUSINESS.Controllers
                                 SalePrice = sod.SalePrice.Value,
                                 Stock = 0,
                                 totalPiece = 0,
-                                PType = 4,
+                                Saleable = true,
                                 PerPack = 1,
                                 ShowIn = "S",
                                 StoreId = storeId,//commented due to session issue
@@ -1089,7 +1078,6 @@ namespace MYBUSINESS.Controllers
                             {//piece
                                 sO.SaleOrderAmount += (sod.Quantity * sod.SalePrice);
                                 //int pieceSold = (int)(sod.Quantity * product.Stock);
-                                sO.SaleOrderAmountWithVaT = sO.SaleOrderAmount + (sO.SaleOrderAmount * vatTaxPercent / 100);
                                 decimal qty = (decimal)sod.Quantity;// / (decimal)product.PerPack;
                                 storeProduct.Stock -= qty;
                                 //product.Stock -= qty;
@@ -1103,7 +1091,7 @@ namespace MYBUSINESS.Controllers
                                 sO.SaleOrderAmount += (sod.Quantity * sod.SalePrice * sod.PerPack);
                                 storeProduct.Stock -= (int)sod.Quantity * sod.PerPack;
                                 //product.Stock -= (int)sod.Quantity * sod.PerPack;
-                                sO.SaleOrderAmountWithVaT = sO.SaleOrderAmount + (sO.SaleOrderAmount * vatTaxPercent / 100);
+
                                 sO.SaleOrderQty += (int)sod.Quantity * sod.PerPack;
                                 sO.Profit += (sod.Quantity * sod.SalePrice * sod.PerPack) - (decimal)(sod.Quantity * product.PurchasePrice * sod.PerPack); //- (decimal)(sO.Discount);
                             }
@@ -1113,7 +1101,6 @@ namespace MYBUSINESS.Controllers
                             if (sod.IsPack == false)
                             {
                                 sO.SaleOrderAmount += (sod.Quantity * sod.SalePrice);
-                                sO.SaleOrderAmountWithVaT = sO.SaleOrderAmount + (sO.SaleOrderAmount * vatTaxPercent / 100);
                                 decimal qty = (decimal)sod.Quantity;// / (decimal)product.PerPack;
                                 storeProduct.Stock += qty;
                                 //product.Stock += qty;
@@ -1125,12 +1112,10 @@ namespace MYBUSINESS.Controllers
                                 sO.SaleOrderAmount += (sod.Quantity * sod.SalePrice * sod.PerPack);
                                 storeProduct.Stock += (int)sod.Quantity * sod.PerPack;
                                 //product.Stock += (int)sod.Quantity * sod.PerPack;
-                                sO.SaleOrderAmountWithVaT = sO.SaleOrderAmount + (sO.SaleOrderAmount * vatTaxPercent / 100);
+
                                 sO.SaleOrderQty += (int)sod.Quantity * sod.PerPack;
                                 sO.Profit += (sod.Quantity * sod.SalePrice * sod.PerPack) - (decimal)(sod.Quantity * product.PurchasePrice * sod.PerPack); //- (decimal)(sO.Discount);
                             }
-                            
-
 
                         }
                         sod.Product = null;
@@ -1175,15 +1160,14 @@ namespace MYBUSINESS.Controllers
                         if (nestedDataObject != null)
                         {
                             // Example of accessing a value within the nested 'data'
-                            string invoiceSeries = nestedDataObject["khieu"]?.ToString();
-                            //string invoiceNumber = nestedDataObject["inv_invoiceNumber"]?.ToString();
+                            string invoiceSeries = nestedDataObject["inv_invoiceSeries"]?.ToString();
                             string invoiceNumber = nestedDataObject["inv_invoiceNumber"]?.ToString();
                             string macqt = nestedDataObject["macqt"]?.ToString();
-                            string sbmat = nestedDataObject["sbmat"]?.ToString();
+                            string sobaomat = nestedDataObject["sobaomat"]?.ToString();
                             TempData["InvoiceSeries"] = invoiceSeries;
                             TempData["InvoiceNumber"] = invoiceNumber;
                             TempData["Macqt"] = macqt;
-                            TempData["Sobaomat"] = sbmat;
+                            TempData["Sobaomat"] = sobaomat;
                         }
                     }
                     if (webServiceResponse.Success)
@@ -1202,7 +1186,6 @@ namespace MYBUSINESS.Controllers
                     ///////////////////////
 
                     TempData["CustomerName"] = Customer.Name;
-                    TempData["SaleOrderAmountWithVaT"] = sO.SaleOrderAmountWithVaT;
                     TempData["CustomerEmail"] = Customer.Email;
                     TempData["CustomerAddress"] = Customer.Address;
                     TempData["POSName"] = getStoreName.Name;
@@ -1260,16 +1243,14 @@ namespace MYBUSINESS.Controllers
                 using (var client = new HttpClient())
                 {
                     // Define the login endpoint URL (replace with the actual API endpoint)
-                    string url = "https://0401485182.minvoice.com.vn/api/Account/Login"; // Replace with the actual endpoint
+                    string url = "https://0106026495-998.minvoice.pro/api/Account/Login"; // Replace with the actual endpoint
 
                     // Create the request body with the necessary parameters
                     var requestBody = new
                     {
-                        //username = "PHEVA",
-                        username = "POSDN2",
-                        password = "4£j5Zm60HNl?",
-                        //password = "2BM@g0J%5sguJ@",
-                        //ma_dvcs = "VP"
+                        username = "PHEVA",
+                        password = "2BM@g0J%5sguJ@",
+                        ma_dvcs = "VP"
                     };
 
                     // Convert the request body to JSON format
@@ -1540,14 +1521,7 @@ namespace MYBUSINESS.Controllers
 
             try
             {
-                var tax = 8;/*db.MyBusinessInfoes.TaxInPercent*/
-                var soId = db.SODs.Select(d => d.SOId).FirstOrDefault();
-                var dbsaleOrderDetails = db.SODs
-        .Include(d => d.Product)
-        .Where(d => d.SOId == soId)
-        .ToList();
-
-                string url = "https://0401485182.minvoice.com.vn/api/InvoiceApi78/SaveV2"; //Real url working test env 
+                string url = "https://0106026495-998.minvoice.pro/api/InvoiceApi78/Save"; //Real url working test env 
                 //string url = "https://0106026495-998.minvoice.pro/api/InvoiceApi780/Save"; //To check if webservice down / do not respond
 
                 using (var client = new HttpClient())
@@ -1580,58 +1554,47 @@ namespace MYBUSINESS.Controllers
                     //        inv_TotalAmount = 129600
                     //    })
                     //    .ToList();
-
-                    var invoiceDetails = dbsaleOrderDetails
+                    var invoiceDetails = saleOrderDetails
                         .Where(detail => detail != null && detail.ProductId != null)
                         .Select(detail => new InvoiceDetail
-
-
                         {
-
                             tchat = 1,
-                            stt = detail.SODId, // Ensure dynamic property exists
-                            //stt = (int?)detail.ProductId,
-                            /*ma = detail.Product?.EInvoicePCode?? "",*/ // Handle null Product gracefully
-                            ma = detail.Product.EInvoicePCode ?? "",
-                            ten = detail.Product?.Name ?? "",
-                            dvtinh = detail.Product?.Unit ?? "", // Fix: Use null-conditional operator
-                            sluong = detail.Quantity, // Ensure Quantity is not null
-                            dgia = detail.SalePrice ?? 0, // Ensure SalePrice is not null
-                            tlckhau = 0,
-                            ttcktmai = 0,
-                            stckhau = 0,
-                            thtien = (decimal)((detail.Quantity ) * (detail.SalePrice )), // Ensure null handling
-                            tsuat = tax, // Tax code
-                            tthue = (decimal)((detail.Quantity ) * (detail.SalePrice ) * tax / 100m), // Ensure null handling
-                            tgtien = (decimal)(((detail.Quantity ) * (detail.SalePrice )) + ((detail.Quantity ?? 1) * (detail.SalePrice ) * tax) / 100),
-
+                            stt_rec0 = 1, //detail.SODId ?? 4, // Ensure dynamic property exists
+                            inv_itemCode = "CB005", //detail.Product?.Id.ToString() + "001" ?? "CB005", // Handle null Product gracefully
+                            inv_itemName = "Chocolatebox001",//detail.Product?.Name ?? "Chocolatebox001",
+                            inv_unitCode = "Box", // Assuming default value for unit code
+                            inv_quantity = 12,//detail.Quantity ?? 1,
+                            inv_unitPrice = detail.SalePrice ?? 12000,
+                            inv_discountPercentage = 0,
+                            inv_discountAmount = 0,
+                            inv_TotalAmountWithoutVat = 12000, //saleOrder.BillPaid ?? 120000, // Ensure dynamic property exists
+                            ma_thue = 8, // Tax code
+                            inv_vatAmount = 9600,
+                            inv_TotalAmount = 129600
                         })
                        .ToList();
-                
+
                     // Ensure saleOrder properties are not null before using them
                     var invoice = new Invoice
                     {
                         //inv_invoiceSeries = saleOrder.InvoiceSeries ?? "1C24MPE", // Default value if InvoiceSeries is null
-                        khieu = $"1C{lastTwoDigitsString}MDX",//"1C24MPE", // Default value if InvoiceSeries is null Invoice symobol fo receipt
-                        tdlap = DateTime.Now.AddDays(0).ToString("yyyy-MM-dd HH:mm:ss"),//saleOrder.InvoiceIssuedDate?.ToString("yyyy-MM-dd") ?? DateTime.Now.AddDays(13).ToString("yyyy-MM-dd"),
-                        dvtte = "VND",//saleOrder.CurrencyCode ?? "VND",
-                        tgia = 1,//saleOrder.ExchangeRate ?? 1,
-                        //sdhang = saleOrder.Id,//"HN-20242309-002", //saleOrder.SOSerial ?? "HN-20241509-001",
-                        sdhang = $"{saleOrder.Id}", /*-{DateTime.UtcNow.Ticks}*/
-                        tnmua = cust.Name,
-                        ten = cust.CompanyName,
-                        mst = cust.Vat,/*saleOrder.SOSerial.ToString()*///"0401485182",//cust.TaxCode ?? "0401485182",
-                        dchi = cust.Address,
+                        inv_invoiceSeries = $"1C{lastTwoDigitsString}MPE",//"1C24MPE", // Default value if InvoiceSeries is null Invoice symobol fo receipt
+                        inv_invoiceIssuedDate = DateTime.Now.AddDays(0).ToString("yyyy-MM-dd HH:mm:ss"),//saleOrder.InvoiceIssuedDate?.ToString("yyyy-MM-dd") ?? DateTime.Now.AddDays(13).ToString("yyyy-MM-dd"),
+                        inv_currencyCode = "VND",//saleOrder.CurrencyCode ?? "VND",
+                        inv_exchangeRate = 1,//saleOrder.ExchangeRate ?? 1,
+                        so_benh_an = saleOrder.Id,//"HN-20242309-002", //saleOrder.SOSerial ?? "HN-20241509-001",
+                        inv_buyerDisplayName = cust.Name ?? "Unknown Buyer",
+                        inv_buyerLegalName = cust.Name ?? "Unknown Buyer",
+                        inv_buyerTaxCode = saleOrder.SOSerial.ToString(),//"0401485182",//cust.TaxCode ?? "0401485182",
+                        inv_buyerAddressLine = cust.Address ?? "Unknown Address",
                         //inv_buyerEmail = cust.Email ?? "unknown@example.com",
-                        Email = cust.Email,
-                        htttoan = saleOrder.PaymentMethod ?? "TM/CK",
-                        ttcktmai = (decimal)saleOrder.Discount,
-                        tgtcthue = saleOrder.BillAmount,//saleOrder.TotalAmountWithoutVat ?? 0,
-                        tgtthue = (decimal)(saleOrder.SaleOrderAmount * tax / 100m),
-                        
-                        tgtttbso = (decimal)saleOrder.SaleOrderAmountWithVaT,//saleOrder.BillPaid ?? 0, = saleOrder.BillAmount,//saleOrder.BillPaid ?? 0, = saleOrder.BillAmount,//saleOrder.BillPaid ?? 0,
-                        /*key_API = saleOrder.Id,*///"HN-20242309-002",//saleOrder.ApiKey ?? "HN-20241509-001",
-                       
+                        inv_buyerEmail = cust.Email ?? "",
+                        inv_paymentMethodName = saleOrder.PaymentMethod ?? "TM/CK",
+                        inv_discountAmount = saleOrder.Discount ?? 0,
+                        inv_TotalAmountWithoutVat = saleOrder.BillAmount,//saleOrder.TotalAmountWithoutVat ?? 0,
+                        inv_vatAmount = 17600,//saleOrder.VatAmount ?? 0,
+                        inv_TotalAmount = saleOrder.BillAmount,//saleOrder.BillPaid ?? 0,
+                        key_api = saleOrder.Id,//"HN-20242309-002",//saleOrder.ApiKey ?? "HN-20241509-001",
                         details = new List<InvoiceDetailsWrapper> { new InvoiceDetailsWrapper { data = invoiceDetails } }
                     };
 
@@ -2237,24 +2200,18 @@ namespace MYBUSINESS.Controllers
             //    Console.WriteLine("No valid JSON response found in TempData.");
             //}
 
-
-
-
-
             string _customerName = TempData["_CustomerName"] as string;
-            //string _saleOrderAmountWithVat = TempData["_SaleOrderAmountWithVaT"] as string;
             string _customerEmail = TempData["_CustomerEmail"] as string;
             string _customerAddress = TempData["_CustomerAddress"] as string;
             string _customerPosName = TempData["_POSName"] as string;
             string _customerPosAddress = TempData["_POSAddress"] as string;
             string _customerPosPhoneNumber = TempData["_POSPhoneNumber"] as string;
             string _customerVatNumber = TempData["_CustomerVatNumber"] as string;
-            //string _tgtttbso = TempData["_Tgtttbso"] as string;
 
             string _invoiceSeries = TempData["_InvoiceSeries"] as string;
             string _invoiceNumber = TempData["_InvoiceNumber"] as string;
             string _macqt = TempData["_Macqt"] as string;
-            string _sbmat = TempData["_Sobaomat"] as string;
+            string _sobmaomat = TempData["_Sobaomat"] as string;
             //dynamic tempDataResponse1 = JsonConvert.DeserializeObject(TempData["JsonResponseWebservice"].ToString());
 
             //string _jsonResponseWebservice = TempData["_JsonResponseWebservice"] as string;
@@ -2307,7 +2264,6 @@ namespace MYBUSINESS.Controllers
         new ReportParameter("SaleOrderID", id),
 
         new ReportParameter("CustomerName", _customerName ?? "-"),  //// Pass Customer Name
-        //new ReportParameter("SaleOrderAmountWithVaT", _saleOrderAmountWithVat ?? "-"),
         //new ReportParameter("CustomerEmail", _customerEmail ?? "N/A"), //// Pass Customer Email
         new ReportParameter("CustomerEmail", _customerEmail ?? "-"), //// Pass Customer Email
         new ReportParameter("CustomerAddress", _customerAddress ?? "-"), //// Pass Customer Address
@@ -2319,7 +2275,7 @@ namespace MYBUSINESS.Controllers
         new ReportParameter("InvoiceSeries", _invoiceSeries ?? "-"),  // Pass POS Name
         new ReportParameter("InvoiceNumber", _invoiceNumber ?? "-"),  // Pass POS Name
         new ReportParameter("Macqt", _macqt ?? "-"),  // Pass POS Name
-        new ReportParameter("Sobaomat", _sbmat ?? "-"),  // Pass POS Name
+        new ReportParameter("Sobaomat", _sobmaomat ?? "-"),  // Pass POS Name
        
         //new ReportParameter("SaleOrderID", id),
         //new ReportParameter("CustomerName", _customerName ?? "N/A"),  //// Pass Customer Name
@@ -2331,8 +2287,8 @@ namespace MYBUSINESS.Controllers
 
         //new ReportParameter("InvoiceSeries", _invoiceSeries ?? "N/A"),  // Pass POS Name
         //new ReportParameter("InvoiceNumber", _invoiceNumber ?? "N/A"),  // Pass POS Name
-        //new ReportParameter("Macqt", macqt ?? "N/A"),  // Pass POS Name
-        //new ReportParameter("Sobaomat", _sbmat ?? "N/A"),  // Pass POS Name
+        //new ReportParameter("Macqt", _macqt ?? "N/A"),  // Pass POS Name
+        //new ReportParameter("Sobaomat", _sobmaomat ?? "N/A"),  // Pass POS Name
             });
             viewer.LocalReport.Refresh();
             //byte[] bytes = viewer.LocalReport.Render("PDF", null, out mimeType, out encoding, out extension, out streamIds, out warnings);
@@ -2475,7 +2431,7 @@ namespace MYBUSINESS.Controllers
             }
             SaleOrderViewModel saleOrderViewModel = new SaleOrderViewModel();
             List<SOD> sod = db.SODs.Where(x => x.SOId == id).ToList();
-            saleOrderViewModel.Products = DAL.dbProducts.Where(x => x.PType == 4 || x.PType == 7);
+            saleOrderViewModel.Products = DAL.dbProducts.Where(x => x.Saleable == true);
             saleOrderViewModel.Customers = DAL.dbCustomers;
             saleOrderViewModel.SaleOrderDetail = sod;
             sO.Id = Encryption.Encrypt(sO.Id, "BZNS");
@@ -2739,7 +2695,7 @@ namespace MYBUSINESS.Controllers
             //return View(sO);
             SaleOrderViewModel saleOrderViewModel = new SaleOrderViewModel();
 
-            saleOrderViewModel.Products = DAL.dbProducts.Where(x => x.PType == 4 || x.PType == 7);
+            saleOrderViewModel.Products = DAL.dbProducts.Where(x => x.Saleable == true);
             return View(saleOrderViewModel);
             //return View();
         }

@@ -47,10 +47,6 @@ namespace MYBUSINESS.Models
         public Nullable<decimal> Stock { get; set; }
         public Nullable<int> PerPack { get; set; }
         public decimal totalPiece { get; set; }
-        public bool Saleable { get; set; }
-        public bool Purchasable { get; set; }
-        public bool Manufacturable { get; set; }
-        public bool Variable { get; set; }
         public string RackPosition { get; set; }
         public string Image { get; set; }
         public string Remarks { get; set; }
@@ -64,16 +60,10 @@ namespace MYBUSINESS.Models
         public string Status { get; set; }
         public Nullable<int> StoreId { get; set; }
         public string Category { get; set; }
-        public Nullable<int> NewProductionId { get; set; }
         public string Unit { get; set; }
-        public bool Excess { get; set; }
-        public bool ByProduct { get; set; }
         public Nullable<byte> PType { get; set; }
-        public Nullable<int> VariableProductId { get; set; }
-        public bool Ingredient { get; set; }
-        public bool FinishedProduct { get; set; }
-        public bool Merchandise { get; set; }
-        public bool IntermediaryIngredient { get; set; }
+        public Nullable<int> VarProdParentId { get; set; }
+        public string EInvoicePCode { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BOM> BOMs { get; set; }

@@ -9,7 +9,7 @@ namespace MYBUSINESS.Models
     public class InvoiceDetail
     {
         public int? tchat { get; set; }
-        public int? stt_rec0 { get; set; }
+        public int? stt { get; set; }
         public string ma { get; set; }
         public string ten { get; set; }
         public string dvtinh { get; set; }
@@ -18,9 +18,12 @@ namespace MYBUSINESS.Models
         public decimal tlckhau { get; set; }
         public decimal stckhau { get; set; }
         public decimal thtien { get; set; }
+        public decimal tgtcthue { get; set; }
         public int tsuat { get; set; }
         public decimal tthue { get; set; }
-        //public decimal tgtien { get; set; }
+        public decimal tgtthue { get; set; }
+        public decimal ttcktmai { get; set; }
+        public decimal tgtien { get; set; }
         public decimal tgtttbso { get; set; }
     }
     public class InvoiceDetailsWrapper
@@ -42,9 +45,13 @@ namespace MYBUSINESS.Models
         public string htttoan { get; set; }
         public decimal? stckhau { get; set; }
         public decimal thtien { get; set; }
+        public decimal tgtcthue { get; set; }
         public decimal tthue { get; set; }
+        public decimal tgtthue { get; set; }
         public decimal tgtttbso { get; set; }
+        public decimal tgtien { get; set; }
         public string key_API { get; set; }
+        public decimal ttcktmai { get; set; }
         public List<InvoiceDetailsWrapper> details { get; set; }
     }
 

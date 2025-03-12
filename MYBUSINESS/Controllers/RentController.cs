@@ -577,7 +577,7 @@ namespace MYBUSINESS.Controllers
 
             RentViewModel saleOrderViewModel = new RentViewModel();
             saleOrderViewModel.Customers = db.Customers;
-            saleOrderViewModel.Products = db.Products.Where(x => x.Saleable == true);
+            saleOrderViewModel.Products = db.Products.Where(x => x.PType == 4 || x.PType == 7);
             //bool IsReturn1 = true;
             ViewBag.IsReturn = IsReturn;
             //string isReturn1 = "true";
@@ -995,7 +995,7 @@ namespace MYBUSINESS.Controllers
             }
             RentViewModel saleOrderViewModel = new RentViewModel();
             List<RentDetail> sod = db.RentDetails.Where(x => x.SOId == id).ToList();
-            saleOrderViewModel.Products = db.Products.Where(x => x.Saleable == true);
+            saleOrderViewModel.Products = db.Products.Where(x => x.PType == 4 || x.PType == 7);
             saleOrderViewModel.Customers = db.Customers;
             saleOrderViewModel.SaleOrderDetail = sod;
             sO.Id = Encryption.Encrypt(sO.Id, "BZNS");
@@ -1242,7 +1242,7 @@ namespace MYBUSINESS.Controllers
             //return View(sO);
             RentViewModel saleOrderViewModel = new RentViewModel();
 
-            saleOrderViewModel.Products = db.Products.Where(x => x.Saleable == true);
+            saleOrderViewModel.Products = db.Products.Where(x => x.PType == 4 || x.PType == 7);
             return View(saleOrderViewModel);
             //return View();
         }

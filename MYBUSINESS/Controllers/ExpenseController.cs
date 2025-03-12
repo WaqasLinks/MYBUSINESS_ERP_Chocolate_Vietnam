@@ -283,7 +283,7 @@ namespace MYBUSINESS.Controllers
 
             ExpenseViewModel purchaseOrderViewModel = new ExpenseViewModel();
             purchaseOrderViewModel.Suppliers = db.Suppliers;
-            purchaseOrderViewModel.Products = db.Products.Where(x => x.Saleable == true);
+            purchaseOrderViewModel.Products = db.Products.Where(x => x.PType == 4 || x.PType == 7);
             //purchaseOrderViewModel.FundingSources = db.FundingSources.ToList() ;
             ViewBag.FundingSources = new SelectList(db.Suppliers.Where(x=>x.IsCreditor==true), "Id", "Name");//db.FundingSources.ToList(); ;
             ViewBag.IsReturn = IsReturn;

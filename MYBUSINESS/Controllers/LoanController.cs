@@ -283,7 +283,7 @@ namespace MYBUSINESS.Controllers
 
             LoanViewModel purchaseOrderViewModel = new LoanViewModel();
             purchaseOrderViewModel.Suppliers = db.Suppliers;
-            purchaseOrderViewModel.Products = db.Products.Where(x => x.Saleable == true && x.ShowIn=="P");
+            purchaseOrderViewModel.Products = db.Products.Where(x => x.PType == 4 || x.PType == 7 && x.ShowIn == "P");
             //purchaseOrderViewModel.FundingSources = db.FundingSources.ToList() ;
             ViewBag.FundingSources = new SelectList(db.Suppliers.Where(x => x.IsCreditor == true), "Id", "Name");
             ViewBag.IsReturn = IsReturn;
@@ -781,7 +781,7 @@ namespace MYBUSINESS.Controllers
             //return View(Loan);
             LoanViewModel purchaseOrderViewModel = new LoanViewModel();
 
-            purchaseOrderViewModel.Products = db.Products.Where(x => x.Saleable == true && x.ShowIn == "P");
+            purchaseOrderViewModel.Products = db.Products.Where(x => x.PType == 4 || x.PType == 7 && x.ShowIn == "P");
             return View(purchaseOrderViewModel);
             //return View();
         }
@@ -878,7 +878,7 @@ namespace MYBUSINESS.Controllers
             }
             LoanViewModel purchaseOrderViewModel = new LoanViewModel();
             List<LoanDetail> pod = db.LoanDetails.Where(x => x.POId == id).ToList();
-            purchaseOrderViewModel.Products = db.Products.Where(x=>x.Saleable== true && x.ShowIn == "P");
+            purchaseOrderViewModel.Products = db.Products.Where(x=>x.PType == 4 || x.PType == 7 && x.ShowIn == "P");
             purchaseOrderViewModel.Suppliers = db.Suppliers;
             purchaseOrderViewModel.PurchaseOrderDetail = pod;
             pO.Id = Encryption.Encrypt(pO.Id, "BZNS");

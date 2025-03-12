@@ -20,7 +20,6 @@
         <EntityTypeShape EntityType="Models.LoanDetail" Width="1.5" PointX="9.75" PointY="40.25" />
         <EntityTypeShape EntityType="Models.Location" Width="1.5" PointX="3" PointY="59.125" />
         <EntityTypeShape EntityType="Models.MetaDetaDescription" Width="1.5" PointX="4.75" PointY="0.75" />
-        <EntityTypeShape EntityType="Models.MyBusinessInfo" Width="1.5" PointX="0.75" PointY="4.75" />
         <EntityTypeShape EntityType="Models.Payment" Width="1.5" PointX="15.75" PointY="31.25" />
         <EntityTypeShape EntityType="Models.PO" Width="1.5" PointX="10.5" PointY="24.375" />
         <EntityTypeShape EntityType="Models.POD" Width="1.5" PointX="12.75" PointY="43" />
@@ -31,7 +30,6 @@
         <EntityTypeShape EntityType="Models.RentDetail" Width="1.5" PointX="12.75" PointY="47.5" />
         <EntityTypeShape EntityType="Models.Service" Width="1.5" PointX="10.5" PointY="32" />
         <EntityTypeShape EntityType="Models.ServiceDetail" Width="1.5" PointX="15.75" PointY="50.5" />
-        <EntityTypeShape EntityType="Models.SO" Width="1.5" PointX="13.5" PointY="29.125" />
         <EntityTypeShape EntityType="Models.SOD" Width="1.5" PointX="15.75" PointY="45.125" />
         <EntityTypeShape EntityType="Models.Store" Width="1.5" PointX="8.25" PointY="73.125" />
         <EntityTypeShape EntityType="Models.StoreProduct" Width="1.5" PointX="10.5" PointY="59.375" />
@@ -39,14 +37,12 @@
         <EntityTypeShape EntityType="Models.sysdiagram" Width="1.5" PointX="2.75" PointY="4.75" />
         <EntityTypeShape EntityType="Models.UserAuthorization" Width="1.5" PointX="4.75" PointY="3.75" />
         <AssociationConnector Association="Models.FK_PO_Account" />
-        <AssociationConnector Association="Models.FK_SO_Account" />
         <AssociationConnector Association="Models.FK_Customer_Business" />
         <AssociationConnector Association="Models.FK_Department_Business" />
         <AssociationConnector Association="Models.FK_Location_Business" />
         <AssociationConnector Association="Models.FK_Supplier_Business" />
         <AssociationConnector Association="Models.FK_Rent_Customer" />
         <AssociationConnector Association="Models.FK_Service_Customer" />
-        <AssociationConnector Association="Models.FK_SO_Customer" />
         <AssociationConnector Association="Models.FK_Employee_Department" />
         <AssociationConnector Association="Models.FK_Expense_Employee" />
         <AssociationConnector Association="Models.FK_Loan_Employee" />
@@ -54,61 +50,63 @@
         <AssociationConnector Association="Models.FK_ProductionOrder_Employee" />
         <AssociationConnector Association="Models.FK_Rent_Employee" />
         <AssociationConnector Association="Models.FK_Service_Employee" />
-        <AssociationConnector Association="Models.FK_SO_Employee" />
         <AssociationConnector Association="Models.FK_Expense_Supplier" />
         <AssociationConnector Association="Models.FK_ExpenseDetail_Expense" />
         <AssociationConnector Association="Models.FK_Loan_Supplier" />
         <AssociationConnector Association="Models.FK_LoanDetail_Loan" />
-        <AssociationConnector Association="Models.FK_Payment_SO" />
         <AssociationConnector Association="Models.FK_PO_Supplier" />
         <AssociationConnector Association="Models.FK_POD_PO" />
         <AssociationConnector Association="Models.FK_ProductionOrderDetail_ProductionOrder" />
         <AssociationConnector Association="Models.FK_RentDetail_Rent" />
         <AssociationConnector Association="Models.FK_ServiceDetail_Service" />
-        <AssociationConnector Association="Models.FK_SOD_SO" />
         <AssociationConnector Association="Models.FK_StoreProduct_Store" />
-        <EntityTypeShape EntityType="Models.QuantityToProduce" Width="1.5" PointX="12.75" PointY="62.375" />
         <EntityTypeShape EntityType="Models.ProductType" Width="1.5" PointX="7.5" PointY="42.5" />
         <AssociationConnector Association="Models.FK_ProductType_BOM" />
         <EntityTypeShape EntityType="Models.PODReciver" Width="1.5" PointX="12.75" PointY="37.875" />
         <AssociationConnector Association="Models.FK_PODReciver_PO" />
         <EntityTypeShape EntityType="Models.ProductionDetail" Width="1.5" PointX="12.75" PointY="66.25" />
         <EntityTypeShape EntityType="Models.PostProduction" Width="1.5" PointX="15.75" PointY="61.25" />
-        <AssociationConnector Association="Models.FK_QuantityToProduce_PostProduction" />
-        <EntityTypeShape EntityType="Models.NewProduction" Width="1.5" PointX="7.5" PointY="77.125" />
-        <AssociationConnector Association="Models.FK_PostProduction_NewProduction" />
-        <AssociationConnector Association="Models.FK_ProductionDetail_NewProduction" />
-        <AssociationConnector Association="Models.FK_QuantityToProduce_NewProduction1" />
         <EntityTypeShape EntityType="Models.ProductDetail" Width="1.5" PointX="9.75" PointY="67.375" />
-        <AssociationConnector Association="Models.FK_ProductDetail_NewProduction" />
-        <AssociationConnector Association="Models.FK_QuantityToProduce_ProductDetail" />
         <EntityTypeShape EntityType="Models.SubItem" Width="1.5" PointX="12.75" PointY="58.375" />
         <AssociationConnector Association="Models.FK_SubItem_BOM" />
-        <EntityTypeShape EntityType="Models.Product" Width="1.5" PointX="5.875" PointY="54.125" />
-        <AssociationConnector Association="Models.FK_BOM_Product1" />
-        <AssociationConnector Association="Models.FK_ExpenseDetail_Product" />
-        <AssociationConnector Association="Models.FK_FinalProduction_Product" />
-        <AssociationConnector Association="Models.FK_LoanDetail_Product" />
-        <AssociationConnector Association="Models.FK_NewProduction_Product1" />
-        <AssociationConnector Association="Models.FK_POD_Product" />
-        <AssociationConnector Association="Models.FK_PODReciver_Product" />
-        <AssociationConnector Association="Models.FK_PostProduction_Product" />
-        <AssociationConnector Association="Models.FK_ProductCategory_Product" />
-        <AssociationConnector Association="Models.FK_ProductDetail_Product" />
-        <AssociationConnector Association="Models.FK_ProductionDetail_Product" />
-        <AssociationConnector Association="Models.FK_ProductionOrderDetail_Product" />
-        <AssociationConnector Association="Models.FK_ProductType_Product" />
-        <AssociationConnector Association="Models.FK_QuantityToProduce_Product" />
-        <AssociationConnector Association="Models.FK_RentDetail_Product" />
-        <AssociationConnector Association="Models.FK_ServiceDetail_Product" />
-        <AssociationConnector Association="Models.FK_SOD_Product" />
-        <AssociationConnector Association="Models.FK_StoreProduct_Product" />
-        <AssociationConnector Association="Models.FK_SubItem_Product" />
         <EntityTypeShape EntityType="Models.SubItemProduction" Width="1.5" PointX="18" PointY="65.25" />
         <AssociationConnector Association="Models.FK_SubItemProduction_BOM" />
-        <AssociationConnector Association="Models.FK_SubItemProduction_NewProduction" />
         <AssociationConnector Association="Models.FK_SubItemProduction_PostProduction" />
-        <AssociationConnector Association="Models.FK_SubItemProduction_Product" />
+        <EntityTypeShape EntityType="Models.QuantityToProduce" Width="1.5" PointX="18" PointY="60.875" />
+        <AssociationConnector Association="Models.FK_QuantityToProduce_PostProduction" />
+        <AssociationConnector Association="Models.FK_QuantityToProduce_ProductDetail" />
+        <EntityTypeShape EntityType="Models.NewProduction" Width="1.5" PointX="7.5" PointY="58.625" />
+        <AssociationConnector Association="Models.FK_PostProduction_NewProduction" />
+        <AssociationConnector Association="Models.FK_ProductDetail_NewProduction" />
+        <AssociationConnector Association="Models.FK_ProductionDetail_NewProduction" />
+        <EntityTypeShape EntityType="Models.SO" Width="1.5" PointX="13.5" PointY="23.375" />
+        <AssociationConnector Association="Models.FK_SO_Account" />
+        <AssociationConnector Association="Models.FK_SO_Customer" />
+        <AssociationConnector Association="Models.FK_SO_Employee" />
+        <AssociationConnector Association="Models.FK_Payment_SO" />
+        <AssociationConnector Association="Models.FK_SOD_SO" />
+        <EntityTypeShape EntityType="Models.MyBusinessInfo" Width="1.5" PointX="5.375" PointY="6.75" />
+        <EntityTypeShape EntityType="Models.Product" Width="1.5" PointX="5.25" PointY="49.375" />
+        <AssociationConnector Association="Models.FK_BOM_Product1" />
+        <AssociationConnector Association="Models.FK_ExpenseDetail_Product1" />
+        <AssociationConnector Association="Models.FK_FinalProduction_Product" />
+        <AssociationConnector Association="Models.FK_LoanDetail_Product1" />
+        <AssociationConnector Association="Models.FK_NewProduction_Product" />
+        <AssociationConnector Association="Models.FK_POD_Product" />
+        <AssociationConnector Association="Models.FK_PODReciver_Product1" />
+        <AssociationConnector Association="Models.FK_PostProduction_Product1" />
+        <AssociationConnector Association="Models.FK_ProductCategory_Product1" />
+        <AssociationConnector Association="Models.FK_ProductDetail_Product" />
+        <AssociationConnector Association="Models.FK_ProductionDetail_Product1" />
+        <AssociationConnector Association="Models.FK_ProductionOrderDetail_Product1" />
+        <AssociationConnector Association="Models.FK_ProductType_Product" />
+        <AssociationConnector Association="Models.FK_QuantityToProduce_Product" />
+        <AssociationConnector Association="Models.FK_RentDetail_Product1" />
+        <AssociationConnector Association="Models.FK_ServiceDetail_Product1" />
+        <AssociationConnector Association="Models.FK_SOD_Product1" />
+        <AssociationConnector Association="Models.FK_StoreProduct_Product" />
+        <AssociationConnector Association="Models.FK_SubItem_Product" />
+        <AssociationConnector Association="Models.FK_SubItemProduction_Product1" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

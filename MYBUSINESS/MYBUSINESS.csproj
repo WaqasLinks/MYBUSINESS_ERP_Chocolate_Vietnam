@@ -546,6 +546,7 @@
     <Compile Include="Models\QuantityToProduce.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\QuantityToProduceViewModel.cs" />
     <Compile Include="Models\Rent.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>

@@ -18,30 +18,24 @@ namespace MYBUSINESS.Models
         public NewProduction()
         {
             this.PostProductions = new HashSet<PostProduction>();
-            this.ProductionDetails = new HashSet<ProductionDetail>();
-            this.QuantityToProduces = new HashSet<QuantityToProduce>();
             this.ProductDetails = new HashSet<ProductDetail>();
-            this.SubItemProductions = new HashSet<SubItemProduction>();
+            this.ProductionDetails = new HashSet<ProductionDetail>();
         }
     
         public int Id { get; set; }
-        public Nullable<System.DateTime> ProductionDate { get; set; }
         public string ProductName { get; set; }
         public string Unit { get; set; }
         public Nullable<decimal> ProductId { get; set; }
         public Nullable<decimal> Quantity { get; set; }
         public Nullable<bool> Validate { get; set; }
+        public Nullable<System.DateTime> ProductionDate { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PostProduction> PostProductions { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProductionDetail> ProductionDetails { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<QuantityToProduce> QuantityToProduces { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductDetail> ProductDetails { get; set; }
-        public virtual Product Product { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SubItemProduction> SubItemProductions { get; set; }
+        public virtual ICollection<ProductionDetail> ProductionDetails { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

@@ -210,7 +210,7 @@ new { @class = "form-control product-dropdown", @id = "productDropdown" }
                     <div class="box-footer">
                         <input type="submit" id="CreateSO" value="Create" class="btn btn-primary" />
                         @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-secondary" })
-                        <button id="validateBtn" class="btn btn-primary" style="margin-left:250px;">Validate</button>
+                        <button  id="validateBtn" class="btn btn-primary" style="margin-left:250px; display:none;">Validate</button>
                     </div>
                 </div>
             </div>
@@ -232,8 +232,8 @@ new { @class = "form-control product-dropdown", @id = "productDropdown" }
                             <thead>
                                 <tr>
                                     <th style="width: 5%;">#</th>
-                                    <th style="width: 50%;">Name</th>
-                                    <th style="width: 12%;">Qty</th>
+                                    <th style="width: 35%;">Name</th>
+                                    <th style="width: 25%;">Qty</th>
                                     <th style="width: 20%;">Unit</th>
                                     @*<th style="width: 20%;">Calculated Weight</th>*@
                                     @*<th style="width: 12%;"></th>*@
@@ -299,8 +299,8 @@ new { @class = "form-control product-dropdown", @id = "productDropdown" }
                             <thead>
                                 <tr>
                                     <th style="width: 5%;">#</th>
-                                    <th style="width: 50%;">Name</th>
-                                    <th style="width: 12%;">Qty</th>
+                                    <th style="width: 35%;">Name</th>
+                                    <th style="width: 25%;">Qty</th>
                                     <th style="width: 20%;">Unit</th>
                                     <th style="width: 20%;">P.Type</th>
                                     @*<th style="width: 20%;">Calculated Weight</th>*@
@@ -315,7 +315,7 @@ new { @class = "form-control product-dropdown", @id = "productDropdown" }
                                     <td><input type="text" readonly class="form-control" name="SubItem[0].Product.Name" id="name0" placeholder="Type product name"></td>
                                     <td><input type="text"  class="form-control" name="SubItem[0].Quantity" id="quantity0"></td>
                                     <td><input type="text" readonly class="form-control" name="SubItem[0].Unit" id="unit0"></td>
-                                    <td><input type="text" readonly class="form-control" name="SubItem[0].Product.PType" id="ptype0" placeholder=""></td>
+                                    <td ><input type="text" readonly class="form-control" name="SubItem[0].Product.PType" id="ptype0" placeholder=""></td>
                                     @*<td>
                                             <input type="text" readonly class="form-control calculated-weight" name="QuantityToProduce[${index}].CalculatedWeight" />
                                         </td>*@
@@ -424,22 +424,23 @@ $('#productDropdown').change(function () {
                     // Loop through the product details and create rows
                     data.forEach((detail, index) => {
                         const newRow = `
-                        <tr>
-                            <td>${index + 1}</td>
-                            <td style="display:none;">
-                                <input type="hidden" name="QuantityToProduce.Index" value="${index}" />
-                            </td>
-
-                            <td>
-                                <input type="text" readonly class="form-control" name="QuantityToProduce[${index}].Shape" value="${detail.Shape}" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control production-qty" data-weight="${detail.Weight}" name="QuantityToProduce[${index}].ProductionQty" />
-                            </td>
-                            <td>
-                                <input type="text" readonly class="form-control calculated-weight" name="QuantityToProduce[${index}].CalculatedWeight" />
-                            </td>
-                        </tr>`;
+                       <tr>
+    <td>${index + 1}</td>
+    <td style="display:none;">
+        <input type="hidden" name="QuantityToProduce.Index" value="${index}" />
+    </td>
+    <td>
+        <input type="hidden" name="QuantityToProduce[${index}].ProductDetailId" value="${detail.Id}" />
+        <input type="text" readonly class="form-control" name="QuantityToProduce[${index}].Shape" value="${detail.Shape}" />
+    </td>
+    <td>
+        <input type="text" class="form-control production-qty" data-weight="${detail.Weight}" name="QuantityToProduce[${index}].ProductionQty" />
+    </td>
+    <td>
+        <input type="hidden" name="QuantityToProduce[${index}].Weight" value="${detail.Weight}" />
+        <input type="text" readonly class="form-control calculated-weight" name="QuantityToProduce[${index}].CalculatedWeight" />
+    </td>
+</tr>`;
                         $('#selectedProduct tbody').append(newRow); // Append rows
                     });
                 } else {
@@ -464,7 +465,7 @@ $('#productDropdown').change(function () {
         let variableConsumptionRate = parseFloat($(this).data('consumption-rate')) || 1;
 
         console.log(variableProductId, "Variable Product ID from Input Field"); // Debugging log
-
+        /*alert(variableProductId, "Variable Product ID from Input Field");*/
         // Get the previous weight stored in the row
         let previousWeight = parseFloat($row.find('.calculated-weight').data('previous-weight')) || 0;
 
@@ -498,8 +499,9 @@ $('#productDropdown').change(function () {
                 console.log(totalWeight, 'totalWeight');
                 // Calculate new result
                 const calculatedValue = quantity * totalWeight;
-                const result = gtotalWeight - newProductionQty;
-
+                console.log(calculatedValue);
+                const result = (gtotalWeight * quantity) - newProductionQty;
+                console.log(result);
                 // Update only matching row
                 $(this).find('.calculated-subitem').text(result.toFixed(2));
                 console.log(`✅ Updated row with ProductId: ${variableProductId}, New Result: ${result}`);
@@ -548,7 +550,8 @@ $('#productDropdown').change(function () {
         // Calculate the weight and update the corresponding field
         const calculatedWeight = productionQty * weight;
         $(this).closest('tr').find('.calculated-weight').val(calculatedWeight.toFixed(2));
-
+        console.log(productionQty)
+        console.log(weight)
         // Recalculate the total weight
         calculateTotalWeight();
 
@@ -594,7 +597,9 @@ $('#productDropdown').change(function () {
         $('#selectedProducts > tbody  > tr').each(function () {
             const quantity = parseFloat($(this).find("[name$='Quantity']").val()) || 0; // Get quantity value
             const calculatedValue = quantity * gtotalWeight; // Multiply quantity by total weight
-            $(this).find('.calculated-subitem').text(calculatedValue.toFixed(2)); // Update calculated value
+            $(this).find('.calculated-subitem').text(calculatedValue.toFixed(2));
+            console.log('quantity');
+            console.log('calculatedValue');// Update calculated value
         });
 
         // Alert to check updated sub-item values
@@ -624,74 +629,77 @@ $('#productDropdown').change(function () {
 
                     // Loop through sub-items and append rows to the respective table
                     data.forEach((subItem, index) => {
+                        let isByProduct = subItem.PType === "ByProduct"; // Check if PType is "ByProduct"
+
                         let quantityValue = subItem.Quantity !== null && subItem.Quantity !== undefined ? subItem.Quantity : "0";
 
                         let newRow = `
-                        <tr>
-                            <td>${index + 1}</td>
-                            <td style="display:none;">
-                                <input type="hidden" name="SubItemProduction[${index}].ProductId" value="${subItem.ProductId}" />
-                            </td>
-                            <td>
-                                <input type="text" readonly class="form-control"
-                                   name="SubItemProduction[${index}].Product.Name"
-                                   value="${subItem.ProductName}" />
-                            </td>`;
+    <tr ${isByProduct ? 'style="display: none;"' : ''}>  <!-- Hide ByProduct Rows -->
+        <td>${index + 1}</td>
+        <td style="display:none;">
+            <input type="hidden" name="SubItemProduction[${index}].ProductId" value="${subItem.ProductId}" />
+        </td>
+        <td>
+            <input type="text" readonly class="form-control"
+               name="SubItemProduction[${index}].Product.Name"
+               value="${subItem.ProductName}" />
+        </td>`;
 
-                        if (subItem.Ingredient) {
+                        if (subItem.Ingredient || subItem.IntermediaryIngredient) {
                             // Add row to Selected Products (Ingredient Table)
                             newRow += `
-                            </td>
-                             <td style="display:none;">
-                                <input type="hidden" readonly class="form-control"
-                                       name="SubItemProduction[${index}].Quantity"
-                                       value="${quantityValue}"
-                                       placeholder="Quantity" />
-                            </td>
-                            <td>
-                                <span class="calculated-subitem">0.00</span>
-                                <input type="hidden" name="SubItemProduction[${index}].SubItemQty" class="subitem-qty-hidden" value="0.00" />
-                            </td>
-                            <td>
-                                <input type="text" readonly class="form-control"
-                                       name="SubItemProduction[${index}].Unit"
-                                       value="${subItem.Unit || ''}"
-                                       placeholder="Unit" />
-                            </td>`;
+        </td>
+         <td style="display:none;">
+            <input type="hidden" readonly class="form-control"
+                   name="SubItemProduction[${index}].Quantity"
+                   value="${quantityValue}"
+                   placeholder="Quantity" />
+        </td>
+        <td>
+            <span class="calculated-subitem">0.00</span>
+            <input type="hidden" name="SubItemProduction[${index}].SubItemQty" class="subitem-qty-hidden" value="0.00" />
+        </td>
+        <td>
+            <input type="text" readonly class="form-control"
+                   name="SubItemProduction[${index}].Unit"
+                   value="${subItem.Unit || ''}"
+                   placeholder="Unit" />
+        </td>`;
                             $('#selectedProducts tbody').append(newRow);
 
-                        } else if (subItem.FinalProduct) {
+                        } else if (subItem.PType === "Variable" || subItem.PType === "Excess" || subItem.PType === "ByProduct") {
                             // Add row to Product Type Table (Final Product Table)
                             newRow += `
-                            <td>
-                                <input type="text" class="form-control production-qty1"
-                                    data-variable-product-id="${subItem.VariableProduct}"
-                                    name="SubItemProduction[${index}].Quantity"
-                                    value="${quantityValue}"
-                                    placeholder="Quantity" />
-                            </td>
-                            <td>
-                                <input type="text" readonly class="form-control"
-                                       name="SubItemProduction[${index}].Unit"
-                                       value="${subItem.Unit || ''}"
-                                       placeholder="Unit" />
-                            </td>
-                            <td>
-                                <input type="text" readonly class="form-control"
-                                       name="SubItemProduction[${index}].Product.PType"
-                                       value="${subItem.PType}"
-                                       placeholder="Product Type" />
-                            </td>
-                            <td>
-                                <input type="hidden"
-                                       name="SubItemProduction[${index}].ProductType"
-                                       value="${subItem.PType}" />
-                            </td>`;
+        <td>
+            <input type="text" class="form-control production-qty1"
+                data-variable-product-id="${subItem.VariableProduct}"
+                name="SubItemProduction[${index}].Quantity"
+                value="${quantityValue}"
+                placeholder="Quantity" />
+        </td>
+        <td>
+            <input type="text" readonly class="form-control"
+                   name="SubItemProduction[${index}].Unit"
+                   value="${subItem.Unit || ''}"
+                   placeholder="Unit" />
+        </td>
+        <td>
+            <input type="text" readonly class="form-control"
+                   name="SubItemProduction[${index}].Product.PType"
+                   value="${subItem.PType}"
+                   placeholder="Product Type" />
+        </td>
+        <td>
+            <input type="hidden"
+                   name="SubItemProduction[${index}].ProductType"
+                   value="${subItem.PType}" />
+        </td>`;
                             $('#productTypeTable tbody').append(newRow);
                         }
 
                         newRow += `</tr>`;
                     });
+
 
                     // Update calculations after adding rows
                     updateSubItemCalculations();
@@ -712,6 +720,7 @@ $('#productDropdown').change(function () {
         $('#productTypeTable tbody').empty();
     }
 });
+
 
 
 
@@ -917,8 +926,8 @@ $('#productDropdown').change(function () {
         $('.calculated-subitem').each(function () {
             let calculatedValue = $(this).text().trim();
             $(this).siblings('.subitem-qty-hidden').val(calculatedValue);
-            alert('.subitem-qty')
-            alert('calculatedValue')
+            //alert('.subitem-qty')
+            //alert('calculatedValue')
         });
     });
 

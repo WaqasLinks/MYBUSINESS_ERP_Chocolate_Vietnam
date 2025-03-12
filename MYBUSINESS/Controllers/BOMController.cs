@@ -71,7 +71,7 @@ namespace MYBUSINESS.Controllers
 
             // Get products without BOM
             var productsWithoutBOM = db.Products
-                .Where(p => p.FinishedProduct == true && !db.BOMs.Any(b => b.ProductId == p.Id)) // Filter out products with existing BOMs
+                .Where(p => p.PType == 4 && !db.BOMs.Any(b => b.ProductId == p.Id)) // Filter out products with existing BOMs
                 .Select(p => new { Value = p.Id.ToString(), Text = p.Name }) // Prepare for SelectList
                 .ToList();
 
@@ -305,76 +305,49 @@ namespace MYBUSINESS.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-
-
             BOM bom = db.BOMs.Find(id);
-
             if (bom == null)
             {
                 return HttpNotFound();
             }
+
+            // Fetch products without BOM (filtered by PType 4)
             var productsWithoutBOM = db.Products
-          .Where(p => p.FinishedProduct == true &&
-              (!db.BOMs.Any(b => b.ProductId == p.Id) || p.Id == bom.ProductId)) // Include the current product
-          .Select(p => new { Value = p.Id.ToString(), Text = p.Name })
-          .ToList();
-
-            // Pass the filtered product list to the view, pre-select the current product
-            ViewBag.ProductList = new SelectList(productsWithoutBOM, "Value", "Text", bom.ProductId);
-            var products = db.Products
-        .Where(p => p.FinishedProduct == true)
-        .Select(p => new { Value = p.Id.ToString(), Text = p.Name })
-        .ToList();
-
-            // Populate ViewBag with products for the dropdown
-            ViewBag.ProductList = products;
-
-            // Fetch SubItems for the BOM
-            var subItems = db.SubItems
-                .Where(s => s.BOMId == bom.Id)
+                .Where(p => p.PType == 4 && (!db.BOMs.Any(b => b.ProductId == p.Id) || p.Id == bom.ProductId))
+                .Select(p => new { Value = p.Id.ToString(), Text = p.Name })
                 .ToList();
 
-            var productsWithSubItem = db.SubItems
+            ViewBag.ProductList = new SelectList(productsWithoutBOM, "Value", "Text", bom.ProductId);
+
+            // Fetch SubItems related to this BOM
+            var subItemProducts = db.SubItems
                 .Where(s => s.BOMId == bom.Id && s.ProductId != null)  // Filter out NULL ProductId
                 .Include(s => s.Product) // Eager load related Product
-                .Select(s => new { Value = s.ProductId.ToString(), Text = s.Product.Name }) // Select Product Name
+                .Select(s => new { Value = s.ProductId.ToString(), Text = s.Product.Name  }) // Select Product Name
                 .ToList();
 
+            ViewBag.SubItemProductList = new SelectList(subItemProducts, "Value", "Text", bom.ProductId);
 
-            // Pass the filtered product list to the view, pre-select the current product
-            ViewBag.ProductList = new SelectList(productsWithSubItem, "Value", "Text", bom.ProductId);
+            // Fetch all products based on PType
+            var ptypeProducts = db.Products
+                .Where(p => p.PType == 1 || p.PType == 2 || p.PType == 3)
+                .Select(p => new { Value = p.Id.ToString(), Text = p.Name })
+                .ToList();
 
-            //            var products = db.Products
-            //        .Where(p => p.Manufacturable == true)
-            //        .Select(p => new
-            //        {
-            //            Value = p.Id.ToString(),
-            //            Text = p.Name
-            //        })
-            //        .ToList();
-            //            ViewBag.ProductList = new SelectList(db.Products, "Id", "Name", bom.ProductId);
-            //            ViewBag.ProductList = new SelectList(products, "Value", "Text", bom.ProductId); // Pre-select the current product
+            ViewBag.PTypeProductList = new SelectList(ptypeProducts, "Value", "Text");
 
-            //            ViewBag.ProductList = new SelectList(
-            // db.Products,           // Source collection
-            // "Id",                  // Value field (ProductId)
-            // "Name",                // Display field (ProductName)
-            // bom.ProductId          // Selected value (current ProductId)
-            //);
+            // Pass the BOM model and related data
+            var bomViewModel = new BOMViewModel
+            {
+                BOM = bom,
+                Products = DAL.dbProducts,
+                SubItem = db.SubItems.Where(x => x.BOMId == bom.Id).ToList(),
+                ProductType = db.ProductTypes.Where(x => x.BOMId == bom.Id).ToList()
+            };
 
-
-            //var subItems = db.SubItems.Where(x => x.BOMId == bom.Id).ToList();
-
-            var productTypes = db.ProductTypes.Where(x => x.BOMId == bom.Id).ToList();
-            //var producttypeDetails = db.ProductTypeDetails.Where(x => x.ProductId == bom.Id).ToList();
-            bomViewModel.BOM = bom;
-            bomViewModel.Products = DAL.dbProducts;
-            bomViewModel.SubItem = db.SubItems.Where(x => x.BOMId == bom.Id).ToList();
-            bomViewModel.ProductType = db.ProductTypes.Where(x => x.BOMId == bom.Id).ToList();
-            //bomViewModel.ProductTypeDetail = db.ProductTypeDetails.Where(x => x.ProductId == bom.Id).ToList();
             return View(bomViewModel);
-            //return View(product);
         }
+
 
 
         //public ActionResult Edit(decimal id)
@@ -628,9 +601,9 @@ namespace MYBUSINESS.Controllers
 
         //    if (product != null)
         //    {
-        //        // Fetch the related product's name using VariableProductId
+        //        // Fetch the related product's name using VarProdParentId
         //        var variableProductName = db.Products
-        //            .Where(p => p.Id == product.VariableProductId)  // Find the product by ID
+        //            .Where(p => p.Id == product.VarProdParentId)  // Find the product by ID
         //            .Select(p => p.Name)  // Select its Name
         //            .FirstOrDefault() ?? "N/A"; // If not found, return "N/A"
 
@@ -649,9 +622,9 @@ namespace MYBUSINESS.Controllers
 
             if (product != null)
             {
-                // Fetch the related product's details using VariableProductId
+                // Fetch the related product's details using VarProdParentId
                 var variableProduct = db.Products
-                    .Where(p => p.Id == product.VariableProductId)  // Find the product by ID
+                    .Where(p => p.Id == product.VarProdParentId)  // Find the product by ID
                     .Select(p => new { p.Name, p.Unit })  // Select Name and Unit
                     .FirstOrDefault();
 
@@ -743,7 +716,7 @@ namespace MYBUSINESS.Controllers
         //public JsonResult GetVariableProduct(int productId)
         //{
         //    var variableProduct = db.Products // Change `Product` to `Products`
-        //        .Where(p => p.VariableProductId == productId)
+        //        .Where(p => p.VarProdParentId == productId)
         //        .Select(p => new { p.Id, p.Name, p.Unit})
         //        .FirstOrDefault();
 
@@ -756,7 +729,7 @@ namespace MYBUSINESS.Controllers
         public JsonResult GetVariableProduct(int productId)
         {
             var variableProducts = db.Products // Change `Product` to `Products`
-                .Where(p => p.VariableProductId == productId)
+                .Where(p => p.VarProdParentId == productId)
                 .Select(p => new { p.Id, p.Name, p.Unit })
                 .ToList(); // Convert to List
 

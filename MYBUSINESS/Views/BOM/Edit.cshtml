@@ -48,7 +48,7 @@
                         </div>
 
 
-                        <div class="form-group">
+                        @*<div class="form-group">
             @Html.LabelFor(model => Model.BOM.ProductId, "Select Product", new { @class = "control-label" })
             @Html.DropDownListFor(
                 model => Model.BOM.ProductId,
@@ -57,17 +57,29 @@
                 new { @class = "form-control", @id = "productDropdown" }
             )
             @Html.ValidationMessageFor(model => Model.BOM.ProductId, "", new { @class = "text-danger" })
-        </div>
-                        @*<div class="form-group">
+        </div>*@
+                        <div class="form-group">
                             @Html.LabelFor(model => model.BOM.ProductId, "Select Product", new { @class = "control-label" })
                             @Html.DropDownListFor(
                                 model => model.BOM.ProductId,
-                                ViewBag.ProductList as SelectList, // Ensure correct casting
+                                ViewBag.ProductList as SelectList, // Ensure it's cast correctly
                                 "Select a Product",
                                 new { @class = "form-control", @id = "productDropdown" }
                             )
                             @Html.ValidationMessageFor(model => model.BOM.ProductId, "", new { @class = "text-danger" })
-                        </div>*@
+                        </div>
+
+
+                        @*<div class="form-group">
+            @Html.LabelFor(model => model.BOM.ProductId, "Select Product", new { @class = "control-label" })
+            @Html.DropDownListFor(
+                model => model.BOM.ProductId,
+                ViewBag.ProductList as SelectList, // Ensure correct casting
+                "Select a Product",
+                new { @class = "form-control", @id = "productDropdown" }
+            )
+            @Html.ValidationMessageFor(model => model.BOM.ProductId, "", new { @class = "text-danger" })
+        </div>*@
 
 
 
@@ -211,7 +223,8 @@ new { @class = "form-control" }
                                     int sNo = 0;
                                     foreach (var item in Model.SubItem)
                                     {
-                                        if (item.Product != null && item.Product.Ingredient == true)
+                                        if (item.Product != null && (item.Product.PType == 5 || item.Product.PType == 6))
+
                                         {
                                             <tr>
                                                 <td id="SNo0">@(sNo + 1)</td>
@@ -219,7 +232,7 @@ new { @class = "form-control" }
                                                 <td style="display:none;"><input type="text" value=@item.ProductId readonly class="form-control classBGcolor" name="SubItem[@sNo].ProductId" id="idn@(sNo)"></td>
                                                 <td><input type="text" autocomplete="off" value="@(item.Product.Name)" class="form-control" name="SubItem[@sNo].Product.Name" id="name@(sNo)" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name"></td>
 
-                                                <td><input type="text" autocomplete="off" value=@item.Quantity class="form-control" name="SubItem[@sNo].Quantity" id="quantity@(sNo)"></td>
+                                                <td><input type="number" step="0.00001" min="0" autocomplete="off" value=@item.Quantity class="form-control" name="SubItem[@sNo].Quantity" id="quantity@(sNo)"></td>
                                                 <td>
                                                     <input type="text" autocomplete="off" value=@item.Unit class="form-control" name="SubItem[@sNo].Unit" id="unit@(sNo)">
                                                 </td>
@@ -278,7 +291,8 @@ new { @class = "form-control" }
                                     foreach (var item in Model.SubItem)
                                     {
                                         // Ensure item.Product is not null before accessing its properties
-                                        if (item.Product != null && (item.Product.FinishedProduct == true || item.Product.PType == 1))
+                                        //if (item.Product != null && (item.Product.FinishedProduct == true || item.Product.PType == 1))
+                                        if (item.Product != null && (item.Product.PType == 1 || item.Product.PType == 2 || item.Product.PType == 3))
                                         {
                                             <tr>
                                                 <td>@(sNo + 1)</td>
@@ -289,11 +303,22 @@ new { @class = "form-control" }
                                                 <td>
                                                     @Html.DropDownListFor(
                                                          model => model.SubItem[sNo].ProductId,
-                                                         new SelectList(ViewBag.ProductList, "Value", "Text", item.ProductId),
+                                                         new SelectList(ViewBag.SubItemProductList, "Value", "Text", item.ProductId),
                                                          "Select Product",
                                                          new { @class = "form-control" }
                                                      )
                                                 </td>
+                                                <!--<td>-->
+                                                <!-- You can choose which dropdown to use here.
+    For example, if you want to use the product list based on PType: -->
+                                                <!--@Html.DropDownListFor(
+          model => Model.Product.Id,
+          ViewBag.PTypeProductList as SelectList, // Ensure it's cast correctly
+          "Select a Product",
+          new { @class = "form-control", @id = "productDropdown" }
+      )
+    </td>-->
+
                                                 <td>
                                                     <input type="text" name="SubItem[@sNo].Quantity" value="@item.Quantity"
                                                            class="form-control"

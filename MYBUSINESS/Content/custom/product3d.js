@@ -1,4 +1,4 @@
-﻿var productColumns = [{ name: 'Id', minWidth: '50px' }, { name: 'Product', minWidth: '300px' }, { name: 'S.Price', minWidth: '100px' }, { name: 'Stock', minWidth: '50px' }];
+﻿var productColumns = [{ name: 'Id', minWidth: '100px' }, { name: 'Product', minWidth: '320px' }, { name: 'Purch. Price', minWidth: '100px' }, { name: 'Stock', minWidth: '70px' }, { name: 'PerPack', minWidth: '70px' }];
 //var products = []; //[['Ciplet', '10', '60'], ['Gaviscon', '85', '12'], ['Surficol', '110', '8']];
 var products = new Array();
 
@@ -14,10 +14,7 @@ var clickedIdNum = "";
 var x, y;
 var _total = 0;
 var IsReturn = "false";
-
-
 function OnTypeSupplierName(param) {
-
     $(param).mcautocomplete({
         showHeader: true,
         columns: supplierColumns,
@@ -25,19 +22,16 @@ function OnTypeSupplierName(param) {
         select: function (event, ui) {
             this.value = (ui.item ? ui.item[1] : '');
             //productName = this.value;
-            //$('#idnCustomer').val(ui.item ? ui.item[0] : '');
-            //$('#customerAddress').val(ui.item ? ui.item[2] : '');
             $('#idnSupplier').val(ui.item ? ui.item[0] : '');
             $('#supplierAddress').val(ui.item ? ui.item[2] : '');
             $('#PreviousBalance').val(ui.item ? ui.item[3] : '');
-            //document.getElementById(clickedTextboxId).focus();
             update_itemTotal();
-
+            //document.getElementById('name' + txtSerialNum).focus();  //Due to supplier selection commented this code This one is for focussing on product name...
             return false;
         }
 
     });
-
+    
 }
 
 var productName = "";
@@ -50,7 +44,7 @@ function OnTypeName(param) {
 
         clickedTextboxId = $(document.activeElement).attr("id");
         clickedIdNum = clickedTextboxId.substring(4);
-
+       
     });
 
 
@@ -59,12 +53,12 @@ function OnTypeName(param) {
         columns: productColumns,
         source: products,
         select: function (event, ui) {
-            var pfound = 0;
+            pfound = 0;
             $('#selectedProducts > tbody  > tr').each(function () {
 
                 if ($(this).find("[id^='idn']").val() == ui.item[0]) {
-                    var num = +$(this).find("[id^='quantity']").val() + 1;
-                    +$(this).find("[id^='quantity']").val(num);
+                    num = + $(this).find("[id^='quantity']").val() + 1;
+                    $(this).find("[id^='quantity']").val(num);
                     //alert($(this).find("[id^='quantity']").val());
                     //$(this).find("[id^='quantity']").val() += 1;
                     //alert(ui.item[0]);
@@ -76,14 +70,14 @@ function OnTypeName(param) {
 
             if (pfound == 0) {
 
-
                 this.value = (ui.item ? ui.item[1] : '');
                 productName = this.value;
                 //if ($('#isPack' + clickedIdNum).val() == "true") {//false=piece true=PerPack
+                $('#name' + clickedIdNum).val(ui.item ? ui.item[1] : '');
                 $('#perPack' + clickedIdNum).val(ui.item ? ui.item[4] : '');
                 //}
 
-                $('#salePrice' + clickedIdNum).val(ui.item ? ui.item[2] : '');
+                $('#purchasePrice' + clickedIdNum).val(ui.item ? ui.item[2] : '');
                 $('#quantity' + clickedIdNum).val(ui.item ? 1 : '');
                 $('#idn' + clickedIdNum).val(ui.item ? ui.item[0] : '');
                 //document.getElementById(clickedTextboxId).focus();
@@ -99,21 +93,19 @@ function OnTypeName(param) {
 }
 
 
-//$(function () {
-//    //OnTypeName('#name0');
-//    //alert('#' + clickedTextboxId);
+$(function () {
+    //OnTypeName('#name0');
+    //alert('#' + clickedTextboxId);
 
-//    alert('cus');
-//    ConfigDialogueCreateCustomer();
 
-//});
+    ConfigDialogueCreateSupplier();
 
-var _keybuffer = "";
+});
 
 
 $(document).ready(function () {
-    //alert(products);
 
+    //$(this).closest('form').find("input[type=text], textarea").val("");
     if (IsReturn == 'true') {
         $('#saleOrder').hide();
         $('#saleReturn').show();
@@ -122,107 +114,10 @@ $(document).ready(function () {
         $('#saleReturn').hide();
         $('#saleOrder').show();
     }
+    
 
-    $('#abc').scannerDetection({
-
-        //https://github.com/kabachello/jQuery-Scanner-Detection
-
-        timeBeforeScanTest: 200, // wait for the next character for upto 200ms
-        avgTimeByChar: 40, // it's not a barcode if a character takes longer than 100ms
-        //preventDefault: false,
-
-        endChar: [13],
-        onComplete: function (barcode, qty) {
-            validScan = true;
-            //$('#customer').val(barcode);
-            //alert(barcode);
-
-
-            var activeControlId = $(document.activeElement).attr("id");
-            //alert(activeControlId);
-
-            if (activeControlId.substring(0, 4) != 'name') {
-                alert("To scan product barcode, please place cursor in product name text box.");
-                return false;
-            }
-
-            //var result = $.grep(products, function (e) { return e.Barcode == barcode; });
-            //alert('lakdsfjkljs');
-
-            var result = [];
-            //if (typeof result === "undefined") {
-            //    alert("something is undefined");
-            //}
-
-            //for (var i = 0, len = products.length; i < len; i++) {
-            //    alert(products[i]);
-            //    if (products[i][0] === barcode) {
-            //        result = products[i];
-            //        break;
-            //    }
-            //}
-
-            //var abc = productsBarcodes[2];
-            //alert(productsBarcodes.length);
-            for (var i = 0, len = productsBarcodes.length; i < len; i++) {
-                //alert(productsBarcodes[i][1]);
-                if (productsBarcodes[i][1] === barcode) {
-                    /*alert('found');*/
-                    result = products[i];
-                    break;
-                }
-            }
-
-
-            if (result.length === 0) {
-                alert('unfortunately, No item found against this barcode ');
-                return false;
-            }
-
-
-
-
-            //if (len == 0) {
-            //    alert("unfortunately, No item found against this barcode " + string);
-            //    return false;
-            //}
-
-
-            //alert('ji')
-            //alert(result[1]);
-            //alert(result[2]);
-            //alert(result[3]);
-            //alert(result[4]);
-
-            //this.value = result[2];//(ui.item ? ui.item[1] : '');
-
-
-            $('#name' + clickedIdNum).val(result[1]);
-            $('#salePrice' + clickedIdNum).val(result[2]);
-            $('#quantity' + clickedIdNum).val(1);
-            $('#idn' + clickedIdNum).val(result[0]);
-            //document.getElementById(clickedTextboxId).focus();
-            update_itemTotal();
-            $('#addNewRow').trigger('click');
-
-        } // main callback function	,
-        //,
-        //onError: function (string, qty) {
-        //    var activeControlId = $(document.activeElement).attr("id");
-        //    if (activeControlId.substring(0, 4) != 'name') {
-        //        alert("To scan product barcode, please place cursor in product name text box.");
-        //        return false;
-        //    }
-        //    alert("unfortunately not found product against this barcode" );
-        //    //$('#customerAddress').val($('#customerAddress').val() + string);
-        //}
-
-
-    });
-    //$("#addNewRow1").click(function () {
-    //    alert("button");
-    //});
-    //document.getElementById('customer').focus();
+    //alert('iam ready');
+    document.getElementById('supplier').focus();
 
     //$('#name').tooltip('show')
 
@@ -231,14 +126,14 @@ $(document).ready(function () {
     // Append table with add row form on add new button click
 
     $('#addNewRow').keydown(function (event) {
-
+        //alert('keydown');
         if (event.keyCode == 13) {
             $('#addNewRow').trigger('click');
         }
     });
 
     $("#addNewRow").click(function (e) {
-
+        //alert('click');
         //var key = e.which;
         //if (key !== 13)  // the enter key code
         //{
@@ -253,26 +148,29 @@ $(document).ready(function () {
         //var rowCount = 
         var row = '<tr>' +
             '<td id="SNo' + txtSerialNum + '">' + $('#selectedProducts tr').length + '</td>' +
-            '<td style="display:none;"><input type="hidden" name="ProductDetail.Index" value="' + txtSerialNum + '" /></td>' +
-            '<td style="display:none;"><input type="text" readonly class="form-control classBGcolor" name="ProductDetail[' + txtSerialNum + '].ProductId" id="idn' + txtSerialNum + '"></td>' +
-            '<td><input type="text" class="form-control" autocomplete="off" name="ProductDetail[' + txtSerialNum + '].Shape" id="name' + txtSerialNum + '"></td>' +
+            '<td style="display:none;"><input type="hidden" name="PurchaseOrderDetail.Index" value="' + txtSerialNum + '" /></td>' +
+            '<td style="display:none;"><input type="text" readonly class="form-control classBGcolor" name="PurchaseOrderDetail[' + txtSerialNum + '].ProductId" id="idn' + txtSerialNum + '"></td>' +
+            '<td><input type="text" class="form-control" autocomplete="off" name="name' + txtSerialNum + '" id="name' + txtSerialNum + '"></td>' +
+            '<td><input type="text"  class="form-control autocomplete="off" classBGcolor" name="PurchaseOrderDetail[' + txtSerialNum + '].PurchasePrice" id="purchasePrice' + txtSerialNum + '"></td>' +
+            '<td><input type="text" class="form-control" autocomplete="off" name="PurchaseOrderDetail[' + txtSerialNum + '].Quantity" id="quantity' + txtSerialNum + '"></td>' +
+            '<td style="display:none;"><select class="form-control" name="PurchaseOrderDetail[' + txtSerialNum + '].IsPack" id="isPack' + txtSerialNum + '"><option value="false">Piece</option><option value="true" selected>Pack</option></select></td>' +
+            '<td style="display:none;"><input type="text" class="form-control" readonly autocomplete="off" name="PurchaseOrderDetail[' + txtSerialNum + '].PerPack" id="perPack' + txtSerialNum + '"></td>' +
 
-            '<td><input type="number" step="any" min="0" value="0.1" class="form-control" autocomplete="off" name="ProductDetail[' + txtSerialNum + '].Weight" id="quantity' + txtSerialNum + '"></td>' +
-
-          
+            '<td><input type="text" readonly class="form-control classBGcolor" name="itemTotal' + txtSerialNum + '" id="itemTotal' + txtSerialNum + '"tabindex="-1"></td>' +
+            '<td style="display:none;"><select class="form-control" name="PurchaseOrderDetail[' + txtSerialNum + '].SaleType" id="saleType' + txtSerialNum + '"><option value="false" selected>Order</option><option value="true">Return</option></select></td>' +
             '<td><button type="button" id="delete' + txtSerialNum + '" class="delete btn btn-default add-new"> <a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button></td>' +
             '</tr>';
-
+        
         //alert(row);
         $("#selectedProducts").append(row);
         //alert(txtSerialNum)
 
         $("table tbody tr").eq(index + 1).find(".add, .edit").toggle();
         //$('[data-toggle="tooltip"]').tooltip();
-
+        
         document.getElementById('name' + txtSerialNum).focus();
         TriggerBodyEvents();
-
+        
     });
 
 
@@ -327,19 +225,20 @@ $(document).ready(function () {
     //    }
     //});
 
-    $('#CreateSO').keydown(function (event) {
+    $('#CreatePO').keydown(function (event) {
         if (event.keyCode == 13) {
-            $('#CreateSO').trigger('click');
+            $('#CreatePO').trigger('click');
         }
     });
-    $('#CreateSO').click(function () {
+    $('#CreatePO').click(function () {
 
-        if ($('#idnCustomer').val() == "") {
-            alert('Customer not found. Please select customer from list or add new');
+        if ($('#idnSupplier').val() == "") {
+            alert('Supplier not found. Please select supplier from list or add new');
             return false;
+
         }
 
-        //-----------------------------------------------------------------v-product stock check-v--------------------------
+         //-----------------------------------------------------------------v-product stock check-v--------------------------
         //var EnteredQty1 = 0;
         //var EnteredProductId1 = 0;
         //var tblProductStock1 = 0;
@@ -352,30 +251,17 @@ $(document).ready(function () {
         //    EnteredQty1 = $(this).closest("tr").find("[id^='quantity']").val();
         //    EnteredProductId1 = $(this).closest("tr").find("[id^='idn']").val().trim();
         //    saleType1 = $(this).closest("tr").find("[id^='saleType']").val().trim();
-
-
-        //    //$('#productsTable tr').each(function () {
-        //    //    tblProductId1 = $(this).find(".ProductId").html();
-        //    //    if (typeof tblProductId1 != 'undefined') {
-        //    //        if (EnteredProductId1 == tblProductId1.trim()) {
-        //    //            //alert('abc');
-        //    //            tblProductStock1 = $(this).find(".stock").html().trim();
-        //    //        }
-        //    //    }
-        //    //});
-
-        //    for (var i = 0, l = products.length; i < l; i++) {
-        //        tblProductId1 = products[i][0];
+        //    $('#productsTable tr').each(function () {
+        //        tblProductId1 = $(this).find(".ProductId").html();
         //        if (typeof tblProductId1 != 'undefined') {
         //            if (EnteredProductId1 == tblProductId1.trim()) {
-        //                tblProductStock1 = products[i][3];
+        //                //alert('abc');
+        //                tblProductStock1 = $(this).find(".stock").html().trim();
         //            }
         //        }
-
-        //    }
-
+        //    });
         //    if (Number(EnteredQty1) > Number(tblProductStock1) && saleType1 == "false") {
-        //        alert("Item # " + idx1 + " available stock is only " + tblProductStock1);
+        //        alert("Item # " + idx1 + " available stock is " + tblProductStock1);
         //        //$(this).closest("tr").find("[id^='quantity']").val(tblProductStock1);
         //        isFalse = false;
         //        return false;
@@ -387,58 +273,42 @@ $(document).ready(function () {
         //-----------------------------------------------------------------^-product stock check-^--------------------------
 
         //alert($('#ItemsTotal').val());
-        var ErrorFound = 100;
-        var InvalidproductName = ' ';
-        var InvalidproductQty = ' ';
+        var wentRight = 1;
+        var InvalidproductName= ' ';
         var idx = 0;
 
 
 
+        if (isNaN($('#total').val())) {
+            alert('Total is not valid');
+            return false;
+        }
+        //
+        if (isNaN($('#balance').val())) {
+            alert('Balance is not valid');
+            return false;
+        }
+
         $('#selectedProducts > tbody  > tr').each(function () {
             idx += 1;
-            //var name = $(this).find("[id^='name']").val();
-
-            if ($(this).find("[id^='quantity']").val().trim() == "") {
-                InvalidproductQty += $(this).find("[id^='quantity']").val() + ", ";
-                ErrorFound = 2;
-            }
-
-            if ($(this).find("[id^='idn']").val().trim() == "") {
-                //alert($(this).find("[id^='name']").val().trim());
-                InvalidproductName += $(this).find("[id^='name']").val() + ", ";
+            var price = $(this).find("[id^='purchasePrice']").val();
+            InvalidproductName = $(this).find("[id^='name']").val();
+            //alert(price);
+            if (!price) {
                 //alert(price + " returning");
-                ErrorFound = 1;
-                //return false;
+                wentRight = 0;
+                return false;
 
             }
-
         });
 
-        if (ErrorFound == 1) {
+        if (wentRight == 0) {
             //alert("item # " + idx + " " + InvalidproductName + " is not a valid product name. Please select valid product from product list");
-            alert("(Item # " + idx + ") " + InvalidproductName + " not found. Please type and select product name from list");
+            alert("(Item # " + idx + ") " + InvalidproductName + " Please select appropriate product name from list");
             return false;
         }
-        if (ErrorFound == 2) {
-            //alert("item # " + idx + " " + InvalidproductName + " is not a valid product name. Please select valid product from product list");
-            alert("(Item # " + idx + ") " + InvalidproductQty + " Please input valid quantity");
-            return false;
-        }
-        //if (ErrorFound == 1) {
-        //    if (confirm('Do you want to add' + InvalidproductName + 'as an service')) {
-        //        return false;
-        //    } else {
-        //        return true;
-        //    }
-        //}
-        //if (ErrorFound == 2) {
-        //    alert('Row is empty')
-        //    return false;
-        //}
 
-
-
-
+        if (checkAvaiableStock() == false) return false;
 
         //if ($('#ItemsTotal').val() == 0) {
         //    alert('Please add at least one product to proceed');
@@ -451,11 +321,15 @@ $(document).ready(function () {
         if ($('#paid').val().trim() == "") {
             $('#paid').val(0);
         }
+
         //if ($('#ItemsTotal').val().trim() == "") {
         //    $('#ItemsTotal').val(0);
         //}
+        //if ($('#ReturnItemsTotal').val().trim() == "") {
+        //    $('#ReturnItemsTotal').val(0);
+        //}
 
-        //$("#CreateSO").attr("disabled", true);
+        //$("#CreatePO").attr("disabled", true);
         $('form').preventDoubleSubmission();
 
     });
@@ -477,28 +351,28 @@ $(document).ready(function () {
         return this;
     };
 
-    //$(document).on("click", "OpenNewCustForm", function () {
-    //    $("#dialog-CreateCustomer").dialog("open");
+    //$(document).on("click", "OpenNewSuppForm", function () {
+    //    $("#dialog-CreateSupplier").dialog("open");
     //});
 
-    $('#OpenNewCustForm').click(function () {
-
-        $("#dialog-CreateCustomer").dialog("open");
+    $('#OpenNewSuppForm').click(function () {
+        
+        $("#dialog-CreateSupplier").dialog("open");
     });
 
-    $('#btnCreateNewCust').click(function () {
+    $('#btnCreateNewSupp').click(function () {
 
-        $("#dialog-CreateCustomer").dialog("close");
-        //$('#idnCustomer').val(CustomerId);
-        var contents = $("#NewCustomerId").val();
-        $("#idnCustomer").val(contents);
+        $("#dialog-CreateSupplier").dialog("close");
+        //$('#idnSupplier').val(SupplierId);
+        var contents = $("#NewSupplierId").val();
+        $("#idnSupplier").val(contents);
 
-        contents = $("#NewCustomerName").val();
+        contents = $("#NewSupplierName").val();
 
-        $("#customer").val(contents);
+        $("#supplier").val(contents);
 
-        contents = $("#NewCustomerAddress").val();
-        $("#customerAddress").val(contents);
+        contents = $("#NewSupplierAddress").val();
+        $("#supplierAddress").val(contents);
 
         $("#PreviousBalance").val(0.00);
         update_itemTotal();
@@ -509,9 +383,8 @@ $(document).ready(function () {
     //    update_itemTotal();
     //});
 
-
-
-
+   
+    
 });
 
 
@@ -559,48 +432,65 @@ function barcodeEntered(value) {
         alert('unfortunately, No item found against this barcode ');
         return false;
     }
-    //alert(result);
-    $('#name' + clickedIdNum).val(result[1]);
-    $('#salePrice' + clickedIdNum).val(result[2]);
-    $('#quantity' + clickedIdNum).val(1);
-    $('#idn' + clickedIdNum).val(result[0]);
-    $('#PerPack' + clickedIdNum).val(result[4]);
-    //document.getElementById(clickedTextboxId).focus();
-    update_itemTotal();
-    $('#addNewRow').trigger('click');
 
+    pfound = 0;
+    $('#selectedProducts > tbody  > tr').each(function () {
+
+        if ($(this).find("[id^='idn']").val() == result[0]) {
+            $('#name' + clickedIdNum).val('');//to remvoe the bar code from textbox
+            num = + $(this).find("[id^='quantity']").val() + 1;
+            $(this).find("[id^='quantity']").val(num);
+            //alert($(this).find("[id^='quantity']").val());
+            //$(this).find("[id^='quantity']").val() += 1;
+            //alert(ui.item[0]);
+            update_itemTotal();
+            pfound = 1;
+            return false;
+        }
+    })
+    if (pfound == 0) {
+        //alert(result);
+        $('#name' + clickedIdNum).val(result[1]);
+        $('#purchasePrice' + clickedIdNum).val(result[2]);
+        $('#quantity' + clickedIdNum).val(1);
+        $('#idn' + clickedIdNum).val(result[0]);
+        $('#PerPack' + clickedIdNum).val(result[4]);
+        //document.getElementById(clickedTextboxId).focus();
+        update_itemTotal();
+        $('#addNewRow').trigger('click');
+    }
 
 }
 
 function TriggerBodyEvents() {
-
+    //alert('#name' + txtSerialNum);
     OnTypeName('#name' + txtSerialNum);
-
+    var _keybuffer = "";
     $('#name' + txtSerialNum).on("keyup", function (e) {
-        //alert('#name' + txtSerialNum);
+        /*alert('#name' + txtSerialNum);*/
         //if (e.keyCode === 13)
         //{
         //    alert('enter');
         //}
         var code = e.keyCode || e.which;
-
+        //alert(code);
         _keybuffer += String.fromCharCode(code).trim();
 
         // trim to last 13 characters
         _keybuffer = _keybuffer.substr(-13);
-
+        
         if (_keybuffer.length == 13) {
             if (!isNaN(parseInt(_keybuffer))) {
+                
                 barcodeEntered(_keybuffer);
                 _keybuffer = "";
             }
         }
     });
-
     $('#quantity' + txtSerialNum).keyup(function () {
         update_itemTotal();
     });
-    $('#salePrice' + txtSerialNum).keyup(function () {
+    $('#purchasePrice' + txtSerialNum).keyup(function () {
         update_itemTotal();
     });
     //$('#delete' + txtSerialNum).keyup(function () {
@@ -616,7 +506,6 @@ function TriggerBodyEvents() {
             $('#' + document.activeElement.id).trigger('click');
         }
     });
-
     $('#delete' + txtSerialNum).click(function () {
         //alert(txtSerialNum);
         $(this).parents("tr").remove();
@@ -628,7 +517,6 @@ function TriggerBodyEvents() {
     //    alert("fff");
     //    update_itemTotal();
     //});
-
     $('#quantity' + txtSerialNum).keydown(function (e) {
         // Allow: backspace, delete, tab, escape, enter and .
         if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
@@ -644,7 +532,6 @@ function TriggerBodyEvents() {
             e.preventDefault();
         }
     });
-
     $('#saleType' + txtSerialNum).change(function () {
         //var end = this.value;
         //var firstDropVal = $('#saleType').val();
@@ -662,11 +549,7 @@ function TriggerBodyEvents() {
         update_itemTotal();
     });
     //packing0
-
-
 }
-
-
 function TriggerFooterEvents() {
     $("#discount,#PreviousBalance").keyup(function () {
         //alert("afasf");
@@ -678,21 +561,18 @@ function TriggerFooterEvents() {
         var paid = $('#paid').val();
         var balance = _total - paid;
         $('#balance').val(balance.toFixed(2));
-
         if (IsReturn == 'false') {
-            $("#CreateSO").html("Pay " + paid);
+            $("#CreatePO").html("Pay " + paid);
         }
         else {
-            $("#CreateSO").html("Return " + paid);
+            $("#CreatePO").html("Return " + paid);
         }
-        //
     });
 
 }
-
-function ConfigDialogueCreateCustomer() {
-    //alert("create customer configured");
-    $("#dialog-CreateCustomer").dialog({
+function ConfigDialogueCreateSupplier() {
+    //alert("create Supplier configured");
+    $("#dialog-CreateSupplier").dialog({
         title: '',
         modal: true,
         autoOpen: false,
@@ -708,7 +588,7 @@ function ConfigDialogueCreateCustomer() {
         //},
         open: function (event, ui) {
             $(".ui-dialog-titlebar-close", ui.dialog | ui).show();
-            $('#dialog-CreateCustomer').css('overflow', 'hidden'); //this line does the actual hiding
+            $('#dialog-CreateSupplier').css('overflow', 'hidden'); //this line does the actual hiding
         }
 
 
@@ -718,7 +598,6 @@ function ConfigDialogueCreateCustomer() {
 $('td:first-child').each(function () {
     console.log($(this).text());
 });
-
 function checkAvaiableStock() {
     //alert('abc');
     var EnteredQty1 = 0;
@@ -729,13 +608,14 @@ function checkAvaiableStock() {
     var saleType1 = false;
     var idx1 = 0;
     var isFalse = true;
+    
     $('#selectedProducts tbody tr').each(function () {
 
         //alert(clickedIdNum + ',' + idx1);
-        if (clickedIdNum != idx1) {
-            idx1 += 1;
-            return true;
-        }
+        //if (clickedIdNum != idx1) {
+        //    idx1 += 1;
+        //    return true;
+        //}
         EnteredQty1 = $(this).closest("tr").find("[id^='quantity']").val();
         EnteredProductId1 = $(this).closest("tr").find("[id^='idn']").val().trim();
         saleType1 = $(this).closest("tr").find("[id^='saleType']").val().trim();
@@ -746,48 +626,46 @@ function checkAvaiableStock() {
                 if (EnteredProductId1 == tblProductId1.trim()) {
                     tblProductStock1 = products[i][3];
                     tblProductName1 = products[i][1];
-
                 }
             }
-
         }
-
-        if (Number(EnteredQty1) > Number(tblProductStock1) && saleType1 == "false") {
-            alert("Item '" + tblProductName1 + "' available stock is only " + tblProductStock1);
+        //alert(saleType1);
+        if (Number(EnteredQty1) > Number(tblProductStock1) && saleType1 == "true") {
+            alert("Item '" + tblProductName1 + "' available stock is " + tblProductStock1);
             isFalse = false;
-            return false;
+            //alert(isFalse);
+            return isFalse;
         }
+        else {
+            isFalse = true;
+        }
+
     });
-
+    return isFalse;
 }
-
 function update_itemTotal() {
-
-
-
+    
     var ItemsTotal = 0;
-
+    
     var orderQty = 0;
     var orderQtyPiece = 0;
     var returnQty = 0;
     var returnQtyPiece = 0;
     var SN = 0;
-
     $("#OrderTotal").val('Order Total(' + parseInt(orderQty) + ')');
-
+    
     $('#selectedProducts > tbody  > tr').each(function () {
-
-        //$(this).find("[id^='isPack']").prop('disabled', true);
-        //$(this).find("[id^='isPack']").prop('selectedIndex', 1);
-
-        if (IsReturn == 'false') {//if (IsReturn == 'True') { c# model uses 'T'rue and java script user 't'rue
+        //if (IsReturn == 'true') {//if (IsReturn == 'True') { c# model uses 'T'rue and java script user 't'rue
+        if (IsReturn == 'false') {
             //$('#name').prop('selectedIndex', 0);
 
             $(this).find("[id^='saleType']").prop('selectedIndex', 0);
+            //alert('aaa');
         }
         else {
 
             $(this).find("[id^='saleType']").prop('selectedIndex', 1);
+            //alert(IsOrder);
         }
 
         SN += 1;
@@ -797,47 +675,32 @@ function update_itemTotal() {
         var price = 0;
         var perPack = 0;
         //alert(IsReturn);
-
         //alert($(this).find("[id^='saleType']").val());
-        //if ($(this).find("[id^='saleType']").val() == "false") {//sale order
+        //if ($(this).find("[id^='saleType']").val() == "false") {
         if (IsReturn == 'false') {
-            //Sale
-
             qty = $(this).find("[id^='quantity']").val();
-
             if (!(qty)) { qty = 0; }
-            price = $(this).find("[id^='salePrice']").val();
-
+            price = $(this).find("[id^='purchasePrice']").val();
+            
             var itemAmount = (qty * price);
-
             if ($(this).find("[id^='isPack']").val() == "true") {//false=item true=PerPack
                 perPack = $(this).find("[id^='perPack']").val();
                 if (perPack == 0) perPack = 1;
                 itemAmount = itemAmount * perPack;
                 orderQty += parseInt(qty);
-                //alert(itemAmount);
-                //alert("pack true");
-                //$(this).find("[id^='perPack']").val($(this).find("[id^='perPackHidden']").val());
-                //$(this).find("[id^='perPackHidden']").remove();
             }
             else {
-                //alert("pack false");
                 orderQtyPiece += parseInt(qty);
-                //$("[id^='perPack']").hide();
-                //$("[id^='perPack']").after('<input type="hidden" id="perPackHidden' + txtSerialNum + '"  value="' + $("#perPack").val() + '" />').val("").attr("disabled", true);
             }
-
             ItemsTotal += itemAmount;
             $(this).find("[id^='itemTotal']").val(itemAmount.toFixed(2));
         } else {
-            //Return
             //alert($('#saleType').val());
             qty = $(this).find("[id^='quantity']").val();
             if (!(qty)) { qty = 0; }
-            price = $(this).find("[id^='salePrice']").val();
-
+            price = $(this).find("[id^='purchasePrice']").val();
+            
             var ItemAmount = (qty * price);
-
             if ($(this).find("[id^='isPack']").val() == "true") {//false=item true=PerPack
                 perPack = $(this).find("[id^='perPack']").val();
                 if (perPack == 0) perPack = 1;
@@ -847,27 +710,19 @@ function update_itemTotal() {
             } else {
                 orderQtyPiece += parseInt(qty);
             }
-
-
             ItemsTotal += ItemAmount;
-            //alert(ItemsTotal);
             $(this).find("[id^='itemTotal']").val(ItemAmount.toFixed(2));
 
 
         }
 
-        $("#OrderTotal").val('Order Total(' + parseInt(orderQty) + ' pack, ' + parseInt(orderQtyPiece) + ' piece)');
-
+        //$("#OrderTotal").val('Order Total(' + parseInt(orderQty) + ' pack, ' + parseInt(orderQtyPiece) + ' piece)');
+        $("#OrderTotal").val('Order Total(' + parseInt(orderQty) + ')');
+        
     });
 
-    //checkAvaiableStock();
-
-    //$('[id^="name"]').focusout(function () {
-    //    alert("hello");
-
-    //});
-    //$('#OpenNewCustForm').click(function () {
-    //    $("#dialog-CreateCustomer").dialog("open");
+    //$('#OpenNewSuppForm').click(function () {
+    //    $("#dialog-CreateSupplier").dialog("open");
     //});
 
     //$('[id^="quantity"]').change(function () {
@@ -879,59 +734,50 @@ function update_itemTotal() {
     //});
 
     /////////////////////////////////
-    ////$('[id^="quantity"]').blur(function () {
-    ////var inputObj = this;
-    //var EnteredQty = 0;
-    //var EnteredProductId = 0;
-    //var tblProductStock = 0;
-    //var tblProductId = 0;
-    //var saleType = false;
-    //EnteredQty = this.value.trim();
-    ////alert(this.value.trim());
-    //EnteredProductId = $(this).closest("tr").find("[id^='idn']").val().trim();
-    //saleType = $(this).closest("tr").find("[id^='saleType']").val().trim();
+    //$('[id^="quantity"]').blur(function () {
+    //    //var inputObj = this;
+    //    var EnteredQty = 0;
+    //    var EnteredProductId = 0;
+    //    var tblProductStock = 0;
+    //    var tblProductId = 0;
+    //    var saleType = false;
+    //    EnteredQty = this.value.trim();
+    //    //alert(this.value.trim());
+    //    EnteredProductId = $(this).closest("tr").find("[id^='idn']").val().trim();
+    //    saleType = $(this).closest("tr").find("[id^='saleType']").val().trim();
 
 
-    ////$('#productsTable tr').each(function () {
-    ////    tblProductId = $(this).find(".ProductId").html();
+    //    $('#productsTable tr').each(function () {
+    //        tblProductId = $(this).find(".ProductId").html();
 
-    ////    if (typeof tblProductId != 'undefined') {
-    ////        if (EnteredProductId == tblProductId.trim()) {
-    ////            //alert('abc');
-    ////            tblProductStock = $(this).find(".stock").html().trim();
-    ////            //alert(tblProductStock.trim());
-    ////            //if (EnteredQty.trim() > tblProductStock.trim()) {
-    ////            //    alert("available stock is " + tblProductStock);
-    ////            //    return false; 
-    ////            //}
-    ////            //return false;
-    ////        }
-    ////    }
-    ////});
-    //for (var i = 0, l = products.length; i < l; i++) {
-    //    tblProductId = products[i][0];
-    //    if (typeof tblProductId != 'undefined') {
-    //        if (EnteredProductId == tblProductId.trim()) {
-    //            tblProductStock = products[i][3];
+    //        if (typeof tblProductId != 'undefined') {
+    //            if (EnteredProductId == tblProductId.trim()) {
+    //                //alert('abc');
+    //                tblProductStock = $(this).find(".stock").html().trim();
+    //                //alert(tblProductStock.trim());
+    //                //if (EnteredQty.trim() > tblProductStock.trim()) {
+    //                //    alert("available stock is " + tblProductStock);
+    //                //    return false; 
+    //                //}
+    //                //return false;
+    //            }
     //        }
+    //    });
+    //    //alert(EnteredQty.trim());
+    //    //alert(tblProductStock.trim());
+    //    if (Number(EnteredQty) > Number(tblProductStock) && saleType == "false") {
+
+    //        alert("available stock is " + tblProductStock);
+    //        $(this).closest("tr").find("[id^='quantity']").val(EnteredQty.trim());
+    //        //return false;
+
     //    }
 
-    //}
-    ////alert(EnteredQty.trim());
-    ////alert(tblProductStock.trim());
-    //if (Number(EnteredQty) > Number(tblProductStock) && saleType == "false") {
+    //    //$('#productsTable .ProductIdd').each(function () {
+    //    //    alert($(this).html());
+    //    //});
 
-    //    alert("available stock is " + tblProductStock);
-    //    $(this).closest("tr").find("[id^='quantity']").val(EnteredQty.trim());
-    //    //return false;
-
-    //}
-
-    ////$('#productsTable .ProductIdd').each(function () {
-    ////    alert($(this).html());
-    ////});
-
-    ////});
+    //});
     /////////////////////////////////////
 
 
@@ -962,7 +808,7 @@ function update_itemTotal() {
     //}
 
     $('#ItemsTotal').val(ItemsTotal.toFixed(2));//for input element
-
+    
 
     var discount = $('#discount').val();
     var prevBal = parseFloat($("#PreviousBalance").val());
@@ -974,7 +820,7 @@ function update_itemTotal() {
     }
     else {
         total = subtotal - prevBal;
-        $('#pb3').val('Prev. Balance                                 -');
+        $('#pb3').val('Prev. Balance                             -');
     }
 
     //total += $("#PreviousBalance").val();
@@ -987,15 +833,14 @@ function update_itemTotal() {
     var paid = $('#paid').val();
     var balance = _total - paid;
     $('#balance').val(balance.toFixed(2));
-    /*alert(IsReturn);*/
     if (IsReturn == 'false') {
-        $("#CreateSO").html("Pay " + paid);
+        $("#CreatePO").html("Pay " + paid);
     }
     else {
-        $("#CreateSO").html("Return " + paid);
+        $("#CreatePO").html("Return " + paid);
     }
     //$('#ItemsTotal > tbody > tr > td').val(ItemsTotal);
     //just update the total to sum
     //$('.total').text(ItemsTotal);
-
+    
 }

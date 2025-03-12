@@ -20,7 +20,7 @@
 @{
     bool isReadonly = ViewBag.ReadonlyMode ?? false;
 }
-@using (Html.BeginForm(Html.BeginForm("Edit", "PostProduction", FormMethod.Post, new { id = "newProductionForm" })))
+@using (Html.BeginForm("Edit", "PostProduction", FormMethod.Post, new { id = "postProductionForm" }))
 {
     @Html.AntiForgeryToken()
     <section class="content">
@@ -242,7 +242,8 @@
 
                         @Html.ActionLink("Back to List", "Index")
 
-                        <button id="validateBtn" class="btn btn-primary" style="margin-left:280px;" @(isReadonly ? "disabled='disabled'" : "")>Validate</button>
+                        @*<button id="validateBtn" class="btn btn-primary" style="margin-left:280px;" @(isReadonly ? "disabled='disabled'" : "")>Validate</button>*@
+                        <button id="validateBtn" class="btn btn-primary" style="margin-left:250px;" @(isReadonly ? "disabled='disabled'" : "")>Validate</button>
 
                     </div>
 
@@ -283,7 +284,7 @@
                                     int sNo = 0;
                                     foreach (var item in Model.SubItemProduction)
                                     {
-                                        if (item.Product.Ingredient == true)
+                                        if (item.Product.PType == 5)
                                         {
                                             <tr>
                                                 <td id="SNo0">@(sNo + 1)</td>
@@ -347,10 +348,10 @@
                             <thead>
                                 <tr>
                                     <th style="width: 5%;">#</th>
-                                    <th style="width: 12%;">Name</th>
-                                    <th style="width: 10%;">Qty</th>
+                                    <th style="width: 20%;">Name</th>
+                                    <th style="width: 20%;">Qty</th>
                                     <th style="width: 10%;">Unit</th>
-                                    <th style="width: 20%;">P.Type</th>
+                                    <th style="width: 15%;">P.Type</th>
                                     @*<th style="width: 10%;">AvailableIn</th>*@
                                     @*<th style="width: 8%;">Unit</th>
                                         <th style="width: 8%;"></th>*@
@@ -362,7 +363,8 @@
                                     int sNo = 0;
                                     foreach (var item in Model.SubItemProduction)
                                     {
-                                        if (item.Product.FinishedProduct == true && item.Product.PType != 1)
+                                        //if (item.Product.PType == true && item.Product.PType != 1)
+                                        if (item.Product.PType == 2 || item.Product.PType == 3)
                                         {
                                             <tr>
                                                 <td id="SNo0">@(sNo + 1)</td>
@@ -372,20 +374,30 @@
                                                 @*<td><input type="text" autocomplete="off" value="@(item.QuantitytoPrepare)" class="form-control" name="SubItem[@sNo].Shape" id="shape@(sNo)" placeholder="" data-toggle="tooltip" data-placement="top" title=""></td>*@
                                                 <td><input type="text" autocomplete="off" value=@item.Quantity class="form-control production-qty" name="SubItemProduction[@sNo].Quantity" id="quantity@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>
                                                 <td><input type="text" readonly autocomplete="off" value=@item.Unit class="form-control" name="SubItemProduction[@sNo].Unit" id="unit@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>
-                                                <td><input type="text" readonly autocomplete="off" value=@item.Product.PType class="form-control" name="SubItemProduction[@sNo].Product.PType" id="ptype@(sNo)"></td>
+                                                @*<td><input type="text" readonly autocomplete="off" value=@item.Product.PType class="form-control" name="SubItemProduction[@sNo].Product.PType" id="ptype@(sNo)"></td>*@
+                                                <td>
+                                                    <input type="text" readonly autocomplete="off"
+                                                           value="@(item.Product.PType == 1 ? "Variable" :
+item.Product.PType == 2 ? "Excess" :
+item.Product.PType == 3 ? "ByProduct" : "Unknown")"
+                                                           class="form-control"
+                                                           name="SubItemProduction[@sNo].Product.PType"
+                                                           id="ptype@(sNo)"
+                                                           @(isReadonly ? "readonly='readonly'" : "")>
+                                                </td>
                                                 @*<td>
-                                                        <select class="form-control" name="SubItem[0].BOM.Unit" id="unit0">
-                                                            <option value="Kg" selected>Kg</option>
-                                                            <option value="Gram">Gram</option>
-                                                        </select>
-                                                    </td>*@
+            <select class="form-control" name="SubItem[0].BOM.Unit" id="unit0">
+                <option value="Kg" selected>Kg</option>
+                <option value="Gram">Gram</option>
+            </select>
+        </td>*@
                                                 @*<td><input type="text" autocomplete="off" value=@item.AvailableInventory class="form-control" name="SubItem[@sNo].AvailableInventory" id="availableinventory@(sNo)"></td>
-                                                    <td><input type="text" autocomplete="off" value=@item.QuantitytoPrepare class="form-control" name="SubItem[@sNo].QuantitytoPrepare" id="quantitytoprepare@(sNo)"></td>*@
+        <td><input type="text" autocomplete="off" value=@item.QuantitytoPrepare class="form-control" name="SubItem[@sNo].QuantitytoPrepare" id="quantitytoprepare@(sNo)"></td>*@
 
                                                 @*<td>
 
-                                                        <button type="button" id="delete@(sNo)" class="delete btn btn-default add-new"><a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button>
-                                                    </td>*@
+            <button type="button" id="delete@(sNo)" class="delete btn btn-default add-new"><a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button>
+        </td>*@
                                             </tr>
                                         }
                                         sNo += 1;
@@ -482,7 +494,7 @@
                 $('#unitHiddenField').val(data.unit); // Update the hidden unit field
             },
             error: function () {
-                alert('Failed to fetch unit details.');
+            /*    alert('Failed to fetch unit details.');*/
             }
         });
     } else {
@@ -530,11 +542,11 @@ $('#productDropdown').change(function () {
                     });
                 } else {
                     $('#selectedProduct tbody').empty();
-                    alert('No product details found.');
+                    /*alert('No product details found.');*/
                 }
             },
             error: function () {
-                alert('Failed to fetch product details.');
+                /*alert('Failed to fetch product details.');*/
             }
         });
     } else {
@@ -797,7 +809,7 @@ $('#productDropdown').change(function () {
                             </td>
                             <td>
                             <input type="hidden"
-                                name="SubItemProduction[${index}].Product.VariableProductId"
+                                name="SubItemProduction[${index}].Product.VarProdParentId"
                                 value="${subItem.VariableProduct}" />
                         </td>
                             `;
@@ -832,7 +844,7 @@ $('#productDropdown').change(function () {
         $('#productTypeTable tbody').empty();
     }
 });
-   $('#validateBtn').click(function (event) {
+   @*$('#validateBtn').click(function (event) {
      event.preventDefault();
      alert("Button Clicked!"); // Debugging alert
 
@@ -866,7 +878,7 @@ $('#productDropdown').change(function () {
 
        if (productUpdates.length > 0) {
 
-         alert("Sending AJAX Request..."); // Debugging alert
+         //alert("Sending AJAX Request..."); // Debugging alert
          $.ajax({
              url: '@Url.Action("EIncreasedStock", "NewProduction")',
              type: 'POST',
@@ -878,7 +890,7 @@ $('#productDropdown').change(function () {
              success: function (response) {
                  alert(response.message);
                  if (response.success) {
-                     location.reload();
+                     $("#newProductionForm").submit();
                  }
              },
              error: function (xhr, status, error) {
@@ -887,10 +899,67 @@ $('#productDropdown').change(function () {
              }
          });
      } else {
-         alert("No products to validate.");
+         /*alert("No products to validate.");*/
      }
- });
+ });*@
+     $('#validateBtn').click(function (event) {
+    event.preventDefault();
+    alert("Button Clicked!"); // Debugging alert
 
+    let productUpdates = [];
+
+         $('#selectedProducts > tbody > tr').each(function () {
+             let productionId = $("#PostProduction_Id").val(); // This should be inside each row if needed
+             /*let productId = $(this).find("input[name^='SubItemProduction'][name$='.ProductId']").val() || "";*/
+             let productId = $(this).find("input[name^='SubItemProduction'][name$='.ProductId']").val() || "";
+
+             let productName = $(this).find("[name*='Product.Name']").val() || "";
+             /*let quantity = parseFloat($(this).find("[name*='Quantity']").val()) || 0;*/
+             let quantity = parseFloat($(this).find("input[name^='SubItemProduction'][name$='.Quantity']").val()) || 0;
+
+             let gtotalWeight = 15; // Ensure this value is set correctly
+             let calculatedValue = quantity * gtotalWeight;
+             let stock = parseFloat($(this).find("[name*='Stock']").val()) || 0;
+             let subtractValue = stock - calculatedValue;
+
+             productUpdates.push({
+                 productionId: productionId,
+                 productId: productId,
+                 productName: productName,
+                 calculatedValue: calculatedValue,
+                 stock: stock,
+                 subtractValue: subtractValue
+             });
+         });
+
+         console.log("Final Product Updates List:", productUpdates);
+
+      if (productUpdates.length > 0) {
+
+        alert("Sending AJAX Request..."); // Debugging alert
+        $.ajax({
+            url: '@Url.Action("EIncreasedStock", "NewProduction")',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ updates: productUpdates }),
+            headers: {
+                'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+            },
+            success: function (response) {
+                alert(response.message);
+                if (response.success) {
+                    $("#postProductionForm").submit();
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred while updating the stock.");
+                console.error("Error:", error);
+            }
+        });
+    } else {
+        alert("No products to validate.");
+    }
+});
 
 
 
@@ -998,7 +1067,7 @@ $('#productDropdown').change(function () {
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     //$('#lblCommentsNotification').text("Error encountered while saving the comments.");
-                    alert('Data provided was not valid');
+                    /*alert('Data provided was not valid');*/
                 }
             });
         }

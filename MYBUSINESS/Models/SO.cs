@@ -46,6 +46,7 @@ namespace MYBUSINESS.Models
         public Nullable<int> UserId { get; set; }
         public string VatNumber { get; set; }
         public Nullable<decimal> VatAmountInPercent { get; set; }
+        public Nullable<decimal> SaleOrderAmountWithVaT { get; set; }
     
         public virtual BankAccount BankAccount { get; set; }
         public virtual Customer Customer { get; set; }

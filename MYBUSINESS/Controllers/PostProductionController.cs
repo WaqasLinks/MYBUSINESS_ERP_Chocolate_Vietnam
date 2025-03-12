@@ -186,12 +186,13 @@ namespace MYBUSINESS.Controllers
             Console.WriteLine(newProduction.ProductionDate); // Debugging line
             // Get the list of products
             var products = db.Products
-                             .Where(p => p.Manufacturable == true)
-                             .Select(p => new { Value = p.Id.ToString(), Text = p.Name })
-                             .ToList();
+    .Where(p => p.PType == 4)
+    .Select(p => new { Value = p.Id.ToString(), Text = p.Name })
+    .ToList();
 
             // Pre-select the current product in the dropdown
             ViewBag.ProductList = new SelectList(products, "Value", "Text", newProduction.ProductId);
+
 
             // Prepare ViewModel (including SubItems if needed)
             var viewModel = new PostProductionViewModel
@@ -385,7 +386,7 @@ namespace MYBUSINESS.Controllers
             Console.WriteLine(postProduction.ProductionDate); // Debugging line
             // Get the list of products
             var products = db.Products
-                             .Where(p => p.Manufacturable == true)
+                             .Where(p => p.PType == 4)
                              .Select(p => new { Value = p.Id.ToString(), Text = p.Name })
                              .ToList();
 
@@ -533,7 +534,7 @@ namespace MYBUSINESS.Controllers
     [Bind(Prefix = "SubItemProduction", Include = "Id,ParentProductId,ProductId,Quantity,Unit,AvailableInventory,QuantitytoPrepare,QuantityRequested")] List<SubItemProduction> subItemProductions)
 
         {
-            if (ModelState.IsValid)
+            
             {
                 // Fetch the existing NewProduction entity
                 var existingProduction = db.PostProductions.Find(model.PostProduction.Id);
@@ -671,11 +672,11 @@ namespace MYBUSINESS.Controllers
                     
                     
                     //s.Product.Manufacturable
-                    manufacturable = s.Product.Manufacturable, // Include the Manufacturable property from the Product table
+                    manufacturable = s.Product.PType==4, // Include the Manufacturable property from the Product table
                     PType = s.Product.PType == 1 ? "Variable" :
                     s.Product.PType == 2 ? "Excess" :
                     s.Product.PType == 3 ? "ByProduct" : "Unknown", // Default case
-                    VariableProduct = s.Product.VariableProductId,
+                    VariableProduct = s.Product.VarProdParentId,
                 })
                 .ToList();
 
@@ -909,7 +910,7 @@ namespace MYBUSINESS.Controllers
             ViewBag.Suppliers = DAL.dbSuppliers;  // Assuming this contains the supplier list
 
             var products = db.Products
-       .Where(p => p.Manufacturable == true)
+       .Where(p => p.PType == 4)
        .Select(p => new
        {
            Value = p.Id.ToString(),  // ID of the product

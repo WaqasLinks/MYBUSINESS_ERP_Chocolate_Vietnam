@@ -21,53 +21,102 @@ namespace MYBUSINESS.Controllers
         private BusinessContext db = new BusinessContext();
         private DAL DAL = new DAL();
         // GET: POes
+        //public ActionResult Index()
+        //{
+        //    int? storeId = Session["StoreId"] as int?;
+        //    //var storeId = Session["StoreId"] as string;
+        //    if (storeId == null)
+        //    {
+        //        return RedirectToAction("StoreNotFound", "UserManagement");
+        //    }
+        //    //var storeId = Session["StoreId"] as string; //commented due to session issue
+        //    //if (storeId == null)
+        //    //{
+        //    //    return RedirectToAction("StoreNotFound", "UserManagement");
+        //    //}
+        //    //var parseId = int.Parse(storeId);
+
+        //    DateTime PKDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pakistan Standard Time"));
+        //    var dtStartDate = new DateTime(PKDate.Year, PKDate.Month, 1);
+        //    var dtEndtDate = dtStartDate.AddMonths(1).AddSeconds(-1);
+        //    //DateTime PKDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pakistan Standard Time"));
+        //    //var dtStartDate = new DateTime(PKDate.Year, PKDate.Month, 1);
+        //    //var dtEndtDate = dtStartDate.AddMonths(1).AddSeconds(-1);
+
+        //    //IQueryable<PO> pOes = db.POes.Include(s => s.Supplier);
+        //    IQueryable<PO> pOes = db.POes.Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate && x.SupplierId > 0).Include(s => s.Supplier);
+        //    //pOes.ForEachAsync(m => m.Id = Encryption.Encrypt(m.Id, "BZNS"));
+        //    //var pOes = db.POes.Where(s => s.SaleReturn == false);
+        //    GetTotalBalance(ref pOes);
+        //    Dictionary<decimal, decimal> LstMaxSerialNo = new Dictionary<decimal, decimal>();
+        //    int thisSerial = 0;
+        //    foreach (PO itm in pOes)
+        //    {
+        //        thisSerial = (int)itm.Supplier.POes.Max(x => x.POSerial);
+
+        //        if (!LstMaxSerialNo.ContainsKey((int)itm.SupplierId))
+        //        {
+        //            LstMaxSerialNo.Add(itm.Supplier.Id, thisSerial);
+        //        }
+
+        //        //itm.Id = Encryption.Encrypt(itm.Id, "BZNS");
+        //        itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(itm.Id, "BZNS")));
+        //    }
+        //    ViewBag.LstMaxSerialno = LstMaxSerialNo;
+        //    ViewBag.Suppliers = DAL.dbSuppliers;
+        //    ViewBag.StartDate = dtStartDate.ToString("dd-MMM-yyyy");
+        //    ViewBag.EndDate = dtEndtDate.ToString("dd-MMM-yyyy");
+        //    var poess = pOes.Where(x => x.StoreId == storeId).OrderByDescending(i => i.Date).ToList();
+        //    //var poess = pOes.Where(x => x.StoreId == parseId).OrderByDescending(i => i.Date).ToList();//commented due to session issue
+        //    //var poess = pOes.OrderByDescending(i => i.Date).ToList();
+        //    return View(poess);
+        //}
         public ActionResult Index()
         {
+            // Get StoreId from session
             int? storeId = Session["StoreId"] as int?;
-            //var storeId = Session["StoreId"] as string;
             if (storeId == null)
             {
                 return RedirectToAction("StoreNotFound", "UserManagement");
             }
-            //var storeId = Session["StoreId"] as string; //commented due to session issue
-            //if (storeId == null)
-            //{
-            //    return RedirectToAction("StoreNotFound", "UserManagement");
-            //}
-            //var parseId = int.Parse(storeId);
 
-            DateTime PKDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pakistan Standard Time"));
-            var dtStartDate = new DateTime(PKDate.Year, PKDate.Month, 1);
-            var dtEndtDate = dtStartDate.AddMonths(1).AddSeconds(-1);
+            // ✅ Get the latest available year and month from database dynamically
+            var latestDate = db.POes.OrderByDescending(x => x.Date).Select(x => x.Date).FirstOrDefault();
 
-            //IQueryable<PO> pOes = db.POes.Include(s => s.Supplier);
-            IQueryable<PO> pOes = db.POes.Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate && x.SupplierId > 0).Include(s => s.Supplier);
-            //pOes.ForEachAsync(m => m.Id = Encryption.Encrypt(m.Id, "BZNS"));
-            //var pOes = db.POes.Where(s => s.SaleReturn == false);
-            GetTotalBalance(ref pOes);
-            Dictionary<decimal, decimal> LstMaxSerialNo = new Dictionary<decimal, decimal>();
-            int thisSerial = 0;
-            foreach (PO itm in pOes)
+            if (latestDate == null)
             {
-                thisSerial = (int)itm.Supplier.POes.Max(x => x.POSerial);
-
-                if (!LstMaxSerialNo.ContainsKey((int)itm.SupplierId))
-                {
-                    LstMaxSerialNo.Add(itm.Supplier.Id, thisSerial);
-                }
-
-                //itm.Id = Encryption.Encrypt(itm.Id, "BZNS");
-                itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(itm.Id, "BZNS")));
+                ViewBag.Message = "No records found!";
+                return View(new List<PO>()); // Return an empty list if no data is available
             }
-            ViewBag.LstMaxSerialno = LstMaxSerialNo;
-            ViewBag.Suppliers = DAL.dbSuppliers;
+
+            int year = latestDate.Value.Year;
+            int month = latestDate.Value.Month;
+
+            // ✅ Dynamically set the date range based on the latest available data
+            DateTime dtStartDate = new DateTime(year, month, 1, 0, 0, 0);
+            DateTime dtEndtDate = new DateTime(year, month, DateTime.DaysInMonth(year, month), 23, 59, 59);
+
+            // ✅ Fetch filtered data dynamically
+            var pOes = db.POes
+                .Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate && x.SupplierId > 0)
+                .Include(s => s.Supplier)
+                .ToList();
+
+            // ✅ Encrypt PO Ids
+            foreach (var po in pOes)
+            {
+                po.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(po.Id, "BZNS")));
+            }
+
+            // ✅ Pass data to View
             ViewBag.StartDate = dtStartDate.ToString("dd-MMM-yyyy");
             ViewBag.EndDate = dtEndtDate.ToString("dd-MMM-yyyy");
-            var poess = pOes.Where(x => x.StoreId == storeId).OrderByDescending(i => i.Date).ToList();
-            //var poess = pOes.Where(x => x.StoreId == parseId).OrderByDescending(i => i.Date).ToList();//commented due to session issue
-            //var poess = pOes.OrderByDescending(i => i.Date).ToList();
-            return View(poess);
+            ViewBag.Suppliers = DAL.dbSuppliers;
+
+            var filteredPOs = pOes.Where(x => x.StoreId == storeId).OrderByDescending(i => i.Date).ToList();
+            return View(filteredPOs);
         }
+
         //public ActionResult SearchData(string custName, DateTime startDate, DateTime endDate)
 
         //public ActionResult SearchData(string custName, string startDate, string endDate)
@@ -311,7 +360,7 @@ namespace MYBUSINESS.Controllers
 
             PurchaseOrderViewModel purchaseOrderViewModel = new PurchaseOrderViewModel();
             purchaseOrderViewModel.Suppliers = DAL.dbSuppliers;
-            purchaseOrderViewModel.Products = DAL.dbProducts.Include(x => x.StoreProducts).Where(x => x.Saleable == true && x.IsService == false);
+            purchaseOrderViewModel.Products = DAL.dbProducts.Include(x => x.StoreProducts).Where(x => x.PType == 4 || x.PType == 7 && x.IsService == false);
             //purchaseOrderViewModel.FundingSources = db.FundingSources.ToList() ;
             ViewBag.FundingSources = new SelectList(db.Suppliers.Where(x => x.IsCreditor == true), "Id", "Name");//db.FundingSources.ToList(); ;
             ViewBag.BankAccounts = new SelectList(db.BankAccounts, "Id", "Name");
@@ -353,7 +402,7 @@ namespace MYBUSINESS.Controllers
                     maxId += 1;
                     Supplier.Id = maxId;
                     Supplier.Balance = pO.Balance;
-                    Supplier.StoreId = storeId; 
+                    Supplier.StoreId = storeId;
                     //Supplier.StoreId = parseId; //commented due to session issue
                     db.Suppliers.Add(Supplier);
                     //db.SaveChanges();
@@ -506,7 +555,7 @@ namespace MYBUSINESS.Controllers
             //return View(pO);
             PurchaseOrderViewModel purchaseOrderViewModel = new PurchaseOrderViewModel();
             purchaseOrderViewModel.Suppliers = DAL.dbSuppliers;
-            purchaseOrderViewModel.Products = DAL.dbProducts.Where(x => x.Saleable == true && x.IsService == false);
+            purchaseOrderViewModel.Products = DAL.dbProducts.Where(x => (x.PType == 4 || x.PType == 7) && x.IsService == false);
             return View(purchaseOrderViewModel);
             //return View();
 
@@ -857,7 +906,7 @@ namespace MYBUSINESS.Controllers
             //return View(PO);
             PurchaseOrderViewModel purchaseOrderViewModel = new PurchaseOrderViewModel();
 
-            purchaseOrderViewModel.Products = DAL.dbProducts.Where(x => x.Saleable == true && x.IsService == false);
+            purchaseOrderViewModel.Products = DAL.dbProducts.Where(x => x.PType == 4 || x.PType == 7 && x.IsService == false);
             return View(purchaseOrderViewModel);
             //return View();
         }
@@ -954,7 +1003,7 @@ namespace MYBUSINESS.Controllers
             }
             PurchaseOrderViewModel purchaseOrderViewModel = new PurchaseOrderViewModel();
             List<POD> pod = db.PODs.Where(x => x.POId == id).ToList();
-            purchaseOrderViewModel.Products = DAL.dbProducts.Where(x => x.Saleable == true && x.IsService == false);
+            purchaseOrderViewModel.Products = DAL.dbProducts.Where(x => x.PType == 4 || x.PType == 7 && x.IsService == false);
             purchaseOrderViewModel.Suppliers = DAL.dbSuppliers;
             purchaseOrderViewModel.PurchaseOrderDetail = pod;
             pO.Id = Encryption.Encrypt(pO.Id, "BZNS");

@@ -89,6 +89,22 @@
           <DataField>Tagline</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="CompanyName">
+          <DataField>CompanyName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="CompanyAddress">
+          <DataField>CompanyAddress</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="VatNumber">
+          <DataField>VatNumber</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TaxInPercent">
+          <DataField>TaxInPercent</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
         <Field Name="ItemTotal">
           <DataField>ItemTotal</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
@@ -105,6 +121,10 @@
           <DataField>BillPaid</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
+        <Field Name="BillPaidByCash">
+          <DataField>BillPaidByCash</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
         <Field Name="Discount">
           <DataField>Discount</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
@@ -119,20 +139,16 @@
         </Field>
         <Field Name="Date">
           <DataField>Date</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Remarks">
           <DataField>Remarks</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="BillPaidByCash">
-          <DataField>BillPaidByCash</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>spSOReport_DataSet</rd:DataSetName>
-        <rd:SchemaPath>C:\CURRENT PROJECTS\ERP_Latest\BMS Zahra Rubab New - hans - Upgraded (current)\MYBUSINESS\DataSets\spSOReport_DataSet.xsd</rd:SchemaPath>
+        <rd:SchemaPath>E:\Project1\MYBUSINESS_ERP_Chocolate_Vietnam\MYBUSINESS\DataSets\spSOReport_DataSet.xsd</rd:SchemaPath>
         <rd:TableName>spSOReport</rd:TableName>
         <rd:TableAdapterFillMethod>Fill</rd:TableAdapterFillMethod>
         <rd:TableAdapterGetDataMethod>GetData</rd:TableAdapterGetDataMethod>
@@ -148,21 +164,21 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>2.19951in</Width>
+                  <Width>0.84721in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.82907in</Width>
+                  <Width>0.63124in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.1962in</Width>
+                  <Width>0.81508in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.30825in</Width>
+                  <Width>0.93299in</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>0.25in</Height>
+                  <Height>0.14544in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -177,6 +193,7 @@
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
                                     <FontFamily />
+                                    <FontSize>5pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <TextDecoration>None</TextDecoration>
                                   </Style>
@@ -190,8 +207,7 @@
                           <rd:DefaultName>Textbox8</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
+                              <Style>None</Style>
                             </Border>
                             <BackgroundColor>White</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -213,6 +229,7 @@
                                 <TextRun>
                                   <Value>SL</Value>
                                   <Style>
+                                    <FontSize>5pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -225,8 +242,7 @@
                           <rd:DefaultName>Textbox20</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
+                              <Style>None</Style>
                             </Border>
                             <BackgroundColor>White</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -249,6 +265,7 @@
                                   <Value>Đơn giá</Value>
                                   <Style>
                                     <FontFamily />
+                                    <FontSize>5pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -261,8 +278,7 @@
                           <rd:DefaultName>Textbox26</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
+                              <Style>None</Style>
                             </Border>
                             <BackgroundColor>White</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -285,6 +301,7 @@
                                   <Value>Thành tiền</Value>
                                   <Style>
                                     <FontFamily />
+                                    <FontSize>5pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -297,8 +314,7 @@
                           <rd:DefaultName>Textbox5</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
+                              <Style>None</Style>
                             </Border>
                             <BackgroundColor>White</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -312,7 +328,7 @@
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.25in</Height>
+                  <Height>0.14544in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -324,7 +340,9 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!ProductName.Value</Value>
-                                  <Style />
+                                  <Style>
+                                    <FontSize>5pt</FontSize>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -335,8 +353,7 @@
                           <rd:DefaultName>ProductName</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
+                              <Style>None</Style>
                             </Border>
                             <BackgroundColor>White</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -357,7 +374,9 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!Quantity.Value</Value>
-                                  <Style />
+                                  <Style>
+                                    <FontSize>5pt</FontSize>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -368,8 +387,7 @@
                           <rd:DefaultName>Quantity</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
+                              <Style>None</Style>
                             </Border>
                             <BackgroundColor>White</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -390,21 +408,23 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!SalePrice.Value</Value>
-                                  <Style />
+                                  <Style>
+                                    <FontSize>5pt</FontSize>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Right</TextAlign>
+                                <TextAlign>Center</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>SalePrice</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
+                              <Style>None</Style>
                             </Border>
                             <BackgroundColor>White</BackgroundColor>
+                            <VerticalAlign>Top</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -423,21 +443,23 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!ItemTotal.Value</Value>
-                                  <Style />
+                                  <Style>
+                                    <FontSize>5pt</FontSize>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Right</TextAlign>
+                                <TextAlign>Center</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>ItemTotal</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
+                              <Style>None</Style>
                             </Border>
                             <BackgroundColor>White</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -469,10 +491,10 @@
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DataSet1</DataSetName>
-            <Top>0.06944in</Top>
-            <Left>0.3433in</Left>
-            <Height>0.5in</Height>
-            <Width>5.53303in</Width>
+            <Top>0.02281in</Top>
+            <Left>0.08561in</Left>
+            <Height>0.29088in</Height>
+            <Width>3.22652in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -489,6 +511,7 @@
                     <Value>Thành tiền trước thuế GTGT</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                     </Style>
                   </TextRun>
@@ -499,18 +522,16 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox30</rd:DefaultName>
-            <Top>0.62063in</Top>
-            <Left>0.3433in</Left>
-            <Height>0.22281in</Height>
-            <Width>1.81978in</Width>
+            <Top>0.33313in</Top>
+            <Left>0.0808in</Left>
+            <Height>0.15337in</Height>
+            <Width>1.09752in</Width>
             <ZIndex>1</ZIndex>
             <Visibility>
               <Hidden>=IIF(First(Fields!SaleOrderQty.Value, "DataSet1") &gt; "0", False, True)</Hidden>
             </Visibility>
             <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
+              <Border />
               <VerticalAlign>Middle</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
@@ -528,6 +549,7 @@
                     <Value>Thuế GTGT </Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                     </Style>
                   </TextRun>
@@ -538,19 +560,17 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox30</rd:DefaultName>
-            <Top>0.85733in</Top>
-            <Left>0.3433in</Left>
-            <Height>0.23691in</Height>
-            <Width>0.7497in</Width>
+            <Top>0.50733in</Top>
+            <Left>0.0808in</Left>
+            <Height>0.13274in</Height>
+            <Width>0.51272in</Width>
             <ZIndex>2</ZIndex>
             <Visibility>
               <Hidden>=IIF(First(Fields!SaleOrderQty.Value, "DataSet1") &gt; "0", False, True)</Hidden>
             </Visibility>
             <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <VerticalAlign>Middle</VerticalAlign>
+              <Border />
+              <VerticalAlign>Top</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -567,6 +587,7 @@
                     <Value>=FormatNumber(Fields!SaleOrderAmount.Value, 2)</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -576,18 +597,17 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>SaleOrderAmount</rd:DefaultName>
-            <Top>0.62975in</Top>
-            <Left>4.78837in</Left>
-            <Height>0.25in</Height>
-            <Width>1.08797in</Width>
+            <Top>0.34225in</Top>
+            <Left>2.77277in</Left>
+            <Height>0.14425in</Height>
+            <Width>0.52531in</Width>
             <ZIndex>3</ZIndex>
             <Visibility>
               <Hidden>=IIF(First(Fields!SaleOrderQty.Value, "DataSet1") &gt; "0", False, True)</Hidden>
             </Visibility>
             <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
+              <Border />
+              <VerticalAlign>Top</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -604,6 +624,7 @@
                     <Value>=Sum(Fields!Quantity.Value)</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -613,18 +634,16 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>SaleType1</rd:DefaultName>
-            <Top>0.63531in</Top>
-            <Left>3.68891in</Left>
-            <Height>0.25in</Height>
-            <Width>1.06775in</Width>
+            <Top>0.34781in</Top>
+            <Left>2.02956in</Left>
+            <Height>0.14425in</Height>
+            <Width>0.72932in</Width>
             <ZIndex>4</ZIndex>
             <Visibility>
-              <Hidden>=IIF(First(Fields!SaleOrderQty.Value, "DataSet1") &gt; "0", False, True)</Hidden>
+              <Hidden>true</Hidden>
             </Visibility>
             <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
+              <Border />
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -641,28 +660,28 @@
                     <Value>Total VAT Value</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
-                  <TextAlign>Right</TextAlign>
+                  <TextAlign>Left</TextAlign>
                 </Style>
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox30</rd:DefaultName>
-            <Top>0.91844in</Top>
-            <Left>3.68891in</Left>
-            <Height>0.25in</Height>
-            <Width>1.21868in</Width>
+            <Top>0.50594in</Top>
+            <Left>2.02956in</Left>
+            <Height>0.13333in</Height>
+            <Width>0.72932in</Width>
             <ZIndex>5</ZIndex>
             <Visibility>
-              <Hidden>=IIF(First(Fields!SaleOrderQty.Value, "DataSet1") &gt; "0", False, True)</Hidden>
+              <Hidden>true</Hidden>
             </Visibility>
             <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
+              <Border />
+              <VerticalAlign>Top</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -679,6 +698,7 @@
                     <Value>Tổng tiền thanh toán</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
@@ -689,19 +709,17 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox30</rd:DefaultName>
-            <Top>1.10813in</Top>
-            <Left>0.3433in</Left>
-            <Height>0.25in</Height>
-            <Width>1.81436in</Width>
+            <Top>0.67063in</Top>
+            <Left>0.0808in</Left>
+            <Height>0.13542in</Height>
+            <Width>0.7497in</Width>
             <ZIndex>6</ZIndex>
             <Visibility>
               <Hidden>=IIF(First(Fields!SaleOrderQty.Value, "DataSet1") &gt; "0", False, True)</Hidden>
             </Visibility>
             <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <VerticalAlign>Middle</VerticalAlign>
+              <Border />
+              <VerticalAlign>Top</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -718,6 +736,7 @@
                     <Value>Total Amount After Tax Value</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
@@ -728,18 +747,16 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox30</rd:DefaultName>
-            <Top>1.18233in</Top>
-            <Left>3.03537in</Left>
-            <Height>0.25in</Height>
-            <Width>2.19166in</Width>
+            <Top>0.65753in</Top>
+            <Left>1.89414in</Left>
+            <Height>0.1375in</Height>
+            <Width>1.01228in</Width>
             <ZIndex>7</ZIndex>
             <Visibility>
-              <Hidden>=IIF(First(Fields!SaleOrderQty.Value, "DataSet1") &gt; "0", False, True)</Hidden>
+              <Hidden>true</Hidden>
             </Visibility>
             <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
+              <Border />
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -747,10 +764,10 @@
             </Style>
           </Textbox>
           <Line Name="Line3">
-            <Top>1.4625in</Top>
-            <Left>0.3433in</Left>
+            <Top>0.85in</Top>
+            <Left>0.0433in</Left>
             <Height>0in</Height>
-            <Width>5.53304in</Width>
+            <Width>3.26883in</Width>
             <ZIndex>8</ZIndex>
             <Style>
               <Border>
@@ -765,27 +782,29 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Tổng tiền khách trả ( Thẻ ngân hàng)</Value>
+                    <Value EvaluationMode="Constant">Tổng tiền khách trả ( Thẻ ngân hàng)</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
-                  <TextAlign>Right</TextAlign>
+                  <TextAlign>Left</TextAlign>
                 </Style>
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>1.53194in</Top>
-            <Left>0.3433in</Left>
-            <Height>0.25in</Height>
+            <Top>0.89444in</Top>
+            <Left>0.07098in</Left>
+            <Height>0.15in</Height>
             <Width>2.29353in</Width>
             <ZIndex>9</ZIndex>
+            <Visibility>
+              <Hidden>=IIF(First(Fields!BillPaid.Value, "DataSet1")&gt;"0",false,true)</Hidden>
+            </Visibility>
             <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
+              <Border />
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -802,6 +821,7 @@
                     <Value>=FormatNumber(Fields!BillPaid.Value, 2)</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -811,15 +831,16 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
-            <Top>1.53194in</Top>
-            <Left>4.74065in</Left>
-            <Height>0.25in</Height>
-            <Width>1.13569in</Width>
+            <Top>0.89028in</Top>
+            <Left>2.50456in</Left>
+            <Height>0.125in</Height>
+            <Width>0.8065in</Width>
             <ZIndex>10</ZIndex>
+            <Visibility>
+              <Hidden>=IIF(First(Fields!BillPaid.Value, "DataSet1")&gt;"0",false,true)</Hidden>
+            </Visibility>
             <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
+              <Border />
               <VerticalAlign>Middle</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
@@ -834,9 +855,10 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Tổng tiền khách trả (Tiền mặt)</Value>
+                    <Value EvaluationMode="Constant">Tổng tiền khách trả (Tiền mặt)</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -846,15 +868,16 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>1.79736in</Top>
-            <Left>0.3433in</Left>
-            <Height>0.25in</Height>
+            <Top>1.08486in</Top>
+            <Left>0.0683in</Left>
+            <Height>0.125in</Height>
             <Width>2.29353in</Width>
             <ZIndex>11</ZIndex>
+            <Visibility>
+              <Hidden>=IIF(First(Fields!BillPaidByCash.Value, "DataSet1")&gt;"0",false,true)</Hidden>
+            </Visibility>
             <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
+              <Border />
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -871,6 +894,7 @@
                     <Value>=FormatNumber(Fields!BillPaidByCash.Value, 2)</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -880,15 +904,16 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
-            <Top>1.79736in</Top>
-            <Left>4.74065in</Left>
-            <Height>0.25in</Height>
-            <Width>1.13569in</Width>
+            <Top>1.0557in</Top>
+            <Left>2.50456in</Left>
+            <Height>0.125in</Height>
+            <Width>0.8065in</Width>
             <ZIndex>12</ZIndex>
+            <Visibility>
+              <Hidden>=IIF(First(Fields!BillPaidByCash.Value, "DataSet1")&gt;"0",false,true)</Hidden>
+            </Visibility>
             <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
+              <Border />
               <VerticalAlign>Middle</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
@@ -903,9 +928,10 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Tổng tiền khách trả</Value>
+                    <Value EvaluationMode="Constant">Tổng tiền khách trả</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -915,15 +941,13 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>2.06715in</Top>
-            <Left>0.3433in</Left>
-            <Height>0.25in</Height>
+            <Top>1.25465in</Top>
+            <Left>0.0683in</Left>
+            <Height>0.125in</Height>
             <Width>2.29353in</Width>
             <ZIndex>13</ZIndex>
             <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
+              <Border />
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -940,6 +964,7 @@
                     <Value>=FormatNumber(Fields!SaleOrderAmount.Value, 2)</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -949,15 +974,13 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
-            <Top>2.06715in</Top>
-            <Left>4.74065in</Left>
-            <Height>0.23611in</Height>
-            <Width>1.13569in</Width>
+            <Top>1.23799in</Top>
+            <Left>2.50456in</Left>
+            <Height>0.12361in</Height>
+            <Width>0.8065in</Width>
             <ZIndex>14</ZIndex>
             <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
+              <Border />
               <VerticalAlign>Middle</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
@@ -975,6 +998,7 @@
                     <Value>=FormatNumber(Fields!Balance.Value, 2)</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -984,15 +1008,13 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
-            <Top>2.33104in</Top>
-            <Left>4.06808in</Left>
-            <Height>0.21561in</Height>
-            <Width>1.80826in</Width>
+            <Top>1.41438in</Top>
+            <Left>2.50456in</Left>
+            <Height>0.12811in</Height>
+            <Width>0.8065in</Width>
             <ZIndex>15</ZIndex>
             <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
+              <Border />
               <VerticalAlign>Middle</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
@@ -1010,6 +1032,7 @@
                     <Value>Tổng tiền trả lại</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1019,15 +1042,13 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>2.33104in</Top>
-            <Left>0.3433in</Left>
-            <Height>0.21561in</Height>
+            <Top>1.41854in</Top>
+            <Left>0.0683in</Left>
+            <Height>0.12811in</Height>
             <Width>2.29353in</Width>
             <ZIndex>16</ZIndex>
             <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
+              <Border />
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -1035,10 +1056,10 @@
             </Style>
           </Textbox>
           <Line Name="Line4">
-            <Top>2.90464in</Top>
-            <Left>0.27038in</Left>
+            <Top>1.77964in</Top>
+            <Left>0.0433in</Left>
             <Height>0in</Height>
-            <Width>5.60596in</Width>
+            <Width>3.26883in</Width>
             <ZIndex>17</ZIndex>
             <Style>
               <Border>
@@ -1056,24 +1077,23 @@
                     <Value>Xin cảm ơn quý khách / Thank you</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
-                  <TextAlign>Right</TextAlign>
+                  <TextAlign>Center</TextAlign>
                 </Style>
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>2.57443in</Top>
-            <Left>1.83921in</Left>
-            <Height>0.26042in</Height>
-            <Width>2.33121in</Width>
+            <Top>1.57894in</Top>
+            <Left>1.13664in</Left>
+            <Height>0.13542in</Height>
+            <Width>1.45621in</Width>
             <ZIndex>18</ZIndex>
             <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
+              <Border />
               <VerticalAlign>Middle</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
@@ -1091,7 +1111,7 @@
                     <Value>THÔNG TIN HÓA ĐƠN ĐIỆN TỬ</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>14pt</FontSize>
+                      <FontSize>5pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
@@ -1102,15 +1122,13 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>2.99943in</Top>
-            <Left>1.47867in</Left>
-            <Height>0.26042in</Height>
-            <Width>3.18937in</Width>
+            <Top>1.81158in</Top>
+            <Left>1.13664in</Left>
+            <Height>0.13542in</Height>
+            <Width>1.45621in</Width>
             <ZIndex>19</ZIndex>
             <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
+              <Border />
               <VerticalAlign>Middle</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
@@ -1128,6 +1146,7 @@
                     <Value>Tên đơn vị bán hàng: </Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1137,15 +1156,13 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>3.32929in</Top>
-            <Left>0.39538in</Left>
-            <Height>0.26042in</Height>
-            <Width>1.34722in</Width>
+            <Top>1.97756in</Top>
+            <Left>0.0683in</Left>
+            <Height>0.13542in</Height>
+            <Width>0.82262in</Width>
             <ZIndex>20</ZIndex>
             <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
+              <Border />
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -1162,6 +1179,7 @@
                     <Value>Mã số thuế: </Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1171,10 +1189,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>3.58971in</Top>
-            <Left>0.39538in</Left>
-            <Height>0.23264in</Height>
-            <Width>0.79513in</Width>
+            <Top>2.13798in</Top>
+            <Left>0.0683in</Left>
+            <Height>0.13264in</Height>
+            <Width>0.50064in</Width>
             <ZIndex>21</ZIndex>
             <Style>
               <Border>
@@ -1196,6 +1214,7 @@
                     <Value>Địa chỉ:</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1205,10 +1224,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>3.82236in</Top>
-            <Left>0.39538in</Left>
-            <Height>0.30209in</Height>
-            <Width>0.5868in</Width>
+            <Top>2.30813in</Top>
+            <Left>0.0683in</Left>
+            <Height>0.12709in</Height>
+            <Width>0.3368in</Width>
             <ZIndex>22</ZIndex>
             <Style>
               <Border>
@@ -1230,6 +1249,7 @@
                     <Value>=Parameters!CustomerAddress.Value</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1239,10 +1259,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
-            <Top>3.82236in</Top>
-            <Left>0.98218in</Left>
-            <Height>0.30209in</Height>
-            <Width>4.71671in</Width>
+            <Top>2.30813in</Top>
+            <Left>0.4176in</Left>
+            <Height>0.12709in</Height>
+            <Width>1.14836in</Width>
             <ZIndex>23</ZIndex>
             <Style>
               <Border>
@@ -1264,6 +1284,7 @@
                     <Value>=Parameters!CustomerVatNumber.Value</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1273,10 +1294,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
-            <Top>3.58971in</Top>
-            <Left>1.19051in</Left>
-            <Height>0.23264in</Height>
-            <Width>4.50838in</Width>
+            <Top>2.13798in</Top>
+            <Left>0.58283in</Left>
+            <Height>0.13264in</Height>
+            <Width>1.15813in</Width>
             <ZIndex>24</ZIndex>
             <Style>
               <Border>
@@ -1298,6 +1319,7 @@
                     <Value>=Parameters!POSName.Value</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1307,15 +1329,13 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
-            <Top>3.32929in</Top>
-            <Left>1.7426in</Left>
-            <Height>0.26042in</Height>
-            <Width>3.95629in</Width>
+            <Top>1.97756in</Top>
+            <Left>0.86592in</Left>
+            <Height>0.13542in</Height>
+            <Width>1.03754in</Width>
             <ZIndex>25</ZIndex>
             <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
+              <Border />
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -1329,13 +1349,9 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Tên đơn vị mua hàng</Value>
-                    <Style />
-                  </TextRun>
-                  <TextRun>
-                    <Value>: </Value>
+                    <Value EvaluationMode="Constant">Tên đơn vị mua hàng:</Value>
                     <Style>
-                      <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1345,10 +1361,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>4.67653in</Top>
-            <Left>0.38561in</Left>
-            <Height>0.26042in</Height>
-            <Width>1.4536in</Width>
+            <Top>2.6873in</Top>
+            <Left>0.05709in</Left>
+            <Height>0.14792in</Height>
+            <Width>0.83383in</Width>
             <ZIndex>26</ZIndex>
             <Style>
               <Border>
@@ -1368,9 +1384,10 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Mã số thuế: </Value>
+                    <Value EvaluationMode="Constant">Mã số thuế:</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1380,10 +1397,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>4.93695in</Top>
-            <Left>0.38561in</Left>
-            <Height>0.23264in</Height>
-            <Width>0.79513in</Width>
+            <Top>2.88522in</Top>
+            <Left>0.05709in</Left>
+            <Height>0.13264in</Height>
+            <Width>0.59657in</Width>
             <ZIndex>27</ZIndex>
             <Style>
               <Border>
@@ -1403,9 +1420,10 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Địa chỉ:</Value>
+                    <Value EvaluationMode="Constant">Địa chỉ:</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1415,9 +1433,9 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>5.1696in</Top>
-            <Left>0.38561in</Left>
-            <Height>0.30209in</Height>
+            <Top>3.05537in</Top>
+            <Left>0.05709in</Left>
+            <Height>0.12709in</Height>
             <Width>0.5868in</Width>
             <ZIndex>28</ZIndex>
             <Style>
@@ -1441,6 +1459,7 @@
                     <Value>=Fields!Id.Value</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1450,10 +1469,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
-            <Top>5.1696in</Top>
-            <Left>0.97241in</Left>
-            <Height>0.30209in</Height>
-            <Width>4.71671in</Width>
+            <Top>3.05537in</Top>
+            <Left>0.64389in</Left>
+            <Height>0.12709in</Height>
+            <Width>1.17643in</Width>
             <ZIndex>29</ZIndex>
             <Style>
               <Border>
@@ -1476,6 +1495,7 @@
                     <Value>=FormatNumber(Fields!BillPaid.Value, 9)</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1485,10 +1505,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
-            <Top>4.93695in</Top>
-            <Left>1.18074in</Left>
-            <Height>0.23264in</Height>
-            <Width>4.50838in</Width>
+            <Top>2.8866in</Top>
+            <Left>0.67624in</Left>
+            <Height>0.13126in</Height>
+            <Width>1.15082in</Width>
             <ZIndex>30</ZIndex>
             <Style>
               <Border>
@@ -1511,6 +1531,7 @@
                     <Value>=Parameters!POSName.Value</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1520,10 +1541,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
-            <Top>4.67653in</Top>
-            <Left>1.83921in</Left>
-            <Height>0.26042in</Height>
-            <Width>3.84991in</Width>
+            <Top>2.6873in</Top>
+            <Left>0.89092in</Left>
+            <Height>0.14792in</Height>
+            <Width>1.50979in</Width>
             <ZIndex>31</ZIndex>
             <Style>
               <Border>
@@ -1546,6 +1567,7 @@
                     <Value>Ký hiệu: </Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1555,10 +1577,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>5.97169in</Top>
-            <Left>0.39538in</Left>
-            <Height>0.26042in</Height>
-            <Width>0.5868in</Width>
+            <Top>3.40051in</Top>
+            <Left>0.0558in</Left>
+            <Height>0.13542in</Height>
+            <Width>0.60069in</Width>
             <ZIndex>32</ZIndex>
             <Style>
               <Border>
@@ -1581,6 +1603,7 @@
                     <Value>Số hóa đơn: </Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1590,10 +1613,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>6.23211in</Top>
-            <Left>0.39538in</Left>
-            <Height>0.23264in</Height>
-            <Width>0.90151in</Width>
+            <Top>3.58593in</Top>
+            <Left>0.0558in</Left>
+            <Height>0.13264in</Height>
+            <Width>0.62044in</Width>
             <ZIndex>33</ZIndex>
             <Style>
               <Border>
@@ -1616,6 +1639,7 @@
                     <Value>Mà CQT: </Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1625,9 +1649,9 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>6.46476in</Top>
-            <Left>0.39538in</Left>
-            <Height>0.21787in</Height>
+            <Top>3.76858in</Top>
+            <Left>0.0558in</Left>
+            <Height>0.13037in</Height>
             <Width>0.69762in</Width>
             <ZIndex>34</ZIndex>
             <Style>
@@ -1648,9 +1672,10 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=FormatNumber(Fields!BillPaid.Value, 9)</Value>
+                    <Value>=Parameters!Macqt.Value</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1660,10 +1685,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
-            <Top>6.46475in</Top>
-            <Left>1.10689in</Left>
-            <Height>0.21788in</Height>
-            <Width>4.59201in</Width>
+            <Top>3.76857in</Top>
+            <Left>0.76731in</Left>
+            <Height>0.13038in</Height>
+            <Width>1.04in</Width>
             <ZIndex>35</ZIndex>
             <Style>
               <Border>
@@ -1683,9 +1708,10 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=FormatNumber(Fields!BillPaid.Value, 9)</Value>
+                    <Value>=Parameters!InvoiceNumber.Value</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1695,10 +1721,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
-            <Top>6.23211in</Top>
-            <Left>1.2969in</Left>
-            <Height>0.23264in</Height>
-            <Width>4.40199in</Width>
+            <Top>3.58593in</Top>
+            <Left>0.70402in</Left>
+            <Height>0.13264in</Height>
+            <Width>1.10329in</Width>
             <ZIndex>36</ZIndex>
             <Style>
               <Border>
@@ -1718,9 +1744,10 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=FormatNumber(Fields!BillPaid.Value, 9)</Value>
+                    <Value>=Parameters!InvoiceSeries.Value</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1730,10 +1757,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
-            <Top>5.97169in</Top>
-            <Left>0.98218in</Left>
-            <Height>0.26042in</Height>
-            <Width>4.71671in</Width>
+            <Top>3.40051in</Top>
+            <Left>0.68427in</Left>
+            <Height>0.13542in</Height>
+            <Width>1.12499in</Width>
             <ZIndex>37</ZIndex>
             <Style>
               <Border>
@@ -1753,9 +1780,10 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Số bảo mật (Mã tra cứu): </Value>
+                    <Value EvaluationMode="Constant">Số bảo mật (Mã tra cứu):</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1765,10 +1793,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>6.68263in</Top>
-            <Left>0.39538in</Left>
-            <Height>0.23264in</Height>
-            <Width>1.62846in</Width>
+            <Top>3.94895in</Top>
+            <Left>0.0558in</Left>
+            <Height>0.13264in</Height>
+            <Width>0.96244in</Width>
             <ZIndex>38</ZIndex>
             <Style>
               <Border>
@@ -1791,6 +1819,7 @@
                     <Value>Tra cứu tại:</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                     </Style>
                   </TextRun>
@@ -1801,10 +1830,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>6.91528in</Top>
-            <Left>0.39539in</Left>
-            <Height>0.21787in</Height>
-            <Width>0.9015in</Width>
+            <Top>4.1191in</Top>
+            <Left>0.05581in</Left>
+            <Height>0.13037in</Height>
+            <Width>0.69761in</Width>
             <ZIndex>39</ZIndex>
             <Style>
               <Border>
@@ -1824,9 +1853,10 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=FormatNumber(Fields!BillPaid.Value, 9)</Value>
+                    <Value>=Parameters!Sobaomat.Value</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1836,10 +1866,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
-            <Top>6.68263in</Top>
-            <Left>2.03773in</Left>
-            <Height>0.23264in</Height>
-            <Width>3.66116in</Width>
+            <Top>3.94895in</Top>
+            <Left>1.01824in</Left>
+            <Height>0.13264in</Height>
+            <Width>1.03907in</Width>
             <ZIndex>40</ZIndex>
             <Style>
               <Border>
@@ -1862,6 +1892,7 @@
                     <Value>Email: </Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1871,10 +1902,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>5.47516in</Top>
-            <Left>0.38561in</Left>
-            <Height>0.23264in</Height>
-            <Width>0.47041in</Width>
+            <Top>3.22343in</Top>
+            <Left>0.04598in</Left>
+            <Height>0.13264in</Height>
+            <Width>0.44263in</Width>
             <ZIndex>41</ZIndex>
             <Style>
               <Border>
@@ -1897,6 +1928,7 @@
                     <Value>=Parameters!CustomerEmail.Value</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1906,10 +1938,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
-            <Top>5.47516in</Top>
-            <Left>0.86991in</Left>
-            <Height>0.23264in</Height>
-            <Width>4.81921in</Width>
+            <Top>3.23802in</Top>
+            <Left>0.52838in</Left>
+            <Height>0.13264in</Height>
+            <Width>1.27893in</Width>
             <ZIndex>42</ZIndex>
             <Style>
               <Border>
@@ -1929,9 +1961,10 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Họ và tên người mua hàng:</Value>
+                    <Value EvaluationMode="Constant">Họ và tên người mua hàng:</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
+                      <FontSize>5pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#000000</Color>
@@ -1944,10 +1977,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>4.40222in</Top>
-            <Left>0.3856in</Left>
-            <Height>0.26042in</Height>
-            <Width>1.76771in</Width>
+            <Top>2.50049in</Top>
+            <Left>0.05708in</Left>
+            <Height>0.14792in</Height>
+            <Width>1.10804in</Width>
             <ZIndex>43</ZIndex>
             <Style>
               <Border>
@@ -1970,6 +2003,7 @@
                     <Value>=Parameters!CustomerName.Value</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1979,10 +2013,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
-            <Top>4.40222in</Top>
-            <Left>2.19497in</Left>
-            <Height>0.26042in</Height>
-            <Width>3.49414in</Width>
+            <Top>2.50049in</Top>
+            <Left>1.09706in</Left>
+            <Height>0.14792in</Height>
+            <Width>1.16615in</Width>
             <ZIndex>44</ZIndex>
             <Style>
               <Border>
@@ -2002,9 +2036,10 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=10</Value>
+                    <Value>=Fields!TaxInPercent.Value</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2014,18 +2049,17 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>SaleOrderAmount</rd:DefaultName>
-            <Top>0.84344in</Top>
-            <Left>1.10689in</Left>
-            <Height>0.25in</Height>
-            <Width>1.05619in</Width>
+            <Top>0.50594in</Top>
+            <Left>0.60713in</Left>
+            <Height>0.14583in</Height>
+            <Width>0.88686in</Width>
             <ZIndex>45</ZIndex>
             <Visibility>
               <Hidden>=IIF(First(Fields!SaleOrderQty.Value, "DataSet1") &gt; "0", False, True)</Hidden>
             </Visibility>
             <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
+              <Border />
+              <VerticalAlign>Top</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -2039,9 +2073,10 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=FormatNumber(Fields!SaleOrderAmount.Value, 2)*10/100</Value>
+                    <Value>=FormatNumber(Fields!SaleOrderAmount.Value, 2)*8/100</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2051,18 +2086,17 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>SaleOrderAmount</rd:DefaultName>
-            <Top>0.90753in</Top>
-            <Left>4.93537in</Left>
-            <Height>0.25in</Height>
-            <Width>1.08797in</Width>
+            <Top>0.50753in</Top>
+            <Left>2.77277in</Left>
+            <Height>0.14424in</Height>
+            <Width>0.52392in</Width>
             <ZIndex>46</ZIndex>
             <Visibility>
               <Hidden>=IIF(First(Fields!SaleOrderQty.Value, "DataSet1") &gt; "0", False, True)</Hidden>
             </Visibility>
             <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
+              <Border />
+              <VerticalAlign>Top</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -2079,6 +2113,7 @@
                     <Value>=FormatNumber(Fields!SaleOrderAmount.Value, 2) * 10 / 100</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2088,18 +2123,16 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>SaleOrderAmount</rd:DefaultName>
-            <Top>1.18233in</Top>
-            <Left>5.24092in</Left>
-            <Height>0.25in</Height>
-            <Width>0.78241in</Width>
+            <Top>0.65753in</Top>
+            <Left>2.90642in</Left>
+            <Height>0.1375in</Height>
+            <Width>0.39839in</Width>
             <ZIndex>47</ZIndex>
             <Visibility>
-              <Hidden>=IIF(First(Fields!SaleOrderQty.Value, "DataSet1") &gt; "0", False, True)</Hidden>
+              <Hidden>true</Hidden>
             </Visibility>
             <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
+              <Border />
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -2113,9 +2146,9 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=FormatNumber(Fields!SaleOrderAmount.Value, 2)</Value>
+                    <Value>=First(Fields!SaleOrderAmount.Value, "DataSet1")</Value>
                     <Style>
-                      <FontFamily />
+                      <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2125,18 +2158,17 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>SaleOrderAmount</rd:DefaultName>
-            <Top>1.12122in</Top>
-            <Left>2.15766in</Left>
-            <Height>0.25in</Height>
-            <Width>1.08797in</Width>
+            <Top>0.67122in</Top>
+            <Left>0.85828in</Left>
+            <Height>0.13542in</Height>
+            <Width>0.71967in</Width>
             <ZIndex>48</ZIndex>
             <Visibility>
               <Hidden>=IIF(First(Fields!SaleOrderQty.Value, "DataSet1") &gt; "0", False, True)</Hidden>
             </Visibility>
             <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
+              <Border />
+              <VerticalAlign>Top</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -2153,6 +2185,7 @@
                     <Value>tracuuhoadon.minvoice.com.vn</Value>
                     <Style>
                       <FontFamily />
+                      <FontSize>5pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                     </Style>
                   </TextRun>
@@ -2168,10 +2201,10 @@
                 </Action>
               </Actions>
             </ActionInfo>
-            <Top>6.92916in</Top>
-            <Left>1.32467in</Left>
-            <Height>0.20399in</Height>
-            <Width>4.36444in</Width>
+            <Top>4.12048in</Top>
+            <Left>0.76731in</Left>
+            <Height>0.14149in</Height>
+            <Width>1.165in</Width>
             <ZIndex>49</ZIndex>
             <Style>
               <Border>
@@ -2184,15 +2217,14 @@
             </Style>
           </Textbox>
         </ReportItems>
-        <Height>7.66456in</Height>
+        <Height>4.34164in</Height>
         <Style />
       </Body>
-      <Width>6.28154in</Width>
+      <Width>85.44154mm</Width>
       <Page>
         <PageHeader>
-          <Height>2.11994in</Height>
+          <Height>1.37985in</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
-          <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
             <Textbox Name="Textbox41">
               <CanGrow>true</CanGrow>
@@ -2205,6 +2237,7 @@
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily />
+                        <FontSize>5pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
                         <Color>#000000</Color>
@@ -2217,14 +2250,12 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox31</rd:DefaultName>
-              <Top>1.49652in</Top>
-              <Left>0.27038in</Left>
-              <Height>0.26042in</Height>
-              <Width>0.60349in</Width>
+              <Top>0.89465in</Top>
+              <Left>0.0808in</Left>
+              <Height>0.13383in</Height>
+              <Width>0.59544in</Width>
               <Style>
-                <Border>
-                  <Style>None</Style>
-                </Border>
+                <Border />
                 <VerticalAlign>Middle</VerticalAlign>
                 <PaddingLeft>2pt</PaddingLeft>
                 <PaddingRight>2pt</PaddingRight>
@@ -2236,9 +2267,10 @@
               <Source>Embedded</Source>
               <Value>PhevaImg</Value>
               <Sizing>FitProportional</Sizing>
-              <Left>3.03537in</Left>
-              <Height>0.64062in</Height>
-              <Width>0.75902in</Width>
+              <Top>0.0125in</Top>
+              <Left>1.60531in</Left>
+              <Height>0.33333in</Height>
+              <Width>0.51944in</Width>
               <ZIndex>1</ZIndex>
               <Style>
                 <Border>
@@ -2246,57 +2278,6 @@
                 </Border>
               </Style>
             </Image>
-            <Textbox Name="Textbox46">
-              <CanGrow>true</CanGrow>
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>Store Address</Value>
-                      <Style>
-                        <FontFamily />
-                        <FontWeight>Normal</FontWeight>
-                        <TextDecoration>None</TextDecoration>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style>
-                    <TextAlign>Center</TextAlign>
-                  </Style>
-                </Paragraph>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>Store phone number</Value>
-                      <Style>
-                        <FontFamily />
-                        <FontWeight>Normal</FontWeight>
-                        <TextDecoration>None</TextDecoration>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style>
-                    <TextAlign>Center</TextAlign>
-                  </Style>
-                </Paragraph>
-              </Paragraphs>
-              <rd:DefaultName>Textbox31</rd:DefaultName>
-              <Top>0.53194in</Top>
-              <Left>2.29789in</Left>
-              <Height>0.53006in</Height>
-              <Width>2.20191in</Width>
-              <ZIndex>2</ZIndex>
-              <Style>
-                <Border>
-                  <Style>None</Style>
-                </Border>
-                <PaddingLeft>2pt</PaddingLeft>
-                <PaddingRight>2pt</PaddingRight>
-                <PaddingTop>2pt</PaddingTop>
-                <PaddingBottom>2pt</PaddingBottom>
-              </Style>
-            </Textbox>
             <Textbox Name="Textbox47">
               <CanGrow>true</CanGrow>
               <KeepTogether>true</KeepTogether>
@@ -2308,6 +2289,7 @@
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily />
+                        <FontSize>5pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
                         <Color>#000000</Color>
@@ -2320,15 +2302,13 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox31</rd:DefaultName>
-              <Top>1.75694in</Top>
-              <Left>0.27038in</Left>
-              <Height>0.26042in</Height>
-              <Width>0.79484in</Width>
-              <ZIndex>3</ZIndex>
+              <Top>1.09792in</Top>
+              <Left>0.10123in</Left>
+              <Height>0.25416in</Height>
+              <Width>0.46771in</Width>
+              <ZIndex>2</ZIndex>
               <Style>
-                <Border>
-                  <Style>None</Style>
-                </Border>
+                <Border />
                 <VerticalAlign>Middle</VerticalAlign>
                 <PaddingLeft>2pt</PaddingLeft>
                 <PaddingRight>2pt</PaddingRight>
@@ -2347,6 +2327,7 @@
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily />
+                        <FontSize>5pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
                         <Color>#000000</Color>
@@ -2359,15 +2340,13 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox31</rd:DefaultName>
-              <Top>1.49652in</Top>
-              <Left>3.46612in</Left>
-              <Height>0.26042in</Height>
-              <Width>1.06776in</Width>
-              <ZIndex>4</ZIndex>
+              <Top>0.88076in</Top>
+              <Left>2.37029in</Left>
+              <Height>0.17292in</Height>
+              <Width>0.47609in</Width>
+              <ZIndex>3</ZIndex>
               <Style>
-                <Border>
-                  <Style>None</Style>
-                </Border>
+                <Border />
                 <VerticalAlign>Middle</VerticalAlign>
                 <PaddingLeft>2pt</PaddingLeft>
                 <PaddingRight>2pt</PaddingRight>
@@ -2386,6 +2365,7 @@
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily />
+                        <FontSize>5pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
                         <Color>#000000</Color>
@@ -2398,15 +2378,13 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox31</rd:DefaultName>
-              <Top>1.49652in</Top>
-              <Left>4.53388in</Left>
-              <Height>0.26042in</Height>
-              <Width>1.34246in</Width>
-              <ZIndex>5</ZIndex>
+              <Top>0.89465in</Top>
+              <Left>2.88805in</Left>
+              <Height>0.14584in</Height>
+              <Width>0.44732in</Width>
+              <ZIndex>4</ZIndex>
               <Style>
-                <Border>
-                  <Style>None</Style>
-                </Border>
+                <Border />
                 <VerticalAlign>Middle</VerticalAlign>
                 <PaddingLeft>2pt</PaddingLeft>
                 <PaddingRight>2pt</PaddingRight>
@@ -2424,7 +2402,7 @@
                       <Value>HÓA ĐƠN THANH TOÁN</Value>
                       <Style>
                         <FontFamily />
-                        <FontSize>14pt</FontSize>
+                        <FontSize>5pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
                       </Style>
@@ -2436,15 +2414,13 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox31</rd:DefaultName>
-              <Top>1.11756in</Top>
-              <Left>2.06138in</Left>
-              <Height>0.30952in</Height>
-              <Width>2.37373in</Width>
-              <ZIndex>6</ZIndex>
+              <Top>0.70367in</Top>
+              <Left>1.26164in</Left>
+              <Height>0.13542in</Height>
+              <Width>1.18425in</Width>
+              <ZIndex>5</ZIndex>
               <Style>
-                <Border>
-                  <Style>None</Style>
-                </Border>
+                <Border />
                 <PaddingLeft>2pt</PaddingLeft>
                 <PaddingRight>2pt</PaddingRight>
                 <PaddingTop>2pt</PaddingTop>
@@ -2461,6 +2437,7 @@
                       <Value>=Fields!Id.Value</Value>
                       <Style>
                         <FontFamily />
+                        <FontSize>5pt</FontSize>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -2470,18 +2447,16 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>SaleOrderAmount</rd:DefaultName>
-              <Top>1.75694in</Top>
-              <Left>1.10689in</Left>
-              <Height>0.25661in</Height>
-              <Width>1.43592in</Width>
-              <ZIndex>7</ZIndex>
+              <Top>1.1493in</Top>
+              <Left>0.79509in</Left>
+              <Height>0.14375in</Height>
+              <Width>0.63571in</Width>
+              <ZIndex>6</ZIndex>
               <Visibility>
                 <Hidden>=IIF(First(Fields!SaleOrderQty.Value, "DataSet1") &gt; "0", False, True)</Hidden>
               </Visibility>
               <Style>
-                <Border>
-                  <Style>None</Style>
-                </Border>
+                <Border />
                 <PaddingLeft>2pt</PaddingLeft>
                 <PaddingRight>2pt</PaddingRight>
                 <PaddingTop>2pt</PaddingTop>
@@ -2495,9 +2470,10 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>=Fields!Date.Value</Value>
+                      <Value>=Format(Fields!Date.Value, "dd/MM/yyyy hh:mm tt")</Value>
                       <Style>
                         <FontFamily />
+                        <FontSize>5pt</FontSize>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -2507,18 +2483,84 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>SaleOrderAmount</rd:DefaultName>
-              <Top>1.49583in</Top>
-              <Left>0.78526in</Left>
-              <Height>0.26111in</Height>
-              <Width>1.75755in</Width>
-              <ZIndex>8</ZIndex>
+              <Top>0.89465in</Top>
+              <Left>0.79509in</Left>
+              <Height>0.15903in</Height>
+              <Width>0.74057in</Width>
+              <ZIndex>7</ZIndex>
               <Visibility>
                 <Hidden>=IIF(First(Fields!SaleOrderQty.Value, "DataSet1") &gt; "0", False, True)</Hidden>
               </Visibility>
               <Style>
-                <Border>
-                  <Style>None</Style>
-                </Border>
+                <Border />
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Textbox Name="BillPaid18">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>=Parameters!POSAddress.Value</Value>
+                      <Style>
+                        <FontFamily />
+                        <FontSize>5pt</FontSize>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Center</TextAlign>
+                  </Style>
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>BillPaid</rd:DefaultName>
+              <Top>0.38056in</Top>
+              <Left>1.33309in</Left>
+              <Height>0.13542in</Height>
+              <Width>1.03754in</Width>
+              <ZIndex>8</ZIndex>
+              <Style>
+                <Border />
+                <VerticalAlign>Middle</VerticalAlign>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Textbox Name="BillPaid19">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>=Parameters!POSPhoneNumber.Value</Value>
+                      <Style>
+                        <FontFamily />
+                        <FontSize>5pt</FontSize>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Center</TextAlign>
+                  </Style>
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>BillPaid</rd:DefaultName>
+              <Top>0.53497in</Top>
+              <Left>1.33051in</Left>
+              <Height>0.13542in</Height>
+              <Width>1.03754in</Width>
+              <ZIndex>9</ZIndex>
+              <Style>
+                <Border />
+                <VerticalAlign>Middle</VerticalAlign>
                 <PaddingLeft>2pt</PaddingLeft>
                 <PaddingRight>2pt</PaddingRight>
                 <PaddingTop>2pt</PaddingTop>
@@ -2533,7 +2575,7 @@
           </Style>
         </PageHeader>
         <PageFooter>
-          <Height>1.2625in</Height>
+          <Height>0.30416in</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
           <Style>
@@ -2542,8 +2584,8 @@
             </Border>
           </Style>
         </PageFooter>
-        <PageHeight>12in</PageHeight>
-        <PageWidth>7in</PageWidth>
+        <PageHeight>6.1in</PageHeight>
+        <PageWidth>3.34in</PageWidth>
         <InteractiveHeight>5.845in</InteractiveHeight>
         <InteractiveWidth>4.135in</InteractiveWidth>
         <Style />
@@ -2575,11 +2617,35 @@
       <DataType>String</DataType>
       <Prompt>ReportParameter1</Prompt>
     </ReportParameter>
+    <ReportParameter Name="InvoiceSeries">
+      <DataType>String</DataType>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="InvoiceNumber">
+      <DataType>String</DataType>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="Macqt">
+      <DataType>String</DataType>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="Sobaomat">
+      <DataType>String</DataType>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="POSAddress">
+      <DataType>String</DataType>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="POSPhoneNumber">
+      <DataType>String</DataType>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
       <NumberOfColumns>4</NumberOfColumns>
-      <NumberOfRows>2</NumberOfRows>
+      <NumberOfRows>3</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
@@ -2610,6 +2676,36 @@
           <ColumnIndex>1</ColumnIndex>
           <RowIndex>1</RowIndex>
           <ParameterName>CustomerVatNumber</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>2</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>InvoiceSeries</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>3</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>InvoiceNumber</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>2</RowIndex>
+          <ParameterName>Macqt</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>2</RowIndex>
+          <ParameterName>Sobaomat</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>2</ColumnIndex>
+          <RowIndex>2</RowIndex>
+          <ParameterName>POSAddress</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>3</ColumnIndex>
+          <RowIndex>2</RowIndex>
+          <ParameterName>POSPhoneNumber</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>

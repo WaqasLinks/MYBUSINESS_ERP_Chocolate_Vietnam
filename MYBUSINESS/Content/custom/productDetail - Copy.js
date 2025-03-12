@@ -2,9 +2,10 @@
 //var products = []; //[['Ciplet', '10', '60'], ['Gaviscon', '85', '12'], ['Surficol', '110', '8']];
 var products = new Array();
 
-var supplierColumns = [{ name: 'Id', minWidth: '100px' }, { name: 'Name', minWidth: '320px' }, { name: 'Address', minWidth: '200px' }, { name: 'Balance', minWidth: '70px' }];
+var customerColumns = [{ name: 'Id', minWidth: '100px' }, { name: 'Name', minWidth: '320px' }, { name: 'Address', minWidth: '400px' }, { name: 'Balance', minWidth: '150px' }];
+
 //var products = []; //[['Ciplet', '10', '60'], ['Gaviscon', '85', '12'], ['Surficol', '110', '8']];
-var suppliers = new Array();
+var customers = new Array();
 var productsBarcodes = new Array();
 //var focusedBtnId = "";
 //var focusedBtnSno = "";
@@ -16,19 +17,17 @@ var _total = 0;
 var IsReturn = "false";
 
 
-function OnTypeSupplierName(param) {
+function OnTypeCustomerName(param) {
 
     $(param).mcautocomplete({
         showHeader: true,
-        columns: supplierColumns,
-        source: suppliers,
+        columns: customerColumns,
+        source: customers,
         select: function (event, ui) {
             this.value = (ui.item ? ui.item[1] : '');
             //productName = this.value;
-            //$('#idnCustomer').val(ui.item ? ui.item[0] : '');
-            //$('#customerAddress').val(ui.item ? ui.item[2] : '');
-            $('#idnSupplier').val(ui.item ? ui.item[0] : '');
-            $('#supplierAddress').val(ui.item ? ui.item[2] : '');
+            $('#idnCustomer').val(ui.item ? ui.item[0] : '');
+            $('#customerAddress').val(ui.item ? ui.item[2] : '');
             $('#PreviousBalance').val(ui.item ? ui.item[3] : '');
             //document.getElementById(clickedTextboxId).focus();
             update_itemTotal();

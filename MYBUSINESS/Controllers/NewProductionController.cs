@@ -158,7 +158,7 @@ namespace MYBUSINESS.Controllers
                 ViewBag.Suppliers = DAL.dbSuppliers;  // Assuming this contains the supplier list
 
             var products = db.Products
-       .Where(p => p.FinishedProduct == true)
+       .Where(p => p.PType == 4)
        .Select(p => new
        {
            Value = p.Id.ToString(),  // ID of the product
@@ -267,7 +267,7 @@ namespace MYBUSINESS.Controllers
      [Bind(Prefix = "NewProduction", Include = "Id,ProductionDate,ProductName,Unit,ProductId")] NewProduction newProduction,
      //[Bind(Prefix = "SubItem", Include = "Id,ParentProductId,ProductId,Quantity,Unit,AvailableInventory,QuantitytoPrepare,QuantityRequested")] List<SubItem> subItems,
      [Bind(Prefix = "SubItemProduction", Include = "Id,ParentProductId,ProductId,Quantity,Unit,AvailableInventory,QuantitytoPrepare,QuantityRequested,SubItemQty")] List<SubItemProduction> subItemProductions,
-     [Bind(Prefix = "QuantityToProduce", Include = "Id,ProductionQty,BOMId,ProductDetailId,Shape,CalculatedWeight,ProductId")] List<QuantityToProduce> quantityToProduces)
+     [Bind(Prefix = "QuantityToProduce", Include = "Id,ProductionQty,BOMId,ProductDetailId,Shape,CalculatedWeight,ProductId,Weight")] List<QuantityToProduce> quantityToProduces)
         {
             if (ModelState.IsValid)
             {
@@ -403,6 +403,9 @@ namespace MYBUSINESS.Controllers
 .Where(x => x.NewProductionId == newProduction.Id)
 .ToList();
 
+
+
+
             var totalWeight = quantityToProduce.Sum(x => x.CalculatedWeight) ?? 0;
 
 
@@ -411,14 +414,15 @@ namespace MYBUSINESS.Controllers
             //var subItems = db.SubItems.Where(s => s.ParentProductId == newProduction.ProductId).ToList();
             var subItemProductions = db.SubItemProductions.Where(s => s.NewProductionId == newProduction.Id).ToList();
             Console.WriteLine(newProduction.ProductionDate); // Debugging line
-            // Get the list of products
+                                                             // Get the list of products
             var products = db.Products
-                             .Where(p => p.Manufacturable == true)
-                             .Select(p => new { Value = p.Id.ToString(), Text = p.Name })
-                             .ToList();
+        .Where(p => p.PType == 4)
+        .Select(p => new { Value = p.Id.ToString(), Text = p.Name })
+        .ToList();
 
             // Pre-select the current product in the dropdown
             ViewBag.ProductList = new SelectList(products, "Value", "Text", newProduction.ProductId);
+
             ViewBag.ReadonlyMode = readonlyMode;
             // Prepare ViewModel (including SubItems if needed)
             var viewModel = new NewProductionViewModel
@@ -560,7 +564,7 @@ namespace MYBUSINESS.Controllers
     [Bind(Prefix = "SubItemProduction", Include = "Id,ParentProductId,ProductId,Quantity,Unit,AvailableInventory,QuantitytoPrepare,QuantityRequested")] List<SubItemProduction> subItemProductions)
 
         {
-            if (ModelState.IsValid)
+            
             {
                 // Fetch the existing NewProduction entity
                 var existingProduction = db.NewProductions.Find(model.NewProduction.Id);
@@ -703,7 +707,7 @@ namespace MYBUSINESS.Controllers
             //        PType = s.Product.PType == 1 ? "Variable" :
             //        s.Product.PType == 2 ? "Excess" :
             //        s.Product.PType == 3 ? "ByProduct" : "Unknown", // Default case
-            //        VariableProduct = s.Product.VariableProductId,
+            //        VariableProduct = s.Product.VarProdParentId,
             //    })
             //    .ToList();
             var subItems = db.SubItems
@@ -716,15 +720,16 @@ namespace MYBUSINESS.Controllers
         ProductName = s.Product != null ? s.Product.Name : "Unknown",
         s.Quantity,
         s.Unit,
-        manufacturable = s.Product != null && s.Product.Manufacturable, // Prevent null reference errors
-        Ingredient = s.Product != null && s.Product.Ingredient,
-        FinalProduct = s.Product != null && s.Product.FinishedProduct,
+        manufacturable = s.Product != null && s.Product.PType == 4, // Prevent null reference errors
+        Ingredient = s.Product != null && s.Product.PType == 5,
+        IntermediaryIngredient = s.Product != null && s.Product.PType == 6,
+        FinalProduct = s.Product != null && s.Product.PType == 4,
         PType = s.Product != null ?
             (s.Product.PType == 1 ? "Variable" :
              s.Product.PType == 2 ? "Excess" :
              s.Product.PType == 3 ? "ByProduct" : "Unknown")
             : "Unknown",
-        VariableProduct = s.Product != null ? s.Product.VariableProductId : (int?)null,
+        VariableProduct = s.Product != null ? s.Product.VarProdParentId : (int?)null,
     })
     .ToList();
 
@@ -1122,7 +1127,7 @@ namespace MYBUSINESS.Controllers
             ViewBag.Suppliers = DAL.dbSuppliers;  // Assuming this contains the supplier list
 
             var products = db.Products
-       .Where(p => p.Manufacturable == true)
+       .Where(p => p.PType == 4)
        .Select(p => new
        {
            Value = p.Id.ToString(),  // ID of the product

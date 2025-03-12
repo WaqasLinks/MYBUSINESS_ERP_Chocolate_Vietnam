@@ -25,6 +25,6 @@ namespace MYBUSINESS.Models
         public string CompanyName { get; set; }
         public string CompanyAddress { get; set; }
         public string CompanyTaxNumber { get; set; }
-        public Nullable<decimal> TaxInPercent { get; set; }
+        public decimal TaxInPercent { get; set; }
     }
 }

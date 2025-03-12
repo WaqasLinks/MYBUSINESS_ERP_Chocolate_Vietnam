@@ -26,6 +26,6 @@ namespace MYBUSINESS.Models
 
         public decimal CalculatedValue { get; set; }
         public string ProductType { get; set; } // ✅ New Property for PType
-
+  
     }
 }

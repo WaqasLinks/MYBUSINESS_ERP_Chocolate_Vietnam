@@ -312,7 +312,7 @@ namespace MYBUSINESS.Controllers
 
             PurchaseOrderViewModel purchaseOrderViewModel = new PurchaseOrderViewModel();
             purchaseOrderViewModel.Suppliers = DAL.dbSuppliers;
-            purchaseOrderViewModel.Products = DAL.dbProducts.Include(x => x.StoreProducts).Where(x => x.Saleable == true && x.IsService == false);
+            purchaseOrderViewModel.Products = DAL.dbProducts.Include(x => x.StoreProducts).Where(x => x.PType == 4 || x.PType == 7  && x.IsService == false);
             //purchaseOrderViewModel.FundingSources = db.FundingSources.ToList() ;
             ViewBag.FundingSources = new SelectList(db.Suppliers.Where(x => x.IsCreditor == true), "Id", "Name");//db.FundingSources.ToList(); ;
             ViewBag.BankAccounts = new SelectList(db.BankAccounts, "Id", "Name");
@@ -507,7 +507,7 @@ namespace MYBUSINESS.Controllers
             //return View(pO);
             PurchaseOrderViewModel purchaseOrderViewModel = new PurchaseOrderViewModel();
             purchaseOrderViewModel.Suppliers = DAL.dbSuppliers;
-            purchaseOrderViewModel.Products = DAL.dbProducts.Where(x => x.Saleable == true && x.IsService == false);
+            purchaseOrderViewModel.Products = DAL.dbProducts.Where(x => x.PType == 4 || x.PType == 7 && x.IsService == false);
             return View(purchaseOrderViewModel);
             //return View();
 
@@ -858,7 +858,7 @@ namespace MYBUSINESS.Controllers
             //return View(PO);
             PurchaseOrderViewModel purchaseOrderViewModel = new PurchaseOrderViewModel();
 
-            purchaseOrderViewModel.Products = DAL.dbProducts.Where(x => x.Saleable == true && x.IsService == false);
+            purchaseOrderViewModel.Products = DAL.dbProducts.Where(x => x.PType == 4 || x.PType == 7 && x.IsService == false);
             return View(purchaseOrderViewModel);
             //return View();
         }
@@ -955,7 +955,7 @@ namespace MYBUSINESS.Controllers
             }
             PurchaseOrderViewModel purchaseOrderViewModel = new PurchaseOrderViewModel();
             List<POD> pod = db.PODs.Where(x => x.POId == id).ToList();
-            purchaseOrderViewModel.Products = DAL.dbProducts.Where(x => x.Saleable == true && x.IsService == false);
+            purchaseOrderViewModel.Products = DAL.dbProducts.Where(x => x.PType == 4 || x.PType == 7 && x.IsService == false);
             purchaseOrderViewModel.Suppliers = DAL.dbSuppliers;
             purchaseOrderViewModel.PurchaseOrderDetail = pod;
             pO.Id = Encryption.Encrypt(pO.Id, "BZNS");

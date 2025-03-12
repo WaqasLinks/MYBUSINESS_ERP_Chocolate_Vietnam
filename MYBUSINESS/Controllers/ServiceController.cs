@@ -580,7 +580,7 @@ namespace MYBUSINESS.Controllers
 
             ServiceViewModel saleOrderViewModel = new ServiceViewModel();
             saleOrderViewModel.Customers = DAL.dbCustomers;
-            saleOrderViewModel.Products = DAL.dbProducts.Where(x => x.Saleable == true && x.IsService == true && x.ShowIn=="S");
+            saleOrderViewModel.Products = DAL.dbProducts.Where(x => x.PType == 4 || x.PType == 7 && x.IsService == true && x.ShowIn=="S");
             //bool IsReturn1 = true;
             ViewBag.IsReturn = IsReturn;
             //string isReturn1 = "true";
@@ -1018,7 +1018,7 @@ namespace MYBUSINESS.Controllers
             }
             ServiceViewModel saleOrderViewModel = new ServiceViewModel();
             List<ServiceDetail> sod = db.ServiceDetails.Where(x => x.SOId == id).ToList();
-            saleOrderViewModel.Products = DAL.dbProducts.Where(x => x.Saleable == true && x.IsService == true && x.ShowIn == "S");
+            saleOrderViewModel.Products = DAL.dbProducts.Where(x => x.PType == 4 || x.PType == 7 && x.IsService == true && x.ShowIn == "S");
             saleOrderViewModel.Customers = DAL.dbCustomers;
             saleOrderViewModel.SaleOrderDetail = sod;
             sO.Id = Encryption.Encrypt(sO.Id, "BZNS");
@@ -1264,7 +1264,7 @@ namespace MYBUSINESS.Controllers
             //return View(sO);
             ServiceViewModel saleOrderViewModel = new ServiceViewModel();
 
-            saleOrderViewModel.Products = DAL.dbProducts.Where(x => x.Saleable == true && x.IsService == true && x.ShowIn == "S");
+            saleOrderViewModel.Products = DAL.dbProducts.Where(x => x.PType == 4 || x.PType == 7 && x.IsService == true && x.ShowIn == "S");
             return View(saleOrderViewModel);
             //return View();
         }

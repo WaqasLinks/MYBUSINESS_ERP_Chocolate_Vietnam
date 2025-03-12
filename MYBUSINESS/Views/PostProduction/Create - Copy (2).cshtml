@@ -476,9 +476,9 @@ $('#productDropdown').change(function () {
         // Update the total weight dynamically
         updateTotalWeight(newWeight, previousWeight);
         $('#selectedProducts > tbody  > tr').each(function () {
-            const variableProdId = $(this).find("[name$='Product.VariableProductId']").val();
+            const variableProdId = $(this).find("[name$='Product.VarProdParentId']").val();
 
-            // Check if this row matches the VariableProductId you want to update
+            // Check if this row matches the VarProdParentId you want to update
             if (variableProductId === subItem.VariableProduct) {
                 // Get the quantity value for the current row
                 const quantity = parseFloat($(this).find("[name$='Quantity']").val()) || 0;
@@ -709,7 +709,7 @@ $('#productDropdown').change(function () {
                             <td>
                             <input type="text"
                                 id="Variable${subItem.VariableProduct}"
-                                name="SubItem[${index}].Product.VariableProductId"
+                                name="SubItem[${index}].Product.VarProdParentId"
                                 value="${subItem.VariableProduct}" />
                         </td>
                             `;

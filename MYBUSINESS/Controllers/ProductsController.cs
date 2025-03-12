@@ -157,7 +157,7 @@ namespace MYBUSINESS.Controllers
                                 {
                                     uploadingProduct.Id = maxId + u + 1;
                                     uploadingProduct.PerPack = 1;
-                                    uploadingProduct.Saleable = true;
+                                    uploadingProduct.PType = 4;
                                     uploadingProduct.IsService = false;
                                     uploadingProduct.Stock = 0;
                                     uploadingProduct.ShowIn = "P";
@@ -392,7 +392,7 @@ namespace MYBUSINESS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,StoreId,Category,Unit,Variable,Excess,ByProduct,PType,VariableProductId,Ingredient,FinishedProduct,Merchandise,IntermediaryIngredient")] Product product,
+        public ActionResult Create([Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,StoreId,Category,Unit,Variable,Excess,ByProduct,PType,VarProdParentId,Ingredient,FinishedProduct,Merchandise,IntermediaryIngredient,EInvoicePCode")] Product product,
         [Bind(Prefix = "ProductDetail", Include = "Id,ProductId,Shape,Weight")] List<ProductDetail> productDetails)
         {
             int productType = 0;
@@ -400,11 +400,11 @@ namespace MYBUSINESS.Controllers
             if (Request.Form["VariableProduct"] != null)
             {
                 productType |= 1;
-                product.Variable = true;
+                //product.Variable = true;
             }
             else
             {
-                product.Variable = false;
+                //product.Variable = false;
             }
             if (Request.Form["ExcessProduct"] != null)
             {
@@ -416,7 +416,22 @@ namespace MYBUSINESS.Controllers
             {
                 productType |= 3;
             }
-
+            if (Request.Form["FinishedProduct"] != null)
+            {
+                productType |= 4;
+            }
+            if (Request.Form["Ingredient"] != null)
+            {
+                productType |= 5;
+            }
+            if (Request.Form["IntermediaryIngredient"] != null)
+            {
+                productType |= 6;
+            }
+            if (Request.Form["Merchandise"] != null)
+            {
+                productType |= 7;
+            }
             // Set final PType
             product.PType = (byte)productType;
             //if (Request.Form["ExcessProduct"] != null) product.PType |= 2;
@@ -565,13 +580,14 @@ namespace MYBUSINESS.Controllers
                         };
             ViewBag.UnitTypeOptionList = myUnitTypeOptionList;
             var products = db.Products
-        .Where(p => p.Manufacturable == true)
-        .Select(p => new SelectListItem
-        {
-            Value = p.Id.ToString(),  // ID of the product
-            Text = p.Name            // Name of the product
-        })
-        .ToList();
+      .Select(p => new SelectListItem
+      {
+          Value = p.Id.ToString(),  // ID of the product
+          Text = p.Name,             // Name of the product
+          Selected = (p.Id == product.VarProdParentId)
+      })
+      .ToList();
+
             ViewBag.ProductList = products; // Use List<SelectListItem>
             return View(productViewModel);
         }
@@ -581,7 +597,7 @@ namespace MYBUSINESS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(
-    [Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,Category,Unit,Variable,Excess,ByProduct,PType,VariableProductId,Ingredient,FinishedProduct,Merchandise,IntermediaryIngredient")] Product product,
+    [Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,Category,Unit,Variable,Excess,ByProduct,PType,VarProdParentId,Ingredient,FinishedProduct,Merchandise,IntermediaryIngredient")] Product product,
     [Bind(Prefix = "ProductDetail", Include = "Id,ProductId,Shape,Weight")] List<ProductDetail> productDetails)
         {
             int productType = 0;
@@ -589,16 +605,39 @@ namespace MYBUSINESS.Controllers
             if (Request.Form["VariableProduct"] != null)
             {
                 productType |= 1;
-                product.Variable = true;
+                //product.Variable = true;
             }
             else
             {
-                product.Variable = false;
+                //product.Variable = false;
+            }
+            if (Request.Form["ExcessProduct"] != null)
+            {
+                productType |= 2;
             }
 
-            if (Request.Form["ExcessProduct"] != null) product.PType |= 2;
-            if (Request.Form["ByProduct"] != null) product.PType |= 4;
-
+            // Handle ByProduct
+            if (Request.Form["ByProduct"] != null)
+            {
+                productType |= 3;
+            }
+            if (Request.Form["FinishedProduct"] != null)
+            {
+                productType |= 4;
+            }
+            if (Request.Form["Ingredient"] != null)
+            {
+                productType |= 5;
+            }
+            if (Request.Form["IntermediaryIngredient"] != null)
+            {
+                productType |= 6;
+            }
+            if (Request.Form["Merchandise"] != null)
+            {
+                productType |= 7;
+            }
+            // Set final PType
             product.PType = (byte)productType;
             int? storeId = Session["StoreId"] as int?;
             if (storeId == null)
@@ -696,7 +735,7 @@ namespace MYBUSINESS.Controllers
             prod.SalePrice = 0;
             prod.Stock = 0;
 
-            prod.Saleable = true;
+            prod.PType = 4;
             return View(prod);
         }
 

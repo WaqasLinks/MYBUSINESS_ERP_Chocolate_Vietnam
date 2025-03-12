@@ -42,7 +42,6 @@ namespace MYBUSINESS.Models
         public virtual DbSet<LoanDetail> LoanDetails { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<MetaDetaDescription> MetaDetaDescriptions { get; set; }
-        public virtual DbSet<MyBusinessInfo> MyBusinessInfoes { get; set; }
         public virtual DbSet<Payment> Payments { get; set; }
         public virtual DbSet<PO> POes { get; set; }
         public virtual DbSet<POD> PODs { get; set; }
@@ -53,23 +52,24 @@ namespace MYBUSINESS.Models
         public virtual DbSet<RentDetail> RentDetails { get; set; }
         public virtual DbSet<Service> Services { get; set; }
         public virtual DbSet<ServiceDetail> ServiceDetails { get; set; }
-        public virtual DbSet<SO> SOes { get; set; }
         public virtual DbSet<SOD> SODs { get; set; }
         public virtual DbSet<Store> Stores { get; set; }
         public virtual DbSet<StoreProduct> StoreProducts { get; set; }
         public virtual DbSet<Supplier> Suppliers { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<UserAuthorization> UserAuthorizations { get; set; }
-        public virtual DbSet<QuantityToProduce> QuantityToProduces { get; set; }
         public virtual DbSet<ProductType> ProductTypes { get; set; }
         public virtual DbSet<PODReciver> PODRecivers { get; set; }
         public virtual DbSet<ProductionDetail> ProductionDetails { get; set; }
         public virtual DbSet<PostProduction> PostProductions { get; set; }
-        public virtual DbSet<NewProduction> NewProductions { get; set; }
         public virtual DbSet<ProductDetail> ProductDetails { get; set; }
         public virtual DbSet<SubItem> SubItems { get; set; }
-        public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<SubItemProduction> SubItemProductions { get; set; }
+        public virtual DbSet<QuantityToProduce> QuantityToProduces { get; set; }
+        public virtual DbSet<NewProduction> NewProductions { get; set; }
+        public virtual DbSet<SO> SOes { get; set; }
+        public virtual DbSet<MyBusinessInfo> MyBusinessInfoes { get; set; }
+        public virtual DbSet<Product> Products { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {
@@ -219,15 +219,6 @@ namespace MYBUSINESS.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spServiceReport_Result>("spServiceReport", saleOrderIDParameter);
         }
     
-        public virtual ObjectResult<spSOReport_Result> spSOReport(string saleOrderID)
-        {
-            var saleOrderIDParameter = saleOrderID != null ?
-                new ObjectParameter("SaleOrderID", saleOrderID) :
-                new ObjectParameter("SaleOrderID", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spSOReport_Result>("spSOReport", saleOrderIDParameter);
-        }
-    
         public virtual ObjectResult<spTest_Result> spTest(string param1)
         {
             var param1Parameter = param1 != null ?
@@ -235,6 +226,15 @@ namespace MYBUSINESS.Models
                 new ObjectParameter("Param1", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spTest_Result>("spTest", param1Parameter);
+        }
+    
+        public virtual ObjectResult<spSOReport_Result> spSOReport(string saleOrderID)
+        {
+            var saleOrderIDParameter = saleOrderID != null ?
+                new ObjectParameter("SaleOrderID", saleOrderID) :
+                new ObjectParameter("SaleOrderID", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spSOReport_Result>("spSOReport", saleOrderIDParameter);
         }
     }
 }

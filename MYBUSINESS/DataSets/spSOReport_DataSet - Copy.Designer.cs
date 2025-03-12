@@ -287,8 +287,6 @@ namespace MYBUSINESS.DataSets {
             
             private global::System.Data.DataColumn columnPaymentMethod;
             
-            private global::System.Data.DataColumn columnSaleOrderAmountWithVaT;
-            
             private global::System.Data.DataColumn columnName;
             
             private global::System.Data.DataColumn columnAddress;
@@ -344,6 +342,8 @@ namespace MYBUSINESS.DataSets {
             private global::System.Data.DataColumn columnDate;
             
             private global::System.Data.DataColumn columnRemarks;
+            
+            private global::System.Data.DataColumn columnSaleOrderAmountWithVaT;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
@@ -407,14 +407,6 @@ namespace MYBUSINESS.DataSets {
             public global::System.Data.DataColumn PaymentMethodColumn {
                 get {
                     return this.columnPaymentMethod;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn SaleOrderAmountWithVaTColumn {
-                get {
-                    return this.columnSaleOrderAmountWithVaT;
                 }
             }
             
@@ -644,6 +636,14 @@ namespace MYBUSINESS.DataSets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn SaleOrderAmountWithVaTColumn {
+                get {
+                    return this.columnSaleOrderAmountWithVaT;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -684,7 +684,6 @@ namespace MYBUSINESS.DataSets {
                         decimal SOSerial, 
                         decimal SaleOrderQty, 
                         string PaymentMethod, 
-                        decimal SaleOrderAmountWithVaT, 
                         string Name, 
                         string Address, 
                         string CustomerRemarks, 
@@ -711,15 +710,15 @@ namespace MYBUSINESS.DataSets {
                         decimal Discount, 
                         decimal Balance, 
                         decimal PrevBalance, 
-                        System.DateTime Date, 
-                        string Remarks) {
+                        string Date, 
+                        string Remarks, 
+                        string SaleOrderAmountWithVaT) {
                 spSOReportRow rowspSOReportRow = ((spSOReportRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         Id,
                         SOSerial,
                         SaleOrderQty,
                         PaymentMethod,
-                        SaleOrderAmountWithVaT,
                         Name,
                         Address,
                         CustomerRemarks,
@@ -747,7 +746,8 @@ namespace MYBUSINESS.DataSets {
                         Balance,
                         PrevBalance,
                         Date,
-                        Remarks};
+                        Remarks,
+                        SaleOrderAmountWithVaT};
                 rowspSOReportRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowspSOReportRow);
                 return rowspSOReportRow;
@@ -781,7 +781,6 @@ namespace MYBUSINESS.DataSets {
                 this.columnSOSerial = base.Columns["SOSerial"];
                 this.columnSaleOrderQty = base.Columns["SaleOrderQty"];
                 this.columnPaymentMethod = base.Columns["PaymentMethod"];
-                this.columnSaleOrderAmountWithVaT = base.Columns["SaleOrderAmountWithVaT"];
                 this.columnName = base.Columns["Name"];
                 this.columnAddress = base.Columns["Address"];
                 this.columnCustomerRemarks = base.Columns["CustomerRemarks"];
@@ -810,6 +809,7 @@ namespace MYBUSINESS.DataSets {
                 this.columnPrevBalance = base.Columns["PrevBalance"];
                 this.columnDate = base.Columns["Date"];
                 this.columnRemarks = base.Columns["Remarks"];
+                this.columnSaleOrderAmountWithVaT = base.Columns["SaleOrderAmountWithVaT"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -823,8 +823,6 @@ namespace MYBUSINESS.DataSets {
                 base.Columns.Add(this.columnSaleOrderQty);
                 this.columnPaymentMethod = new global::System.Data.DataColumn("PaymentMethod", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnPaymentMethod);
-                this.columnSaleOrderAmountWithVaT = new global::System.Data.DataColumn("SaleOrderAmountWithVaT", typeof(decimal), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnSaleOrderAmountWithVaT);
                 this.columnName = new global::System.Data.DataColumn("Name", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnName);
                 this.columnAddress = new global::System.Data.DataColumn("Address", typeof(string), null, global::System.Data.MappingType.Element);
@@ -877,10 +875,12 @@ namespace MYBUSINESS.DataSets {
                 base.Columns.Add(this.columnBalance);
                 this.columnPrevBalance = new global::System.Data.DataColumn("PrevBalance", typeof(decimal), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnPrevBalance);
-                this.columnDate = new global::System.Data.DataColumn("Date", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
+                this.columnDate = new global::System.Data.DataColumn("Date", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnDate);
                 this.columnRemarks = new global::System.Data.DataColumn("Remarks", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnRemarks);
+                this.columnSaleOrderAmountWithVaT = new global::System.Data.DataColumn("SaleOrderAmountWithVaT", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSaleOrderAmountWithVaT);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnId}, true));
                 this.columnId.AllowDBNull = false;
@@ -904,6 +904,8 @@ namespace MYBUSINESS.DataSets {
                 this.columnSaleType.ReadOnly = true;
                 this.columnSaleType.MaxLength = 1;
                 this.columnBillPaid.AllowDBNull = false;
+                this.columnDate.ReadOnly = true;
+                this.columnDate.MaxLength = 4000;
                 this.columnRemarks.MaxLength = 500;
             }
             
@@ -1101,22 +1103,6 @@ namespace MYBUSINESS.DataSets {
                 }
                 set {
                     this[this.tablespSOReport.PaymentMethodColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public decimal SaleOrderAmountWithVaT {
-                get {
-                    try {
-                        return ((decimal)(this[this.tablespSOReport.SaleOrderAmountWithVaTColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'SaleOrderAmountWithVaT\' in table \'spSOReport\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablespSOReport.SaleOrderAmountWithVaTColumn] = value;
                 }
             }
             
@@ -1533,10 +1519,10 @@ namespace MYBUSINESS.DataSets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public System.DateTime Date {
+            public string Date {
                 get {
                     try {
-                        return ((global::System.DateTime)(this[this.tablespSOReport.DateColumn]));
+                        return ((string)(this[this.tablespSOReport.DateColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
                         throw new global::System.Data.StrongTypingException("The value for column \'Date\' in table \'spSOReport\' is DBNull.", e);
@@ -1560,6 +1546,22 @@ namespace MYBUSINESS.DataSets {
                 }
                 set {
                     this[this.tablespSOReport.RemarksColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string SaleOrderAmountWithVaT {
+                get {
+                    try {
+                        return ((string)(this[this.tablespSOReport.SaleOrderAmountWithVaTColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'SaleOrderAmountWithVaT\' in table \'spSOReport\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablespSOReport.SaleOrderAmountWithVaTColumn] = value;
                 }
             }
             
@@ -1597,18 +1599,6 @@ namespace MYBUSINESS.DataSets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetPaymentMethodNull() {
                 this[this.tablespSOReport.PaymentMethodColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsSaleOrderAmountWithVaTNull() {
-                return this.IsNull(this.tablespSOReport.SaleOrderAmountWithVaTColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetSaleOrderAmountWithVaTNull() {
-                this[this.tablespSOReport.SaleOrderAmountWithVaTColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1934,6 +1924,18 @@ namespace MYBUSINESS.DataSets {
             public void SetRemarksNull() {
                 this[this.tablespSOReport.RemarksColumn] = global::System.Convert.DBNull;
             }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsSaleOrderAmountWithVaTNull() {
+                return this.IsNull(this.tablespSOReport.SaleOrderAmountWithVaTColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetSaleOrderAmountWithVaTNull() {
+                this[this.tablespSOReport.SaleOrderAmountWithVaTColumn] = global::System.Convert.DBNull;
+            }
         }
         
         /// <summary>
@@ -2099,7 +2101,6 @@ namespace MYBUSINESS.DataSets.spSOReport_DataSetTableAdapters {
             tableMapping.ColumnMappings.Add("SOSerial", "SOSerial");
             tableMapping.ColumnMappings.Add("SaleOrderQty", "SaleOrderQty");
             tableMapping.ColumnMappings.Add("PaymentMethod", "PaymentMethod");
-            tableMapping.ColumnMappings.Add("SaleOrderAmountWithVaT", "SaleOrderAmountWithVaT");
             tableMapping.ColumnMappings.Add("Name", "Name");
             tableMapping.ColumnMappings.Add("Address", "Address");
             tableMapping.ColumnMappings.Add("CustomerRemarks", "CustomerRemarks");

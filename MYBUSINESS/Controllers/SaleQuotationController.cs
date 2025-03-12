@@ -750,7 +750,7 @@ namespace MYBUSINESS.Controllers
             ViewBag.MalaysiaTime = DateTime.UtcNow.AddHours(8);
             SaleOrderViewModel saleOrderViewModel = new SaleOrderViewModel();
             saleOrderViewModel.Customers = DAL.dbCustomers;
-            saleOrderViewModel.Products = DAL.dbProducts.Where(x => x.Saleable == true);
+            saleOrderViewModel.Products = DAL.dbProducts.Where(x => x.PType == 4 || x.PType == 7);
             //bool IsReturn1 = true;
             ViewBag.IsReturn = IsReturn;
             //string isReturn1 = "true";
@@ -887,7 +887,7 @@ namespace MYBUSINESS.Controllers
                                 SalePrice = sod.SalePrice.Value,
                                 Stock = 0,
                                 totalPiece = 0,
-                                Saleable = true,
+                                PType = 4,
                                 PerPack = 1,
                                 ShowIn = "S"
                             };
@@ -1176,7 +1176,7 @@ namespace MYBUSINESS.Controllers
             }
             SaleOrderViewModel saleOrderViewModel = new SaleOrderViewModel();
             List<SOD> sod = db.SODs.Where(x => x.SOId == id).ToList();
-            saleOrderViewModel.Products = DAL.dbProducts.Where(x => x.Saleable == true);
+            saleOrderViewModel.Products = DAL.dbProducts.Where(x => x.PType == 4 || x.PType == 7);
             saleOrderViewModel.Customers = DAL.dbCustomers;
             saleOrderViewModel.SaleOrderDetail = sod;
             sO.Id = Encryption.Encrypt(sO.Id, "BZNS");
@@ -1458,7 +1458,7 @@ namespace MYBUSINESS.Controllers
             //return View(sO);
             SaleOrderViewModel saleOrderViewModel = new SaleOrderViewModel();
 
-            saleOrderViewModel.Products = DAL.dbProducts.Where(x => x.Saleable == true);
+            saleOrderViewModel.Products = DAL.dbProducts.Where(x => x.PType == 4 || x.PType == 7);
             return View(saleOrderViewModel);
             //return View();
         }

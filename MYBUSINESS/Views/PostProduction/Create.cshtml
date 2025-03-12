@@ -56,7 +56,7 @@
 model => model.PostProduction.ProductId,
 (SelectList)ViewBag.ProductList,
 "Select a Product",
-new { @class = "form-control product-dropdown", @id = "productDropdown" }
+new { @class = "form-control product-dropdown", @id = "productDropdown", @readonly = "readonly" }
 )
                             @Html.ValidationMessageFor(model => model.PostProduction.ProductId, "", new { @class = "text-danger" })
                         </div>
@@ -227,7 +227,7 @@ new { @class = "form-control product-dropdown", @id = "productDropdown" }
                     <div class="box-footer">
                         <input type="submit" id="CreateSO" value="Create" class="btn btn-primary" />
                         @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-secondary" })
-                        <button id="validateBtn" class="btn btn-primary" style="margin-left:250px;">Validate</button>
+                        <button id="validateBtn" class="btn btn-primary" style="margin-left: 250px; display: none;">Validate</button>
                     </div>
                 </div>
             </div>
@@ -265,7 +265,7 @@ new { @class = "form-control product-dropdown", @id = "productDropdown" }
                                     int sNo = 0;
                                     foreach (var item in Model.SubItemProduction)
                                     {
-                                        if (item.Product.Ingredient == true)
+                                        if (item.Product.PType == 5 || item.Product.PType == 6)
                                         {
                                             <tr>
                                                 <td id="SNo0">@(sNo + 1)</td>
@@ -336,11 +336,11 @@ new { @class = "form-control product-dropdown", @id = "productDropdown" }
                             <thead>
                                 <tr>
                                     <th style="width: 5%;">#</th>
-                                    <th style="width: 12%;">Name</th>
+                                    <th style="width: 20%;">Name</th>
                                     @*<th style="width: 12%;">Name</th>*@
-                                    <th style="width: 10%;">Qty</th>
+                                    <th style="width: 20%;">Qty</th>
                                     <th style="width: 10%;">Unit</th>
-                                    <th style="width: 20%;">P.Type</th>
+                                    <th style="width: 15%;">P.Type</th>
                                     @*<th style="width: 10%;">AvailableIn</th>*@
                                     @*<th style="width: 8%;">Unit</th>
         <th style="width: 8%;"></th>*@
@@ -352,7 +352,8 @@ new { @class = "form-control product-dropdown", @id = "productDropdown" }
                                     int sNo = 0;
                                     foreach (var item in Model.SubItemProduction)
                                     {
-                                        if (item.Product.FinishedProduct == true && item.Product.PType != 1)
+                                        //if (item.Product.FinishedProduct == true && item.Product.PType != 1)
+                                        if (item.Product != null &&  item.Product.PType == 2 || item.Product.PType == 3)
                                         {
                                             <tr>
                                                 <td id="SNo0">@(sNo + 1)</td>
@@ -364,15 +365,25 @@ new { @class = "form-control product-dropdown", @id = "productDropdown" }
                                                 @*<td><input type="text" autocomplete="off" value=@item.Quantity class="form-control production-qty" name="SubItemProduction[@sNo].Quantity" id="quantity@(sNo)"></td>*@
                                                 <td>
                                                     <input type="text" autocomplete="off" value="@item.Quantity"
-                                                           class="form-control production-qty"
+                                                           class="form-control"
                                                            name="SubItemProduction[@sNo].Quantity"
                                                            id="quantity@(sNo)"
-                                                           @(item.ProductType != 3 ? "readonly" : "")>
+                                                           >
                                                 </td>
 
                                                 <td><input type="text" readonly autocomplete="off" value=@item.Unit class="form-control" name="SubItemProduction[@sNo].Unit" id="unit@(sNo)"></td>
                                                 @*<td><input type="text" readonly autocomplete="off" value=@item.ProductType class="form-control" name="SubItemProduction[@sNo].ProductType" id="ptype@(sNo)"></td>*@
-                                                <td><input type="text" readonly autocomplete="off" value=@item.Product.PType class="form-control" name="SubItemProduction[@sNo].Product.PType" id="ptype@(sNo)"></td>
+                                                @*<td><input type="text" readonly autocomplete="off" value=@item.Product.PType class="form-control" name="SubItemProduction[@sNo].Product.PType" id="ptype@(sNo)"></td>*@
+                                                <td>
+                                                    <input type="text" readonly autocomplete="off"
+                                                           value="@(item.Product.PType == 1 ? "Variable" :
+item.Product.PType == 2 ? "Excess" :
+item.Product.PType == 3 ? "ByProduct" : "Unknown")"
+                                                           class="form-control"
+                                                           name="SubItemProduction[@sNo].Product.PType"
+                                                           id="ptype@(sNo)"
+                                                         >
+                                                </td>
 
 
 
@@ -763,7 +774,7 @@ $('#productDropdown').change(function () {
         </td>
         <td>
             <input type="hidden"
-                name="SubItemProduction[${index}].Product.VariableProductId"
+                name="SubItemProduction[${index}].Product.VarProdParentId"
                 value="${subItem.VariableProduct}" />
         </td>`;
                         }
