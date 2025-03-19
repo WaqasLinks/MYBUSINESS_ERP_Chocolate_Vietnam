@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<MYBUSINESS.Models.PO>
 
+
 @{
     /**/
 
@@ -171,38 +172,41 @@
                                             @*<td>
                                                     @Html.DisplayFor(modelItem => item.Employee.Login)
                                                 </td>*@
-                                            <td class="noPrint">
-                                                @*@Html.ActionLink("View", "Edit", new { id = item.Id }) |*@
+                                        <td class="noPrint">
+                                            @*@Html.ActionLink("View", "Edit", new { id = item.Id }) |*@
 
-                                                @{
+                                            @{
 
-                                                    @*if (LstMaxSerialNo != null && LstMaxSerialNo.ContainsValue((int)item.POSerial))
-                                                        {
-                                                            @Html.ActionLink("Update", "Edit", new { id = item.Id, update = true }, new { @class = "btn btn-info" })
-                                                        }
-                                                        else
-                                                        {
+                                                @*if (LstMaxSerialNo != null && LstMaxSerialNo.ContainsValue((int)item.POSerial))
+            {
+                @Html.ActionLink("Update", "Edit", new { id = item.Id, update = true }, new { @class = "btn btn-info" })
+            }
+            else
+            {
 
-                                                            @Html.ActionLink(whtieSpace + "View", "Edit", new { id = item.Id, update = false }, new { @class = "btn btn-info" })
-                                                        }*@
+                @Html.ActionLink(whtieSpace + "View", "Edit", new { id = item.Id, update = false }, new { @class = "btn btn-info" })
+            }*@
 
-                                                    if (currentUser.EmployeeTypeId == 0)
-                                                    {
-                                                        @Html.ActionLink("Update", "Edit", new { id = item.Id, update = true }, new { @class = "btn btn-info" })
-                                                    }
-                                                    else
-                                                    {
-                                                        @Html.ActionLink(whtieSpace + "View", "Edit", new { id = item.Id, update = false }, new { @class = "btn btn-info" })
-                                                    }
+                                                if (currentUser.EmployeeTypeId == 0)
+                                                {
+                                                    @Html.ActionLink("Update", "Edit", new { id = item.Id, update = true }, new { @class = "btn btn-info" })
 
+                                                    @Html.ActionLink("Receving", "Create", "POPRReciver", new { id = item.Id,  update = true },
+    new { @class = "btn btn-warning text-dark fw-bold" }) <!-- Yellow color for Post Production -->
                                                 }
-                                                |
+                                                else
+                                                {
+                                                    @Html.ActionLink(whtieSpace + "View", "Edit", new { id = item.Id, update = false }, new { @class = "btn btn-info" })
+                                                }
 
-                                                @Html.ActionLink("Print", "PrintSO3", new { id = item.Id }, new { @class = "btn btn-warning" })
-                                                @*|
-                                                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                                                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })*@
-                                            </td>
+                                            }
+                                            |
+
+                                            @Html.ActionLink("Print", "PrintSO3", new { id = item.Id }, new { @class = "btn btn-warning" })
+                                            @*|
+        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+        @Html.ActionLink("Delete", "Delete", new { id = item.Id })*@
+                                        </td>
                                         </tr>
                                         //Balance = TotalPOAmout - TotalPRAmout - BillPaid - Discount- PrevBalance;
                                     }

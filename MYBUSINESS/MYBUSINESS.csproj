@@ -513,6 +513,9 @@
     <Compile Include="Models\PODReciver.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\POReciver.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\PostProduction.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>

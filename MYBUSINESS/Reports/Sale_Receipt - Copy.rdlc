@@ -33,6 +33,10 @@
           <DataField>PaymentMethod</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="SaleOrderAmountWithVaT">
+          <DataField>SaleOrderAmountWithVaT</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
         <Field Name="Name">
           <DataField>Name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -139,7 +143,7 @@
         </Field>
         <Field Name="Date">
           <DataField>Date</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
+          <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
         <Field Name="Remarks">
           <DataField>Remarks</DataField>

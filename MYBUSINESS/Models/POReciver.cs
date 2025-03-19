@@ -12,12 +12,12 @@ namespace MYBUSINESS.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class PO
+    public partial class POReciver
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public PO()
+        public POReciver()
         {
-            this.PODs = new HashSet<POD>();
+            this.PODRecivers = new HashSet<PODReciver>();
         }
     
         public string Id { get; set; }
@@ -43,10 +43,9 @@ namespace MYBUSINESS.Models
         public Nullable<int> StoreId { get; set; }
         public string Status { get; set; }
     
-        public virtual BankAccount BankAccount { get; set; }
         public virtual Employee Employee { get; set; }
         public virtual Supplier Supplier { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<POD> PODs { get; set; }
+        public virtual ICollection<PODReciver> PODRecivers { get; set; }
     }
 }

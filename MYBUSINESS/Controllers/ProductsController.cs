@@ -392,7 +392,7 @@ namespace MYBUSINESS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,StoreId,Category,Unit,Variable,Excess,ByProduct,PType,VarProdParentId,Ingredient,FinishedProduct,Merchandise,IntermediaryIngredient,EInvoicePCode")] Product product,
+        public ActionResult Create([Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,StoreId,Category,Unit,Variable,Excess,ByProduct,PType,VarProdParentId,Ingredient,FinishedProduct,Merchandise,IntermediaryIngredient,EInvoicePCode,PVATName")] Product product,
         [Bind(Prefix = "ProductDetail", Include = "Id,ProductId,Shape,Weight")] List<ProductDetail> productDetails)
         {
             int productType = 0;
@@ -436,7 +436,12 @@ namespace MYBUSINESS.Controllers
             product.PType = (byte)productType;
             //if (Request.Form["ExcessProduct"] != null) product.PType |= 2;
             //if (Request.Form["ByProduct"] != null) product.PType |= 4;
+            decimal vatRate = 8m;
+            decimal finalSalePrice = product.SalePrice + (product.SalePrice * vatRate / 100);
+            product.SalePrice = finalSalePrice; // Updated SalePrice with VAT
 
+            // You can store the final price in the product's `SalePrice` or any other property that represents the price after VAT
+            product.SalePrice = finalSalePrice;
             //product.PType = (byte)productType;
             int? storeId = Session["StoreId"] as int?;
             //var storeId = Session["StoreId"] as string;
@@ -597,7 +602,7 @@ namespace MYBUSINESS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(
-    [Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,Category,Unit,Variable,Excess,ByProduct,PType,VarProdParentId,Ingredient,FinishedProduct,Merchandise,IntermediaryIngredient")] Product product,
+    [Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,Category,Unit,Variable,Excess,ByProduct,PType,VarProdParentId,Ingredient,FinishedProduct,Merchandise,IntermediaryIngredient,PVATName,ExcludedSalePrice")] Product product,
     [Bind(Prefix = "ProductDetail", Include = "Id,ProductId,Shape,Weight")] List<ProductDetail> productDetails)
         {
             int productType = 0;

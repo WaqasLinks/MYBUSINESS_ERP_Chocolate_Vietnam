@@ -29,7 +29,7 @@
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <div class="container" id="container">
-        @Html.HiddenFor(model => model.PurchaseOrder.Id)
+        @Html.HiddenFor(model => Model.PurchaseOrder.Id)
         <div class="table-wrapper">
             <div class="table-title">
                 <div class="row">

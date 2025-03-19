@@ -15,7 +15,7 @@ namespace MYBUSINESS.Models
     public partial class PODReciver
     {
         public decimal Auto { get; set; }
-        public string POId { get; set; }
+        public string POReciverId { get; set; }
         public Nullable<int> PODReciverId { get; set; }
         public Nullable<decimal> ProductId { get; set; }
         public Nullable<decimal> OpeningStock { get; set; }
@@ -28,8 +28,9 @@ namespace MYBUSINESS.Models
         public Nullable<System.DateTime> ExpiryDate { get; set; }
         public Nullable<System.DateTime> PurchasingDate { get; set; }
         public string Unit { get; set; }
+        public Nullable<decimal> QtyReceived { get; set; }
     
-        public virtual PO PO { get; set; }
+        public virtual POReciver POReciver { get; set; }
         public virtual Product Product { get; set; }
     }
 }

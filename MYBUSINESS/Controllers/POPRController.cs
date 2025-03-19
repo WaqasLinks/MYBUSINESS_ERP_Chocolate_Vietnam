@@ -73,48 +73,50 @@ namespace MYBUSINESS.Controllers
         //}
         public ActionResult Index()
         {
-            // Get StoreId from session
             int? storeId = Session["StoreId"] as int?;
+            //var storeId = Session["StoreId"] as string;
             if (storeId == null)
             {
                 return RedirectToAction("StoreNotFound", "UserManagement");
             }
+            //var storeId = Session["StoreId"] as string; //commented due to session issue
+            //if (storeId == null)
+            //{
+            //    return RedirectToAction("StoreNotFound", "UserManagement");
+            //}
+            //var parseId = int.Parse(storeId);
 
-            // ✅ Get the latest available year and month from database dynamically
-            var latestDate = db.POes.OrderByDescending(x => x.Date).Select(x => x.Date).FirstOrDefault();
+            DateTime PKDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pakistan Standard Time"));
+            var dtStartDate = new DateTime(PKDate.Year, PKDate.Month, 1);
+            var dtEndtDate = dtStartDate.AddMonths(1).AddSeconds(-1);
 
-            if (latestDate == null)
+            //IQueryable<PO> pOes = db.POes.Include(s => s.Supplier);
+            IQueryable<PO> pOes = db.POes.Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate && x.SupplierId > 0).Include(s => s.Supplier);
+            //pOes.ForEachAsync(m => m.Id = Encryption.Encrypt(m.Id, "BZNS"));
+            //var pOes = db.POes.Where(s => s.SaleReturn == false);
+            GetTotalBalance(ref pOes);
+            Dictionary<decimal, decimal> LstMaxSerialNo = new Dictionary<decimal, decimal>();
+            int thisSerial = 0;
+            foreach (PO itm in pOes)
             {
-                ViewBag.Message = "No records found!";
-                return View(new List<PO>()); // Return an empty list if no data is available
+                thisSerial = (int)itm.Supplier.POes.Max(x => x.POSerial);
+
+                if (!LstMaxSerialNo.ContainsKey((int)itm.SupplierId))
+                {
+                    LstMaxSerialNo.Add(itm.Supplier.Id, thisSerial);
+                }
+
+                //itm.Id = Encryption.Encrypt(itm.Id, "BZNS");
+                itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(itm.Id, "BZNS")));
             }
-
-            int year = latestDate.Value.Year;
-            int month = latestDate.Value.Month;
-
-            // ✅ Dynamically set the date range based on the latest available data
-            DateTime dtStartDate = new DateTime(year, month, 1, 0, 0, 0);
-            DateTime dtEndtDate = new DateTime(year, month, DateTime.DaysInMonth(year, month), 23, 59, 59);
-
-            // ✅ Fetch filtered data dynamically
-            var pOes = db.POes
-                .Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate && x.SupplierId > 0)
-                .Include(s => s.Supplier)
-                .ToList();
-
-            // ✅ Encrypt PO Ids
-            foreach (var po in pOes)
-            {
-                po.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(po.Id, "BZNS")));
-            }
-
-            // ✅ Pass data to View
+            ViewBag.LstMaxSerialno = LstMaxSerialNo;
+            ViewBag.Suppliers = DAL.dbSuppliers;
             ViewBag.StartDate = dtStartDate.ToString("dd-MMM-yyyy");
             ViewBag.EndDate = dtEndtDate.ToString("dd-MMM-yyyy");
-            ViewBag.Suppliers = DAL.dbSuppliers;
-
-            var filteredPOs = pOes.Where(x => x.StoreId == storeId).OrderByDescending(i => i.Date).ToList();
-            return View(filteredPOs);
+            var poess = pOes.Where(x => x.StoreId == storeId).OrderByDescending(i => i.Date).ToList();
+            //var poess = pOes.Where(x => x.StoreId == parseId).OrderByDescending(i => i.Date).ToList();//commented due to session issue
+            //var poess = pOes.OrderByDescending(i => i.Date).ToList();
+            return View(poess);
         }
 
         //public ActionResult SearchData(string custName, DateTime startDate, DateTime endDate)
@@ -910,6 +912,7 @@ namespace MYBUSINESS.Controllers
             return View(purchaseOrderViewModel);
             //return View();
         }
+
         private string Decode(string id)
         {
             byte[] BytesArr = id.Split('-').Select(byte.Parse).ToArray();
@@ -917,6 +920,11 @@ namespace MYBUSINESS.Controllers
             id = Encryption.Decrypt(id, "BZNS");
             return id;
         }
+
+
+
+
+
 
 
 
@@ -1062,6 +1070,9 @@ namespace MYBUSINESS.Controllers
             ViewBag.IsReturn = pO.PurchaseReturn.ToString().ToLower();
             return View(purchaseOrderViewModel);
         }
+
+
+
 
 
         // GET: POes/Delete/5

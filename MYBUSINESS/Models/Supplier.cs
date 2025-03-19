@@ -19,6 +19,7 @@ namespace MYBUSINESS.Models
         {
             this.Expenses = new HashSet<Expense>();
             this.Loans = new HashSet<Loan>();
+            this.PORecivers = new HashSet<POReciver>();
             this.POes = new HashSet<PO>();
         }
     
@@ -39,6 +40,8 @@ namespace MYBUSINESS.Models
         public virtual ICollection<Expense> Expenses { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Loan> Loans { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<POReciver> PORecivers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PO> POes { get; set; }
     }

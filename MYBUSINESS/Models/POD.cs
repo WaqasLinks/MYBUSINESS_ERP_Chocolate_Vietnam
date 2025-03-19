@@ -28,6 +28,7 @@ namespace MYBUSINESS.Models
         public Nullable<System.DateTime> ExpiryDate { get; set; }
         public Nullable<System.DateTime> PurchasingDate { get; set; }
         public string Unit { get; set; }
+        public Nullable<int> QtyReceived { get; set; }
     
         public virtual PO PO { get; set; }
         public virtual Product Product { get; set; }

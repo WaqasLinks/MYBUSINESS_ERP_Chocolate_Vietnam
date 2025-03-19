@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Drawing.Printing;
 using System.Linq;
 using System.Net;
@@ -22,6 +23,48 @@ namespace MYBUSINESS.Controllers
         private BusinessContext db = new BusinessContext();
         private DAL DAL = new DAL();
         // GET: POes
+        //public ActionResult Index()
+        //{
+        //    int? storeId = Session["StoreId"] as int?;
+        //    //var storeId = Session["StoreId"] as string;
+        //    if (storeId == null)
+        //    {
+        //        return RedirectToAction("StoreNotFound", "UserManagement");
+        //    }
+
+
+        //    DateTime PKDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pakistan Standard Time"));
+        //    var dtStartDate = new DateTime(PKDate.Year, PKDate.Month, 1);
+        //    var dtEndtDate = dtStartDate.AddMonths(1).AddSeconds(-1);
+
+        //    //IQueryable<PO> pOes = db.POes.Include(s => s.Supplier);
+        //    IQueryable<POReciver> pOes = db.PORecivers.Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate && x.SupplierId > 0).Include(s => s.Supplier);
+        //    //pOes.ForEachAsync(m => m.Id = Encryption.Encrypt(m.Id, "BZNS"));
+        //    //var pOes = db.POes.Where(s => s.SaleReturn == false);
+        //    //GetTotalBalance(ref pOes);
+        //    Dictionary<decimal, decimal> LstMaxSerialNo = new Dictionary<decimal, decimal>();
+        //    int thisSerial = 0;
+        //    foreach (POReciver itm in pOes)
+        //    {
+        //        thisSerial = (int)itm.Supplier.POes.Max(x => x.POSerial);
+
+        //        if (!LstMaxSerialNo.ContainsKey((int)itm.SupplierId))
+        //        {
+        //            LstMaxSerialNo.Add(itm.Supplier.Id, thisSerial);
+        //        }
+
+        //        //itm.Id = Encryption.Encrypt(itm.Id, "BZNS");
+        //        itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(itm.Id, "BZNS")));
+        //    }
+        //    ViewBag.LstMaxSerialno = LstMaxSerialNo;
+        //    ViewBag.Suppliers = DAL.dbSuppliers;
+        //    ViewBag.StartDate = dtStartDate.ToString("dd-MMM-yyyy");
+        //    ViewBag.EndDate = dtEndtDate.ToString("dd-MMM-yyyy");
+        //    var poess = pOes.Where(x => x.StoreId == storeId).OrderByDescending(i => i.Date).ToList();
+        //    //var poess = pOes.Where(x => x.StoreId == parseId).OrderByDescending(i => i.Date).ToList();//commented due to session issue
+        //    //var poess = pOes.OrderByDescending(i => i.Date).ToList();
+        //    return View(poess);
+        //}
         public ActionResult Index()
         {
             int? storeId = Session["StoreId"] as int?;
@@ -42,13 +85,13 @@ namespace MYBUSINESS.Controllers
             var dtEndtDate = dtStartDate.AddMonths(1).AddSeconds(-1);
 
             //IQueryable<PO> pOes = db.POes.Include(s => s.Supplier);
-            IQueryable<PO> pOes = db.POes.Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate && x.SupplierId > 0).Include(s => s.Supplier);
+            IQueryable<POReciver> pOes = db.PORecivers.Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate && x.SupplierId > 0).Include(s => s.Supplier);
             //pOes.ForEachAsync(m => m.Id = Encryption.Encrypt(m.Id, "BZNS"));
             //var pOes = db.POes.Where(s => s.SaleReturn == false);
-            GetTotalBalance(ref pOes);
+            //GetTotalBalance(ref pOes);
             Dictionary<decimal, decimal> LstMaxSerialNo = new Dictionary<decimal, decimal>();
             int thisSerial = 0;
-            foreach (PO itm in pOes)
+            foreach (POReciver itm in pOes)
             {
                 thisSerial = (int)itm.Supplier.POes.Max(x => x.POSerial);
 
@@ -69,6 +112,11 @@ namespace MYBUSINESS.Controllers
             //var poess = pOes.OrderByDescending(i => i.Date).ToList();
             return View(poess);
         }
+
+
+
+
+
         //public ActionResult SearchData(string custName, DateTime startDate, DateTime endDate)
 
         //public ActionResult SearchData(string custName, string startDate, string endDate)
@@ -287,48 +335,130 @@ namespace MYBUSINESS.Controllers
         }
 
         // GET: POes/Create
-        public ActionResult Create(string IsReturn)
-        {
-            int? storeId = Session["StoreId"] as int?;
-            //var storeId = Session["StoreId"] as string;
-            if (storeId == null)
-            {
-                return RedirectToAction("StoreNotFound", "UserManagement");
-            }
-            //var storeId = Session["StoreId"] as string; //commented due to session issue
-            //if (storeId == null)
-            //{
-            //    return RedirectToAction("StoreNotFound", "UserManagement");
-            //}
-            //var parseId = int.Parse(storeId);
-            //ViewBag.SupplierId = new SelectList(db.Suppliers, "Id", "Name");
-            //ViewBag.Products = db.Products;
+        //public ActionResult Create(string IsReturn)
+        //{
+        //    int? storeId = Session["StoreId"] as int?;
+        //    //var storeId = Session["StoreId"] as string;
+        //    if (storeId == null)
+        //    {
+        //        return RedirectToAction("StoreNotFound", "UserManagement");
+        //    }
+        //    //var storeId = Session["StoreId"] as string; //commented due to session issue
+        //    //if (storeId == null)
+        //    //{
+        //    //    return RedirectToAction("StoreNotFound", "UserManagement");
+        //    //}
+        //    //var parseId = int.Parse(storeId);
+        //    //ViewBag.SupplierId = new SelectList(db.Suppliers, "Id", "Name");
+        //    //ViewBag.Products = db.Products;
 
-            //int maxId = db.Suppliers.Max(p => p.Id);
-            decimal maxId = db.Suppliers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
-            maxId += 1;
+        //    //int maxId = db.Suppliers.Max(p => p.Id);
+        //    decimal maxId = db.Suppliers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
+        //    maxId += 1;
+        //    ViewBag.SuggestedNewSuppId = maxId;
+
+
+        //    PurchaseReciverOrderViewModel purchaseReciverOrderViewModel = new PurchaseReciverOrderViewModel();
+        //    purchaseReciverOrderViewModel.Suppliers = DAL.dbSuppliers;
+        //    purchaseReciverOrderViewModel.Products = DAL.dbProducts.Include(x => x.StoreProducts).Where(x => x.PType == 4 || x.PType == 7  && x.IsService == false);
+        //    //purchaseOrderViewModel.FundingSources = db.FundingSources.ToList() ;
+        //    ViewBag.FundingSources = new SelectList(db.Suppliers.Where(x => x.IsCreditor == true), "Id", "Name");//db.FundingSources.ToList(); ;
+        //    ViewBag.BankAccounts = new SelectList(db.BankAccounts, "Id", "Name");
+        //    ViewBag.MalaysiaTime = DateTime.UtcNow.AddHours(8);
+        //    ViewBag.IsReturn = IsReturn;
+        //    Supplier defaultSupplier = db.Suppliers.FirstOrDefault(x => x.IsCreditor == false);
+        //    ViewBag.DefaultSuppId = defaultSupplier.Id;
+        //    ViewBag.DefaultSuppName = defaultSupplier.Name;
+        //    ViewBag.ReportId = TempData["ReportId"] as string;
+        //    ViewBag.FutureTime = ViewBag.MalaysiaTime.AddMonths(3);
+        //    return View(purchaseReciverOrderViewModel);
+        //}
+        public ActionResult Create(string id, bool update)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            decimal maxId = db.Suppliers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id) + 1;
             ViewBag.SuggestedNewSuppId = maxId;
 
+            List<MySaleType> myOptionLst = new List<MySaleType> {
+        new MySaleType { Text = "Order", Value = "false" },
+        new MySaleType { Text = "Return", Value = "true" }
+    };
+            ViewBag.OptionLst = myOptionLst;
 
-            PurchaseOrderViewModel purchaseOrderViewModel = new PurchaseOrderViewModel();
-            purchaseOrderViewModel.Suppliers = DAL.dbSuppliers;
-            purchaseOrderViewModel.Products = DAL.dbProducts.Include(x => x.StoreProducts).Where(x => x.PType == 4 || x.PType == 7  && x.IsService == false);
-            //purchaseOrderViewModel.FundingSources = db.FundingSources.ToList() ;
-            ViewBag.FundingSources = new SelectList(db.Suppliers.Where(x => x.IsCreditor == true), "Id", "Name");//db.FundingSources.ToList(); ;
+            List<MyPaymentMethod> myPaymentOptionLst = new List<MyPaymentMethod> {
+        new MyPaymentMethod { Text = "Cash", Value = "Cash" },
+        new MyPaymentMethod { Text = "Online", Value = "Online" },
+        new MyPaymentMethod { Text = "Cheque", Value = "Cheque" },
+        new MyPaymentMethod { Text = "Other", Value = "Other" }
+    };
+            ViewBag.PaymentMethodOptionLst = myPaymentOptionLst;
+
+            List<MyUnitType> myUnitTypeOptionList = new List<MyUnitType> {
+        new MyUnitType { Text = "Piece", Value = "false" },
+        new MyUnitType { Text = "Pack", Value = "true" }
+    };
+            ViewBag.UnitTypeOptionList = myUnitTypeOptionList;
+
+            string iid = Decode(id);
+            PO pO = db.POes.Find(iid);
+            if (pO == null)
+            {
+                return HttpNotFound();
+            }
+
+            List<POD> pod = db.PODs.Where(x => x.POId == iid).ToList();
+
+            PurchaseReciverOrderViewModel purchaseReciverOrderViewModel = new PurchaseReciverOrderViewModel
+            {
+                Products = DAL.dbProducts.Where(x => (x.PType == 4 || x.PType == 7) && !x.IsService),
+                Suppliers = DAL.dbSuppliers,
+                PurchaseOrderDetail = pod
+            };
+
+            pO.Id = Encryption.Encrypt(pO.Id, "BZNS");
+            purchaseReciverOrderViewModel.PurchaseOrder = pO;
+
+            //int orderQty = 0, orderQtyPiece = 0, returnQty = 0, returnQtyPiece = 0;
+            //foreach (var item in pod)
+            //{
+            //    if (!pO.PurchaseReturn)
+            //    {
+            //        if (item.IsPack) orderQty += (int)item.Quantity;
+            //        else orderQtyPiece += (int)item.Quantity;
+            //    }
+            //    else
+            //    {
+            //        if (item.IsPack) returnQty += (int)item.Quantity;
+            //        else returnQtyPiece += (int)item.Quantity;
+            //    }
+            //}
+
+            ViewBag.FundingSources = new SelectList(db.Suppliers.Where(x => x.IsCreditor == true), "Id", "Name");
             ViewBag.BankAccounts = new SelectList(db.BankAccounts, "Id", "Name");
-            ViewBag.MalaysiaTime = DateTime.UtcNow.AddHours(8);
-            ViewBag.IsReturn = IsReturn;
-            Supplier defaultSupplier = db.Suppliers.FirstOrDefault(x => x.IsCreditor == false);
-            ViewBag.DefaultSuppId = defaultSupplier.Id;
-            ViewBag.DefaultSuppName = defaultSupplier.Name;
-            ViewBag.ReportId = TempData["ReportId"] as string;
-            return View(purchaseOrderViewModel);
+            //ViewBag.orderQty = orderQty;
+            //ViewBag.orderQtyPiece = orderQtyPiece;
+            //ViewBag.returnQty = returnQty;
+            //ViewBag.returnQtyPiece = returnQtyPiece;
+            ViewBag.SupplierName = pO.Supplier.Name;
+            ViewBag.SupplierAddress = pO.Supplier.Address;
+            ViewBag.SubTotal = (decimal)(pO.PurchaseOrderAmount - pO.Discount);
+            ViewBag.Total = ViewBag.SubTotal + (decimal)pO.PrevBalance;
+            ViewBag.IsUpdate = update;
+            ViewBag.IsReturn = pO.PurchaseReturn.ToString().ToLower();
+            ViewBag.MalaysiaTime = DateTime.Now;  // Current DateTime (Malaysia Time)
+            ViewBag.FutureTime = DateTime.Now.AddMonths(3);  // 3 Months Ahead for Expiry
+            return View(purchaseReciverOrderViewModel);
         }
+
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Prefix = "Supplier", Include = "Name,Address")] Supplier Supplier, [Bind(Prefix = "PurchaseOrder", Include = "BillAmount,Balance,PrevBalance,BillPaid,Discount,SupplierId,Remarks,Remarks2,PaymentMethod,PaymentDetail,PurchaseReturn,FundingSourceId,BankAccountId,Date")] PO pO, [Bind(Prefix = "PurchaseOrderDetail", Include = "ProductId,Quantity,SaleType,PerPack,IsPack,PurchasePrice,ExpiryDate,PurchasingDate,Unit")] List<POD> pOD)
+        public ActionResult Create([Bind(Prefix = "Supplier", Include = "Name,Address")] Supplier Supplier, [Bind(Prefix = "PurchaseOrderReciver", Include = "BillAmount,Balance,PrevBalance,BillPaid,Discount,SupplierId,Remarks,Remarks2,PaymentMethod,PaymentDetail,PurchaseReturn,FundingSourceId,BankAccountId,Date")] POReciver pOReciver, [Bind(Prefix = "PurchaseReciverOrderDetail", Include = "ProductId,Quantity,SaleType,PerPack,IsPack,PurchasePrice,ExpiryDate,PurchasingDate,Unit,QtyReceived")] List<PODReciver> pODRecivers)
         {
             //PO pO = new PO();
             if (ModelState.IsValid)
@@ -345,7 +475,7 @@ namespace MYBUSINESS.Controllers
                 //    return RedirectToAction("StoreNotFound", "UserManagement");
                 //}
                 //var parseId = int.Parse(storeId);
-                Supplier supp = db.Suppliers.FirstOrDefault(x => x.Id == pO.SupplierId);
+                Supplier supp = db.Suppliers.FirstOrDefault(x => x.Id == pOReciver.SupplierId);
                 if (supp == null)
                 {//its means new customer
                     //pO.SupplierId = 10;
@@ -353,7 +483,7 @@ namespace MYBUSINESS.Controllers
                     decimal maxId = db.Suppliers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
                     maxId += 1;
                     Supplier.Id = maxId;
-                    Supplier.Balance = pO.Balance;
+                    Supplier.Balance = pOReciver.Balance;
                     Supplier.StoreId = storeId;
                     //Supplier.StoreId = parseId; //commented due to session issue
                     db.Suppliers.Add(Supplier);
@@ -364,7 +494,7 @@ namespace MYBUSINESS.Controllers
                     //Supplier.Id = (int)pO.SupplierId;
                     //supp.StoreId = parseId; //commented due to session issue
                     supp.StoreId = storeId;
-                    supp.Balance = pO.Balance;
+                    supp.Balance = pOReciver.Balance;
                     db.Entry(supp).State = EntityState.Modified;
                     //db.SaveChanges();
 
@@ -377,97 +507,97 @@ namespace MYBUSINESS.Controllers
                 }
 
                 ////////////////////////////////////////
-                BankAccount bankAccount = db.BankAccounts.FirstOrDefault(x => x.Id == pO.BankAccountId);
-                bankAccount.Balance -= pO.BillPaid;
-                db.BankAccounts.Attach(bankAccount);
-                db.Entry(bankAccount).Property(x => x.Balance).IsModified = true;
+                //BankAccount bankAccount = db.BankAccounts.FirstOrDefault(x => x.Id == pOReciver.BankAccountId);
+                //bankAccount.Balance -= pOReciver.BillPaid;
+                //db.BankAccounts.Attach(bankAccount);
+                //db.Entry(bankAccount).Property(x => x.Balance).IsModified = true;
                 ////////////////////////////////////////
                 //int maxId = db.POes.Max(p => p.Auto);
                 decimal maxId1 = (int)db.POes.DefaultIfEmpty().Max(p => p == null ? 0 : p.POSerial);
                 maxId1 += 1;
-                pO.POSerial = maxId1;
+                pOReciver.POSerial = maxId1;
                 //pO.Date = DateTime.Now;
-                if (string.IsNullOrEmpty(Convert.ToString(pO.Date)))
+                if (string.IsNullOrEmpty(Convert.ToString(pOReciver.Date)))
                 {
-                    pO.Date = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pakistan Standard Time"));
+                    pOReciver.Date = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pakistan Standard Time"));
                 }
                 //pO.SaleReturn = false;
-                pO.Id = System.Guid.NewGuid().ToString().ToUpper();
-                pO.PurchaseOrderAmount = 0;
+                pOReciver.Id = System.Guid.NewGuid().ToString().ToUpper();
+                pOReciver.PurchaseOrderAmount = 0;
 
-                pO.PurchaseOrderQty = 0;
-                pO.StoreId = storeId;
+                pOReciver.PurchaseOrderQty = 0;
+                pOReciver.StoreId = storeId;
                 //pO.StoreId = parseId; //commented due to session issue
-                pO.StoreId = 1;
+                pOReciver.StoreId = 1;
                 Employee emp = (Employee)Session["CurrentUser"];
-                pO.EmployeeId = emp.Id;
-                db.POes.Add(pO);
+                pOReciver.EmployeeId = emp.Id;
+                db.PORecivers.Add(pOReciver);
                 //db.SaveChanges();
                 int sno = 0;
-                if (pOD != null)
+                if (pODRecivers != null)
                 {
                     //pOD.RemoveAll(so => so.ProductId == null);
-                    foreach (POD pod in pOD)
+                    foreach (PODReciver pod in pODRecivers)
                     {
                         sno += 1;
-                        pod.PODId = sno;
-                        pod.PO = pO;
-                        pod.POId = pO.Id;
+                        pod.PODReciverId = sno;
+                        //pod.PO = pOReciver;
+                        pod.POReciverId = pOReciver.Id;
 
                         Product product = db.Products.FirstOrDefault(x => x.Id == pod.ProductId);
 
                         //dont do this. when user made a bill and chnage sale price. it does not reflect in bill and calculations geting wrong
-                        //pod.PurchasePrice = product.PurchasePrice;
+                        pod.PurchasePrice = product.PurchasePrice;
                         if (pod.Quantity == null) { pod.Quantity = 0; }
                         pod.OpeningStock = product.Stock;
                         pod.PerPack = 1;
-                        if (pod.SaleType == false)//purchase
-                        {
+                        //if (pod.SaleType == false)//purchase
+                        //{
 
-                            if (pod.IsPack == false)
-                            {//piece
-                                pO.PurchaseOrderAmount += (decimal)(pod.Quantity * pod.PurchasePrice);
-                                //int pieceSold = (int)(sod.Quantity * product.Stock);
-                                decimal qty = (decimal)pod.Quantity;// / (decimal)product.PerPack;
-                                product.Stock += qty;
+                        //    if (pod.IsPack == false)
+                        //    {//piece
+                        //        pO.PurchaseOrderAmount += (decimal)(pod.Quantity * pod.PurchasePrice);
+                        //        //int pieceSold = (int)(sod.Quantity * product.Stock);
+                        //        decimal qty = (decimal)pod.Quantity;// / (decimal)product.PerPack;
+                        //        product.Stock += qty;
 
-                                pO.PurchaseOrderQty += qty;//(int)sod.Quantity;
+                        //        pO.PurchaseOrderQty += qty;//(int)sod.Quantity;
 
-                            }
-                            else
-                            {//pack
+                        //    }
+                        //    else
+                        //    {//pack
 
-                                pO.PurchaseOrderAmount += (decimal)(pod.Quantity * pod.PurchasePrice * pod.PerPack);
-                                product.Stock += (int)pod.Quantity * pod.PerPack;
+                        //        pO.PurchaseOrderAmount += (decimal)(pod.Quantity * pod.PurchasePrice * pod.PerPack);
+                        //        product.Stock += (int)pod.Quantity * pod.PerPack;
 
-                                pO.PurchaseOrderQty += (int)pod.Quantity * pod.PerPack;
+                        //        pO.PurchaseOrderQty += (int)pod.Quantity * pod.PerPack;
 
-                            }
+                        //    }
 
-                        }
-                        else//return
-                        {
-                            if (pod.IsPack == false)
-                            {
-                                pO.PurchaseOrderAmount += (decimal)(pod.Quantity * pod.PurchasePrice);
-                                decimal qty = (decimal)pod.Quantity;// / (decimal)product.PerPack;
-                                product.Stock -= qty;
-                                pO.PurchaseOrderQty += qty;//(int)sod.Quantity;
+                        //}
+                        //else//return
+                        //{
+                        //    if (pod.IsPack == false)
+                        //    {
+                        //        pO.PurchaseOrderAmount += (decimal)(pod.Quantity * pod.PurchasePrice);
+                        //        decimal qty = (decimal)pod.Quantity;// / (decimal)product.PerPack;
+                        //        product.Stock -= qty;
+                        //        pO.PurchaseOrderQty += qty;//(int)sod.Quantity;
 
-                            }
-                            else
-                            {
-                                pO.PurchaseOrderAmount += (decimal)(pod.Quantity * pod.PurchasePrice * pod.PerPack);
-                                product.Stock -= (int)pod.Quantity * pod.PerPack;
+                        //    }
+                        //    else
+                        //    {
+                        //        pO.PurchaseOrderAmount += (decimal)(pod.Quantity * pod.PurchasePrice * pod.PerPack);
+                        //        product.Stock -= (int)pod.Quantity * pod.PerPack;
 
-                                pO.PurchaseOrderQty += (int)pod.Quantity * pod.PerPack;
+                        //        pO.PurchaseOrderQty += (int)pod.Quantity * pod.PerPack;
 
-                            }
+                        //    }
 
-                        }
+                        //}
 
                     }
-                    db.PODs.AddRange(pOD);
+                    db.PODRecivers.AddRange(pODRecivers);
                 }
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -494,21 +624,21 @@ namespace MYBUSINESS.Controllers
                 /////////////////////////////////////
 
 
-                string POId = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(pO.Id, "BZNS")));
+                string POId = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(pOReciver.Id, "BZNS")));
                 //return PrintSO(POId);
                 //return PrintSO3(POId);
                 //return RedirectToAction("PrintSO3", new { id = POId });
-                TempData["ReportId"] = pO.Id;
+                TempData["ReportId"] = pOReciver.Id;
                 return RedirectToAction("Create", new { IsReturn = "false" });
                 //return RedirectToAction("Index");
             }
 
             //ViewBag.SupplierId = new SelectList(db.Suppliers, "Id", "Name", pO.SupplierId);
             //return View(pO);
-            PurchaseOrderViewModel purchaseOrderViewModel = new PurchaseOrderViewModel();
-            purchaseOrderViewModel.Suppliers = DAL.dbSuppliers;
-            purchaseOrderViewModel.Products = DAL.dbProducts.Where(x => x.PType == 4 || x.PType == 7 && x.IsService == false);
-            return View(purchaseOrderViewModel);
+            PurchaseReciverOrderViewModel purchaseReciverOrderViewModel = new PurchaseReciverOrderViewModel();
+            purchaseReciverOrderViewModel.Suppliers = DAL.dbSuppliers;
+            purchaseReciverOrderViewModel.Products = DAL.dbProducts.Where(x => x.PType == 4 || x.PType == 7 && x.IsService == false);
+            return View(purchaseReciverOrderViewModel);
             //return View();
 
         }
@@ -874,6 +1004,253 @@ namespace MYBUSINESS.Controllers
 
 
         // GET: POes/Edit/5
+        //public ActionResult Edit(string id, bool update)
+        //{
+
+        //    if (id == null)
+        //    {
+
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+
+        //    //byte[] BytesArr = id.Split('-').Select(byte.Parse).ToArray();
+        //    //id = new string( Encoding.UTF8.GetString(BytesArr).ToCharArray());
+        //    //id = Encryption.Decrypt(id,"BZNS");
+
+        //    decimal maxId = db.Suppliers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
+        //    maxId += 1;
+        //    ViewBag.SuggestedNewSuppId = maxId;
+
+        //    List<MySaleType> myOptionLst = new List<MySaleType> {
+        //                    new MySaleType {
+        //                        Text = "Order",
+        //                        Value = "false"
+        //                    },
+        //                    new MySaleType {
+        //                        Text = "Return",
+        //                        Value = "true"
+        //                    }
+        //                };
+        //    ViewBag.OptionLst = myOptionLst;
+
+        //    ////////////////
+        //    List<MyPaymentMethod> myPaymentOptionLst = new List<MyPaymentMethod> {
+        //                    new MyPaymentMethod {
+        //                        Text = "Cash",
+        //                        Value = "Cash"
+        //                    },
+        //                    new MyPaymentMethod {
+        //                        Text = "Online",
+        //                        Value = "Online"
+        //                    },
+        //                    new MyPaymentMethod {
+        //                        Text = "Cheque",
+        //                        Value = "Cheque"
+        //                    },
+        //                    new MyPaymentMethod {
+        //                        Text = "Other",
+        //                        Value = "Other"
+        //                    }
+        //                };
+
+        //    ViewBag.PaymentMethodOptionLst = myPaymentOptionLst;
+
+        //    List<MyUnitType> myUnitTypeOptionList = new List<MyUnitType> {
+        //                    new MyUnitType {
+        //                        Text = "Piece",
+        //                        Value = "false"
+        //                    },
+        //                    new MyUnitType {
+        //                        Text = "Pack",
+        //                        Value = "true"
+        //                    }
+        //                };
+
+        //    ViewBag.UnitTypeOptionList = myUnitTypeOptionList;
+        //    string iid = Decode(id);
+        //    //Payment pmnt = db.Payments.Where(x => x.SOId == iid).FirstOrDefault();
+        //    //if (pmnt != null)
+        //    //{
+        //    //    ViewBag.paymentMethod = pmnt.PaymentMethod;
+        //    //    ViewBag.paymentRemarks = pmnt.Remarks;
+        //    //}
+        //    ///////////////////
+
+        //    id = Decode(id);
+
+        //    POReciver pO = db.PORecivers.Find(id);
+        //    if (pO == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    PurchaseReciverOrderViewModel purchaseReciverOrderViewModel = new PurchaseReciverOrderViewModel();
+        //    List<PODReciver> podRecivers = db.PODRecivers.Where(x => x.POReciverId == id).ToList();
+        //    purchaseReciverOrderViewModel.Products = DAL.dbProducts.Where(x => x.PType == 4 || x.PType == 7 && x.IsService == false);
+        //    purchaseReciverOrderViewModel.Suppliers = DAL.dbSuppliers;
+        //    purchaseReciverOrderViewModel.PurchaseOrderDetail = pod;
+        //    pO.Id = Encryption.Encrypt(pO.Id, "BZNS");
+        //    //purchaseReciverOrderViewModel.PurchaseOrder = pOReciver;
+        //    int orderQty = 0;
+        //    int orderQtyPiece = 0;//orderQtyPiece 'P for piece' 
+        //    int returnQty = 0;
+        //    int returnQtyPiece = 0;//orderQtyPiece 'P for piece' 
+        //    foreach (var item in pod)
+        //    {
+        //        if (pO.PurchaseReturn == false)
+        //        {
+        //            if (item.IsPack == true)
+        //            {//Pack
+        //                orderQty += (int)item.Quantity;
+        //            }
+        //            else
+        //            {//Item
+        //                orderQtyPiece += (int)item.Quantity;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (item.IsPack == true)
+        //            {//Pack
+        //                returnQty += (int)item.Quantity;
+        //            }
+        //            else
+        //            {//Item
+        //                returnQtyPiece += (int)item.Quantity;
+        //            }
+
+        //        }
+
+        //    }
+
+        //    //List<SelectListItem> FundingSources = new List<SelectListItem>();
+        //    //foreach (FundingSource fundingSource in db.FundingSources)
+        //    //{
+        //    //    FundingSources.Add(new SelectListItem() { Text = fundingSource.Source, Value = fundingSource.Id.ToString() });
+        //    //}
+        //    //ViewBag.FundingSources = db.Suppliers.Where(x => x.IsCreditor == true).ToList();//FundingSources;
+        //    ViewBag.FundingSources = new SelectList(db.Suppliers.Where(x => x.IsCreditor == true), "Id", "Name");//db.FundingSources.ToList(); ;
+        //    ViewBag.BankAccounts = new SelectList(db.BankAccounts, "Id", "Name");
+        //    ViewBag.orderQty = orderQty;
+        //    ViewBag.orderQtyPiece = orderQtyPiece;
+        //    ViewBag.returnQty = returnQty;
+        //    ViewBag.returnQtyPiece = returnQtyPiece;
+        //    //ViewBag.SupplierId = new SelectList(db.Suppliers, "Id", "Name", sO.SupplierId);
+        //    ViewBag.SupplierName = pO.Supplier.Name;
+        //    ViewBag.SupplierAddress = pO.Supplier.Address;
+        //    decimal subTotal = (decimal)(pO.PurchaseOrderAmount - pO.Discount);
+        //    ViewBag.SubTotal = subTotal;
+        //    ViewBag.Total = subTotal + (decimal)pO.PrevBalance;
+        //    ViewBag.IsUpdate = update;
+        //    ViewBag.IsReturn = pO.PurchaseReturn.ToString().ToLower();
+        //    return View(purchaseReciverOrderViewModel);
+        //}
+
+        //    public ActionResult Edit(string id, bool update)
+        //    {
+        //        if (id == null)
+        //        {
+        //            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //        }
+
+        //        decimal maxId = db.Suppliers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
+        //        maxId += 1;
+        //        ViewBag.SuggestedNewSuppId = maxId;
+
+        //        List<MySaleType> myOptionLst = new List<MySaleType>
+        //{
+        //    new MySaleType { Text = "Order", Value = "false" },
+        //    new MySaleType { Text = "Return", Value = "true" }
+        //};
+        //        ViewBag.OptionLst = myOptionLst;
+
+        //        List<MyPaymentMethod> myPaymentOptionLst = new List<MyPaymentMethod>
+        //{
+        //    new MyPaymentMethod { Text = "Cash", Value = "Cash" },
+        //    new MyPaymentMethod { Text = "Online", Value = "Online" },
+        //    new MyPaymentMethod { Text = "Cheque", Value = "Cheque" },
+        //    new MyPaymentMethod { Text = "Other", Value = "Other" }
+        //};
+        //        ViewBag.PaymentMethodOptionLst = myPaymentOptionLst;
+
+        //        List<MyUnitType> myUnitTypeOptionList = new List<MyUnitType>
+        //{
+        //    new MyUnitType { Text = "Piece", Value = "false" },
+        //    new MyUnitType { Text = "Pack", Value = "true" }
+        //};
+        //        ViewBag.UnitTypeOptionList = myUnitTypeOptionList;
+
+        //        string decodedId = Decode(id);
+        //        id = Decode(id);
+
+        //        POReciver pO = db.PORecivers.Find(id);
+        //        if (pO == null)
+        //        {
+        //            return HttpNotFound();
+        //        }
+
+        //        PurchaseReciverOrderViewModel purchaseReciverOrderViewModel = new PurchaseReciverOrderViewModel();
+        //        //{
+        //        //    PurchaseOrderReciver = pO
+        //        //};
+        //        List<PODReciver> podRecivers = db.PODRecivers.Where(x => x.POReciverId == id).ToList();
+
+        //        purchaseReciverOrderViewModel.Products = DAL.dbProducts.Where(x => x.PType == 4 || x.PType == 7 && x.IsService == false);
+        //        purchaseReciverOrderViewModel.Suppliers = DAL.dbSuppliers;
+        //        purchaseReciverOrderViewModel.PurchaseReciverOrderDetail = podRecivers;
+        //        //purchaseReciverOrderViewModel.PurchaseOrderReciver.Id = pO.Id;
+        //        //pO.Id = Encryption.Encrypt(pO.Id, "BZNS");
+        //        purchaseReciverOrderViewModel.PurchaseOrderReciver = pO;
+        //        int orderQty = 0;
+        //        int orderQtyPiece = 0;
+        //        int returnQty = 0;
+        //        int returnQtyPiece = 0;
+
+        //        //foreach (var item in podRecivers)
+        //        //{
+        //        //    if (!pO.PurchaseReturn.GetValueOrDefault())
+        //        //    {
+        //        //        if (item.IsPack.GetValueOrDefault())
+        //        //        {
+        //        //            orderQty += (int)item.Quantity;
+        //        //        }
+        //        //        else
+        //        //        {
+        //        //            orderQtyPiece += (int)item.Quantity;
+        //        //        }
+        //        //    }
+        //        //    else
+        //        //    {
+        //        //        if (item.IsPack.GetValueOrDefault())
+        //        //        {
+        //        //            returnQty += (int)item.Quantity;
+        //        //        }
+        //        //        else
+        //        //        {
+        //        //            returnQtyPiece += (int)item.Quantity;
+        //        //        }
+        //        //    }
+
+
+        //        //}
+
+        //        ViewBag.FundingSources = new SelectList(db.Suppliers.Where(x => x.IsCreditor == true), "Id", "Name");
+        //        ViewBag.BankAccounts = new SelectList(db.BankAccounts, "Id", "Name");
+        //        ViewBag.orderQty = orderQty;
+        //        ViewBag.orderQtyPiece = orderQtyPiece;
+        //        ViewBag.returnQty = returnQty;
+        //        ViewBag.returnQtyPiece = returnQtyPiece;
+        //        ViewBag.SupplierName = pO.Supplier.Name;
+        //        ViewBag.SupplierAddress = pO.Supplier.Address;
+
+        //        decimal subTotal = (decimal)(pO.PurchaseOrderAmount - pO.Discount);
+        //        ViewBag.SubTotal = subTotal;
+        //        ViewBag.Total = subTotal + (decimal)pO.PrevBalance;
+        //        ViewBag.IsUpdate = update;
+        //        ViewBag.IsReturn = pO.PurchaseReturn.ToString().ToLower();
+
+        //        return View(purchaseReciverOrderViewModel);
+        //    }
+
         public ActionResult Edit(string id, bool update)
         {
 
@@ -948,23 +1325,25 @@ namespace MYBUSINESS.Controllers
 
             id = Decode(id);
 
-            PO pO = db.POes.Find(id);
+            POReciver pO = db.PORecivers.Find(id);
             if (pO == null)
             {
                 return HttpNotFound();
             }
-            PurchaseOrderViewModel purchaseOrderViewModel = new PurchaseOrderViewModel();
-            List<POD> pod = db.PODs.Where(x => x.POId == id).ToList();
-            purchaseOrderViewModel.Products = DAL.dbProducts.Where(x => x.PType == 4 || x.PType == 7 && x.IsService == false);
-            purchaseOrderViewModel.Suppliers = DAL.dbSuppliers;
-            purchaseOrderViewModel.PurchaseOrderDetail = pod;
-            pO.Id = Encryption.Encrypt(pO.Id, "BZNS");
-            purchaseOrderViewModel.PurchaseOrder = pO;
+            PurchaseReciverOrderViewModel purchaseReciverOrderViewModel = new PurchaseReciverOrderViewModel();
+            List<PODReciver> podRecivers = db.PODRecivers.Where(x => x.POReciverId == id).ToList();
+            purchaseReciverOrderViewModel.Products = DAL.dbProducts.Where(x => x.PType == 4 || x.PType == 7 && x.IsService == false);
+            purchaseReciverOrderViewModel.Suppliers = DAL.dbSuppliers;
+            purchaseReciverOrderViewModel.PurchaseReciverOrderDetail = podRecivers;
+            purchaseReciverOrderViewModel.PurchaseOrderReciver = pO;
+            
+            //pO.Id = Encryption.Encrypt(pO.Id, "BZNS");
+            //purchaseReciverOrderViewModel.PurchaseOrderReciver = pO;
             int orderQty = 0;
             int orderQtyPiece = 0;//orderQtyPiece 'P for piece' 
             int returnQty = 0;
             int returnQtyPiece = 0;//orderQtyPiece 'P for piece' 
-            foreach (var item in pod)
+            foreach (var item in podRecivers)
             {
                 if (pO.PurchaseReturn == false)
                 {
@@ -1007,14 +1386,13 @@ namespace MYBUSINESS.Controllers
             //ViewBag.SupplierId = new SelectList(db.Suppliers, "Id", "Name", sO.SupplierId);
             ViewBag.SupplierName = pO.Supplier.Name;
             ViewBag.SupplierAddress = pO.Supplier.Address;
-            decimal subTotal = (decimal)(pO.PurchaseOrderAmount - pO.Discount);
-            ViewBag.SubTotal = subTotal;
-            ViewBag.Total = subTotal + (decimal)pO.PrevBalance;
+            //decimal subTotal = (decimal)(pO.PurchaseOrderAmount - pO.Discount);
+            //ViewBag.SubTotal = subTotal;
+            //ViewBag.Total = subTotal + (decimal)pO.PrevBalance;
             ViewBag.IsUpdate = update;
             ViewBag.IsReturn = pO.PurchaseReturn.ToString().ToLower();
-            return View(purchaseOrderViewModel);
+            return View(purchaseReciverOrderViewModel);
         }
-
 
         // GET: POes/Delete/5
         public ActionResult Delete(string id)
@@ -1055,6 +1433,41 @@ namespace MYBUSINESS.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+        [HttpGet]
+        public JsonResult GetLastOrderProducts(int supplierId)
+        {
+            if (supplierId <= 0)
+            {
+                return Json(new List<object>(), JsonRequestBehavior.AllowGet);  // ✅ Allow GET requests
+            }
+
+            var lastOrder = db.POes
+                .Where(p => p.SupplierId == supplierId)
+                .OrderByDescending(p => p.Date)
+                .FirstOrDefault();
+
+            if (lastOrder == null)
+            {
+                return Json(new List<object>(), JsonRequestBehavior.AllowGet);  // ✅ Always return an array
+            }
+
+            var products = db.PODs
+     .Where(pod => pod.POId == lastOrder.Id)
+     .Select(pod => new
+     {
+         ProductId = pod.ProductId,  // Ensure this is included
+         ProductName = db.Products.Where(p => p.Id == pod.ProductId).Select(p => p.Name).FirstOrDefault(),
+         pod.Quantity,
+         pod.Unit
+     })
+     .ToList();
+
+            return Json(products, JsonRequestBehavior.AllowGet);
+            // ✅ Allow GET requests
+        }
+
+
+
 
         protected override void Dispose(bool disposing)
         {

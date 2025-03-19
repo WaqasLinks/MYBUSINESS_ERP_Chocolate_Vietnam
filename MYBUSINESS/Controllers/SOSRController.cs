@@ -866,16 +866,20 @@ namespace MYBUSINESS.Controllers
             TempData["_CustomerName"] = TempData["CustomerName"] as string;
             TempData["_CustomerEmail"] = TempData["CustomerEmail"] as string;
             TempData["_CustomerAddress"] = TempData["CustomerAddress"] as string;
+            TempData["_CompanyName"] = TempData["CompanyName"] as string;
             TempData["_POSName"] = TempData["POSName"] as string;
             TempData["_POSAddress"] = TempData["POSAddress"] as string;
             TempData["_POSPhoneNumber"] = TempData["POSPhoneNumber"] as string;
             TempData["_CustomerVatNumber"] = TempData["CustomerVatNumber"] as string;
+            TempData["_CustomerCompanyAddress"] = TempData["CustomerCompanyAddress"] as string;
             TempData["_InvoiceSeries"] = TempData["InvoiceSeries"] as string;
             //TempData["_InvoiceNumber"] = TempData["InvoiceNumber"] as string;
-            TempData["_InvoiceNumber"] = TempData["InvoiceNumber"] as string ?? "INV-DEFAULT-001";
+            TempData["_InvoiceNumber"] = TempData["InvoiceNumber"] as string;
 
             TempData["_Macqt"] = TempData["Macqt"] as string;
-            TempData["_Sobaomat"] = TempData["sbmat"] as string ?? "873D78E28D2B193E";
+            TempData["_Sobaomat"] = TempData["_Sobaomat"] as string;
+
+            //TempData["_Sobaomat"] = TempData["sbmat"] as string ;
 
 
             //var jsonResponseWebservicess1 = TempData["JsonResponseWebservice"] as string;
@@ -909,7 +913,7 @@ namespace MYBUSINESS.Controllers
 
             var getStoreName = db.Stores.FirstOrDefault(x => x.Id == storeId);
             var getVatTaxInPercent = db.MyBusinessInfoes.FirstOrDefault().TaxInPercent;
-
+           
             string SOId = string.Empty;
             //SO sO = new SO();
             //if (ModelState.IsValid)
@@ -1015,7 +1019,14 @@ namespace MYBUSINESS.Controllers
                         //    storeProduct.Stock = 0;
                         //StoreProduct storeProduct = db.StoreProducts.FirstOrDefault(x => x.ProductId == sod.ProductId && x.StoreId == parseId); commented due to session issue
                         StoreProduct storeProduct = db.StoreProducts.FirstOrDefault(x => x.ProductId == sod.ProductId && x.StoreId == storeId); //commented due to session issue
-                        //StoreProduct storeProduct = db.StoreProducts.FirstOrDefault(x => x.ProductId == sod.ProductId);
+                        decimal salePriceWithVat = sod.SalePrice.Value; // The price with VAT included
+
+                        // Reverse VAT removal (divide by 1 + VAT rate in decimal)
+                        decimal salePriceWithoutVat = salePriceWithVat / (1 + vatTaxPercent / 100);
+
+                        // Round to the nearest whole number
+                        sod.SalePrice = Math.Round(salePriceWithoutVat); // This will give you the original price, e.g., 100
+
                         if (storeProduct == null)
                         {
                             storeProduct = new StoreProduct
@@ -1177,13 +1188,16 @@ namespace MYBUSINESS.Controllers
                             // Example of accessing a value within the nested 'data'
                             string invoiceSeries = nestedDataObject["khieu"]?.ToString();
                             //string invoiceNumber = nestedDataObject["inv_invoiceNumber"]?.ToString();
-                            string invoiceNumber = nestedDataObject["inv_invoiceNumber"]?.ToString();
+                            string invoiceNumber = nestedDataObject["shdon"]?.ToString();
+                            // Correct key name
                             string macqt = nestedDataObject["macqt"]?.ToString();
                             string sbmat = nestedDataObject["sbmat"]?.ToString();
                             TempData["InvoiceSeries"] = invoiceSeries;
                             TempData["InvoiceNumber"] = invoiceNumber;
                             TempData["Macqt"] = macqt;
-                            TempData["Sobaomat"] = sbmat;
+                            TempData["_Sobaomat"] = sbmat;
+                            TempData.Keep("_Sobaomat");
+
                         }
                     }
                     if (webServiceResponse.Success)
@@ -1202,6 +1216,7 @@ namespace MYBUSINESS.Controllers
                     ///////////////////////
 
                     TempData["CustomerName"] = Customer.Name;
+                    TempData["CompanyName"] = Customer.CompanyName;
                     TempData["SaleOrderAmountWithVaT"] = sO.SaleOrderAmountWithVaT;
                     TempData["CustomerEmail"] = Customer.Email;
                     TempData["CustomerAddress"] = Customer.Address;
@@ -1209,6 +1224,7 @@ namespace MYBUSINESS.Controllers
                     TempData["POSAddress"] = getStoreName.Address;
                     TempData["POSPhoneNumber"] = getStoreName.PhoneNumber;
                     TempData["CustomerVatNumber"] = Customer.Vat;
+                    TempData["CustomerCompanyAddress"] = Customer.CompanyAddress;
                     string aa = TempData["JsonResponseWebservicess"] as string;
 
                     //var addWebServiceCuromerDetails =  AddWebServiceCustomerDetails(authToken, cust,sO,sOD);
@@ -1617,7 +1633,9 @@ namespace MYBUSINESS.Controllers
                         dvtte = "VND",//saleOrder.CurrencyCode ?? "VND",
                         tgia = 1,//saleOrder.ExchangeRate ?? 1,
                         //sdhang = saleOrder.Id,//"HN-20242309-002", //saleOrder.SOSerial ?? "HN-20241509-001",
-                        sdhang = $"{saleOrder.Id}", /*-{DateTime.UtcNow.Ticks}*/
+                        //sdhang = $"{saleOrder.Id}", /*-{DateTime.UtcNow.Ticks}*/
+                        sdhang = $"{saleOrder.Id}-{DateTime.UtcNow.Ticks}",
+                        //sdhang = $"{saleOrder.Id}",
                         tnmua = cust.Name,
                         ten = cust.CompanyName,
                         mst = cust.Vat,/*saleOrder.SOSerial.ToString()*///"0401485182",//cust.TaxCode ?? "0401485182",
@@ -1626,7 +1644,7 @@ namespace MYBUSINESS.Controllers
                         Email = cust.Email,
                         htttoan = saleOrder.PaymentMethod ?? "TM/CK",
                         ttcktmai = (decimal)saleOrder.Discount,
-                        tgtcthue = saleOrder.BillAmount,//saleOrder.TotalAmountWithoutVat ?? 0,
+                        tgtcthue = (decimal)saleOrder.SaleOrderAmount / (1 + tax / 100),//saleOrder.TotalAmountWithoutVat ?? 0,
                         tgtthue = (decimal)(saleOrder.SaleOrderAmount * tax / 100m),
                         
                         tgtttbso = (decimal)saleOrder.SaleOrderAmountWithVaT,//saleOrder.BillPaid ?? 0, = saleOrder.BillAmount,//saleOrder.BillPaid ?? 0, = saleOrder.BillAmount,//saleOrder.BillPaid ?? 0,
@@ -2245,18 +2263,25 @@ namespace MYBUSINESS.Controllers
             //string _saleOrderAmountWithVat = TempData["_SaleOrderAmountWithVaT"] as string;
             string _customerEmail = TempData["_CustomerEmail"] as string;
             string _customerAddress = TempData["_CustomerAddress"] as string;
+            string _companyName = TempData["_CompanyName"] as string;
             string _customerPosName = TempData["_POSName"] as string;
             string _customerPosAddress = TempData["_POSAddress"] as string;
             string _customerPosPhoneNumber = TempData["_POSPhoneNumber"] as string;
             string _customerVatNumber = TempData["_CustomerVatNumber"] as string;
+            string _customerCompanyAddress = TempData["_CustomerCompanyAddress"] as string;
             //string _tgtttbso = TempData["_Tgtttbso"] as string;
 
             string _invoiceSeries = TempData["_InvoiceSeries"] as string;
             string _invoiceNumber = TempData["_InvoiceNumber"] as string;
             string _macqt = TempData["_Macqt"] as string;
-            string _sbmat = TempData["_Sobaomat"] as string;
-            //dynamic tempDataResponse1 = JsonConvert.DeserializeObject(TempData["JsonResponseWebservice"].ToString());
+            //string _sbmat = TempData["_Sobaomat"] as string;
+            string _sbmat = TempData["_Sobaomat"] as string;  // Ensure the key matches exactly
 
+            //dynamic tempDataResponse1 = JsonConvert.DeserializeObject(TempData["JsonResponseWebservice"].ToString());
+            TempData.Keep("_InvoiceSeries");
+            TempData.Keep("_InvoiceNumber");
+            TempData.Keep("_Macqt");
+            TempData.Keep("_Sobaomat");
             //string _jsonResponseWebservice = TempData["_JsonResponseWebservice"] as string;
 
             //var jsonResponseWebservice = Session["JsonResponse"];
@@ -2311,11 +2336,12 @@ namespace MYBUSINESS.Controllers
         //new ReportParameter("CustomerEmail", _customerEmail ?? "N/A"), //// Pass Customer Email
         new ReportParameter("CustomerEmail", _customerEmail ?? "-"), //// Pass Customer Email
         new ReportParameter("CustomerAddress", _customerAddress ?? "-"), //// Pass Customer Address
+        new ReportParameter("CompanyName", _companyName ?? "-"),
         new ReportParameter("POSName", _customerPosName ?? "-"),   // Pass POS Name
         new ReportParameter("POSAddress", _customerPosAddress ?? "-"),   // Pass POS Name
         new ReportParameter("POSPhoneNumber", _customerPosPhoneNumber ?? "-"),   // Pass POS Name
         new ReportParameter("CustomerVatNumber", _customerVatNumber ?? "-"),  // Pass POS Name
-
+        new ReportParameter("CustomerCompanyAddress", _customerCompanyAddress ?? "-"),
         new ReportParameter("InvoiceSeries", _invoiceSeries ?? "-"),  // Pass POS Name
         new ReportParameter("InvoiceNumber", _invoiceNumber ?? "-"),  // Pass POS Name
         new ReportParameter("Macqt", _macqt ?? "-"),  // Pass POS Name
@@ -2518,6 +2544,7 @@ namespace MYBUSINESS.Controllers
             //ViewBag.CustomerId = new SelectList(db.Customers, "Id", "Name", sO.CustomerId);
             ViewBag.CustomerName = sO.Customer.Name;
             ViewBag.CustomerAddress = sO.Customer.Address;
+            ViewBag.CompanyName = sO.Customer.CompanyName;
             decimal subTotal = (decimal)(sO.SaleOrderAmount - sO.Discount);
             ViewBag.SubTotal = subTotal;
             ViewBag.Total = subTotal + (decimal)sO.PrevBalance;
