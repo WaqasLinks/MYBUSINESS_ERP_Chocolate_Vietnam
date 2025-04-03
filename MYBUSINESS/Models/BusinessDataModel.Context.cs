@@ -32,7 +32,6 @@ namespace MYBUSINESS.Models
         public virtual DbSet<BusinessInfo> BusinessInfoes { get; set; }
         public virtual DbSet<Currency> Currencies { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
-        public virtual DbSet<DailyBalanceVnd> DailyBalanceVnds { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<Expense> Expenses { get; set; }
@@ -71,6 +70,7 @@ namespace MYBUSINESS.Models
         public virtual DbSet<PODReciver> PODRecivers { get; set; }
         public virtual DbSet<PO> POes { get; set; }
         public virtual DbSet<POD> PODs { get; set; }
+        public virtual DbSet<DailyBalanceVnd> DailyBalanceVnds { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {
@@ -236,6 +236,15 @@ namespace MYBUSINESS.Models
                 new ObjectParameter("SaleOrderID", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spSOReport_Result>("spSOReport", saleOrderIDParameter);
+        }
+    
+        public virtual ObjectResult<spBankDepositReport_Result> spBankDepositReport(Nullable<int> bankDepositId)
+        {
+            var bankDepositIdParameter = bankDepositId.HasValue ?
+                new ObjectParameter("BankDepositId", bankDepositId) :
+                new ObjectParameter("BankDepositId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spBankDepositReport_Result>("spBankDepositReport", bankDepositIdParameter);
         }
     }
 }

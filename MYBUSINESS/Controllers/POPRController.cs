@@ -7,6 +7,7 @@ using System.Drawing.Printing;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -118,6 +119,8 @@ namespace MYBUSINESS.Controllers
             //var poess = pOes.OrderByDescending(i => i.Date).ToList();
             return View(poess);
         }
+
+
 
         //public ActionResult SearchData(string custName, DateTime startDate, DateTime endDate)
 
@@ -381,8 +384,7 @@ namespace MYBUSINESS.Controllers
         public ActionResult Create([Bind(Prefix = "Supplier", Include = "Name,Address")] Supplier Supplier, [Bind(Prefix = "PurchaseOrder", Include = "BillAmount,Balance,PrevBalance,BillPaid,Discount,SupplierId,Remarks,Remarks2,PaymentMethod,PaymentDetail,PurchaseReturn,FundingSourceId,BankAccountId,Date")] PO pO, [Bind(Prefix = "PurchaseOrderDetail", Include = "ProductId,Quantity,SaleType,PerPack,IsPack,PurchasePrice,ExpiryDate,PurchasingDate,Unit")] List<POD> pOD)
         {
             //PO pO = new PO();
-            if (ModelState.IsValid)
-            {
+            
                 int? storeId = Session["StoreId"] as int?;
                 //var storeId = Session["StoreId"] as string;
                 if (storeId == null)
@@ -448,7 +450,7 @@ namespace MYBUSINESS.Controllers
                 pO.PurchaseOrderQty = 0;
                 pO.StoreId = storeId;
                 //pO.StoreId = parseId; //commented due to session issue
-                pO.StoreId = 1;
+                //pO.StoreId = 1;
                 Employee emp = (Employee)Session["CurrentUser"];
                 pO.EmployeeId = emp.Id;
                 db.POes.Add(pO);
@@ -516,7 +518,7 @@ namespace MYBUSINESS.Controllers
 
                         }
 
-                    }
+                    
                     db.PODs.AddRange(pOD);
                 }
                 db.SaveChanges();

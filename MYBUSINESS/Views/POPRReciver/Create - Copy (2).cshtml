@@ -110,7 +110,7 @@
                         int sNo = 0;
                         foreach (var item in Model.PurchaseOrderDetail)
                         {
-                            if (sNo > 0) { break; }
+
                             <tr>
                                 <td id="SNo0">@(sNo + 1)</td>
                                 <td style="display:none;"><input type="hidden" name="PurchaseReciverOrderDetail.Index" value="@sNo" /></td>

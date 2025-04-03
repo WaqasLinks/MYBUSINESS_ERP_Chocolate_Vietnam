@@ -407,6 +407,11 @@
     <Compile Include="CustomClasses\NoCache.cs" />
     <Compile Include="CustomClasses\Utilities.cs" />
     <Compile Include="CustomClasses\WebServiceResponse.cs" />
+    <Compile Include="DataSets\spBankDepositReport_DataSet1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>spBankDepositReport_DataSet1.xsd</DependentUpon>
+    </Compile>
     <Compile Include="DataSets\spPOReport_DataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -416,6 +421,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>spSOReport_DataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="db_aab342_businessDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>db_aab342_businessDataSet.xsd</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -427,6 +437,7 @@
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BankAccounts1Controller.cs" />
+    <Compile Include="Models\BankDepositReportViewModel.cs" />
     <Compile Include="Models\BOM.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -569,6 +580,9 @@
     <Compile Include="Models\SOD.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\spBankDepositReport_Result.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\spExpenseReport_Result.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -599,6 +613,7 @@
     <Compile Include="Models\Store.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\StoreBalanceViewModel.cs" />
     <Compile Include="Models\StoreProduct.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -3068,6 +3083,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\custom\bankdeposit.js" />
     <Content Include="Content\custom\menuHide.js" />
     <Content Include="Content\custom\custom.css" />
     <Content Include="Content\custom\clientSOSR.js" />
@@ -3410,6 +3426,17 @@
     <Content Include="bower_components\font-awesome\.icons-cache.json" />
     <Content Include="bower_components\font-awesome\.shims-cache.json" />
     <Content Include="App_Data\db.zip" />
+    <Content Include="DataSets\spBankDepositReport_DataSet1.xsc">
+      <DependentUpon>spBankDepositReport_DataSet1.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\spBankDepositReport_DataSet1.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>spBankDepositReport_DataSet1.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="DataSets\spBankDepositReport_DataSet1.xss">
+      <DependentUpon>spBankDepositReport_DataSet1.xsd</DependentUpon>
+    </Content>
     <None Include="DataSets\spPOReport_DataSet.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
@@ -3425,6 +3452,17 @@
     </None>
     <Content Include="DataSets\spSOReport_DataSet.xss">
       <DependentUpon>spSOReport_DataSet.xsd</DependentUpon>
+    </Content>
+    <Content Include="db_aab342_businessDataSet.xsc">
+      <DependentUpon>db_aab342_businessDataSet.xsd</DependentUpon>
+    </Content>
+    <None Include="db_aab342_businessDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>db_aab342_businessDataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="db_aab342_businessDataSet.xss">
+      <DependentUpon>db_aab342_businessDataSet.xsd</DependentUpon>
     </Content>
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\test.pubxml" />
@@ -3758,6 +3796,8 @@
     <Content Include="Views\PostProduction\_IndexComponents.cshtml" />
     <Content Include="Views\PostProduction\_SelectedNewProduction.cshtml" />
     <Content Include="Views\PostProduction\_SelectedProducts1.cshtml" />
+    <Content Include="Views\Shared\_BankDepositPopup.cshtml" />
+    <Content Include="Views\Shared\_MoneyInputPopup.cshtml" />
     <None Include="Web.Debug.Config">
       <DependentUpon>Web.Config</DependentUpon>
     </None>
@@ -3815,6 +3855,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Reports\Report1.rdlc" />
     <EmbeddedResource Include="Reports\Sale_Receipt009.rdlc" />
+    <Content Include="Reports\Sale_ReceiptBankDeposit.rdlc" />
+    <Content Include="Reports\Sale_ReceiptMoneyInput.rdlc" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -2,147 +2,37 @@
 //var products = []; //[['Ciplet', '10', '60'], ['Gaviscon', '85', '12'], ['Surficol', '110', '8']];
 var products = new Array();
 
-var supplierColumns = [
-    { name: 'Id', minWidth: '100px' },
-    { name: 'Name', minWidth: '320px' },
-    { name: 'Address', minWidth: '200px' },
-    { name: 'Balance', minWidth: '70px' }
-];
-
+var supplierColumns = [{ name: 'Id', minWidth: '100px' }, { name: 'Name', minWidth: '320px' }, { name: 'Address', minWidth: '200px' }, { name: 'Balance', minWidth: '70px' }];
+//var products = []; //[['Ciplet', '10', '60'], ['Gaviscon', '85', '12'], ['Surficol', '110', '8']];
 var suppliers = new Array();
+var productsBarcodes = new Array();
+//var focusedBtnId = "";
+//var focusedBtnSno = "";
 var txtSerialNum = 0;
-
+var clickedTextboxId = "name0";
+var clickedIdNum = "";
+var x, y;
+var _total = 0;
+var IsReturn = "false";
 function OnTypeSupplierName(param) {
     $(param).mcautocomplete({
         showHeader: true,
         columns: supplierColumns,
         source: suppliers,
         select: function (event, ui) {
-            alert("Supplier selected:", ui.item); // Debugging
-
             this.value = (ui.item ? ui.item[1] : '');
+            //productName = this.value;
             $('#idnSupplier').val(ui.item ? ui.item[0] : '');
             $('#supplierAddress').val(ui.item ? ui.item[2] : '');
             $('#PreviousBalance').val(ui.item ? ui.item[3] : '');
-
-            var supplierId = ui.item ? ui.item[0] : '';
-            alert("Selected supplierId:", supplierId); // Debugging
-
-            if (supplierId) {
-                $('#idnSupplier').trigger('change'); // Ensure input updates
-                fetchLastOrderProducts(supplierId);
-            } else {
-                console.error("Supplier ID is missing!");
-            }
-
+            update_itemTotal();
+            document.getElementById('name' + txtSerialNum).focus();
             return false;
         }
+
     });
+
 }
-
-// Function to Fetch Last Order Products Based on Supplier ID
-// Function to Fetch Last Order Products Based on Supplier ID
-function fetchLastOrderProducts(supplierId) {
-    alert("Fetching last order products for supplierId:", supplierId); // Debugging
-
-    $.ajax({
-        url: '/POPRReciver/GetLastOrderProducts',
-        type: 'GET',
-        data: { supplierId: supplierId },
-        dataType: 'json',
-        success: function (data) {
-            console.log("AJAX success triggered!");
-            alert("Success");
-            console.log("Raw response from server:", data); // Log the server response
-
-            // Check if data is an array
-            if (!Array.isArray(data)) {
-                alert("Error: Server did not return an array!");
-                console.log("Received:", data);
-                return;
-            }
-
-            if (data.length > 0) {
-                console.log("Calling populateProductTable with data:", data); // Log before calling
-                alert("Calling populateProductTable with data: " + JSON.stringify(data)); // Debugging
-                populateProductTable(data);
-            } else {
-                alert('No previous orders found for this supplier.');
-            }
-        },
-        error: function (xhr, status, error) {
-            console.error('Error fetching order products:', status, error);
-            console.log('Response Text:', xhr.responseText); // Check the response text
-        }
-    });
-    
-}
-
-// Function to populate Product Name, Quantity, and Unit fields
-//function populateProductTable(products) {
-//    console.log("Inside populateProductTable function");  // Log to check if the function is being called
-//    alert("Populating product fields:", products);
-
-//    if (!Array.isArray(products)) {
-//        console.error("Error: Data is not an array!", products);
-//        return;
-//    }
-
-//    let productTableBody = $("#selectedProduct tbody"); // Ensure the correct table ID is used
-//    productTableBody.empty(); // Clear existing rows
-
-//    products.forEach((product, index) => {
-//        let rowNumber = index;
-
-//        let newRow = `
-//    <tr>
-//        <td>${rowNumber + 1}</td>
-//        <td><input type="hidden" name="PurchaseReceiverOrderDetail.Index" value="${rowNumber}" /></td>
-//        <td><input type="text" readonly class="form-control" name="PurchaseReceiverOrderDetail[${rowNumber}].ProductId" id="idn${rowNumber}" value="${product.ProductName}" /></td>
-//        <td><input type="text" autocomplete="off" class="form-control" name="name${rowNumber}" id="name${rowNumber}" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name" value="${product.ProductName}"></td>
-//        <td><input type="text" class="form-control" name="PurchaseReceiverOrderDetail[${rowNumber}].Quantity" id="quantity${rowNumber}" value="${product.Quantity}" /></td>
-//        <td><input type="text" class="form-control" name="PurchaseReceiverOrderDetail[${rowNumber}].Unit" id="unit${rowNumber}" value="${product.Unit}" /></td>
-//        <td><button type="button" id="delete${rowNumber}" class="delete btn btn-default add-new"><i class="material-icons">&#xE872;</i></button></td>
-//    </tr>
-//`;
-
-//        productTableBody.append(newRow);
-//    });
-
-//    console.log("Final table HTML:", productTableBody.html()); // Debugging
-//}
-//populateProductTable([
-//    { ProductName: "Chocolate 1X", Quantity: 1, Unit: "Kg" },
-//    { ProductName: "Sugar", Quantity: 5, Unit: "Kg" }
-//]);
-
-
-
-
-
-// Function to remove a row
-function removeRow(button) {
-    $(button).closest("tr").remove();
-}
-
-
-
-// Function to Populate Product Table with Last Order Products
-function populateProductTable(products) {
-    var tableBody = $('#productTable tbody'); // Adjust table ID as needed
-    tableBody.empty(); // Clear previous entries
-
-    products.forEach(function (product, index) {
-        var row = `<tr>
-            <td>${product.ProductName}</td>
-            <td>${product.Quantity}</td>
-            <td>${product.PurchasePrice}</td>
-            <td><input type="text" name="receivedQuantity" value="${product.Quantity}" /></td>
-        </tr>`;
-        tableBody.append(row);
-    });
-}
-
 
 var productName = "";
 function OnTypeName(param) {
@@ -154,7 +44,7 @@ function OnTypeName(param) {
 
         clickedTextboxId = $(document.activeElement).attr("id");
         clickedIdNum = clickedTextboxId.substring(4);
-       
+
     });
 
 
@@ -225,7 +115,7 @@ $(document).ready(function () {
         $('#saleReturn').hide();
         $('#saleOrder').show();
     }
-    
+
 
     //alert('iam ready');
     document.getElementById('supplier').focus();
@@ -242,85 +132,86 @@ $(document).ready(function () {
             $('#addNewRow').trigger('click');
         }
     });
-    $("#addNewRow").click(function () {
-        txtSerialNum += 1;
+    $(document).ready(function () {
+        // Function to make all fields readonly on page load
+        function makeFieldsReadonly() {
+            $('#selectedProducts tr').each(function () {
+                $(this).find('input, select').each(function () {
+                    $(this).prop('readonly', true); // Make all inputs readonly
+                });
+            });
+        }
+        //var malaysiaTimeStr = $('#timeValues').data('malaysia-time');
+        //var futureTimeStr = $('#timeValues').data('future-time');
 
-        var index = $("table tbody tr:last-child").index();
+        //// Check if the times are being loaded properly
+        //alert("Malaysia Time:", malaysiaTimeStr);
+        //alert("Future Time:", futureTimeStr);
 
-        var row = '<tr>' +
-            '<td id="SNo' + txtSerialNum + '">' + $('#selectedProducts tr').length + '</td>' +
-            '<td style="display:none;"><input type="hidden" name="PurchaseReceiverOrderDetail.Index" value="' + txtSerialNum + '" /></td>' +
-            '<td style="display:none;"><input type="hidden" name="PurchaseOrderDetail[' + txtSerialNum + '].ProductId" id="productId' + txtSerialNum + '"></td>' + // Hidden Product ID field
-            '<td><input type="text" class="form-control" autocomplete="off" name="PurchaseOrderDetail[' + txtSerialNum + '].QtyReceived" id="qtyreceived' + txtSerialNum + '"></td>' +
-            '<td><input type="datetime-local" class="form-control" autocomplete="off" name="PurchaseOrderDetail[' + txtSerialNum + '].PurchasingDate" id="purchasingdate' + txtSerialNum + '"></td>' +
-            '<td><input type="datetime-local" class="form-control" autocomplete="off" name="PurchaseOrderDetail[' + txtSerialNum + '].ExpiryDate" id="expirydate' + txtSerialNum + '"></td>' +
-            '<td><button type="button" id="delete' + txtSerialNum + '" class="delete btn btn-default add-new"> <a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button></td>' +
-            '</tr>';
+        //// Convert them to JavaScript Date objects
+        //var malaysiaTime = new Date(malaysiaTimeStr);
+        //var futureTime = new Date(futureTimeStr);
+        // Function to make the last row editable and previous rows readonly
+        function makeLastRowEditable() {
+            var totalRows = $('#selectedProducts tr').length;  // Get the total number of rows
+            if (totalRows > 0) {
+                // Make the last row editable and all previous rows readonly
+                var lastRow = $('#selectedProducts tr').last();
+                lastRow.find('input, select').each(function () {
+                    $(this).prop('readonly', false); // Make last row editable
+                });
 
-        $("#selectedProducts").append(row);
+                // Make all previous rows readonly
+                $('#selectedProducts tr').not(lastRow).each(function () {
+                    $(this).find('input, select').each(function () {
+                        $(this).prop('readonly', true); // Make previous rows readonly
+                    });
+                });
+            }
+        }
 
-        // Focus on Quantity Received input
-        document.getElementById('qtyreceived' + txtSerialNum).focus();
+        // On page load, make all fields readonly except the last one (if any)
+        makeFieldsReadonly();
+        makeLastRowEditable();  // Ensure the last row is editable on page load
 
-        // Event Listeners for Auto-Linking Product ID
-        $("#qtyreceived" + txtSerialNum + ", #purchasingdate" + txtSerialNum + ", #expirydate" + txtSerialNum).on("change", function () {
-            fetchProductId(txtSerialNum);
+        // When the "Add New Row" button is clicked
+        $("#addNewRow").click(function () {
+            var index = $("#selectedProducts tr").length;
+            var txtSerialNum = index; // Use the number of rows as a serial number
+
+            var malaysiaTime = new Date('@(ViewBag.MalaysiaTime?.ToString("yyyy-MM-ddTHH:mm") ?? "")');
+            var futureTime = new Date('@(ViewBag.FutureTime?.ToString("yyyy-MM-ddTHH:mm") ?? "")');
+
+            var row = '<tr>' +
+                '<td id="SNo' + txtSerialNum + '">' + $('#selectedProducts tr').length + '</td>' +
+                '<td style="display:none;"><input type="hidden" name="PurchaseReciverOrderDetail.Index" value="' + txtSerialNum + '" /></td>' +
+                '<td style="display:none;"><input type="text" readonly class="form-control classBGcolor" name="PurchaseReciverOrderDetail[' + txtSerialNum + '].ProductId" id="idn' + txtSerialNum + '"></td>' +
+                '<td><input type="text" class="form-control" autocomplete="off" name="PurchaseReciverOrderDetail[' + txtSerialNum + '].QtyReceived" id="quantityreceived' + txtSerialNum + '"></td>' +
+                '<td><input type="datetime-local" class="form-control from-date-picker" name="PurchaseReciverOrderDetail[' + txtSerialNum + '].PurchasingDate id="purchasingdate' + txtSerialNum + '" ></td>' +
+                '<td><input type="datetime-local" class="form-control from-date-picker" name="PurchaseReciverOrderDetail[' + txtSerialNum + '].ExpiryDate id="expirydate' + txtSerialNum + '"></td>' +
+
+                '<td><button type="button" id="delete' + txtSerialNum + '" class="delete btn btn-default add-new"> <a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button></td>' +
+                '</tr>';
+
+            // Append the new row to the table
+            $("#selectedProducts").append(row);
+
+            // Make the last row editable and all previous rows readonly
+            makeLastRowEditable();
+
+            // Focus the new row's first field (optional)
+            document.getElementById('idn' + txtSerialNum).focus();
+
+            // Optional: Trigger body events if necessary
+            TriggerBodyEvents();
         });
 
-        TriggerBodyEvents();
+        // Optional: Add delete row functionality
+        $(document).on('click', '.delete', function () {
+            $(this).closest('tr').remove();
+            makeLastRowEditable();  // Reapply readonly functionality after row deletion
+        });
     });
-
-    // Function to Fetch Product ID
-    function fetchProductId(serialNum) {
-        alert(productId)
-        var productId = populateProductTable(); // Replace with actual function
-        $("#productId" + serialNum).val(productId);
-    }
-
-    //$("#addNewRow").click(function (e) {
-    //    //alert('click');
-    //    //var key = e.which;
-    //    //if (key !== 13)  // the enter key code
-    //    //{
-
-    //    //    return false;
-    //    //}
-
-    //    //$(this).attr("disabled", "disabled");
-    //    txtSerialNum += 1;
-    //    //alert(txtSerialNum)
-    //    var index = $("table tbody tr:last-child").index();
-    //    //var rowCount = 
-    //    var row = '<tr>' +
-    //        '<td id="SNo' + txtSerialNum + '">' + $('#selectedProducts tr').length + '</td>' +
-    //        '<td style="display:none;"><input type="hidden" name="PurchaseReceiverOrderDetail.Index" value="' + txtSerialNum + '" /></td>' +
-    //        /*'<td style="display:none;"><input type="text" readonly class="form-control classBGcolor" name="PurchaseOrderDetail[' + txtSerialNum + '].ProductId" id="idn' + txtSerialNum + '"></td>' +*/
-    //        /*'<td><input type="text" class="form-control" autocomplete="off" name="name' + txtSerialNum + '" id="name' + txtSerialNum + '"></td>' +*/
-    //        '<td><input type="text"  class="form-control autocomplete="off" classBGcolor" name="PurchaseOrderDetail[' + txtSerialNum + '].QtyReceived" id="qtyreceived' + txtSerialNum + '"></td>' +
-    //        //'<td><input type="text" class="form-control" autocomplete="off" name="PurchaseOrderDetail[' + txtSerialNum + '].Quantity" id="quantity' + txtSerialNum + '"></td>' +
-    //        //'<td><input type="text" class="form-control" autocomplete="off" name="PurchaseOrderDetail[' + txtSerialNum + '].Unit" id="unit' + txtSerialNum + '"></td>' +
-    //        //'<td style="display:none;"><select class="form-control" name="PurchaseOrderDetail[' + txtSerialNum + '].IsPack" id="isPack' + txtSerialNum + '"><option value="false">Piece</option><option value="true" selected>Pack</option></select></td>' +
-    //        //'<td style="display:none;"><input type="text" class="form-control" readonly autocomplete="off" name="PurchaseOrderDetail[' + txtSerialNum + '].PerPack" id="perPack' + txtSerialNum + '"></td>' +
-
-    //        //'<td><input type="text" readonly class="form-control classBGcolor" name="itemTotal' + txtSerialNum + '" id="itemTotal' + txtSerialNum + '"tabindex="-1"></td>' +
-    //        //'<td style="display:none;"><select class="form-control" name="PurchaseOrderDetail[' + txtSerialNum + '].SaleType" id="saleType' + txtSerialNum + '"><option value="false" selected>Order</option><option value="true">Return</option></select></td>' +
-    //        '<td><input type="datetime-local" class="form-control" autocomplete="off" name="PurchaseOrderDetail[' + txtSerialNum + '].PurchasingDate" id="purchasingdate' + txtSerialNum + '"></td>' +
-    //        '<td><input type="datetime-local" class="form-control" autocomplete="off" name="PurchaseOrderDetail[' + txtSerialNum + '].ExpiryDate" id="expirydate' + txtSerialNum + '"></td>' +
-    //        '<td><button type="button" id="delete' + txtSerialNum + '" class="delete btn btn-default add-new"> <a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button></td>' +
-    //        '</tr>';
-        
-    //    //alert(row);
-    //    $("#selectedProducts").append(row);
-    //    //alert(txtSerialNum)
-
-    //    $("table tbody tr").eq(index + 1).find(".add, .edit").toggle();
-    //    //$('[data-toggle="tooltip"]').tooltip();
-        
-    //    document.getElementById('name' + txtSerialNum).focus();
-    //    TriggerBodyEvents();
-        
-    //});
-
 
     // Edit row on edit button click
     $(document).on("click", ".edit", function () {
@@ -704,18 +595,18 @@ function TriggerFooterEvents() {
         update_itemTotal();
     });
 
-    //$("#paid").keyup(function () {
-    //    //alert(_total);
-    //    var paid = $('#paid').val();
-    //    var balance = _total - paid;
-    //    $('#balance').val(balance.toFixed(2));
-    //    if (IsReturn == 'false') {
-    //        $("#CreatePO").html("Pay " + paid);
-    //    }
-    //    else {
-    //        $("#CreatePO").html("Return " + paid);
-    //    }
-    //});
+    $("#paid").keyup(function () {
+        //alert(_total);
+        var paid = $('#paid').val();
+        var balance = _total - paid;
+        $('#balance').val(balance.toFixed(2));
+        if (IsReturn == 'false') {
+            $("#CreatePO").html("Pay " + paid);
+        }
+        else {
+            $("#CreatePO").html("Return " + paid);
+        }
+    });
 
 }
 function ConfigDialogueCreateSupplier() {
@@ -981,12 +872,12 @@ function update_itemTotal() {
     var paid = $('#paid').val();
     var balance = _total - paid;
     $('#balance').val(balance.toFixed(2));
-    //if (IsReturn == 'false') {
-    //    $("#CreatePO").html("Pay " + paid);
-    //}
-    //else {
-    //    $("#CreatePO").html("Return " + paid);
-    //}
+    if (IsReturn == 'false') {
+        $("#CreatePO").html("Pay " + paid);
+    }
+    else {
+        $("#CreatePO").html("Return " + paid);
+    }
 
        
 }

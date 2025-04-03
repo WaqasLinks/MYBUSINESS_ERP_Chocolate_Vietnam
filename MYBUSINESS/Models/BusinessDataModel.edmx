@@ -93,6 +93,11 @@
           <Property Name="UserId" Type="decimal" Precision="18" Scale="0" />
           <Property Name="OpeningCurrencyDetail" Type="nvarchar" MaxLength="1000" />
           <Property Name="ClosingCurrencyDetail" Type="nvarchar" MaxLength="1000" />
+          <Property Name="Quantity" Type="int" />
+          <Property Name="VNDQuantity" Type="int" />
+          <Property Name="USDQuantity" Type="int" />
+          <Property Name="JPYQuantity" Type="int" />
+          <Property Name="CurrencyName" Type="nvarchar" MaxLength="1000" />
         </EntityType>
         <EntityType Name="Department">
           <Key>
@@ -1528,6 +1533,9 @@
           <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="spBankDepositReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="BankDepositId" Type="int" Mode="In" />
+        </Function>
         <Function Name="spExpenseReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PurchaseOrderID" Type="nvarchar" Mode="In" />
         </Function>
@@ -1889,7 +1897,6 @@
           <EntitySet Name="BusinessInfoes" EntityType="Models.BusinessInfo" />
           <EntitySet Name="Currencies" EntityType="Models.Currency" />
           <EntitySet Name="Customers" EntityType="Models.Customer" />
-          <EntitySet Name="DailyBalanceVnds" EntityType="Models.DailyBalanceVnd" />
           <EntitySet Name="Departments" EntityType="Models.Department" />
           <EntitySet Name="Employees" EntityType="Models.Employee" />
           <EntitySet Name="Expenses" EntityType="Models.Expense" />
@@ -2175,6 +2182,10 @@
             <End Role="Product" EntitySet="Products" />
             <End Role="POD" EntitySet="PODs" />
           </AssociationSet>
+          <EntitySet Name="DailyBalanceVnds" EntityType="Models.DailyBalanceVnd" />
+          <FunctionImport Name="spBankDepositReport" ReturnType="Collection(Models.spBankDepositReport_Result)">
+            <Parameter Name="BankDepositId" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
           <Property Type="Int32" Name="version" Nullable="true" />
@@ -2409,20 +2420,6 @@
           <NavigationProperty Name="Rents" Relationship="Models.FK_Rent_Customer" FromRole="Customer" ToRole="Rent" />
           <NavigationProperty Name="Services" Relationship="Models.FK_Service_Customer" FromRole="Customer" ToRole="Service" />
           <NavigationProperty Name="SOes" Relationship="Models.FK_SO_Customer" FromRole="Customer" ToRole="SO" />
-        </EntityType>
-        <EntityType Name="DailyBalanceVnd">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="OpeningDate" Type="DateTime" Precision="3" />
-          <Property Name="OpeningBalance" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="ClosingBalance" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="ClosingDate" Type="DateTime" Precision="3" />
-          <Property Name="StoreId" Type="Int32" />
-          <Property Name="UserId" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="OpeningCurrencyDetail" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
-          <Property Name="ClosingCurrencyDetail" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Department">
           <Key>
@@ -3994,6 +3991,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="DailyBalanceVnd">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OpeningDate" Type="DateTime" Precision="3" />
+          <Property Name="OpeningBalance" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="ClosingBalance" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="ClosingDate" Type="DateTime" Precision="3" />
+          <Property Name="StoreId" Type="Int32" />
+          <Property Name="UserId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="OpeningCurrencyDetail" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="ClosingCurrencyDetail" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="VNDQuantity" Type="Int32" />
+          <Property Name="USDQuantity" Type="Int32" />
+          <Property Name="JPYQuantity" Type="Int32" />
+          <Property Name="CurrencyName" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <ComplexType Name="spBankDepositReport_Result">
+          <Property Type="Int32" Name="BankDepositId" Nullable="false" />
+          <Property Type="DateTime" Name="ClosingDate" Nullable="true" Precision="23" />
+          <Property Type="Decimal" Name="ClosingBalance" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="String" Name="ClosingCurrencyDetail" Nullable="true" MaxLength="1000" />
+          <Property Type="Int32" Name="Qty" Nullable="true" />
+          <Property Type="Int32" Name="VNDQuantity" Nullable="true" />
+          <Property Type="Int32" Name="USDQuantity" Nullable="true" />
+          <Property Type="Int32" Name="JPYQuantity" Nullable="true" />
+          <Property Type="String" Name="CurrencyName" Nullable="true" MaxLength="1000" />
+          <Property Type="String" Name="StoreName" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="StoreAddress" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="StorePhone" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="CustomerName" Nullable="true" MaxLength="300" />
+          <Property Type="String" Name="CustomerEmail" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="CustomerAddress" Nullable="true" MaxLength="500" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4258,21 +4291,6 @@
                 <ScalarProperty Name="Balance" ColumnName="Balance" />
                 <ScalarProperty Name="Address" ColumnName="Address" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="DailyBalanceVnds">
-            <EntityTypeMapping TypeName="Models.DailyBalanceVnd">
-              <MappingFragment StoreEntitySet="DailyBalanceVnd">
-                <ScalarProperty Name="ClosingCurrencyDetail" ColumnName="ClosingCurrencyDetail" />
-                <ScalarProperty Name="OpeningCurrencyDetail" ColumnName="OpeningCurrencyDetail" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
-                <ScalarProperty Name="ClosingDate" ColumnName="ClosingDate" />
-                <ScalarProperty Name="ClosingBalance" ColumnName="ClosingBalance" />
-                <ScalarProperty Name="OpeningBalance" ColumnName="OpeningBalance" />
-                <ScalarProperty Name="OpeningDate" ColumnName="OpeningDate" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -5009,6 +5027,47 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="DailyBalanceVnds">
+            <EntityTypeMapping TypeName="Models.DailyBalanceVnd">
+              <MappingFragment StoreEntitySet="DailyBalanceVnd">
+                <ScalarProperty Name="CurrencyName" ColumnName="CurrencyName" />
+                <ScalarProperty Name="JPYQuantity" ColumnName="JPYQuantity" />
+                <ScalarProperty Name="USDQuantity" ColumnName="USDQuantity" />
+                <ScalarProperty Name="VNDQuantity" ColumnName="VNDQuantity" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="ClosingCurrencyDetail" ColumnName="ClosingCurrencyDetail" />
+                <ScalarProperty Name="OpeningCurrencyDetail" ColumnName="OpeningCurrencyDetail" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
+                <ScalarProperty Name="ClosingDate" ColumnName="ClosingDate" />
+                <ScalarProperty Name="ClosingBalance" ColumnName="ClosingBalance" />
+                <ScalarProperty Name="OpeningBalance" ColumnName="OpeningBalance" />
+                <ScalarProperty Name="OpeningDate" ColumnName="OpeningDate" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="spBankDepositReport" FunctionName="Models.Store.spBankDepositReport">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Models.spBankDepositReport_Result">
+                <ScalarProperty Name="BankDepositId" ColumnName="BankDepositId" />
+                <ScalarProperty Name="ClosingDate" ColumnName="ClosingDate" />
+                <ScalarProperty Name="ClosingBalance" ColumnName="ClosingBalance" />
+                <ScalarProperty Name="ClosingCurrencyDetail" ColumnName="ClosingCurrencyDetail" />
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
+                <ScalarProperty Name="VNDQuantity" ColumnName="VNDQuantity" />
+                <ScalarProperty Name="USDQuantity" ColumnName="USDQuantity" />
+                <ScalarProperty Name="JPYQuantity" ColumnName="JPYQuantity" />
+                <ScalarProperty Name="CurrencyName" ColumnName="CurrencyName" />
+                <ScalarProperty Name="StoreName" ColumnName="StoreName" />
+                <ScalarProperty Name="StoreAddress" ColumnName="StoreAddress" />
+                <ScalarProperty Name="StorePhone" ColumnName="StorePhone" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="CustomerEmail" ColumnName="CustomerEmail" />
+                <ScalarProperty Name="CustomerAddress" ColumnName="CustomerAddress" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

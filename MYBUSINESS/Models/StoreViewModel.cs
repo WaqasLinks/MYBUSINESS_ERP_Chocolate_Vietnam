@@ -17,7 +17,13 @@ namespace MYBUSINESS.Models
         public decimal ClosingBalance { get; set; }
         public string ClosingCurrencyDetail { get; set; }
         public int StoreId { get; set; }
+        public int Quantity { get; set; }
 
+        // Optional: If you want quantities per currency
+        public int VNDQuantity { get; set; }
+        public int USDQuantity { get; set; }
+        public int JPYQuantity { get; set; }
+        public string CurrencyName { get; set; }
     }
 
 

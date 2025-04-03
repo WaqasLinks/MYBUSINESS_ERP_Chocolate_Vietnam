@@ -10,7 +10,6 @@
         <EntityTypeShape EntityType="Models.BusinessInfo" Width="1.5" PointX="0.75" PointY="37.25" />
         <EntityTypeShape EntityType="Models.Currency" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="Models.Customer" Width="1.5" PointX="3" PointY="33.875" />
-        <EntityTypeShape EntityType="Models.DailyBalanceVnd" Width="1.5" PointX="2.75" PointY="0.75" />
         <EntityTypeShape EntityType="Models.Department" Width="1.5" PointX="3" PointY="28.375" />
         <EntityTypeShape EntityType="Models.Employee" Width="1.5" PointX="5.25" PointY="26.375" />
         <EntityTypeShape EntityType="Models.Expense" Width="1.5" PointX="7.5" PointY="24.75" />
@@ -110,6 +109,7 @@
         <EntityTypeShape EntityType="Models.POD" Width="1.5" PointX="12.75" PointY="41.5" />
         <AssociationConnector Association="Models.FK_POD_PO" />
         <AssociationConnector Association="Models.FK_POD_Product" />
+        <EntityTypeShape EntityType="Models.DailyBalanceVnd" Width="1.5" PointX="7.375" PointY="0.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

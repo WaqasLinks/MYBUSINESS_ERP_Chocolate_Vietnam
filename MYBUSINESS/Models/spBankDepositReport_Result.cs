@@ -10,23 +10,23 @@
 namespace MYBUSINESS.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class DailyBalanceVnd
+    public partial class spBankDepositReport_Result
     {
-        public int Id { get; set; }
-        public Nullable<System.DateTime> OpeningDate { get; set; }
-        public Nullable<decimal> OpeningBalance { get; set; }
-        public Nullable<decimal> ClosingBalance { get; set; }
+        public int BankDepositId { get; set; }
         public Nullable<System.DateTime> ClosingDate { get; set; }
-        public Nullable<int> StoreId { get; set; }
-        public Nullable<decimal> UserId { get; set; }
-        public string OpeningCurrencyDetail { get; set; }
+        public Nullable<decimal> ClosingBalance { get; set; }
         public string ClosingCurrencyDetail { get; set; }
-        public Nullable<int> Quantity { get; set; }
+        public Nullable<int> Qty { get; set; }
         public Nullable<int> VNDQuantity { get; set; }
         public Nullable<int> USDQuantity { get; set; }
         public Nullable<int> JPYQuantity { get; set; }
         public string CurrencyName { get; set; }
+        public string StoreName { get; set; }
+        public string StoreAddress { get; set; }
+        public string StorePhone { get; set; }
+        public string CustomerName { get; set; }
+        public string CustomerEmail { get; set; }
+        public string CustomerAddress { get; set; }
     }
 }

@@ -72,10 +72,10 @@
                         <div class="small-box @colors[index % colors.Length] storeids" data-storeid="@item.Id" data-storename="@item.Name">
                             <div class="inner">
                                 <h3>@*@ViewBag.SOCount*@</h3>
-                                <p>@Html.DisplayFor(modelItem => item.Name)</p>
-                                @{
+                                <p>@Html.DisplayFor(modelItem => item.Name)</p>                                                                @{
                                     index++;
                                 }
+
                             </div>
                             <div class="icon">
                                 <i class="ion ion-bag"></i>

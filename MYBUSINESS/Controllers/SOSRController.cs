@@ -105,6 +105,15 @@ namespace MYBUSINESS.Controllers
             }
             return PartialView("_StoreClosePopup");
         }
+        public ActionResult OpenPosPopup()
+        {
+            int? storeId = Session["StoreId"] as int?;
+            if (storeId == null)
+            {
+                return RedirectToAction("StoreNotFound", "UserManagement");
+            }
+            return PartialView("_StoreClosePopup");
+        }
         public ActionResult IndexReturn()
         {
             int? storeId = Session["StoreId"] as int?;
@@ -1264,7 +1273,16 @@ namespace MYBUSINESS.Controllers
 
         public ActionResult CloseStorePopup()
         {
-            return PartialView("_StoreClosePopup1");
+            return PartialView("_StoreClosePopup");
+        }
+
+        public ActionResult BankDepositPopup()
+        {
+            return PartialView("_BankDepositPopup");
+        }
+        public ActionResult MoneyInputPopup()
+        {
+            return PartialView("_MoneyInputPopup");
         }
         public async Task<JsonResult> LoginToWebServiceAsync()
         {

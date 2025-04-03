@@ -1,4 +1,4 @@
-﻿var productColumns = [{ name: 'Id', minWidth: '100px' }, { name: 'Product', minWidth: '320px' }, { name: 'Purch. Price', minWidth: '100px' }, { name: 'Stock', minWidth: '70px' }, { name: 'PerPack', minWidth: '70px' }, { name: 'Unit', minWidth: '70px' }];
+﻿var productColumns = [{ name: 'Id', minWidth: '100px' }, { name: 'Product', minWidth: '320px' }, { name: 'Purch. Price', minWidth: '100px' }, { name: 'Stock', minWidth: '70px' }, { name: 'PerPack', minWidth: '70px' }];
 //var products = []; //[['Ciplet', '10', '60'], ['Gaviscon', '85', '12'], ['Surficol', '110', '8']];
 var products = new Array();
 
@@ -80,7 +80,6 @@ function OnTypeName(param) {
                 $('#purchasePrice' + clickedIdNum).val(ui.item ? ui.item[2] : '');
                 $('#quantity' + clickedIdNum).val(ui.item ? 1 : '');
                 $('#idn' + clickedIdNum).val(ui.item ? ui.item[0] : '');
-                $('#unit' + clickedIdNum).val(ui.item ? ui.item[5] : '');
                 //document.getElementById(clickedTextboxId).focus();
                 update_itemTotal();
                 //FetchProductRentStatus();
@@ -154,13 +153,11 @@ $(document).ready(function () {
             '<td><input type="text" class="form-control" autocomplete="off" name="name' + txtSerialNum + '" id="name' + txtSerialNum + '"></td>' +
             '<td><input type="text"  class="form-control autocomplete="off" classBGcolor" name="PurchaseOrderDetail[' + txtSerialNum + '].PurchasePrice" id="purchasePrice' + txtSerialNum + '"></td>' +
             '<td><input type="text" class="form-control" autocomplete="off" name="PurchaseOrderDetail[' + txtSerialNum + '].Quantity" id="quantity' + txtSerialNum + '"></td>' +
-            '<td><input type="text" class="form-control" autocomplete="off" name="PurchaseOrderDetail[' + txtSerialNum + '].Unit" id="unit' + txtSerialNum + '"></td>' +
             '<td style="display:none;"><select class="form-control" name="PurchaseOrderDetail[' + txtSerialNum + '].IsPack" id="isPack' + txtSerialNum + '"><option value="false">Piece</option><option value="true" selected>Pack</option></select></td>' +
             '<td style="display:none;"><input type="text" class="form-control" readonly autocomplete="off" name="PurchaseOrderDetail[' + txtSerialNum + '].PerPack" id="perPack' + txtSerialNum + '"></td>' +
 
             '<td><input type="text" readonly class="form-control classBGcolor" name="itemTotal' + txtSerialNum + '" id="itemTotal' + txtSerialNum + '"tabindex="-1"></td>' +
             '<td style="display:none;"><select class="form-control" name="PurchaseOrderDetail[' + txtSerialNum + '].SaleType" id="saleType' + txtSerialNum + '"><option value="false" selected>Order</option><option value="true">Return</option></select></td>' +
-        
             '<td><button type="button" id="delete' + txtSerialNum + '" class="delete btn btn-default add-new"> <a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button></td>' +
             '</tr>';
         
@@ -559,18 +556,18 @@ function TriggerFooterEvents() {
         update_itemTotal();
     });
 
-    //$("#paid").keyup(function () {
-    //    //alert(_total);
-    //    var paid = $('#paid').val();
-    //    var balance = _total - paid;
-    //    $('#balance').val(balance.toFixed(2));
-    //    if (IsReturn == 'false') {
-    //        $("#CreatePO").html("Pay " + paid);
-    //    }
-    //    else {
-    //        $("#CreatePO").html("Return " + paid);
-    //    }
-    //});
+    $("#paid").keyup(function () {
+        //alert(_total);
+        var paid = $('#paid').val();
+        var balance = _total - paid;
+        $('#balance').val(balance.toFixed(2));
+        if (IsReturn == 'false') {
+            $("#CreatePO").html("Pay " + paid);
+        }
+        else {
+            $("#CreatePO").html("Return " + paid);
+        }
+    });
 
 }
 function ConfigDialogueCreateSupplier() {
@@ -836,12 +833,12 @@ function update_itemTotal() {
     var paid = $('#paid').val();
     var balance = _total - paid;
     $('#balance').val(balance.toFixed(2));
-    //if (IsReturn == 'false') {
-    //    $("#CreatePO").html("Pay " + paid);
-    //}
-    //else {
-    //    $("#CreatePO").html("Return " + paid);
-    //}
+    if (IsReturn == 'false') {
+        $("#CreatePO").html("Pay " + paid);
+    }
+    else {
+        $("#CreatePO").html("Return " + paid);
+    }
     //$('#ItemsTotal > tbody > tr > td').val(ItemsTotal);
     //just update the total to sum
     //$('.total').text(ItemsTotal);

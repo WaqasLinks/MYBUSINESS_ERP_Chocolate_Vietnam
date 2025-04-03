@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.Reporting.WebForms;
+using System.IO;
 using System.Web.WebSockets;
 using MYBUSINESS.CustomClasses;
 using MYBUSINESS.Models;
@@ -26,6 +28,33 @@ namespace MYBUSINESS.Controllers
         {
             return View(DAL.dbStore);
         }
+        //public ActionResult Index()
+        //{
+        //    using (var db = new BusinessContext()) // Ensures proper context handling
+        //    {
+        //        var storeBalances = (from store in db.Stores
+        //                             join balance in db.DailyBalanceVnds on store.Id equals balance.StoreId into storeBalanceGroup
+        //                             from balance in storeBalanceGroup.DefaultIfEmpty()
+        //                             select new StoreBalanceViewModel
+        //                             {
+        //                                 StoreId = store.Id,
+        //                                 StoreName = store.Name,
+        //                                 ClosingBalance = balance != null && balance.ClosingBalance.HasValue ? balance.ClosingBalance.Value : 0m,
+        //                                 ClosingDate = balance != null ? balance.ClosingDate : (DateTime?)null,
+        //                                 Quantity = balance != null && balance.Quantity.HasValue ? balance.Quantity.Value : 0,
+        //                                 VNDQuantity = balance != null && balance.VNDQuantity.HasValue ? balance.VNDQuantity.Value : 0,
+        //                                 USDQuantity = balance != null && balance.USDQuantity.HasValue ? balance.USDQuantity.Value : 0,
+        //                                 JPYQuantity = balance != null && balance.JPYQuantity.HasValue ? balance.JPYQuantity.Value : 0,
+        //                                 CurrencyName = balance != null ? balance.CurrencyName : "N/A"
+        //                             }).ToList(); // ✅ Ensures a List<StoreBalanceViewModel>
+
+        //        return View(storeBalances);
+
+        //    }
+        //}
+
+
+
         public ActionResult GetStoreVndBalance(string id)
         {
             int? storeId = Session["StoreId"] as int?;
@@ -282,34 +311,335 @@ namespace MYBUSINESS.Controllers
             //return View("Some thing went wrong");
 
         }
-        [HttpPost]
+        //[HttpPost]
         //[ValidateAntiForgeryToken]
+        //public ActionResult OpenShop(StoreViewModel storeDto)
+        //{
+        //    //var storeId = Session["StoreId"] as string; //commented due to session issue
+        //    //if (storeId == null)
+        //    //{
+        //    //    return RedirectToAction("StoreNotFound", "UserManagement");
+        //    //}
+        //    //var parseId = int.Parse(storeId);
+        //    if (storeDto.Id == 0)
+        //    {
+        //        //if (storeDto.OpeningBalance==0)
+        //        //    storeDto.OpeningBalance = 0;
+        //        var store = new DailyBalanceVnd
+        //        {
+        //            OpeningDate = DateTime.UtcNow,
+        //            OpeningBalance = storeDto.OpeningBalance,
+        //            OpeningCurrencyDetail = storeDto.OpeningCurrencyDetail,
+        //            StoreId = storeDto.StoreId //commented due to session issue
+        //            //StoreId = 1
+        //        };
+        //        Session["StoreId"] = storeDto.StoreId;
+        //        db.DailyBalanceVnds.Add(store);
+        //        db.SaveChanges();
+        //    }
+        //    return Json(new { Success = true, Message = "Shop opened successfully" });
+        //}
+        [HttpPost]
         public ActionResult OpenShop(StoreViewModel storeDto)
         {
+            try
+            {
+                if (storeDto == null)
+                {
+                    return Json(new { Success = false, Message = "Invalid data received." });
+                }
+
+                // Ensure StoreId is provided
+                if (storeDto.Id == 0)
+                {
+                    var store = new DailyBalanceVnd
+                    {
+                        OpeningDate = DateTime.UtcNow,
+                        OpeningBalance = storeDto.OpeningBalance,
+                        OpeningCurrencyDetail = storeDto.OpeningCurrencyDetail,
+                        StoreId = storeDto.StoreId // Ensure this value is correctly assigned
+                    };
+
+                    // Store session data if needed
+                    Session["StoreId"] = storeDto.StoreId;
+
+                    db.DailyBalanceVnds.Add(store);
+                    int recordsAffected = db.SaveChanges(); // Save changes to the database
+
+                    if (recordsAffected > 0)
+                    {
+                        return Json(new { Success = true, Message = "Shop opened successfully" });
+                    }
+                    else
+                    {
+                        return Json(new { Success = false, Message = "Failed to save data. No records affected." });
+                    }
+                }
+
+                return Json(new { Success = false, Message = "Invalid store data." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Success = false, Message = "An error occurred: " + ex.Message });
+            }
+        }
+
+        //[HttpPost]
+        //public ActionResult BankDeposit(StoreViewModel storeDto)
+        //{
+        //    try
+        //    {
+        //        if (storeDto == null)
+        //        {
+        //            return Json(new { Success = false, Message = "Invalid data received." });
+        //        }
+
+        //        // Ensure StoreId is provided
+        //        if (storeDto.Id == 0)
+        //        {
+        //            var store = new DailyBalanceVnd
+        //            {
+        //                OpeningDate = DateTime.UtcNow,
+        //                OpeningBalance = storeDto.OpeningBalance,
+        //                OpeningCurrencyDetail = storeDto.OpeningCurrencyDetail,
+        //                StoreId = storeDto.StoreId // Ensure this value is correctly assigned
+        //            };
+
+        //            // Store session data if needed
+        //            Session["StoreId"] = storeDto.StoreId;
+
+        //            db.DailyBalanceVnds.Add(store);
+        //            int recordsAffected = db.SaveChanges(); // Save changes to the database
+
+        //            if (recordsAffected > 0)
+        //            {
+        //                return RedirectToAction("PrintReport", new { storeId = storeDto.StoreId });
+        //            }
+        //            else
+        //            {
+        //                return Json(new { Success = false, Message = "Failed to save data. No records affected." });
+        //            }
+        //        }
+
+        //        return Json(new { Success = false, Message = "Invalid store data." });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { Success = false, Message = "An error occurred: " + ex.Message });
+        //    }
+        //}
+        //[HttpGet]
+        //public ActionResult PrintReport(int storeId)
+        //{
+        //    try
+        //    {
+        //        LocalReport localReport = new LocalReport();
+        //        string reportPath = Server.MapPath("~/Reports/Sale_ReceiptBankDeposit.rdlc");
+
+        //        //if (!System.IO.File.Exists(reportPath))
+        //        //{
+        //        //    return HttpNotFound("Report file not found.");
+        //        //}
+
+        //        localReport.ReportPath = reportPath;
+
+        //        // Fetch Data for Report
+        //        var storeData = db.DailyBalanceVnds.Where(s => s.StoreId == storeId).ToList();
+
+        //        // Create Report Data Source
+        //        ReportDataSource reportDataSource = new ReportDataSource("YourDataSetName", storeData);
+        //        localReport.DataSources.Clear();
+        //        localReport.DataSources.Add(reportDataSource);
+
+        //        // Render Report to PDF
+        //        string mimeType, encoding, fileNameExtension;
+        //        Warning[] warnings;
+        //        string[] streams;
+        //        byte[] renderedBytes = localReport.Render("PDF", null, out mimeType, out encoding, out fileNameExtension, out streams, out warnings);
+
+        //        // Return File as Download
+        //        return File(renderedBytes, mimeType, "Report.pdf");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Content("Error generating report: " + ex.Message);
+        //    }
+        //}
+
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public ActionResult BankDeposit(StoreViewModel storeDto)
+        {
+            if (storeDto == null) { return new HttpStatusCodeResult(HttpStatusCode.BadRequest); }
             //var storeId = Session["StoreId"] as string; //commented due to session issue
             //if (storeId == null)
             //{
             //    return RedirectToAction("StoreNotFound", "UserManagement");
             //}
             //var parseId = int.Parse(storeId);
-            if (storeDto.Id == 0)
+            var store = new DailyBalanceVnd
             {
-                //if (storeDto.OpeningBalance==0)
-                //    storeDto.OpeningBalance = 0;
-                var store = new DailyBalanceVnd
-                {
-                    OpeningDate = DateTime.UtcNow,
-                    OpeningBalance = storeDto.OpeningBalance,
-                    OpeningCurrencyDetail = storeDto.OpeningCurrencyDetail,
-                    //StoreId = parseId //commented due to session issue
-                    StoreId = 1
-                };
-                Session["StoreId"] = storeDto.StoreId;
-                db.DailyBalanceVnds.Add(store);
-                db.SaveChanges();
-            }
-            return Json(new { Success = true, Message = "Shop opened successfully" });
+                OpeningBalance = storeDto.OpeningBalance,
+                OpeningCurrencyDetail = storeDto.OpeningCurrencyDetail,
+                Quantity = storeDto.Quantity,
+                VNDQuantity =  storeDto.VNDQuantity,
+                USDQuantity = storeDto.USDQuantity,
+                JPYQuantity = storeDto.USDQuantity,
+                CurrencyName  = storeDto.CurrencyName,
+                OpeningDate = DateTime.UtcNow,
+                ClosingDate = DateTime.UtcNow,
+                ClosingBalance = storeDto.ClosingBalance,
+                ClosingCurrencyDetail = storeDto.ClosingCurrencyDetail,
+                //StoreId = parseId //commented due to session issue
+                StoreId = 17,
+                //StoreId = storeDto.StoreId
+            };
+            db.DailyBalanceVnds.Add(store);
+            db.SaveChanges();
+            var bankDepositId = store.Id;  // Get the ID of the bank deposit just saved
+
+            // Call the method to generate the RDLC report
+            //return GenerateBankDepositReport(bankDepositId);
+            //Session["StoreId"] = null;
+            return Json(new { Success = true, bankDepositId = bankDepositId });
         }
+        [HttpGet]
+        public ActionResult GenerateBankDepositReport(int bankDepositId)
+        {
+            LocalReport localReport = new LocalReport();
+            localReport.ReportPath = Server.MapPath("~/Reports/Sale_ReceiptBankDeposit.rdlc");  // ✅ Correct report name
+
+            // Fetch the bank deposit data using the saved ID
+            var bankDepositData = db.Database.SqlQuery<BankDepositReportViewModel>(
+                "EXEC spBankDepositReport @BankDepositId = {0}", bankDepositId).ToList();
+
+            // ✅ Check if data exists
+            if (bankDepositData == null || !bankDepositData.Any())
+            {
+                throw new Exception("No data found for the selected Bank Deposit ID.");
+            }
+
+            // ✅ Ensure ReportDataSource Name matches RDLC dataset
+            //ReportDataSource reportDataSource = new ReportDataSource("BankDepositDataSet", bankDepositData);
+            ReportDataSource reportDataSource = new ReportDataSource("DataSet1", bankDepositData); // Update if needed
+
+            localReport.DataSources.Add(reportDataSource);
+
+            // Render the report to PDF
+            string mimeType, encoding, fileNameExtension;
+            Warning[] warnings;
+            string[] streams;
+            byte[] renderBytes;
+
+            renderBytes = localReport.Render(
+                "PDF", null, out mimeType, out encoding, out fileNameExtension, out streams, out warnings);
+
+            // ✅ Use `File` instead of `Response.AddHeader`
+            return File(renderBytes, mimeType, "BankDepositReport.pdf");
+        }
+
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public ActionResult MoneyInput(StoreViewModel storeDto)
+        {
+            if (storeDto == null) { return new HttpStatusCodeResult(HttpStatusCode.BadRequest); }
+            //var storeId = Session["StoreId"] as string; //commented due to session issue
+            //if (storeId == null)
+            //{
+            //    return RedirectToAction("StoreNotFound", "UserManagement");
+            //}
+            //var parseId = int.Parse(storeId);
+            var store = new DailyBalanceVnd
+            {
+                OpeningBalance = storeDto.OpeningBalance,
+                OpeningCurrencyDetail = storeDto.OpeningCurrencyDetail,
+                Quantity = storeDto.Quantity,
+                VNDQuantity = storeDto.VNDQuantity,
+                USDQuantity = storeDto.USDQuantity,
+                JPYQuantity = storeDto.USDQuantity,
+                CurrencyName = storeDto.CurrencyName,
+                OpeningDate = DateTime.UtcNow,
+                ClosingDate = DateTime.UtcNow,
+                ClosingBalance = storeDto.ClosingBalance,
+                ClosingCurrencyDetail = storeDto.ClosingCurrencyDetail,
+                //StoreId = parseId //commented due to session issue
+                StoreId = 17,
+                //StoreId = storeDto.StoreId
+            };
+            db.DailyBalanceVnds.Add(store);
+            db.SaveChanges();
+            var bankDepositId = store.Id;  // Get the ID of the bank deposit just saved
+
+            // Call the method to generate the RDLC report
+            //return GenerateBankDepositReport(bankDepositId);
+            //Session["StoreId"] = null;
+            return Json(new { Success = true, bankDepositId = bankDepositId });
+        }
+        [HttpGet]
+        public ActionResult GenerateMoneyInputReport(int bankDepositId)
+        {
+            LocalReport localReport = new LocalReport();
+            localReport.ReportPath = Server.MapPath("~/Reports/Sale_ReceiptMoneyInput.rdlc");  // ✅ Correct report name
+
+            // Fetch the bank deposit data using the saved ID
+            var bankDepositData = db.Database.SqlQuery<BankDepositReportViewModel>(
+                "EXEC spBankDepositReport @BankDepositId = {0}", bankDepositId).ToList();
+
+            // ✅ Check if data exists
+            if (bankDepositData == null || !bankDepositData.Any())
+            {
+                throw new Exception("No data found for the selected Bank Deposit ID.");
+            }
+
+            // ✅ Ensure ReportDataSource Name matches RDLC dataset
+            //ReportDataSource reportDataSource = new ReportDataSource("BankDepositDataSet", bankDepositData);
+            ReportDataSource reportDataSource = new ReportDataSource("DataSet1", bankDepositData); // Update if needed
+
+            localReport.DataSources.Add(reportDataSource);
+
+            // Render the report to PDF
+            string mimeType, encoding, fileNameExtension;
+            Warning[] warnings;
+            string[] streams;
+            byte[] renderBytes;
+
+            renderBytes = localReport.Render(
+                "PDF", null, out mimeType, out encoding, out fileNameExtension, out streams, out warnings);
+
+            // ✅ Use `File` instead of `Response.AddHeader`
+            return File(renderBytes, mimeType, "BankDepositReport.pdf");
+        }
+        //public FileContentResult GenerateBankDepositReport(int bankDepositId)
+        //{
+        //    LocalReport localReport = new LocalReport();
+        //    localReport.ReportPath = Server.MapPath("~/Reports/BankDepositReport.rdlc");
+
+        //    // Fetch the bank deposit data using the saved ID
+        //    var bankDepositData = db.Database.SqlQuery<BankDepositReportViewModel>(
+        //        "EXEC spBankDepositReport @BankDepositId = {0}", bankDepositId).ToList();
+
+        //    // Add the data source to the report
+        //    ReportDataSource reportDataSource = new ReportDataSource();
+        //    reportDataSource.Name = "BankDepositDataSet";  // This should match the dataset name in your RDLC
+        //    reportDataSource.Value = bankDepositData;
+        //    localReport.DataSources.Add(reportDataSource);
+
+        //    // Render the report to PDF
+        //    string reportType = "PDF";
+        //    string mimeType;
+        //    string encoding;
+        //    string fileNameExtension = "pdf";
+        //    Warning[] warnings;
+        //    string[] streams;
+        //    byte[] renderBytes;
+
+        //    renderBytes = localReport.Render(reportType, null, out mimeType, out encoding, out fileNameExtension, out streams, out warnings);
+
+        //    // Return the report as a file download
+        //    Response.AddHeader("content-disposition", "attachment; filename=BankDepositReport." + fileNameExtension);
+        //    return new FileContentResult(renderBytes, mimeType);
+        //}
+
         [HttpPost]
         //[ValidateAntiForgeryToken]
         public ActionResult CloseShop(StoreViewModel storeDto)
@@ -327,7 +657,8 @@ namespace MYBUSINESS.Controllers
                 ClosingBalance = storeDto.ClosingBalance,
                 ClosingCurrencyDetail = storeDto.ClosingCurrencyDetail,
                 //StoreId = parseId //commented due to session issue
-                StoreId = 1
+                //StoreId = 1
+                StoreId = storeDto.StoreId
             };
             db.DailyBalanceVnds.Add(store);
             db.SaveChanges();

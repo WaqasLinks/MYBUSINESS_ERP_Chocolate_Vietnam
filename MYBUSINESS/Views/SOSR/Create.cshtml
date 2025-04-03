@@ -617,14 +617,14 @@
                                                 <br />
                                                 <form>
                                                     <div class="form-group">
-                                                        <label for="inputField">TM/CK</label>
-                                                        <input type="text" autocomplete="off" class="form-control" name="SaleOrder.BillPaid" id="cardvnd" value="">
+                                                        <label for="inputField">Card Vnd</label>
+                                                        <input type="text" autocomplete="off" class="form-control" name="SaleOrder.BillPaid" id="tm/ck" value="">
                                                         @*<input type="text" autocomplete="off" class="form-control" placeholder="Card Vnd" name="SaleOrder.BillPaid" id="cardvnd" value="0">*@
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <label for="inputField">TM</label>
-                                                        <input type="text" class="form-control" id="cashvnd" value="">
+                                                        <label for="inputField">Cash Vnd</label>
+                                                        <input type="text" class="form-control" id="tm" value="">
                                                     </div>
                                                     <div class="form-group hiddenCurrencyInputs" style="display:none;">
                                                         <label for="inputField">Cash USD($)</label>
@@ -979,6 +979,9 @@
 
 }
 <script>
+    
+    
+
     $(document).ready(function () {
         document.getElementById('SOCreate').reset(); // has to be handle
         debugger;
@@ -1015,23 +1018,52 @@
     //    $("#addNewRow").removeAttr("disabled");
     //    update_itemTotal();
     //});
-    $('#SaleOrder\\.PaymentMethod').on('change', function () {
-        var selectedPayment = $(this).val();
-        alert("Selected Payment Method: ", selectedPayment); // Debugging
+    //$('#SaleOrder\\.PaymentMethod').on('change', function () {
+    //    var selectedPayment = $(this).val();
+    //    alert("Selected Payment Method: ", selectedPayment); // Debugging
 
-        if (selectedPayment === "TM/CK") {
-            $('#cardvnd').attr('name', 'SaleOrder.BillPaid');
-            $('#cashvnd').removeAttr('name');
-            alert("Card VND selected, name assigned to #cardvnd");
-        } else if (selectedPayment === "TM") {
-            $('#cashvnd').attr('name', 'SaleOrder.BillPaid');
-            $('#cardvnd').removeAttr('name');
-            alert("Cash selected, name assigned to #cashvnd");
-        } else {
-            $('#cardvnd, #cashvnd').removeAttr('name');
-            alert("Neither TM nor TM/CK selected, names removed.");
-        }
+    //    if (selectedPayment === "TM/CK") {
+    //        $('#cardvnd').attr('name', 'SaleOrder.BillPaid');
+    //        $('#cashvnd').removeAttr('name');
+    //        alert("Card VND selected, name assigned to #cardvnd");
+    //    } else if (selectedPayment === "TM") {
+    //        $('#cashvnd').attr('name', 'SaleOrder.BillPaid');
+    //        $('#cardvnd').removeAttr('name');
+    //        alert("Cash selected, name assigned to #cashvnd");
+    //    } else {
+    //        $('#cardvnd, #cashvnd').removeAttr('name');
+    //        alert("Neither TM nor TM/CK selected, names removed.");
+    //    }
+    //});
+
+    $(document).ready(function () {
+        // When "Pay all by card" is clicked
+        $('#payallbycard').on('click', function () {
+            $('#SaleOrder\\.PaymentMethod').val("TM/CK").trigger('change'); // Set dropdown to "TM/CK"
+        });
+        debugger
+        // When Payment Method is changed, update field names accordingly
+        $('#SaleOrder\\.PaymentMethod').on('change', function () {
+            var selectedPayment = $(this).val();
+            console.log("Selected Payment Method: " + selectedPayment); // Debugging
+            debugger
+            if (selectedPayment === "TM/CK") {
+                $('#tm\\/ck').attr('name', 'SaleOrder.BillPaid'); // Assign name to Card VND
+                $('#tm').removeAttr('name'); // Remove name from Cash VND
+                console.log("Card VND selected, name assigned to #tm/ck");
+            } else if (selectedPayment === "TM") {
+                $('#tm').attr('name', 'SaleOrder.BillPaid'); // Assign name to Cash VND
+                $('#tm\\/ck').removeAttr('name'); // Remove name from Card VND
+                console.log("Cash selected, name assigned to #tm");
+            } else {
+                $('#tm, #tm\\/ck').removeAttr('name'); // Remove names if none match
+                console.log("Neither TM nor TM/CK selected, names removed.");
+            }
+        });
     });
+
+
+
 
     txtSerialNum = 0;
     TriggerBodyEvents();
