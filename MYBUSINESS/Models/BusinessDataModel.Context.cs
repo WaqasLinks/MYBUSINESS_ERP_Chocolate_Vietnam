@@ -71,6 +71,7 @@ namespace MYBUSINESS.Models
         public virtual DbSet<PO> POes { get; set; }
         public virtual DbSet<POD> PODs { get; set; }
         public virtual DbSet<DailyBalanceVnd> DailyBalanceVnds { get; set; }
+        public virtual DbSet<ShopManage> ShopManages { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {

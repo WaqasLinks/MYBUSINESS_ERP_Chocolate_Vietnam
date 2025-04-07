@@ -28,5 +28,6 @@ namespace MYBUSINESS.Models
         public Nullable<int> USDQuantity { get; set; }
         public Nullable<int> JPYQuantity { get; set; }
         public string CurrencyName { get; set; }
+        public string Notes { get; set; }
     }
 }

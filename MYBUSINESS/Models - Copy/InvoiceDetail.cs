@@ -38,7 +38,7 @@ namespace MYBUSINESS.Models
         public string ten { get; set; }
         public string mst { get; set; }
         public string dchi { get; set; }
-        public string Email { get; set; }
+        public string email { get; set; }
         public string htttoan { get; set; }
         public decimal? stckhau { get; set; }
         public decimal thtien { get; set; }

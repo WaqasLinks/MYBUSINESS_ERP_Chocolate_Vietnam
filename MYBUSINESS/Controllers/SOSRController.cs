@@ -1579,7 +1579,7 @@ namespace MYBUSINESS.Controllers
                 var dbsaleOrderDetails = db.SODs
         .Include(d => d.Product)
         .Where(d => d.SOId == soId)
-        .ToList();
+       .ToList();
 
                 string url = "https://0401485182.minvoice.com.vn/api/InvoiceApi78/SaveV2"; //Real url working test env 
                 //string url = "https://0106026495-998.minvoice.pro/api/InvoiceApi780/Save"; //To check if webservice down / do not respond
@@ -1618,7 +1618,6 @@ namespace MYBUSINESS.Controllers
                     var invoiceDetails = dbsaleOrderDetails
                         .Where(detail => detail != null && detail.ProductId != null)
                         .Select(detail => new InvoiceDetail
-
 
                         {
 
@@ -1659,7 +1658,7 @@ namespace MYBUSINESS.Controllers
                         mst = cust.Vat,/*saleOrder.SOSerial.ToString()*///"0401485182",//cust.TaxCode ?? "0401485182",
                         dchi = cust.Address,
                         //inv_buyerEmail = cust.Email ?? "unknown@example.com",
-                        Email = cust.Email,
+                        email = cust.Email,
                         htttoan = saleOrder.PaymentMethod ?? "TM/CK",
                         ttcktmai = (decimal)saleOrder.Discount,
                         tgtcthue = (decimal)saleOrder.SaleOrderAmount / (1 + tax / 100),//saleOrder.TotalAmountWithoutVat ?? 0,

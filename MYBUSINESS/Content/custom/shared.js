@@ -373,229 +373,309 @@ $(document).on('click', '#closeShop', function () {
     });
 });
 $(document).on('click', '#bankDeposit', function () {
-    /*alert('bankDeposit')*/
     var totalAmountVndClose = document.getElementById('totalVndCountClose').value;
     if (totalAmountVndClose == '0') totalAmountVndClose = 0;
-    if (confirm(`You input '${totalAmountVndClose}', are you sure?`)) {
-        // Confirmation dialog
-        if (!confirm(`You input '${totalAmountVndClose}', are you sure?`)) {
-            alert("Operation cancelled.");
-            $('#storeClosingPopup').modal('hide');
-            $('#storeClosingPopup').find('input, textarea, select').val('0');
-            return;
-        }
 
-        // Initialize counters
-        var totalQuantity = 0;
-        var vndQuantity = 0;
-        var usdQuantity = 0;
-        var jpyQuantity = 0;
-        var currencyName = "VND"; // Default currency
-
-        // 1. Count VND bills
-        var vndInputs = [
-            'oneThsndVndClose', 'twoThsndVndClose', 'fiveThsndVndClose',
-            'tenThsndVndClose', 'twentyThsndVndClose', 'fiftyThsndVndClose',
-            'oneLacVndClose', 'twoLacVndClose', 'fiveLacVndClose'
-        ];
-
-        vndInputs.forEach(function (inputId) {
-            var count = parseInt($('#' + inputId).val()) || 0;
-            vndQuantity += count;
-            totalQuantity += count;
-        });
-
-        // 2. Count USD bills
-        var usdInputs = [
-            'oneDollarClose', 'fiveDollarsClose', 'tenDollarsClose',
-            'twentyDollarsClose', 'fiftyDollarsClose', 'hundredDollarsClose'
-        ];
-
-        usdInputs.forEach(function (inputId) {
-            var count = parseInt($('#' + inputId).val()) || 0;
-            usdQuantity += count;
-            totalQuantity += count;
-        });
-
-        // 3. Count JPY coins/bills
-        var jpyInputs = [
-            'oneYenClose', 'fiveYensClose', 'tenYensClose', 'fiftyYensClose',
-            'hundredYensClose', 'fivehundredYensClose', 'onethousandsYensClose',
-            'twothousandsYensClose', 'fivethousandsYensClose', 'tenthousandsYensClose'
-        ];
-
-        jpyInputs.forEach(function (inputId) {
-            var count = parseInt($('#' + inputId).val()) || 0;
-            jpyQuantity += count;
-            totalQuantity += count;
-        });
-
-        // 4. Format currency details string
-        var formattedString = "";
-        if (closeCurrencyDetalInVnd.length > 0) {
-            formattedString = closeCurrencyDetalInVnd.map(item => {
-                let denominationValue = 0;
-
-                switch (item.denomination) {
-                    case 'oneThsndVndClose':
-                        denominationValue = 1000;
-                        break;
-                    case 'twoThsndVndClose':
-                        denominationValue = 2000;
-                        break;
-                    case 'fiveThsndVndClose':
-                        denominationValue = 5000;
-                        break;
-                    case 'tenThsndVndClose':
-                        denominationValue = 10000;
-                        break;
-                    case 'twentyThsndVndClose':
-                        denominationValue = 20000;
-                        break;
-                    case 'fiftyThsndVndClose':
-                        denominationValue = 50000;
-                        break;
-                    case 'oneLacVndClose':
-                        denominationValue = 100000;
-                        break;
-                    case 'twoLacVndClose':
-                        denominationValue = 200000;
-                        break;
-                    case 'fiveLacVndClose':
-                        denominationValue = 500000;
-                        break;
-                    default:
-                        denominationValue = 0;
-                }
-                return `${denominationValue}@${item.count}`;
-            }).join(':');
-        }
-        var selectedBlance = 0;
-        var vndBalance = parseFloat($('#totalVndCountClose').val());
-        var dollarBalance = parseFloat($('#totalDollarsCountClose').val());
-        var jpyBalance = parseFloat($('#totalYensCountClose').val());
-
-        if (!isNaN(vndBalance) && vndBalance !== 0) {
-            selectedBlance = vndBalance;
-            currencyName = "VND";
-        } else if (!isNaN(dollarBalance) && dollarBalance !== 0) {
-            selectedBlance = dollarBalance;
-            currencyName = "USD";
-        } else if (!isNaN(jpyBalance) && jpyBalance !== 0) {
-            selectedBlance = jpyBalance;
-            currencyName = "JPY";
-        } else {
-            vndBalance = 0;
-            dollarBalance = 0;
-            jpyBalance = 0;
-        }
-
-        var storeViewModel = {
-            ClosingBalance: selectedBlance,
-            ClosingCurrencyDetail: formattedString,
-            OpeningBalance: selectedBlance,
-            Quantity: totalQuantity,
-            VNDQuantity: vndQuantity,
-            USDQuantity: usdQuantity,
-            JPYQuantity: jpyQuantity,
-            CurrencyName: currencyName
-        };
-        //$.ajax({
-        //    url: '/Stores/BankDeposit',
-        //    type: 'POST',
-        //    data: JSON.stringify(storeViewModel),
-        //    contentType: 'application/json; charset=utf-8',
-        //    xhrFields: {
-        //        responseType: 'blob'  // Expect a binary file (PDF)
-        //    },
-        //    success: function (response, status, xhr) {
-        //        // Create a Blob object from the response
-        //        var blob = new Blob([response], { type: 'application/pdf' });
-
-        //        // Get filename from content-disposition header if present
-        //        var filename = "BankDepositReport.pdf";
-        //        var contentDisposition = xhr.getResponseHeader('Content-Disposition');
-        //        if (contentDisposition) {
-        //            var matches = contentDisposition.match(/filename="(.+)"/);
-        //            if (matches.length === 2) filename = matches[1];
-        //        }
-
-        //        // Create a link to download the file
-        //        var link = document.createElement('a');
-        //        link.href = window.URL.createObjectURL(blob);
-        //        link.download = filename;
-        //        document.body.appendChild(link);
-        //        link.click();
-        //        document.body.removeChild(link);
-
-        //        // Redirect after download (optional)
-        //        window.location.href = '/Stores/StoreDashboard';
-        //        localStorage.removeItem('storeIds');
-        //    },
-        //    error: function (xhr, status, error) {
-        //        alert('An error occurred: ' + error);
-        //    }
-        //});
-
-
-        $.ajax({
-            url: '/Stores/BankDeposit',
-            type: 'POST',
-            data: JSON.stringify(storeViewModel),
-            contentType: 'application/json; charset=utf-8',
-            dataType: 'json',
-            success: function (response) {
-                debugger
-
-                if (response.Success) {
-                    window.open('/Stores/GenerateBankDepositReport?bankDepositId=' + response.bankDepositId, '_blank');
-                    //$.ajax({
-                    //    url: '/Stores/GenerateBankDepositReport',
-                    //    type: 'GET',
-                    //    data: response.bankDepositId,
-                        
-                    //    xhrFields: {
-                    //        responseType: 'blob' // Get response as Blob
-                    //    },
-                    //    success: function (response) {
-                    //        // Create a Blob from the PDF response
-                    //        var blob = new Blob([response], { type: 'application/pdf' });
-
-                    //        // Create an object URL for the Blob
-                    //        var blobUrl = URL.createObjectURL(blob);
-
-                    //        // Open the PDF in a new window
-                    //        var newTab = window.open(blobUrl, '_blank');
-
-                    //        // Ensure the tab is opened before triggering print
-                    //        if (newTab) {
-                    //            newTab.onload = function () {
-                    //                newTab.print();
-                    //            };
-                    //        } else {
-                    //            alert('Popup blocked! Please allow popups for this website.');
-                    //        }
-                    //    },
-                    //    error: function (xhr, status, error) {
-                    //        alert('An error occurred: ' + error);
-                    //    }
-                    //});
-                } else {
-                    alert('Error: ' + response.Message);
-                }
-            },
-            error: function (xhr, status, error) {
-                alert('An error occurred: ' + error);
-            }
-        });
-
-
-    } else {
+    if (!confirm(`You input '${totalAmountVndClose}', are you sure?`)) {
         alert("Operation cancelled.");
         $('#storeClosingPopup').modal('hide');
         $('#storeClosingPopup').find('input, textarea, select').val('0');
+        return;
     }
+
+    // Initialize counters
+    var totalQuantity = 0, vndQuantity = 0, usdQuantity = 0, jpyQuantity = 0, currencyName = "VND";
+
+    const getCount = id => parseInt($('#' + id).val()) || 0;
+
+    const vndInputs = ['oneThsndVndClose', 'twoThsndVndClose', 'fiveThsndVndClose',
+        'tenThsndVndClose', 'twentyThsndVndClose', 'fiftyThsndVndClose',
+        'oneLacVndClose', 'twoLacVndClose', 'fiveLacVndClose'];
+
+    vndInputs.forEach(id => { let c = getCount(id); vndQuantity += c; totalQuantity += c; });
+
+    const usdInputs = ['oneDollarClose', 'fiveDollarsClose', 'tenDollarsClose',
+        'twentyDollarsClose', 'fiftyDollarsClose', 'hundredDollarsClose'];
+
+    usdInputs.forEach(id => { let c = getCount(id); usdQuantity += c; totalQuantity += c; });
+
+    const jpyInputs = ['oneYenClose', 'fiveYensClose', 'tenYensClose', 'fiftyYensClose',
+        'hundredYensClose', 'fivehundredYensClose', 'onethousandsYensClose',
+        'twothousandsYensClose', 'fivethousandsYensClose', 'tenthousandsYensClose'];
+
+    jpyInputs.forEach(id => { let c = getCount(id); jpyQuantity += c; totalQuantity += c; });
+
+    // Select balance and currency
+    var vndBalance = parseFloat($('#totalVndCountClose').val()) || 0;
+    var dollarBalance = parseFloat($('#totalDollarsCountClose').val()) || 0;
+    var jpyBalance = parseFloat($('#totalYensCountClose').val()) || 0;
+
+    var selectedBalance = 0;
+    if (vndBalance !== 0) {
+        selectedBalance = vndBalance;
+        currencyName = "VND";
+    } else if (dollarBalance !== 0) {
+        selectedBalance = dollarBalance;
+        currencyName = "USD";
+    } else if (jpyBalance !== 0) {
+        selectedBalance = jpyBalance;
+        currencyName = "JPY";
+    }
+
+    var shopManagementViewModel = {
+        Balance: selectedBalance,
+        Quantity: totalQuantity,
+        VNDQuantity: vndQuantity,
+        USDQuantity: usdQuantity,
+        JPYQuantity: jpyQuantity,
+        CurrencyName: currencyName
+    };
+
+    $.ajax({
+        url: '/Stores/BankDeposit',
+        type: 'POST',
+        data: JSON.stringify(shopManagementViewModel),
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: function (response) {
+            if (response.Success) {
+                const reportUrl = `/Stores/GenerateBankDepositReport?bankDepositId=${encodeURIComponent(response.bankDepositId)}`;
+                window.open(reportUrl, '_blank');
+            } else {
+                alert('Error: ' + response.Message);
+            }
+        },
+        error: function (xhr, status, error) {
+            alert('An error occurred: ' + error);
+        }
+    });
 });
+
+//$(document).on('click', '#bankDeposit', function () {
+//    /*alert('bankDeposit')*/
+//    var totalAmountVndClose = document.getElementById('totalVndCountClose').value;
+//    if (totalAmountVndClose == '0') totalAmountVndClose = 0;
+//    if (confirm(`You input '${totalAmountVndClose}', are you sure?`)) {
+//        // Confirmation dialog
+//        if (!confirm(`You input '${totalAmountVndClose}', are you sure?`)) {
+//            alert("Operation cancelled.");
+//            $('#storeClosingPopup').modal('hide');
+//            $('#storeClosingPopup').find('input, textarea, select').val('0');
+//            return;
+//        }
+
+//        // Initialize counters
+//        var totalQuantity = 0;
+//        var vndQuantity = 0;
+//        var usdQuantity = 0;
+//        var jpyQuantity = 0;
+//        var currencyName = "VND"; // Default currency
+
+//        // 1. Count VND bills
+//        var vndInputs = [
+//            'oneThsndVndClose', 'twoThsndVndClose', 'fiveThsndVndClose',
+//            'tenThsndVndClose', 'twentyThsndVndClose', 'fiftyThsndVndClose',
+//            'oneLacVndClose', 'twoLacVndClose', 'fiveLacVndClose'
+//        ];
+
+//        vndInputs.forEach(function (inputId) {
+//            var count = parseInt($('#' + inputId).val()) || 0;
+//            vndQuantity += count;
+//            totalQuantity += count;
+//        });
+
+//        // 2. Count USD bills
+//        var usdInputs = [
+//            'oneDollarClose', 'fiveDollarsClose', 'tenDollarsClose',
+//            'twentyDollarsClose', 'fiftyDollarsClose', 'hundredDollarsClose'
+//        ];
+
+//        usdInputs.forEach(function (inputId) {
+//            var count = parseInt($('#' + inputId).val()) || 0;
+//            usdQuantity += count;
+//            totalQuantity += count;
+//        });
+
+//        // 3. Count JPY coins/bills
+//        var jpyInputs = [
+//            'oneYenClose', 'fiveYensClose', 'tenYensClose', 'fiftyYensClose',
+//            'hundredYensClose', 'fivehundredYensClose', 'onethousandsYensClose',
+//            'twothousandsYensClose', 'fivethousandsYensClose', 'tenthousandsYensClose'
+//        ];
+
+//        jpyInputs.forEach(function (inputId) {
+//            var count = parseInt($('#' + inputId).val()) || 0;
+//            jpyQuantity += count;
+//            totalQuantity += count;
+//        });
+
+//        // 4. Format currency details string
+//        var formattedString = "";
+//        if (closeCurrencyDetalInVnd.length > 0) {
+//            formattedString = closeCurrencyDetalInVnd.map(item => {
+//                let denominationValue = 0;
+
+//                switch (item.denomination) {
+//                    case 'oneThsndVndClose':
+//                        denominationValue = 1000;
+//                        break;
+//                    case 'twoThsndVndClose':
+//                        denominationValue = 2000;
+//                        break;
+//                    case 'fiveThsndVndClose':
+//                        denominationValue = 5000;
+//                        break;
+//                    case 'tenThsndVndClose':
+//                        denominationValue = 10000;
+//                        break;
+//                    case 'twentyThsndVndClose':
+//                        denominationValue = 20000;
+//                        break;
+//                    case 'fiftyThsndVndClose':
+//                        denominationValue = 50000;
+//                        break;
+//                    case 'oneLacVndClose':
+//                        denominationValue = 100000;
+//                        break;
+//                    case 'twoLacVndClose':
+//                        denominationValue = 200000;
+//                        break;
+//                    case 'fiveLacVndClose':
+//                        denominationValue = 500000;
+//                        break;
+//                    default:
+//                        denominationValue = 0;
+//                }
+//                return `${denominationValue}@${item.count}`;
+//            }).join(':');
+//        }
+//        var selectedBlance = 0;
+//        var vndBalance = parseFloat($('#totalVndCountClose').val());
+//        var dollarBalance = parseFloat($('#totalDollarsCountClose').val());
+//        var jpyBalance = parseFloat($('#totalYensCountClose').val());
+
+//        if (!isNaN(vndBalance) && vndBalance !== 0) {
+//            selectedBlance = vndBalance;
+//            currencyName = "VND";
+//        } else if (!isNaN(dollarBalance) && dollarBalance !== 0) {
+//            selectedBlance = dollarBalance;
+//            currencyName = "USD";
+//        } else if (!isNaN(jpyBalance) && jpyBalance !== 0) {
+//            selectedBlance = jpyBalance;
+//            currencyName = "JPY";
+//        } else {
+//            vndBalance = 0;
+//            dollarBalance = 0;
+//            jpyBalance = 0;
+//        }
+
+//        var ShopManagementViewModel = {
+//            Balance: selectedBlance,
+//            //ClosingCurrencyDetail: formattedString,
+//            //OpeningBalance: selectedBlance,
+
+//            Quantity: totalQuantity,
+//            VNDQuantity: vndQuantity,
+//            USDQuantity: usdQuantity,
+//            JPYQuantity: jpyQuantity,
+//            CurrencyName: currencyName
+//        };
+//        //$.ajax({
+//        //    url: '/Stores/BankDeposit',
+//        //    type: 'POST',
+//        //    data: JSON.stringify(storeViewModel),
+//        //    contentType: 'application/json; charset=utf-8',
+//        //    xhrFields: {
+//        //        responseType: 'blob'  // Expect a binary file (PDF)
+//        //    },
+//        //    success: function (response, status, xhr) {
+//        //        // Create a Blob object from the response
+//        //        var blob = new Blob([response], { type: 'application/pdf' });
+
+//        //        // Get filename from content-disposition header if present
+//        //        var filename = "BankDepositReport.pdf";
+//        //        var contentDisposition = xhr.getResponseHeader('Content-Disposition');
+//        //        if (contentDisposition) {
+//        //            var matches = contentDisposition.match(/filename="(.+)"/);
+//        //            if (matches.length === 2) filename = matches[1];
+//        //        }
+
+//        //        // Create a link to download the file
+//        //        var link = document.createElement('a');
+//        //        link.href = window.URL.createObjectURL(blob);
+//        //        link.download = filename;
+//        //        document.body.appendChild(link);
+//        //        link.click();
+//        //        document.body.removeChild(link);
+
+//        //        // Redirect after download (optional)
+//        //        window.location.href = '/Stores/StoreDashboard';
+//        //        localStorage.removeItem('storeIds');
+//        //    },
+//        //    error: function (xhr, status, error) {
+//        //        alert('An error occurred: ' + error);
+//        //    }
+//        //});
+
+
+//        $.ajax({
+//            url: '/Stores/BankDeposit',
+//            type: 'POST',
+//            data: JSON.stringify(ShopManagementViewModel),
+//            contentType: 'application/json; charset=utf-8',
+//            dataType: 'json',
+//            success: function (response) {
+//                debugger
+
+//                if (response.Success) {
+//                    window.open('/Stores/GenerateBankDepositReport?bankDepositId=' + response.bankDepositId, '_blank');
+//                    //$.ajax({
+//                    //    url: '/Stores/GenerateBankDepositReport',
+//                    //    type: 'GET',
+//                    //    data: response.bankDepositId,
+                        
+//                    //    xhrFields: {
+//                    //        responseType: 'blob' // Get response as Blob
+//                    //    },
+//                    //    success: function (response) {
+//                    //        // Create a Blob from the PDF response
+//                    //        var blob = new Blob([response], { type: 'application/pdf' });
+
+//                    //        // Create an object URL for the Blob
+//                    //        var blobUrl = URL.createObjectURL(blob);
+
+//                    //        // Open the PDF in a new window
+//                    //        var newTab = window.open(blobUrl, '_blank');
+
+//                    //        // Ensure the tab is opened before triggering print
+//                    //        if (newTab) {
+//                    //            newTab.onload = function () {
+//                    //                newTab.print();
+//                    //            };
+//                    //        } else {
+//                    //            alert('Popup blocked! Please allow popups for this website.');
+//                    //        }
+//                    //    },
+//                    //    error: function (xhr, status, error) {
+//                    //        alert('An error occurred: ' + error);
+//                    //    }
+//                    //});
+//                } else {
+//                    alert('Error: ' + response.Message);
+//                }
+//            },
+//            error: function (xhr, status, error) {
+//                alert('An error occurred: ' + error);
+//            }
+//        });
+
+
+//    } else {
+//        alert("Operation cancelled.");
+//        $('#storeClosingPopup').modal('hide');
+//        $('#storeClosingPopup').find('input, textarea, select').val('0');
+//    }
+//});
 $(document).on('click', '#moneyInput', function () {
     /*alert('bankDeposit')*/
     var totalAmountVndClose = document.getElementById('totalVndCountClose').value;

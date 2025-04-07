@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Ajax.Utilities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -39,6 +40,10 @@ namespace MYBUSINESS.Models
     public partial class Product : IProduct_MetadataType
     {
         /* Id property has already existed in the mapped class */
+        public decimal SalePriceWithVat
+        {
+            get { return SalePrice + 8; }
+        }
     }
 
 

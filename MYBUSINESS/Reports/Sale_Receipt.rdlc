@@ -730,49 +730,12 @@
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
-          <Textbox Name="Textbox39">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Total Amount After Tax Value</Value>
-                    <Style>
-                      <FontFamily />
-                      <FontSize>5pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Right</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox30</rd:DefaultName>
-            <Top>0.65753in</Top>
-            <Left>1.89414in</Left>
-            <Height>0.1375in</Height>
-            <Width>1.01228in</Width>
-            <ZIndex>7</ZIndex>
-            <Visibility>
-              <Hidden>true</Hidden>
-            </Visibility>
-            <Style>
-              <Border />
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
           <Line Name="Line3">
             <Top>0.85in</Top>
             <Left>0.0433in</Left>
             <Height>0in</Height>
             <Width>3.26883in</Width>
-            <ZIndex>8</ZIndex>
+            <ZIndex>7</ZIndex>
             <Style>
               <Border>
                 <Style>Solid</Style>
@@ -803,7 +766,7 @@
             <Left>0.07098in</Left>
             <Height>0.15in</Height>
             <Width>2.29353in</Width>
-            <ZIndex>9</ZIndex>
+            <ZIndex>8</ZIndex>
             <Visibility>
               <Hidden>=IIF(First(Fields!BillPaid.Value, "DataSet1")&gt;"0",false,true)</Hidden>
             </Visibility>
@@ -822,7 +785,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=FormatNumber(Fields!BillPaid.Value, 2)</Value>
+                    <Value>=First(Fields!BillPaid.Value, "DataSet1")</Value>
                     <Style>
                       <FontFamily />
                       <FontSize>5pt</FontSize>
@@ -839,7 +802,7 @@
             <Left>2.50456in</Left>
             <Height>0.125in</Height>
             <Width>0.8065in</Width>
-            <ZIndex>10</ZIndex>
+            <ZIndex>9</ZIndex>
             <Visibility>
               <Hidden>=IIF(First(Fields!BillPaid.Value, "DataSet1")&gt;"0",false,true)</Hidden>
             </Visibility>
@@ -876,7 +839,7 @@
             <Left>0.0683in</Left>
             <Height>0.125in</Height>
             <Width>2.29353in</Width>
-            <ZIndex>11</ZIndex>
+            <ZIndex>10</ZIndex>
             <Visibility>
               <Hidden>=IIF(First(Fields!BillPaidByCash.Value, "DataSet1")&gt;"0",false,true)</Hidden>
             </Visibility>
@@ -912,7 +875,7 @@
             <Left>2.50563in</Left>
             <Height>0.125in</Height>
             <Width>0.8065in</Width>
-            <ZIndex>12</ZIndex>
+            <ZIndex>11</ZIndex>
             <Visibility>
               <Hidden>=IIF(First(Fields!BillPaidByCash.Value, "DataSet1")&gt;"0",false,true)</Hidden>
             </Visibility>
@@ -949,7 +912,7 @@
             <Left>0.0683in</Left>
             <Height>0.125in</Height>
             <Width>2.29353in</Width>
-            <ZIndex>13</ZIndex>
+            <ZIndex>12</ZIndex>
             <Style>
               <Border />
               <PaddingLeft>2pt</PaddingLeft>
@@ -982,7 +945,7 @@
             <Left>2.50456in</Left>
             <Height>0.12361in</Height>
             <Width>0.8065in</Width>
-            <ZIndex>14</ZIndex>
+            <ZIndex>13</ZIndex>
             <Style>
               <Border />
               <VerticalAlign>Middle</VerticalAlign>
@@ -1016,7 +979,7 @@
             <Left>2.50456in</Left>
             <Height>0.12811in</Height>
             <Width>0.8065in</Width>
-            <ZIndex>15</ZIndex>
+            <ZIndex>14</ZIndex>
             <Style>
               <Border />
               <VerticalAlign>Middle</VerticalAlign>
@@ -1050,7 +1013,7 @@
             <Left>0.0683in</Left>
             <Height>0.12811in</Height>
             <Width>2.29353in</Width>
-            <ZIndex>16</ZIndex>
+            <ZIndex>15</ZIndex>
             <Style>
               <Border />
               <PaddingLeft>2pt</PaddingLeft>
@@ -1064,7 +1027,7 @@
             <Left>0.0433in</Left>
             <Height>0in</Height>
             <Width>3.26883in</Width>
-            <ZIndex>17</ZIndex>
+            <ZIndex>16</ZIndex>
             <Style>
               <Border>
                 <Style>Solid</Style>
@@ -1095,7 +1058,7 @@
             <Left>1.13664in</Left>
             <Height>0.13542in</Height>
             <Width>1.45621in</Width>
-            <ZIndex>18</ZIndex>
+            <ZIndex>17</ZIndex>
             <Style>
               <Border />
               <VerticalAlign>Middle</VerticalAlign>
@@ -1130,7 +1093,7 @@
             <Left>1.13664in</Left>
             <Height>0.13542in</Height>
             <Width>1.45621in</Width>
-            <ZIndex>19</ZIndex>
+            <ZIndex>18</ZIndex>
             <Style>
               <Border />
               <VerticalAlign>Middle</VerticalAlign>
@@ -1164,7 +1127,7 @@
             <Left>0.0683in</Left>
             <Height>0.13542in</Height>
             <Width>0.82262in</Width>
-            <ZIndex>20</ZIndex>
+            <ZIndex>19</ZIndex>
             <Style>
               <Border />
               <PaddingLeft>2pt</PaddingLeft>
@@ -1197,7 +1160,7 @@
             <Left>0.0683in</Left>
             <Height>0.13264in</Height>
             <Width>0.50064in</Width>
-            <ZIndex>21</ZIndex>
+            <ZIndex>20</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1232,7 +1195,7 @@
             <Left>0.0683in</Left>
             <Height>0.12709in</Height>
             <Width>0.3368in</Width>
-            <ZIndex>22</ZIndex>
+            <ZIndex>21</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1267,7 +1230,7 @@
             <Left>0.4176in</Left>
             <Height>0.12709in</Height>
             <Width>1.14836in</Width>
-            <ZIndex>23</ZIndex>
+            <ZIndex>22</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1302,7 +1265,7 @@
             <Left>0.58283in</Left>
             <Height>0.13264in</Height>
             <Width>1.15813in</Width>
-            <ZIndex>24</ZIndex>
+            <ZIndex>23</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1337,7 +1300,7 @@
             <Left>0.86592in</Left>
             <Height>0.13542in</Height>
             <Width>1.03754in</Width>
-            <ZIndex>25</ZIndex>
+            <ZIndex>24</ZIndex>
             <Style>
               <Border />
               <PaddingLeft>2pt</PaddingLeft>
@@ -1370,7 +1333,7 @@
             <Left>0.0683in</Left>
             <Height>0.12709in</Height>
             <Width>0.5868in</Width>
-            <ZIndex>26</ZIndex>
+            <ZIndex>25</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1406,7 +1369,7 @@
             <Left>0.6551in</Left>
             <Height>0.12709in</Height>
             <Width>1.17643in</Width>
-            <ZIndex>27</ZIndex>
+            <ZIndex>26</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1442,7 +1405,7 @@
             <Left>0.89092in</Left>
             <Height>0.14792in</Height>
             <Width>1.50979in</Width>
-            <ZIndex>28</ZIndex>
+            <ZIndex>27</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1478,7 +1441,7 @@
             <Left>0.0558in</Left>
             <Height>0.13542in</Height>
             <Width>0.60069in</Width>
-            <ZIndex>29</ZIndex>
+            <ZIndex>28</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1514,7 +1477,7 @@
             <Left>0.0558in</Left>
             <Height>0.13264in</Height>
             <Width>0.62044in</Width>
-            <ZIndex>30</ZIndex>
+            <ZIndex>29</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1550,7 +1513,7 @@
             <Left>0.0558in</Left>
             <Height>0.13037in</Height>
             <Width>0.69762in</Width>
-            <ZIndex>31</ZIndex>
+            <ZIndex>30</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1586,7 +1549,7 @@
             <Left>0.76731in</Left>
             <Height>0.13038in</Height>
             <Width>1.04in</Width>
-            <ZIndex>32</ZIndex>
+            <ZIndex>31</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1622,7 +1585,7 @@
             <Left>0.70402in</Left>
             <Height>0.13264in</Height>
             <Width>1.10329in</Width>
-            <ZIndex>33</ZIndex>
+            <ZIndex>32</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1658,7 +1621,7 @@
             <Left>0.68427in</Left>
             <Height>0.13542in</Height>
             <Width>1.12499in</Width>
-            <ZIndex>34</ZIndex>
+            <ZIndex>33</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1694,7 +1657,7 @@
             <Left>0.0558in</Left>
             <Height>0.13264in</Height>
             <Width>0.96244in</Width>
-            <ZIndex>35</ZIndex>
+            <ZIndex>34</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1731,7 +1694,7 @@
             <Left>0.05581in</Left>
             <Height>0.13037in</Height>
             <Width>0.69761in</Width>
-            <ZIndex>36</ZIndex>
+            <ZIndex>35</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1767,7 +1730,7 @@
             <Left>1.01824in</Left>
             <Height>0.13264in</Height>
             <Width>1.03907in</Width>
-            <ZIndex>37</ZIndex>
+            <ZIndex>36</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1803,7 +1766,7 @@
             <Left>0.04598in</Left>
             <Height>0.13264in</Height>
             <Width>0.44263in</Width>
-            <ZIndex>38</ZIndex>
+            <ZIndex>37</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1839,7 +1802,7 @@
             <Left>0.52838in</Left>
             <Height>0.13264in</Height>
             <Width>1.27893in</Width>
-            <ZIndex>39</ZIndex>
+            <ZIndex>38</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1878,7 +1841,7 @@
             <Left>0.05708in</Left>
             <Height>0.14792in</Height>
             <Width>1.10804in</Width>
-            <ZIndex>40</ZIndex>
+            <ZIndex>39</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1914,7 +1877,7 @@
             <Left>1.09706in</Left>
             <Height>0.14792in</Height>
             <Width>1.16615in</Width>
-            <ZIndex>41</ZIndex>
+            <ZIndex>40</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1939,6 +1902,13 @@
                       <FontSize>5pt</FontSize>
                     </Style>
                   </TextRun>
+                  <TextRun>
+                    <Value> %</Value>
+                    <Style>
+                      <FontFamily />
+                      <FontSize>5pt</FontSize>
+                    </Style>
+                  </TextRun>
                 </TextRuns>
                 <Style>
                   <TextAlign>Left</TextAlign>
@@ -1950,7 +1920,7 @@
             <Left>0.60713in</Left>
             <Height>0.14583in</Height>
             <Width>0.88686in</Width>
-            <ZIndex>42</ZIndex>
+            <ZIndex>41</ZIndex>
             <Visibility>
               <Hidden>=IIF(First(Fields!SaleOrderQty.Value, "DataSet1") &gt; "0", False, True)</Hidden>
             </Visibility>
@@ -1987,49 +1957,13 @@
             <Left>2.77277in</Left>
             <Height>0.14424in</Height>
             <Width>0.52392in</Width>
-            <ZIndex>43</ZIndex>
+            <ZIndex>42</ZIndex>
             <Visibility>
               <Hidden>=IIF(First(Fields!SaleOrderQty.Value, "DataSet1") &gt; "0", False, True)</Hidden>
             </Visibility>
             <Style>
               <Border />
               <VerticalAlign>Top</VerticalAlign>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="SaleOrderAmount7">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=FormatNumber(Fields!SaleOrderAmount.Value, 2) * 10 / 100</Value>
-                    <Style>
-                      <FontFamily />
-                      <FontSize>5pt</FontSize>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Left</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>SaleOrderAmount</rd:DefaultName>
-            <Top>0.65753in</Top>
-            <Left>2.90642in</Left>
-            <Height>0.1375in</Height>
-            <Width>0.39839in</Width>
-            <ZIndex>44</ZIndex>
-            <Visibility>
-              <Hidden>true</Hidden>
-            </Visibility>
-            <Style>
-              <Border />
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -2055,11 +1989,11 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>SaleOrderAmount</rd:DefaultName>
-            <Top>0.67955in</Top>
-            <Left>0.84629in</Left>
+            <Top>0.68958in</Top>
+            <Left>2.6157in</Left>
             <Height>0.13542in</Height>
             <Width>0.71967in</Width>
-            <ZIndex>45</ZIndex>
+            <ZIndex>43</ZIndex>
             <Visibility>
               <Hidden>=IIF(First(Fields!SaleOrderQty.Value, "DataSet1") &gt; "0", False, True)</Hidden>
             </Visibility>
@@ -2102,7 +2036,7 @@
             <Left>0.76731in</Left>
             <Height>0.14149in</Height>
             <Width>1.165in</Width>
-            <ZIndex>46</ZIndex>
+            <ZIndex>44</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2136,7 +2070,7 @@
             <Left>0.04598in</Left>
             <Height>0.14792in</Height>
             <Width>0.83383in</Width>
-            <ZIndex>47</ZIndex>
+            <ZIndex>45</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2210,44 +2144,6 @@
                 </Border>
               </Style>
             </Image>
-            <Textbox Name="Textbox47">
-              <CanGrow>true</CanGrow>
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>Số HĐTT:</Value>
-                      <Style>
-                        <FontStyle>Normal</FontStyle>
-                        <FontFamily />
-                        <FontSize>5pt</FontSize>
-                        <FontWeight>Bold</FontWeight>
-                        <TextDecoration>None</TextDecoration>
-                        <Color>#000000</Color>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style>
-                    <TextAlign>Left</TextAlign>
-                  </Style>
-                </Paragraph>
-              </Paragraphs>
-              <rd:DefaultName>Textbox31</rd:DefaultName>
-              <Top>1.09792in</Top>
-              <Left>0.10123in</Left>
-              <Height>0.25416in</Height>
-              <Width>0.46771in</Width>
-              <ZIndex>2</ZIndex>
-              <Style>
-                <Border />
-                <VerticalAlign>Middle</VerticalAlign>
-                <PaddingLeft>2pt</PaddingLeft>
-                <PaddingRight>2pt</PaddingRight>
-                <PaddingTop>2pt</PaddingTop>
-                <PaddingBottom>2pt</PaddingBottom>
-              </Style>
-            </Textbox>
             <Textbox Name="Textbox48">
               <CanGrow>true</CanGrow>
               <KeepTogether>true</KeepTogether>
@@ -2276,7 +2172,7 @@
               <Left>2.37029in</Left>
               <Height>0.17292in</Height>
               <Width>0.47609in</Width>
-              <ZIndex>3</ZIndex>
+              <ZIndex>2</ZIndex>
               <Style>
                 <Border />
                 <VerticalAlign>Middle</VerticalAlign>
@@ -2314,7 +2210,7 @@
               <Left>2.88805in</Left>
               <Height>0.14584in</Height>
               <Width>0.44732in</Width>
-              <ZIndex>4</ZIndex>
+              <ZIndex>3</ZIndex>
               <Style>
                 <Border />
                 <VerticalAlign>Middle</VerticalAlign>
@@ -2350,7 +2246,7 @@
               <Left>1.26164in</Left>
               <Height>0.13542in</Height>
               <Width>1.18425in</Width>
-              <ZIndex>5</ZIndex>
+              <ZIndex>4</ZIndex>
               <Style>
                 <Border />
                 <PaddingLeft>2pt</PaddingLeft>
@@ -2383,7 +2279,7 @@
               <Left>0.79509in</Left>
               <Height>0.14375in</Height>
               <Width>0.63571in</Width>
-              <ZIndex>6</ZIndex>
+              <ZIndex>5</ZIndex>
               <Visibility>
                 <Hidden>=IIF(First(Fields!SaleOrderQty.Value, "DataSet1") &gt; "0", False, True)</Hidden>
               </Visibility>
@@ -2419,7 +2315,7 @@
               <Left>0.79509in</Left>
               <Height>0.15903in</Height>
               <Width>0.74057in</Width>
-              <ZIndex>7</ZIndex>
+              <ZIndex>6</ZIndex>
               <Visibility>
                 <Hidden>=IIF(First(Fields!SaleOrderQty.Value, "DataSet1") &gt; "0", False, True)</Hidden>
               </Visibility>
@@ -2455,7 +2351,7 @@
               <Left>1.33309in</Left>
               <Height>0.13542in</Height>
               <Width>1.03754in</Width>
-              <ZIndex>8</ZIndex>
+              <ZIndex>7</ZIndex>
               <Style>
                 <Border />
                 <VerticalAlign>Middle</VerticalAlign>
@@ -2489,6 +2385,44 @@
               <Left>1.33051in</Left>
               <Height>0.13542in</Height>
               <Width>1.03754in</Width>
+              <ZIndex>8</ZIndex>
+              <Style>
+                <Border />
+                <VerticalAlign>Middle</VerticalAlign>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Textbox Name="Textbox46">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>Số HĐTT:</Value>
+                      <Style>
+                        <FontStyle>Normal</FontStyle>
+                        <FontFamily />
+                        <FontSize>5pt</FontSize>
+                        <FontWeight>Bold</FontWeight>
+                        <TextDecoration>None</TextDecoration>
+                        <Color>#000000</Color>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Left</TextAlign>
+                  </Style>
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox31</rd:DefaultName>
+              <Top>1.1493in</Top>
+              <Left>0.07098in</Left>
+              <Height>0.13383in</Height>
+              <Width>0.59544in</Width>
               <ZIndex>9</ZIndex>
               <Style>
                 <Border />

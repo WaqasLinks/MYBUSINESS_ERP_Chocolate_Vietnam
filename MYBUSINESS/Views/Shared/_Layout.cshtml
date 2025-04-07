@@ -93,6 +93,7 @@
                             var storeId = Session["StoreId"];
                             if (storeId != null)
                             {
+                                
                                 <li><a href="#" id="bankDeposits" data-url="/SOSR/BankDepositPopup" data-target="#storeClosingModal">Bank Deposit</a></li>
                                 @*<li><a href="#" class="small-box-footer" id="bankDepositLink">Bank Deposit</a></li>*@
                                 <li><a href="#" id="moneyInputs" data-url="/SOSR/MoneyInputPopup" data-target="#storeClosingModal">Money Input</a></li>
@@ -134,6 +135,15 @@
                     <li><a href="/SOSR/Index"><i class="fa fa-search"></i> <span>Sales History</span></a></li>
                     <li><a href="/SOSR/IndexReturn"><i class="fa fa-search"></i> <span>Returns History</span></a></li>
 
+                    <li><a href="#"><i class=""></i> <span><b>Scan Bank Deposit</b></span></a></li>
+                    <li><a href="/SOSR/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New ScanBankDeposit</span></a></li>
+                    @*<li><a href="/SOSR/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Sale</span></a></li>
+        <li><a href="/SOSR/Index"><i class="fa fa-search"></i> <span>Sales History</span></a></li>
+        <li><a href="/SOSR/IndexReturn"><i class="fa fa-search"></i> <span>Returns History</span></a></li>*@
+                    <li><a href="#"><i class=""></i> <span><b>Scan Credit Card</b></span></a></li>
+                    <li><a href="/SOSR/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>Scan Credit Card</span></a></li>
+
+
                     <li><a href="#"><i class=""></i> <span><b>Purchases</b></span></a></li>
                     <li><a href="/POPR/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Purchase</span></a></li>
                     <li><a href="/POPR/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Purchase</span></a></li>
@@ -141,7 +151,7 @@
 
                     <li><a href="#"><i class=""></i> <span><b>Recieving</b></span></a></li>
                     @*<li><a href="/POPRReciver/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Recieving</span></a></li>
-                    <li><a href="/POPRReciver/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Recieving</span></a></li>*@
+        <li><a href="/POPRReciver/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Recieving</span></a></li>*@
                     <li><a href="/POPRReciver/Index"><i class="fa fa-search"></i> <span>Recieving History</span></a></li>
 
 
@@ -168,8 +178,8 @@
                     <li><a href="~/PostProduction/Index"><i class="fa fa-gift"></i> <span>Post Production List</span></a></li>
 
                     @*<li><a href="#"><i class=""></i> <span><b>Final Production</b></span></a></li>
-                        <li><a href="~/FinalProduction/Create"><i class="fa fa-sparkles"></i> <span>Final Production</span></a></li>
-                        <li><a href="~/FinalProduction/Index"><i class="fa fa-gift"></i> <span>New Production List</span></a></li>*@
+        <li><a href="~/FinalProduction/Create"><i class="fa fa-sparkles"></i> <span>Final Production</span></a></li>
+        <li><a href="~/FinalProduction/Index"><i class="fa fa-gift"></i> <span>New Production List</span></a></li>*@
 
                     <li><a href="#"><i class=""></i> <span><b>Customers</b></span></a></li>
                     <li><a href="/Customers/Create"><i class="fa fa-sparkles"></i> <span>New Customer</span></a></li>

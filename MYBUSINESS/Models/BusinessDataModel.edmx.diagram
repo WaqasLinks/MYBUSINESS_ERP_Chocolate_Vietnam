@@ -110,6 +110,7 @@
         <AssociationConnector Association="Models.FK_POD_PO" />
         <AssociationConnector Association="Models.FK_POD_Product" />
         <EntityTypeShape EntityType="Models.DailyBalanceVnd" Width="1.5" PointX="7.375" PointY="0.75" />
+        <EntityTypeShape EntityType="Models.ShopManage" Width="1.5" PointX="0.75" PointY="7.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

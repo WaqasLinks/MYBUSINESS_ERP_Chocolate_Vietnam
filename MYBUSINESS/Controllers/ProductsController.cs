@@ -558,7 +558,13 @@ namespace MYBUSINESS.Controllers
             }
             storeProdcut.Stock = storeProdcut.Stock / product.PerPack;
             product.Stock = storeProdcut.Stock;
+            decimal vatRate = 8m;
+            //decimal finalSalePrice = product.SalePrice - (product.SalePrice * vatRate / 100);
+            product.SalePrice = product.SalePrice / (1 + vatRate / 100);
+            //product.SalePrice = finalSalePrice; // Updated SalePrice with VAT
 
+            //// You can store the final price in the product's `SalePrice` or any other property that represents the price after VAT
+            //product.SalePrice = finalSalePrice;
             var productDetails = db.ProductDetails.Where(pd => pd.ProductId == id).ToList();
             ProductViewModel productViewModel = new ProductViewModel
             {
@@ -668,7 +674,12 @@ namespace MYBUSINESS.Controllers
                 .Where(x => x.ProductId == product.Id)
                 .Select(x => (decimal?)x.Stock)
                 .FirstOrDefault() ?? 0m;
+            decimal vatRate = 8m;
+            decimal finalSalePrice = product.SalePrice + (product.SalePrice * vatRate / 100);
+            product.SalePrice = finalSalePrice; // Updated SalePrice with VAT
 
+            // You can store the final price in the product's `SalePrice` or any other property that represents the price after VAT
+            product.SalePrice = finalSalePrice;
             var getProductStock = db.StoreProducts.FirstOrDefault(x => x.ProductId == product.Id);
 
             if (ModelState.IsValid)

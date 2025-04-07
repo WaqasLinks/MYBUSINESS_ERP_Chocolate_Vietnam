@@ -374,6 +374,7 @@
     <Compile Include="Controllers\StoresController.cs" />
     <Compile Include="Controllers\PurchaseQuotationController.cs" />
     <Compile Include="Controllers\SaleQuotationController.cs" />
+    <Compile Include="Controllers\UploadingController.cs" />
     <Compile Include="Controllers\UserAuthorizationController.cs" />
     <Compile Include="Controllers\CustomersController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
@@ -574,6 +575,10 @@
     <Compile Include="Models\ServiceDetail.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ShopManage.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ShopManagementViewModel.cs" />
     <Compile Include="Models\SO.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -3830,6 +3835,7 @@
     <Folder Include="bin\app.publish\" />
     <Folder Include="Resources\" />
     <Folder Include="Views\Report\" />
+    <Folder Include="Views\Uploading\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\index.d.ts" />

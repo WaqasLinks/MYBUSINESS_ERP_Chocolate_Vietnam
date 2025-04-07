@@ -98,6 +98,7 @@
           <Property Name="USDQuantity" Type="int" />
           <Property Name="JPYQuantity" Type="int" />
           <Property Name="CurrencyName" Type="nvarchar" MaxLength="1000" />
+          <Property Name="Notes" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Department">
           <Key>
@@ -610,6 +611,22 @@
           <Property Name="SaleType" Type="bit" />
           <Property Name="Profit" Type="decimal" Precision="18" Scale="2" />
           <Property Name="Remarks" Type="nvarchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="ShopManage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="Balance" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="ShoreId" Type="int" Nullable="false" />
+          <Property Name="TransactionType" Type="tinyint" />
+          <Property Name="Note" Type="nvarchar(max)" />
+          <Property Name="CurrencyName" Type="nvarchar" MaxLength="1000" />
+          <Property Name="JPYQuantity" Type="int" />
+          <Property Name="Quantity" Type="int" />
+          <Property Name="VNDQuantity" Type="int" />
+          <Property Name="USDQuantity" Type="int" />
+          <Property Name="Date" Type="date" />
         </EntityType>
         <EntityType Name="SO">
           <Key>
@@ -1593,6 +1610,7 @@
           <EntitySet Name="RentDetail" EntityType="Self.RentDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Service" EntityType="Self.Service" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ServiceDetail" EntityType="Self.ServiceDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ShopManage" EntityType="Self.ShopManage" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SO" EntityType="Self.SO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SOD" EntityType="Self.SOD" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Store" EntityType="Self.Store" Schema="dbo" store:Type="Tables" />
@@ -2184,8 +2202,9 @@
           </AssociationSet>
           <EntitySet Name="DailyBalanceVnds" EntityType="Models.DailyBalanceVnd" />
           <FunctionImport Name="spBankDepositReport" ReturnType="Collection(Models.spBankDepositReport_Result)">
-            <Parameter Name="BankDepositId" Mode="In" Type="Int32" />
+          <Parameter Name="BankDepositId" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="ShopManages" EntityType="Models.ShopManage" />
           </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
           <Property Type="Int32" Name="version" Nullable="true" />
@@ -4009,6 +4028,7 @@
           <Property Name="USDQuantity" Type="Int32" />
           <Property Name="JPYQuantity" Type="Int32" />
           <Property Name="CurrencyName" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <ComplexType Name="spBankDepositReport_Result">
           <Property Type="Int32" Name="BankDepositId" Nullable="false" />
@@ -4027,6 +4047,22 @@
           <Property Type="String" Name="CustomerEmail" Nullable="true" MaxLength="500" />
           <Property Type="String" Name="CustomerAddress" Nullable="true" MaxLength="500" />
         </ComplexType>
+        <EntityType Name="ShopManage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Balance" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="ShoreId" Type="Int32" Nullable="false" />
+          <Property Name="TransactionType" Type="Byte" />
+          <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CurrencyName" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="JPYQuantity" Type="Int32" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="VNDQuantity" Type="Int32" />
+          <Property Name="USDQuantity" Type="Int32" />
+          <Property Name="Date" Type="DateTime" Precision="0" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -5030,6 +5066,7 @@
           <EntitySetMapping Name="DailyBalanceVnds">
             <EntityTypeMapping TypeName="Models.DailyBalanceVnd">
               <MappingFragment StoreEntitySet="DailyBalanceVnd">
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
                 <ScalarProperty Name="CurrencyName" ColumnName="CurrencyName" />
                 <ScalarProperty Name="JPYQuantity" ColumnName="JPYQuantity" />
                 <ScalarProperty Name="USDQuantity" ColumnName="USDQuantity" />
@@ -5068,6 +5105,23 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="ShopManages">
+            <EntityTypeMapping TypeName="Models.ShopManage">
+              <MappingFragment StoreEntitySet="ShopManage">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="USDQuantity" ColumnName="USDQuantity" />
+                <ScalarProperty Name="VNDQuantity" ColumnName="VNDQuantity" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="JPYQuantity" ColumnName="JPYQuantity" />
+                <ScalarProperty Name="CurrencyName" ColumnName="CurrencyName" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="TransactionType" ColumnName="TransactionType" />
+                <ScalarProperty Name="ShoreId" ColumnName="ShoreId" />
+                <ScalarProperty Name="Balance" ColumnName="Balance" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

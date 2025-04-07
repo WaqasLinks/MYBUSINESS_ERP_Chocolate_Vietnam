@@ -468,64 +468,61 @@ namespace MYBUSINESS.Controllers
 
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public ActionResult BankDeposit(StoreViewModel storeDto)
+        public ActionResult BankDeposit(ShopManagementViewModel shopmanagementDto)
         {
-            if (storeDto == null) { return new HttpStatusCodeResult(HttpStatusCode.BadRequest); }
-            //var storeId = Session["StoreId"] as string; //commented due to session issue
-            //if (storeId == null)
-            //{
-            //    return RedirectToAction("StoreNotFound", "UserManagement");
-            //}
-            //var parseId = int.Parse(storeId);
-            var store = new DailyBalanceVnd
+            if (shopmanagementDto == null)
             {
-                OpeningBalance = storeDto.OpeningBalance,
-                OpeningCurrencyDetail = storeDto.OpeningCurrencyDetail,
-                Quantity = storeDto.Quantity,
-                VNDQuantity =  storeDto.VNDQuantity,
-                USDQuantity = storeDto.USDQuantity,
-                JPYQuantity = storeDto.USDQuantity,
-                CurrencyName  = storeDto.CurrencyName,
-                OpeningDate = DateTime.UtcNow,
-                ClosingDate = DateTime.UtcNow,
-                ClosingBalance = storeDto.ClosingBalance,
-                ClosingCurrencyDetail = storeDto.ClosingCurrencyDetail,
-                //StoreId = parseId //commented due to session issue
-                StoreId = 17,
-                //StoreId = storeDto.StoreId
-            };
-            db.DailyBalanceVnds.Add(store);
-            db.SaveChanges();
-            var bankDepositId = store.Id;  // Get the ID of the bank deposit just saved
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
 
-            // Call the method to generate the RDLC report
-            //return GenerateBankDepositReport(bankDepositId);
-            //Session["StoreId"] = null;
+            // Generate a 10-character ID (since Id is `nchar(10)`)
+            string newId = Guid.NewGuid().ToString("N").Substring(0, 10);
+
+            var shopmanagement = new ShopManage
+            {
+                Id = newId,  // Ensure it matches the nchar(10) type
+                Balance = shopmanagementDto.Balance,
+                Quantity = shopmanagementDto.Quantity,
+                VNDQuantity = shopmanagementDto.VNDQuantity,
+                USDQuantity = shopmanagementDto.USDQuantity,
+                JPYQuantity = shopmanagementDto.JPYQuantity,  // Fixed incorrect assignment
+                CurrencyName = shopmanagementDto.CurrencyName,
+                Date = DateTime.UtcNow,
+                TransactionType = 1,  // Default transaction type
+                ShoreId = 17,  // Default shore ID
+             /*   Note = shopmanagementDto.Note ?? "No Note"*/  // Ensure Note is not null
+            };
+
+            db.ShopManages.Add(shopmanagement);
+
+            int changes = db.SaveChanges();
+            if (changes == 0)
+            {
+                return Json(new { Success = false, Message = "Database save failed." });
+            }
+
+            var bankDepositId = shopmanagement.Id;  // Get the ID of the saved record
+
             return Json(new { Success = true, bankDepositId = bankDepositId });
         }
+
         [HttpGet]
-        public ActionResult GenerateBankDepositReport(int bankDepositId)
+        public ActionResult GenerateBankDepositReport(string bankDepositId)  // Change int to string
         {
             LocalReport localReport = new LocalReport();
-            localReport.ReportPath = Server.MapPath("~/Reports/Sale_ReceiptBankDeposit.rdlc");  // ✅ Correct report name
+            localReport.ReportPath = Server.MapPath("~/Reports/Sale_ReceiptBankDeposit.rdlc");
 
-            // Fetch the bank deposit data using the saved ID
             var bankDepositData = db.Database.SqlQuery<BankDepositReportViewModel>(
                 "EXEC spBankDepositReport @BankDepositId = {0}", bankDepositId).ToList();
 
-            // ✅ Check if data exists
             if (bankDepositData == null || !bankDepositData.Any())
             {
                 throw new Exception("No data found for the selected Bank Deposit ID.");
             }
 
-            // ✅ Ensure ReportDataSource Name matches RDLC dataset
-            //ReportDataSource reportDataSource = new ReportDataSource("BankDepositDataSet", bankDepositData);
-            ReportDataSource reportDataSource = new ReportDataSource("DataSet1", bankDepositData); // Update if needed
-
+            ReportDataSource reportDataSource = new ReportDataSource("DataSet1", bankDepositData);
             localReport.DataSources.Add(reportDataSource);
 
-            // Render the report to PDF
             string mimeType, encoding, fileNameExtension;
             Warning[] warnings;
             string[] streams;
@@ -534,9 +531,9 @@ namespace MYBUSINESS.Controllers
             renderBytes = localReport.Render(
                 "PDF", null, out mimeType, out encoding, out fileNameExtension, out streams, out warnings);
 
-            // ✅ Use `File` instead of `Response.AddHeader`
             return File(renderBytes, mimeType, "BankDepositReport.pdf");
         }
+
 
         [HttpPost]
         //[ValidateAntiForgeryToken]
