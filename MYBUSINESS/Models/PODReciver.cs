@@ -29,6 +29,7 @@ namespace MYBUSINESS.Models
         public Nullable<System.DateTime> PurchasingDate { get; set; }
         public string Unit { get; set; }
         public Nullable<decimal> QtyReceived { get; set; }
+        public Nullable<bool> Validate { get; set; }
     
         public virtual POReciver POReciver { get; set; }
         public virtual Product Product { get; set; }

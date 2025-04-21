@@ -85,7 +85,11 @@ namespace MYBUSINESS.Controllers
             var dtEndtDate = dtStartDate.AddMonths(1).AddSeconds(-1);
 
             //IQueryable<PO> pOes = db.POes.Include(s => s.Supplier);
-            IQueryable<POReciver> pOes = db.PORecivers.Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate && x.SupplierId > 0).Include(s => s.Supplier);
+            //IQueryable<POReciver> pOes = db.PORecivers.Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate && x.SupplierId > 0).Include(s => s.Supplier);
+            IQueryable<POReciver> pOes = db.PORecivers
+.Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate && x.SupplierId > 0)
+.Include(s => s.Supplier)
+.Include(p => p.PODRecivers);
             //pOes.ForEachAsync(m => m.Id = Encryption.Encrypt(m.Id, "BZNS"));
             //var pOes = db.POes.Where(s => s.SaleReturn == false);
             //GetTotalBalance(ref pOes);
@@ -1191,7 +1195,7 @@ namespace MYBUSINESS.Controllers
         //        return View(purchaseReciverOrderViewModel);
         //    }
 
-        public ActionResult Edit(string id, bool update)
+        public ActionResult Edit(string id, bool? update, bool readonlyMode = false)
         {
 
             if (id == null)
@@ -1330,12 +1334,55 @@ namespace MYBUSINESS.Controllers
             //decimal subTotal = (decimal)(pO.PurchaseOrderAmount - pO.Discount);
             //ViewBag.SubTotal = subTotal;
             //ViewBag.Total = subTotal + (decimal)pO.PrevBalance;
-            ViewBag.IsUpdate = update;
+            ViewBag.IsUpdate = update ?? false;
             ViewBag.IsReturn = pO.PurchaseReturn.ToString().ToLower();
             ViewBag.MalaysiaTime = DateTime.Now;  // Current DateTime (Malaysia Time)
             ViewBag.FutureTime = DateTime.Now.AddMonths(3);  // 3 Months Ahead for Expiry
             return View(purchaseReciverOrderViewModel);
         }
+
+        public JsonResult Validation(List<MYBUSINESS.Models.POPRViewModel> LstProductionVM)
+        {
+            try
+            {
+                if (LstProductionVM == null || !LstProductionVM.Any())
+                {
+                    return Json(new { success = false, message = "No data received." });
+                }
+
+                foreach (var item in LstProductionVM)
+                {
+                    int prodId = item.productId;
+                    string poId = item.poreciverId;
+
+                    // Find the matching POD record by POId and ProductId
+                    var podRecord = db.PODRecivers.FirstOrDefault(p =>
+                        p.POReciverId.ToString() == poId && p.ProductId == prodId);
+
+                    if (podRecord == null)
+                    {
+                        return Json(new { success = false, message = $"No POD found for ProductId {prodId} and POId {poId}." });
+                    }
+
+                    // Update the Validate field
+                    podRecord.Validate = true;
+
+                    // Mark the field as modified
+                    db.Entry(podRecord).Property(x => x.Validate).IsModified = true;
+                }
+
+                // Save all changes to the database
+                db.SaveChanges();
+
+                string redirectUrl = Url.Action("Index", "POPR");
+                return Json(new { success = true, message = "Validation completed and records updated.", redirectUrl = redirectUrl });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Server error: " + ex.Message });
+            }
+        }
+
 
         // GET: POes/Delete/5
         public ActionResult Delete(string id)

@@ -1,0 +1,66 @@
+﻿@model IEnumerable<MYBUSINESS.Models.ScanMoneyInput>
+
+@{
+    ViewBag.Title = "BOMs";
+    // Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<center><h2>Scan Deposit</h2></center>
+
+<div class="col-sm-12 noPrint">
+    <a href="#" id="printMe" class="btn btn-info"><i class=""></i> Print</a>
+    <a href="/BOM/Create" id="createBOM" class="btn btn-success"><i class=""></i> New ScanDeposit</a> |
+    @Html.ActionLink("Upload Excel", "Upload", new object { }, new { @class = "btn btn-warning" }) |
+    <a href="/SOSR/Create?IsReturn=false" id="createSOSR" class=""><i class=""></i> New Sale</a> |
+    <a href="/POPR/Create?IsReturn=false" id="createPOPR" class=""><i class=""></i> New Purchase</a>
+</div>
+
+@{Html.RenderPartial("_SelectedProducts", Model);}
+
+<style type="text/css" media="screen">
+    .noPrint {
+    }
+
+    .noScreen {
+        display: none;
+    }
+</style>
+
+<style type="text/css" media="print">
+    .noPrint {
+        display: none;
+    }
+
+    .noScreen {
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#printMe').click(function () {
+            window.print();
+        });
+
+        $('#btnSearch').click(function () {
+            var suppId = $('#idnSupplier').val();
+
+            if ($('#supplier').val().trim() != "" && $('#idnSupplier').val() == "") {
+                alert('Supplier not selected. Please select supplier from list');
+                return false;
+            }
+
+            $.ajax({
+                url: "@Url.Action("SearchData", "NewProduction")",
+                data: { 'suppId': suppId },
+                type: "GET",
+                cache: false,
+                success: function (data) {
+                    $("#NewData").html(data);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert('Data provided was not valid');
+                }
+            });
+        });
+    });
+</script>

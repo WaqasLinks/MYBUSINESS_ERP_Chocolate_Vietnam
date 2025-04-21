@@ -1,0 +1,795 @@
+﻿@*@model MYBUSINESS.Models.BOM*@
+@model MYBUSINESS.Models.PPBOMViewModel
+@{
+    ViewBag.Title = "Create BOM";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Content Wrapper. Contains page content -->
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <section class="content">
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-6">
+                <!-- general form elements -->
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Create New BOM</h3>
+                    </div>
+
+
+                    <div class="box-body">
+
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @Html.LabelFor(model => Model.PPBOM.Id, htmlAttributes: new { @class = "control-label" })
+
+                            @Html.EditorFor(model => Model.PPBOM.Id, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.SuggestedId, @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => Model.PPBOM.Id, "", new { @class = "text-danger" })
+
+                        </div>
+
+                        @*<div class="form-group">
+            @Html.LabelFor(model => model.BOM.ProductId, "Select Product", new { @class = "control-label" })
+            @Html.DropDownListFor(
+                model => model.BOM.ProductId,
+                (SelectList)ViewBag.ProductList, // Use the correct ViewBag property
+                "Select a Product", // Placeholder text
+                new { @class = "form-control" }
+            )
+        </div>*@
+                        @*<div class="form-group">
+            @Html.LabelFor(model => model.BOM.ProductId, "Select Product", new { @class = "control-label" })
+            @Html.DropDownListFor(
+                model => model.BOM.ProductId,
+                (SelectList)ViewBag.ProductList,
+                "Select a Product",
+                new { @class = "form-control product-dropdown", @id = "productDropdown" }
+            )
+            @Html.ValidationMessageFor(model => model.BOM.ProductId, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Unit", new { @class = "control-label" })
+            <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
+            @Html.HiddenFor(model => model.BOM.Unit, new { @id = "unitHiddenField" })
+            @Html.ValidationMessageFor(model => model.BOM.Unit, "", new { @class = "text-danger" })
+        </div>*@
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PPBOM.ProductId, "Select Product", new { @class = "control-label" })
+
+                            @if (((SelectList)ViewBag.ProductList).Any())
+                            {
+                                @Html.DropDownListFor(
+                                    model => model.PPBOM.ProductId,
+                                    (SelectList)ViewBag.ProductList,
+                                    "Select a Product",
+                                    new { @class = "form-control product-dropdown", @id = "productDropdown" }
+                                )
+                            }
+                            else
+                            {
+                                <p class="text-danger">No products available for creating a BOM.</p>
+                            }
+
+                            @Html.ValidationMessageFor(model => model.PPBOM.ProductId, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("Unit", new { @class = "control-label" })
+                            <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
+                            @Html.HiddenFor(model => model.PPBOM.Unit, new { @id = "unitHiddenField" })
+                            @Html.ValidationMessageFor(model => model.PPBOM.Unit, "", new { @class = "text-danger" })
+                        </div>
+                        @*<div class="form-group">
+                            @Html.Label("Variable Product ID", new { @class = "control-label" })
+                            <input type="text" id="variableProductIdField" class="form-control" readonly placeholder="Variable Product ID will be displayed here" />
+                            @Html.HiddenFor(model => Model.Product.VarProdParentId, new { @id = "variableProductIdHiddenField" })
+                        </div>*@
+
+
+
+
+
+                        @*<div class="form-group">
+            @Html.LabelFor(model => model.BOM.ProductId, "Select Product", new { @class = "control-label" })
+            @Html.DropDownListFor(
+                model => model.BOM.ProductId,
+                (SelectList)ViewBag.ProductList,
+                "Select a Product",
+                new { @class = "form-control product-dropdown", @id = "productDropdown" }
+            )
+            @Html.ValidationMessageFor(model => model.BOM.ProductId, "", new { @class = "text-danger" })
+        </div>*@
+
+                        @*<div class="form-group">
+            @Html.Label("Unit", new { @class = "control-label" })
+            <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
+            <input type="hidden" name="BOM.Unit" id="unitHiddenField" />
+        </div>*@
+
+
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => Model.PPBOM.Remarks, htmlAttributes: new { @class = "control-label" })
+
+                            @Html.EditorFor(model => Model.PPBOM.Remarks, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => Model.PPBOM.Remarks, "", new { @class = "text-danger" })
+
+                        </div>
+
+
+                       
+
+                        <div class="form-group">
+                            @*@Html.LabelFor(model => Model.BOM.ProductionProcessCateogry, htmlAttributes: new { @class = "control-label" })*@
+                            <label>Production Process Cateogry</label>
+                            @Html.DropDownListFor(
+                   model => Model.PPBOM.ProductionProcessCateogry,
+      new SelectList(
+          new List<SelectListItem>
+          {
+              new SelectListItem { Text = "Mixing", Value = "Mixing" },
+              new SelectListItem { Text = "Molding", Value = "Molding", Selected = true },
+              new SelectListItem { Text = "Packaging", Value = "Packaging" }
+          },
+          "Value",
+          "Text"
+      ),
+      new { @class = "form-control" }
+  )
+
+
+                            @Html.ValidationMessageFor(model => Model.PPBOM.ProductionProcessCateogry, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            <label>Production Process Description</label>
+                            @*@Html.LabelFor(model => Model.BOM.ProductionProcessDescription, htmlAttributes: new { @class = "control-label" })*@
+
+                            @Html.EditorFor(model => Model.PPBOM.ProductionProcessDescription, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => Model.PPBOM.ProductionProcessDescription, "", new { @class = "text-danger" })
+
+                        </div>
+
+
+                        <div class="form-group">
+                            @*@Html.LabelFor(model => Model.BOM.ShelfLife, htmlAttributes: new { @class = "control-label" })*@
+                            <label>ShelfLife (Days) </label>
+                            @Html.EditorFor(model => Model.PPBOM.ShelfLife, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => Model.PPBOM.ShelfLife, "", new { @class = "text-danger" })
+
+                        </div>
+
+                        @*<div id="pprice" class="form-group">
+            @Html.LabelFor(model => Model.BOM.TimeUnit, htmlAttributes: new { @class = "control-label" })
+
+            @Html.EditorFor(model => Model.BOM.TimeUnit, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => Model.BOM.TimeUnit, "", new { @class = "text-danger" })
+
+        </div>*@
+
+                    </div>
+
+                    <div class="box-footer">
+                        <input type="submit" value="Create" id="CreateProduct" class="btn btn-primary" />
+                        @Html.ActionLink("Back to List", "Index")
+                    </div>
+
+
+
+
+
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <!-- general form elements -->
+                <!-- general form elements -->
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Ingredients</h3>
+                    </div>
+
+                    <div class="box-body">
+
+
+
+                        <table id="selectedProducts" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <!--<th style="width:5%;">#</th>-->
+                                    @*<th>Index</th>
+                                        <th>pId</th>*@
+                                    <!--<th style="width:60%;">Name</th>
+
+
+                                    <th style="width:20%;">Unit</th>
+                                    <th></th>-->
+                                    <th style="width: 5%;">#</th>
+                                    <th style="width: 35%;">Name</th>
+                                    <th style="width: 25%;">Qty</th>
+                                    <th style="width: 20%;">Unit</th>
+                                    <th style="width: 20%;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr>
+
+                                    <td id="SNo0">1</td>
+
+                                    <td style="display:none;"><input type="hidden" name="PPSubItem.Index" value="0" /></td>
+                                    <td style="display:none;"><input type="text" readonly class="form-control classBGcolor" name="PPSubItem[0].ProductId" id="idn0"></td>
+                                    <td><input style="background-color: #f8f9fa;" type="text" autocomplete="off" class="form-control .bg-light" name="PPSubItem[0].Product.Name" id="name0" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name"></td>
+                                    <td><input type="number" step="0.00001" min="0"  autocomplete="off" class="form-control" name="PPSubItem[0].Quantity" id="quantity0"></td>
+
+                                    @*<td>
+            <select class="form-control" name="SubItem[@i].Unit" id="SubItem_@(i)_Unit">
+                <option value="Kg" @(Model.SubItem[i].Unit == "Kg" ? "selected" : "")>Kg</option>
+                <option value="Gram" @(Model.SubItem[i].Unit == "Gram" ? "selected" : "")>Gram</option>
+            </select>
+        </td>*@
+
+                                    <td>
+                                        <input type="text" autocomplete="off" class="form-control" name="PPSubItem[0].Unit" id="unit0">
+                                    </td>
+
+
+                                    
+                                    <td>
+                                        <button type="button" id="delete0" class="delete btn btn-default add-new"><a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button>
+                                    </td>
+
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+
+                        <div class="table-title">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+                <!-- general form elements -->
+                <!-- general form elements -->
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Products Types</h3>
+                    </div>
+
+                    <div class="box-body">
+
+
+
+                        <table id="selectedProduct1" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <!--<th style="width:5%;">#</th>-->
+                                    @*<th>Index</th>
+                                        <th>pId</th>*@
+                                    <!--<th style="width:60%;">Name</th>
+
+
+                                    <th style="width:20%;">Unit</th>
+                                    <th></th>-->
+                                    <th style="width: 5%;">#</th>
+                                    <th style="width: 35%;">Name</th>
+                                    <th style="width: 25%;">Qty</th>
+                                    <th style="width: 20%;">Unit</th>
+                                    @*<th style="width: 12%;"></th>*@
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr>
+                                    <td @*id="SNo0"*@></td>
+
+                                    <td style="display:none;"><input type="hidden" name="PPSubItem.Index" value="30" /></td>
+                                    @*<td style="display:none;"><input type="text" readonly class="form-control classBGcolor" name="SubItem[0].ProductId" id="idn0"></td>*@
+
+                                    @*<td><input type="text" autocomplete="off" class="form-control" name="SubItem[0].Product.Name" id="name0" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name"></td>*@
+                                    @*<td>
+                @Html.DropDownListFor(
+                    model => model.SubItem[30].ProductId,
+                    (SelectList)ViewBag.ProductList,
+                    "Select Variable Product",
+                    new { @class = "form-control product-dropdown", id = "idn30" }
+                )
+            </td>*@
+                                    @*<td>
+                <select id="variableProductDropdown0" class="form-control" name="SubItem[30].ProductId">
+                    <option value="">Select Variable Product</option>
+                </select>
+            </td>*@
+                                    <td>
+                                        <select style="" background-color: #f8f9fa;" id="variableProductDropdown0" class="form-control bg-light " name="PPSubItem[30].ProductId">
+                                            <option value="">Select Variable Product</option>
+                                        </select>
+                                    </td>
+
+
+                                    @*<td>
+                <input type="text" id="variableProductName0" class="form-control" readonly placeholder="Variable Product Name">
+                <input type="hidden" name="SubItem[30].ProductId" id="variableProductId0" value="0">
+            </td>*@
+
+
+                                    <td>
+                                        <input readonly type="number" step="0.000001" autocomplete="off" class="form-control" name="PPSubItem[30].Quantity" id="quantity30">
+                                    </td>
+
+                                    <td>
+                                        <input readonly type="text" autocomplete="off" class="form-control unit-field" name="PPSubItem[30].Unit" id="unit30">
+                                    </td>
+
+
+                                    @*@Html.HiddenFor(model => model.SubItem[30].Unit, new { id = "unitHiddenField30" })*@
+                                </tr>
+
+                                <tr>
+                                    <td @*id="SNo31"*@></td>
+
+                                    <td style="display:none;"><input type="hidden" name="SubItem.Index" value="31" /></td>
+
+                                    <td>
+                                        @Html.DropDownListFor(
+                                            model => model.PPSubItem[31].ProductId,
+                                            (SelectList)ViewBag.ExcessProductList, // Updated to use Excess Product List
+                                            "Select Excess Product",
+                                            new { @class = "form-control product-dropdown", id = "idn31" }
+                                        )
+                                    </td>
+
+                                    <td>
+                                        <input type="number" step="0.1" autocomplete="off" class="form-control" name="PPSubItem[31].Quantity" id="quantity31">
+                                    </td>
+
+                                    <td>
+                                        <input type="text" autocomplete="off" class="form-control unit-field" name="PPSubItem[31].Unit" id="unit31" readonly>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td @*id="SNo32"*@></td>
+
+                                    <td style="display:none;"><input type="hidden" name="SubItem.Index" value="32" /></td>
+
+                                    <td>
+                                        @Html.DropDownListFor(
+                                            model => model.PPSubItem[32].ProductId,
+                                            (SelectList)ViewBag.ByProductList, // Updated to use ByProduct List
+                                            "Select ByProduct",
+                                            new { @class = "form-control product-dropdown", id = "idn32" }
+                                        )
+                                    </td>
+
+                                    <td>
+                                        <input readonly type="number" step="0.1" autocomplete="off" class="form-control" name="PPSubItem[32].Quantity" id="quantity32">
+                                    </td>
+
+                                    <td>
+                                        <input type="text" autocomplete="off" class="form-control unit-field" name="PPSubItem[32].Unit" id="unit32" readonly>
+                                    </td>
+                                </tr>
+
+
+                            </tbody>
+
+                        </table>
+
+
+                        @*<div class="table-title">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
+                                    </div>
+                                </div>
+                            </div>*@
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+
+
+
+
+        </div>
+
+    </section>
+}
+
+<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.css">
+<script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="//code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-sliderAccess.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.js"></script>
+
+
+
+<link href="@Url.Content("~/Content/custom/custom.css")" rel="stylesheet" type="text/css" />
+<script src="~/Content/custom/subItem_BOM.js"></script>
+<script src="~/Content/custom/downloads/jquery.mcautocomplete.js"></script>
+<script src="~/Content/custom/downloads/jquery.scannerdetection.js"></script>
+
+
+
+<script>
+
+  $(document).ready(function () {
+    document.getElementById('SOCreate').reset(); // has to be handle
+  });
+ $('#productDropdown').change(function () {
+    var productId = $(this).val(); // Get selected product ID
+
+    if (productId) {
+        $.ajax({
+            url: '@Url.Action("GetProductUnit", "BOM")', // Corrected API method
+            type: 'GET',
+            data: { id: productId },
+            success: function (data) {
+                $('#unitField').val(data.unit);
+                $('#unitHiddenField').val(data.unit);
+                //$('#variableProductIdField').val(data.variableProductName); // Show Name instead of ID
+                //$('#variableProductIdHiddenField').val(data.variableProductName);
+            },
+            error: function () {
+              /*  alert('Failed to fetch product details.');*/
+            }
+        });
+    } else {
+        $('#unitField').val('');
+        $('#unitHiddenField').val('');
+        //$('#variableProductIdField').val('');
+        //$('#variableProductIdHiddenField').val('');
+    }
+});
+
+
+  @*$('#productDropdown').change(function () {
+    var productId = $(this).val(); // Get selected product ID
+
+    if (productId) {
+        $.ajax({
+            url: '@Url.Action("GetProductUnit", "BOM")',
+            type: 'GET',
+            data: { id: productId },
+            success: function (data) {
+                $('#unitField').val(data.unit); // Update the visible unit field
+                $('#unitHiddenField').val(data.unit); // Update the hidden unit field
+            },
+            error: function () {
+                alert('Failed to fetch unit details.');
+            }
+        });
+    } else {
+        $('#unitField').val(''); // Clear the unit field if no product is selected
+        $('#unitHiddenField').val(''); // Clear the hidden unit field
+    }
+});*@
+    $(document).on('change', '.product-dropdown', function () {
+    var productId = $(this).val(); // Get the selected product ID
+    var dropdownId = $(this).attr('id'); // Get the ID of the current dropdown
+    var index = dropdownId.replace('idn', ''); // Extract the index from the ID
+    var unitFieldId = '#unit' + index; // Construct the ID for the unit field
+    var hiddenUnitFieldId = '#unitHiddenField' + index; // Construct the ID for the hidden unit field
+
+    if (productId) {
+        $.ajax({
+            url: '@Url.Action("GetProductUnit", "BOM")',
+            type: 'GET',
+            data: { id: productId },
+            success: function (data) {
+                $(unitFieldId).val(data.unit); // Update the visible unit field
+                $(hiddenUnitFieldId).val(data.unit); // Update the hidden unit field
+            },
+            error: function () {
+              /*  alert('Failed to fetch unit details.');*/
+            }
+        });
+    } else {
+        $(unitFieldId).val(''); // Clear the unit field if no product is selected
+        $(hiddenUnitFieldId).val(''); // Clear the hidden unit field
+    }
+});
+
+
+        @*$('#productDropdown').change(function () {
+            var productId = $(this).val(); // Get selected product ID
+            alert('hi');
+            if (productId) {
+                $.ajax({
+                    url: '@Url.Action("GetProductUnit", "BOM")',
+                    type: 'GET',
+                    data: { id: productId },
+                    success: function (data) {
+                        $('#unitField').val(data.unit); // Update the unit field
+                    },
+                    error: function () {
+                        alert('Failed to fetch unit details.');
+                    }
+                });
+            } else {
+                $('#unitField').val(''); // Clear the unit field if no product selected
+            }
+        });*@
+
+   @*$('#productDropdown').change(function () {
+    var productId = $(this).val(); // Get the selected product ID
+
+    if (productId) {
+        $.ajax({
+            url: '@Url.Action("GetProductDetails", "BOM")',
+            type: 'GET',
+            data: { productId: productId },
+            success: function (data) {
+                if (data && data.length > 0) {
+                    // Clear existing rows in the Production Output table
+                    $('#selectedProduct tbody').empty();
+
+                    // Loop through the product details and create rows
+                    data.forEach((detail, index) => {
+                        const newRow = `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td style="display:none;">
+                                    <input type="hidden" name="ProductTypeDetail.Index" value="${index}" />
+                                </td>
+                                <td>
+                                    <input type="text" readonly class="form-control" name="ProductTypeDetail[${index}].Shape" value="${detail.Shape}" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" name="ProductTypeDetail[${index}].ProductionQty" />
+                                </td>
+                            </tr>`;
+                        $('#selectedProduct tbody').append(newRow); // Append only to Production Output table
+                    });
+                } else {
+                    // Clear the table if no data is found
+                    $('#selectedProduct tbody').empty();
+                    alert('No product details found.');
+                }
+            },
+            error: function () {
+                alert('Failed to fetch product details.');
+            }
+        });
+    } else {
+        // Clear the table if no product is selected
+        $('#selectedProduct tbody').empty();
+    }
+});*@
+
+
+
+    @*$('#productDropdown').change(function () {
+    var productId = $(this).val(); // Get the selected product ID
+
+    if (productId) {
+        $.ajax({
+            url: '@Url.Action("GetProductDetails", "BOM")',
+            type: 'GET',
+            data: { productId: productId },
+            success: function (data) {
+                if (data && data.length > 0) {
+                    // Clear existing rows in the Production Output table
+                    $('#selectedProduct tbody').empty();
+
+                    // Loop through the product details and create rows
+                    data.forEach((detail, index) => {
+                        const newRow = `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td style="display:none;">
+                                    <input type="hidden" name="ProductDetail.Index" value="${index}" />
+                                </td>
+                                <td>
+                                    <input type="text" readonly class="form-control" name="ProductDetail[${index}].Shape" value="${detail.Shape}" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" name="" />
+                                </td>
+
+                            </tr>`;
+                        $('#selectedProduct tbody').append(newRow);  // Append only to Production Output table
+                    });
+                } else {
+                    // Clear the table if no data is found
+                    $('#selectedProduct tbody').empty();
+                    alert('No product details found.');
+                }
+            },
+            error: function () {
+                alert('Failed to fetch product details.');
+            }
+        });
+    } else {
+        // Clear the table if no product is selected
+        $('#selectedProduct tbody').empty();
+    }
+});*@
+
+
+
+
+
+  @*$('#productDropdown').change(function () {
+    var productId = $(this).val(); // Get selected product ID
+
+    if (productId) {
+        $.ajax({
+            url: '@Url.Action("GetProductDetails", "BOM")',
+            type: 'GET',
+            data: { productId: productId },
+            success: function (data) {
+                if (data && data.length > 0) {
+                    // Populate Shape and Weight fields
+                    $('#shape0').val(data[0].Shape);
+                    $('#weight0').val(data[0].Weight);
+                } else {
+                    // Clear fields if no data found
+                    $('#shape0').val('');
+                    $('#weight0').val('');
+                }
+            },
+            error: function () {
+                alert('Failed to fetch product details.');
+            }
+        });
+    } else {
+        // Clear fields if no product selected
+        $('#shape0').val('');
+        $('#weight0').val('');
+    }
+});*@
+
+
+
+
+
+    txtSerialNum = 0;
+    TriggerBodyEvents();
+
+    var getPrevBalanceUrl = '@Url.Action("GetPreviousBalance", "SOSR")';                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     //OpenDialogue('#name0');
+
+
+    @{
+        var carton = 0; //= (d.Stock / d.PerPack);
+        var piece = 0;
+        foreach (var d in Model.Products)
+        {
+            carton = (int)(d.Stock / d.PerPack);
+            piece = (int)(d.Stock % d.PerPack);
+            if (piece == 0)
+            {
+               @:products.push([ "@d.Id", "@d.Name", "@d.Unit", "@d.Unit", "@carton" ]);
+            }
+            else
+            {
+                @:products.push(["@d.Id", "@d.Name", "@d.Unit", "@carton,@piece"]);
+            }
+            @:productsBarcodes.push(["@d.Id", "@d.BarCode"]);
+
+        }
+     }
+
+
+        IsReturn = '@(ViewBag.IsReturn)';
+
+
+        $('.from-date-picker').datetimepicker({
+            dateFormat: "dd-M-yy",
+            timeFormat: "hh:mm tt",
+            showOn: "both",
+            timeInput: true,
+            stepHour: 1,
+            stepMinute: 5,
+            oneLine: true,
+            //changeMonth: true,
+            //changeYear: true,
+            controlType: 'select',
+            buttonImageOnly: true,
+            buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif",
+            buttonText: "Select date"
+        });
+
+
+
+
+         $("#NewData").dialog({
+            autoOpen: false,
+             title: 'Should not sell-out, already rented on thses dates',
+            closeText: '', //Changes the text of the titlebar-close button to hello instead of default Close
+            width: 500,
+            Height:500
+
+        });
+
+        function FetchProductRentStatus() {
+        //alert('wwww');
+
+            var date = new Date();
+            var day = date.getDate();       // yields date
+            var month = date.getMonth() + 1;    // yields month (add one as '.getMonth()' is zero indexed)
+            var year = date.getFullYear();  // yields year
+            var hour = date.getHours();     // yields hours
+            var minute = date.getMinutes(); // yields minutes
+            var second = date.getSeconds(); // yields seconds
+
+            // After this construct a string with the above results as below
+            var sellDate = day + "/" + month + "/" + year;// + " " + hour + ':' + minute + ':' + second;
+
+            var prodId = $('#idn' + clickedIdNum).val();
+
+
+
+
+            $.ajax({
+                url: "@Url.Action("ProductRentStatus","SOSR")",
+                data: { 'prodId': prodId, 'sellDate': sellDate},
+                type: "GET",
+                cache: false,
+                success: function (data) {
+                    //toastr.success('Hi! I am success message.');
+                    //var abc = data;
+                    //alert(data);
+                    if (data.indexOf('12:00:00 AM') != -1) {
+
+                        $("#NewData").html(data);
+                        $("#NewData").dialog("open");
+                    //}
+                    }
+
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    //$('#lblCommentsNotification').text("Error encountered while saving the comments.");
+                   /* alert('Data provided was not valid');*/
+                }
+            });
+        }
+
+        //alert(IsReturn);
+
+        $('#isService').on('change', function () {
+            if (this.value == 'true')
+            //.....................^.......
+            {
+                $("#pprice").hide();
+                $("#stk").hide();
+            }
+            else {
+                $("#pprice").show();
+                $("#stk").show();
+            }
+        });
+
+
+
+</script>
+

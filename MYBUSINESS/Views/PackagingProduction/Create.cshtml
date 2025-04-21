@@ -1,0 +1,395 @@
+﻿@model MYBUSINESS.Models.PackagingProductionViewModel
+@{
+    ViewBag.Title = "Create Paper production";
+}
+
+<!-- Content Wrapper. Contains page content -->
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <section class="content">
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-6">
+                <!-- general form elements -->
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Create PaperProduction</h3>
+                    </div>
+
+                    <div class="box-body">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => Model.PackagingProduction.Id, htmlAttributes: new { @class = "control-label" })
+                            @Html.EditorFor(model => Model.PackagingProduction.Id, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.SuggestedId, @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => Model.PackagingProduction.Id, "", new { @class = "text-danger" })
+                        </div>
+
+
+                        @*<div class="form-group">
+            @Html.Label("BOM Name", new { @class = "control-label" })
+            @Html.DropDownList(
+                "SelectedRemark",
+                (SelectList)ViewBag.Remarks,
+                "Select a BOM Name",
+                new
+                {
+                    @class = "form-control",
+                    id = "remarksDropdown",
+                    data_remarks = @Html.Raw(Json.Encode(ViewBag.RemarksData))
+                }
+            )
+        </div>
+
+        <div class="form-group">
+            <label for="unitField" class="control-label">Unit</label>
+            <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
+        </div>*@
+                        <div class="form-group">
+                            @Html.LabelFor(model => Model.PackagingProduction.ProductId, "Select Product", new { @class = "control-label" })
+                            @Html.DropDownListFor(
+model => model.PackagingProduction.ProductId,
+(SelectList)ViewBag.ProductList,
+"Select a Product",
+new { @class = "form-control product-dropdown", @id = "productDropdown" }
+)
+                            @Html.ValidationMessageFor(model => model.PackagingProduction.ProductId, "", new { @class = "text-danger" })
+                        </div>
+
+                        @*<div class="form-group">
+            @Html.Label("Unit", new { @class = "control-label" })
+            <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
+            @Html.HiddenFor(model => model.PackagingProduction.Unit, new { @id = "unitHiddenField" })
+            @Html.ValidationMessageFor(model => model.PackagingProduction.Unit, "", new { @class = "text-danger" })
+        </div>*@
+
+
+
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => Model.PackagingProduction.PProdDate, htmlAttributes: new { @class = "control-label" })
+                            @Html.TextBoxFor(model => Model.PackagingProduction.PProdDate, new { @class = "form-control", type = "date" })
+                            @Html.ValidationMessageFor(model => Model.PackagingProduction.PProdDate, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => Model.PackagingProduction.Box, htmlAttributes: new { @class = "control-label" })
+                            @Html.TextBoxFor(model => Model.PackagingProduction.Box, new { @class = "form-control", type = "text" })
+                            @Html.ValidationMessageFor(model => Model.PackagingProduction.Box, "", new { @class = "text-danger" })
+                        </div>
+
+
+                        
+
+                        @*<div class="total-weight-container">
+                            <p><strong>Total Weight: </strong><span id="totalWeightDisplay">0.00</span></p>
+                        </div>*@
+                        @*<div class="form-group">
+            @Html.Label("BOM Name", new { @class = "control-label" })
+            @Html.DropDownList(
+                "SelectedRemark",
+                (SelectList)ViewBag.Remarks,
+                "Select a Remark",
+                new
+                {
+                    @class = "form-control",
+                    id = "remarksDropdown",
+                    data_remarks = @Html.Raw(Json.Encode(ViewBag.RemarksData))
+                }
+            )
+        </div>
+
+        <div class="form-group">
+            <label for="unitField" class="control-label">Unit</label>
+            <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
+        </div>*@
+
+
+
+
+
+                        @*<div class="form-group">
+            @Html.LabelFor(model => Model.Product.Id, "Select Product", new { @class = "control-label" })
+            @Html.DropDownListFor(
+                model => Model.NewProduction.ProductName,
+                (SelectList)ViewBag.ProductList,
+                "Select a Product",
+                new { @class = "form-control" }
+            )
+            @Html.ValidationMessageFor(model => Model.NewProduction.ProductName, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NewProduction.Unit, htmlAttributes: new { @class = "control-label" })
+            @Html.DropDownListFor(
+                model => model.NewProduction.Unit,
+                new SelectList(new List<string> { "Kg", "Gram", "Square", "Bar" }),
+                new { @class = "form-control" }
+            )
+            @Html.ValidationMessageFor(model => model.NewProduction.Unit, "", new { @class = "text-danger" })
+        </div>*@
+
+                        @*<div class="form-group">
+            @Html.LabelFor(model => Model.NewProduction.QuantityToProduce, htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => Model.NewProduction.QuantityToProduce, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => Model.NewProduction.QuantityToProduce, "", new { @class = "text-danger" })
+        </div>*@
+                    </div>
+
+                    <div class="box-footer">
+                        <input type="submit" id="CreateSO" value="Create" class="btn btn-primary" />
+                        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-secondary" })
+                        <button  id="validateBtn" class="btn btn-primary" style="margin-left:250px; display:none;">Validate</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right column for Sub Items -->
+            <div class="col-md-6">
+                <!-- general form elements -->
+                <!-- general form elements -->
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Paper Color</h3>
+                    </div>
+
+
+                    <div class="box-body">
+
+
+
+                        <table id="selectedProducts" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th style="width: 5%;">#</th>
+                                    <th style="width: 50%;">Color</th>
+                                    <th style="width: 20%;">Qty</th>
+                                    <th style="width: 12%;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.Color.Count; i++)
+                                {
+                                    <tr>
+                                        <td>@(i + 1)</td>
+
+                                        <td>
+                                            <div style="background-color: @Model.Color[i].ColorCode; color: #fff; padding: 5px;">
+                                                @Model.Color[i].ColorName (@Model.Color[i].ColorCode)
+                                            </div>
+                                            <input type="hidden" name="PaperColor[@i].Color" value="@Model.Color[i].ColorName" />
+                                        </td>
+
+                                        <td>
+                                            <input type="number" name="PaperColor[@i].Quantity" class="form-control" value="0" min="0" step="0.01" />
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+
+
+
+
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+
+            
+
+
+
+        </div>
+    </section>
+    @*@Html.ActionLink("Validate", "ValidateStock", null, new { @class = "btn btn-secondary" })*@
+    @*<button id="validateBtn" class="btn btn-primary">Validate</button>*@
+}
+
+<!-- Your existing form content -->
+@*<button id="validateBtn" class="btn btn-primary">Validate</button>*@
+
+
+@*<button id="validateBtn" value="ValidateStock" class="btn btn-primary">Validate</button>*@
+
+
+
+<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.css">
+<script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="//code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-sliderAccess.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.js"></script>
+
+
+
+<link href="@Url.Content("~/Content/custom/custom.css")" rel="stylesheet" type="text/css" />
+<script src="~/Content/custom/Packagingproduction.js"></script>
+<script src="~/Content/custom/downloads/jquery.mcautocomplete.js"></script>
+<script src="~/Content/custom/downloads/jquery.scannerdetection.js"></script>
+<script>
+      $(document).ready(function () {
+    document.getElementById('SOCreate').reset(); // has to be handle
+  });
+
+
+
+
+    txtSerialNum = 0;
+    TriggerBodyEvents();
+
+    var getPrevBalanceUrl = '@Url.Action("GetPreviousBalance", "SOSR")';                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     //OpenDialogue('#name0');
+
+
+    @{
+        var carton = 0; //= (d.Stock / d.PerPack);
+        var piece = 0;
+        foreach (var d in Model.Products)
+        {
+            carton = (int)(d.Stock / d.PerPack);
+            piece = (int)(d.Stock % d.PerPack);
+            if (piece == 0)
+            {
+               @:products.push([ "@d.Id", "@d.Name", "@d.Unit", "@d.Unit", "@carton" ]);
+            }
+            else
+            {
+                @:products.push(["@d.Id", "@d.Name", "@d.SalePrice", "@carton,@piece"]);
+            }
+            @:productsBarcodes.push(["@d.Id", "@d.BarCode"]);
+
+        }
+     }
+
+
+        IsReturn = '@(ViewBag.IsReturn)';
+
+
+        $('.from-date-picker').datetimepicker({
+            dateFormat: "dd-M-yy",
+            timeFormat: "hh:mm tt",
+            showOn: "both",
+            timeInput: true,
+            stepHour: 1,
+            stepMinute: 5,
+            oneLine: true,
+            //changeMonth: true,
+            //changeYear: true,
+            controlType: 'select',
+            buttonImageOnly: true,
+            buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif",
+            buttonText: "Select date"
+        });
+
+
+
+
+         $("#NewData").dialog({
+            autoOpen: false,
+             title: 'Should not sell-out, already rented on thses dates',
+            closeText: '', //Changes the text of the titlebar-close button to hello instead of default Close
+            width: 500,
+            Height:500
+
+        });
+
+        function FetchProductRentStatus() {
+        //alert('wwww');
+
+            var date = new Date();
+            var day = date.getDate();       // yields date
+            var month = date.getMonth() + 1;    // yields month (add one as '.getMonth()' is zero indexed)
+            var year = date.getFullYear();  // yields year
+            var hour = date.getHours();     // yields hours
+            var minute = date.getMinutes(); // yields minutes
+            var second = date.getSeconds(); // yields seconds
+
+            // After this construct a string with the above results as below
+            var sellDate = day + "/" + month + "/" + year;// + " " + hour + ':' + minute + ':' + second;
+
+            var prodId = $('#idn' + clickedIdNum).val();
+
+
+
+
+            $.ajax({
+                url: "@Url.Action("ProductRentStatus","SOSR")",
+                data: { 'prodId': prodId, 'sellDate': sellDate},
+                type: "GET",
+                cache: false,
+                success: function (data) {
+                    //toastr.success('Hi! I am success message.');
+                    //var abc = data;
+                    //alert(data);
+                    if (data.indexOf('12:00:00 AM') != -1) {
+
+                        $("#NewData").html(data);
+                        $("#NewData").dialog("open");
+                    //}
+                    }
+
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    //$('#lblCommentsNotification').text("Error encountered while saving the comments.");
+                    alert('Data provided was not valid');
+                }
+            });
+        }
+
+        //alert(IsReturn);
+
+        $('#isService').on('change', function () {
+            if (this.value == 'true')
+            //.....................^.......
+            {
+                $("#pprice").hide();
+                $("#stk").hide();
+            }
+            else {
+                $("#pprice").show();
+                $("#stk").show();
+            }
+        });
+
+
+
+</script>
+@*@section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }*@
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const remarksDropdown = document.getElementById("remarksDropdown"); // The remarks dropdown
+        const unitField = document.getElementById("unitField");             // The Unit input field
+
+        // Parse the JSON data for remarks from the dropdown's data_remarks attribute
+        const remarksData = JSON.parse(remarksDropdown.dataset.remarks);
+
+        // Handle dropdown change event
+        remarksDropdown.addEventListener("change", function () {
+            const selectedRemark = this.value; // Get the selected remark value
+
+            // Find the matched data for the selected remark
+            const matchedData = remarksData.find(r => r.Value === selectedRemark);
+
+            if (matchedData) {
+                // Populate the Unit field with the matched Unit value
+                unitField.value = matchedData.Unit || "N/A"; // Default to "N/A" if no unit found
+            } else {
+                // Clear the field if no match is found
+                unitField.value = "";
+            }
+        });
+    });
+
+
+
+</script>

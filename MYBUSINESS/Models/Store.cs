@@ -18,6 +18,7 @@ namespace MYBUSINESS.Models
         public Store()
         {
             this.StoreProducts = new HashSet<StoreProduct>();
+            this.SOes = new HashSet<SO>();
         }
     
         public int Id { get; set; }
@@ -31,8 +32,13 @@ namespace MYBUSINESS.Models
         public string VatNumber { get; set; }
         public string CompanyName { get; set; }
         public string CompanyAddress { get; set; }
+        public string CompanyVatNumber { get; set; }
+        public string StoreShortCode { get; set; }
+        public string StoreShortName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<StoreProduct> StoreProducts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SO> SOes { get; set; }
     }
 }

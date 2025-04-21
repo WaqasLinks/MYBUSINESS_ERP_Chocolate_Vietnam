@@ -1,0 +1,622 @@
+﻿@model MYBUSINESS.Models.BOMViewModel
+
+@{
+    ViewBag.Title = "Update BOM";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.css">
+<script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="//code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-sliderAccess.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.js"></script>
+
+
+
+<link href="@Url.Content("~/Content/custom/custom.css")" rel="stylesheet" type="text/css" />
+<script src="~/Content/custom/subItem_BOM.js"></script>
+<script src="~/Content/custom/downloads/jquery.mcautocomplete.js"></script>
+<script src="~/Content/custom/downloads/jquery.scannerdetection.js"></script>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <section class="content">
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-6">
+                <!-- general form elements -->
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Update BOM</h3>
+                    </div>
+
+
+                    <div class="box-body">
+
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        @*@Html.HiddenFor(model => model.Id)*@
+
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => Model.BOM.Id, htmlAttributes: new { @class = "control-label" })
+
+                            @Html.EditorFor(model => Model.BOM.Id, new { htmlAttributes = new { @class = "form-control", @Readonly = "Readonly" } })
+                            @Html.ValidationMessageFor(model => Model.BOM.Id, "", new { @class = "text-danger" })
+
+                        </div>
+                        <!--<div class="form-group">
+        @Html.LabelFor(model => model.BOM.ProductId, "Select Product", new { @class = "control-label" })
+        @Html.DropDownListFor(
+            model => model.BOM.ProductId,
+            (SelectList)ViewBag.ProductList,
+            "Select a Product",
+            new { @class = "form-control product-dropdown", @id = "productDropdown" }
+        )
+        @Html.ValidationMessageFor(model => model.BOM.ProductId, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Unit", new { @class = "control-label" })
+        <input type="text" id="unitField" class="form-control" readonly
+               placeholder="Unit will be displayed here"
+               value="@Model.BOM.Unit" />-->
+                        <!-- Pre-fill the saved unit -->
+                        <!--@Html.HiddenFor(model => model.BOM.Unit, new { @id = "unitHiddenField" })
+        @Html.ValidationMessageFor(model => model.BOM.Unit, "", new { @class = "text-danger" })
+    </div>-->
+
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.BOM.ProductId, "Select Product", new { @class = "control-label" })
+                            @Html.DropDownListFor(
+                                model => model.BOM.ProductId,
+                                (SelectList)ViewBag.ProductList,
+                                "Select a Product",
+                                new { @class = "form-control product-dropdown", @id = "productDropdown" }
+                            )
+                            @Html.ValidationMessageFor(model => model.BOM.ProductId, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("Unit", new { @class = "control-label" })
+                            <input type="text" id="unitField" class="form-control" readonly
+                                   placeholder="Unit will be displayed here"
+                                   value="@Model.BOM.Unit" /> <!-- Pre-fill the saved unit -->
+                            @Html.HiddenFor(model => model.BOM.Unit, new { @id = "unitHiddenField" })
+                            @Html.ValidationMessageFor(model => model.BOM.Unit, "", new { @class = "text-danger" })
+                        </div>
+
+
+
+
+
+                        @*@Html.HiddenFor(model => model.IsService, new { Value = "false" })*@
+                        @*@Html.HiddenFor(model => Model.BOM.ShowIn, new { Value = "P" })
+                           <div style="display:none;" class="form-group">
+                               @Html.DropDownList("IsService", new SelectList(ViewBag.UnitTypeOptionList, "Value", "Text", Model.BOM.IsService),
+        new { @class = "form-control", id = "isService" })
+                           </div>*@
+                        <div class="form-group">
+                            @Html.LabelFor(model => Model.BOM.Remarks, htmlAttributes: new { @class = "control-label" })
+
+                            @Html.EditorFor(model => Model.BOM.Remarks, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => Model.BOM.Remarks, "", new { @class = "text-danger" })
+
+                        </div>
+
+
+                        <!--<div class="form-group">
+    @Html.LabelFor(model => Model.BOM.Saleable, htmlAttributes: new { @class = "control-label" })
+    @Html.EditorFor(model => Model.BOM.Saleable)-->
+                        @*@Html.EditorFor(model => model.Saleable, new[] { new SelectListItem { Text = "Yes", Value = "True", Selected = true }, new SelectListItem { Text = "No", Value = "False" } })*@
+                        @*@Html.CheckBoxFor(m => m.Saleable, new { @value = "true" })*@
+                        <!--@Html.ValidationMessageFor(model => Model.BOM.Saleable, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => Model.BOM.Purchasable, htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => Model.BOM.Purchasable)-->
+                        @*@Html.EditorFor(model => model.Saleable, new[] { new SelectListItem { Text = "Yes", Value = "True", Selected = true }, new SelectListItem { Text = "No", Value = "False" } })*@
+                        @*@Html.CheckBoxFor(m => m.Saleable, new { @value = "true" })*@
+                        <!--@Html.ValidationMessageFor(model => Model.BOM.Purchasable, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => Model.BOM.Manufacturable, htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => Model.BOM.Manufacturable)-->
+                        @*@Html.EditorFor(model => model.Saleable, new[] { new SelectListItem { Text = "Yes", Value = "True", Selected = true }, new SelectListItem { Text = "No", Value = "False" } })*@
+                        @*@Html.CheckBoxFor(m => m.Saleable, new { @value = "true" })*@
+                        <!--@Html.ValidationMessageFor(model => Model.BOM.Manufacturable, "", new { @class = "text-danger" })
+    </div>-->
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => Model.BOM.ProductionProcessCateogry, htmlAttributes: new { @class = "control-label" })
+
+                            @Html.DropDownListFor(
+model => Model.BOM.ProductionProcessCateogry,
+new SelectList(
+new List<SelectListItem>
+          {
+              new SelectListItem { Text = "Mixing", Value = "Mixing" },
+              new SelectListItem { Text = "Molding", Value = "Molding", Selected = true },
+              new SelectListItem { Text = "Packaging", Value = "Packaging" }
+          },
+"Value",
+"Text"
+),
+new { @class = "form-control" }
+)
+
+
+                            @Html.ValidationMessageFor(model => Model.BOM.ProductionProcessCateogry, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => Model.BOM.ProductionProcessDescription, htmlAttributes: new { @class = "control-label" })
+
+                            @Html.EditorFor(model => Model.BOM.ProductionProcessDescription, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => Model.BOM.ProductionProcessDescription, "", new { @class = "text-danger" })
+
+                        </div>
+                        <div class="form-group">
+                            @*@Html.LabelFor(model => Model.BOM.ShelfLife, htmlAttributes: new { @class = "control-label" })*@
+                            <label>ShelfLife (Days) </label>
+                            @Html.EditorFor(model => model.BOM.ShelfLife, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => Model.BOM.ShelfLife, "", new { @class = "text-danger" })
+
+                        </div>
+                        @*<div class="form-group">
+            @Html.LabelFor(model => Model.BOM.TimeUnit, htmlAttributes: new { @class = "control-label" })
+
+            @Html.EditorFor(model => Model.BOM.TimeUnit, new { htmlAttributes = new { @class = "form-control", @id = "stock" } })
+            @Html.ValidationMessageFor(model => Model.BOM.TimeUnit, "", new { @class = "text-danger" })
+
+        </div>*@
+
+                    </div>
+
+
+                    <div class="box-footer">
+                        <input type="submit" id="CreateSO" value="Update" class="btn btn-primary" />
+                        @Html.ActionLink("Back to List", "Index")
+                    </div>
+
+
+
+
+
+                </div>
+            </div>
+            <div class="col-md-6">
+                <!-- general form elements -->
+                <!-- general form elements -->
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Sub Items</h3>
+                    </div>
+
+
+                    <div class="box-body">
+
+
+
+                        <table id="selectedProducts" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th style="width: 5%;">#</th>
+                                    <th style="width: 60%;">Name</th>
+                                    <th style="width: 12%;">Qty</th>
+                                    <th style="width: 20%;">Unit</th>
+                                    <th style="width: 15%;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.SubItem != null && Model.SubItem.Count > 0)
+                                {
+                                    int sNo = 0;
+                                    foreach (var item in Model.SubItem)
+                                    {
+                                        <tr>
+                                            <td id="SNo0">@(sNo + 1)</td>
+                                            <td style="display:none;"><input type="hidden" name="SubItem.Index" value="@sNo" /></td>
+                                            <td style="display:none;"><input type="text" value=@item.ProductId readonly class="form-control classBGcolor" name="SubItem[@sNo].ProductId" id="idn@(sNo)"></td>
+                                            <td><input type="text" autocomplete="off" value="@(item.Product.Name)" class="form-control" name="SubItem[@sNo].Product.Name" id="name@(sNo)" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name"></td>
+
+                                            <td><input type="text" autocomplete="off" value=@item.Quantity class="form-control" name="SubItem[@sNo].Quantity" id="quantity@(sNo)"></td>
+                                            <td>
+                                                <input type="text" autocomplete="off" value=@item.Unit class="form-control" name="SubItem[@sNo].Unit" id="unit@(sNo)">
+                                            </td>
+                                            <td>
+
+                                                <button type="button" id="delete@(sNo)" class="delete btn btn-default add-new"><a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button>
+                                            </td>
+                                        </tr>
+                                        sNo += 1;
+                                    }
+
+
+                                }
+                            </tbody>
+
+                        </table>
+
+
+                        <div class="table-title">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+
+
+            <div class="col-md-6">
+                <!-- general form elements -->
+                <!-- general form elements -->
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Production Output</h3>
+                    </div>
+
+
+                    <div class="box-body">
+
+
+                        <table id="selectedProduct" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <!--<th style="width:5%;">#</th>-->
+                                    @*<th>Index</th>
+                                        <th>pId</th>*@
+                                    <!--<th style="width:60%;">Name</th>
+
+
+                                    <th style="width:20%;">Unit</th>
+                                    <th></th>-->
+                                    <th style="width: 5%;">#</th>
+                                    <th style="width: 50%;">Shape</th>
+                                    @*<th style="width: 12%;">Qty</th>*@
+                                    <th style="width: 20%;">Production Qty</th>
+                                    @*<th style="width: 12%;"></th>*@
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    if (Model.ProductTypeDetail != null && Model.ProductTypeDetail.Count > 0)
+                                    {
+                                        int sNo = 0; // Start index
+                                        foreach (var item in Model.ProductTypeDetail)
+                                        {
+                                            <tr>
+                                                <td id="Pr@(sNo)">@(sNo + 1)</td>
+                                                <td style="display:none;">
+                                                    <input type="hidden" name="ProductTypeDetail.Index" value="@sNo" />
+                                                </td>
+                                                <td style="display:none;">
+                                                    <input type="text" value="@item.ProductId" readonly class="form-control classBGcolor"
+                                                           name="ProductTypeDetail[@sNo].ProductId" id="idn@(sNo)">
+                                                </td>
+                                                <td>
+                                                    <input type="text" autocomplete="off" value="@item.Shape" class="form-control"
+                                                           name="ProductTypeDetail[@sNo].Shape" id="shape@(sNo)" placeholder="Type shape"
+                                                           data-toggle="tooltip" data-placement="top" title="Type shape">
+                                                </td>
+                                                <td>
+                                                    <input type="text" autocomplete="off" value="@item.ProductionQty" class="form-control"
+                                                           name="ProductTypeDetail[@sNo].ProductionQty" id="productionqty@(sNo)" placeholder="Type weight"
+                                                           data-toggle="tooltip" data-placement="top" title="Type weight">
+                                                </td>
+                                            </tr>
+                                            sNo++; // Increment index
+                                        }
+                                    }
+                                }
+
+                            </tbody>
+
+                        </table>
+
+
+                        @*<div class="table-title">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
+                                    </div>
+                                </div>
+                            </div>*@
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+
+
+        </div>
+
+    </section>
+
+}
+
+
+
+<script>
+
+  //$(document).ready(function () {
+  //  document.getElementById('SOCreate').reset(); // has to be handle
+  //});
+//  $(document).ready(function () {
+//  document.getElementById('SOCreate').reset(); // has to be handle
+    //});
+    $(document).ready(function () {
+    // Pre-fill the hidden field with the initial value of the Unit field
+    $('#unitHiddenField').val($('#unitField').val());
+
+    // Update Unit field and hidden field when the product is changed
+    $('#productDropdown').change(function () {
+        var productId = $(this).val(); // Get the selected product ID
+
+        if (productId) {
+            $.ajax({
+                url: '@Url.Action("GetProductUnit", "BOM")',
+                type: 'GET',
+                data: { id: productId },
+                success: function (data) {
+                    $('#unitField').val(data.unit); // Update the visible unit field
+                    $('#unitHiddenField').val(data.unit); // Update the hidden unit field
+                },
+                error: function () {
+                    alert('Failed to fetch unit details.');
+                }
+            });
+        } else {
+            $('#unitField').val(''); // Clear the visible unit field
+            $('#unitHiddenField').val(''); // Clear the hidden unit field
+        }
+    });
+});
+
+
+
+      $('#productDropdown').change(function () {
+    var productId = $(this).val(); // Get the selected product ID
+
+    if (productId) {
+        $.ajax({
+            url: '@Url.Action("GetProductDetails", "BOM")', // Server-side action
+            type: 'GET',
+            data: { productId: productId }, // Send the product ID as a parameter
+            success: function (data) {
+                if (data && data.length > 0) {
+                    let existingRowCount = $('#selectedProduct tbody tr').length; // Get current row count
+
+                    // Populate the table with Shape and ProductionQty values
+                    data.forEach((detail, index) => {
+                        let newIndex = existingRowCount + index; // Ensure unique indexing for new rows
+                        const newRow = `
+                <tr>
+                    <td>${newIndex + 1}</td>
+                    <td style="display:none;">
+                        <input type="hidden" name="ProductTypeDetail.Index" value="${newIndex}" />
+                    </td>
+                    <td style="display:none;">
+                        <input type="text" readonly class="form-control classBGcolor"
+                               name="ProductTypeDetail[${newIndex}].ProductId"
+                               value="${detail.ProductId}" />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control"
+                               name="ProductTypeDetail[${newIndex}].Shape"
+                               value="${detail.Shape}" />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control"
+                               name="ProductTypeDetail[${newIndex}].ProductionQty"
+                               value="${detail.ProductionQty}" />
+                    </td>
+                </tr>`;
+                        $('#selectedProduct tbody').append(newRow);
+                    });
+                } else {
+                    alert('No product details found.');
+                }
+            }
+
+            error: function () {
+                alert('Failed to fetch product details.');
+            }
+        });
+    } else {
+        $('#selectedProduct tbody').empty(); // Clear the table if no product is selected
+    }
+});
+
+
+               @*$('#productDropdown').change(function () {
+    var productId = $(this).val(); // Get the selected product ID
+
+    if (productId) {
+        $.ajax({
+            url: '@Url.Action("GetProductDetails", "BOM")',
+            type: 'GET',
+            data: { productId: productId },
+            success: function (data) {
+                if (data && data.length > 0) {
+                    // Clear existing rows in the Production Output table
+                    $('#selectedProduct tbody').empty();
+
+                    // Loop through the product details and create rows
+                    data.forEach((detail, index) => {
+                        const newRow = `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td style="display:none;">
+                                    <input type="hidden" name="ProductTypeDetail.Index" value="${index}" />
+                                </td>
+                                <td>
+                                    <input type="text" readonly class="form-control" name="ProductTypeDetail[${index}].Shape" value="${detail.Shape}" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" name="ProductTypeDetail[${index}].ProductionQty" />
+                                </td>
+                            </tr>`;
+                        $('#selectedProduct tbody').append(newRow); // Append only to Production Output table
+                    });
+                } else {
+                    // Clear the table if no data is found
+                    $('#selectedProduct tbody').empty();
+                    alert('No product details found.');
+                }
+            },
+            error: function () {
+                alert('Failed to fetch product details.');
+            }
+        });
+    } else {
+        // Clear the table if no product is selected
+        $('#selectedProduct tbody').empty();
+    }
+});*@
+
+
+
+
+
+
+
+
+
+    @{
+        var carton = 0; //= (d.Stock / d.PerPack);
+        var piece = 0;
+        foreach (var d in Model.Products)
+        {
+            carton = (int)(d.Stock / d.PerPack);
+            piece = (int)(d.Stock % d.PerPack);
+            if (piece == 0)
+ {
+    @:products.push([ "@d.Id", "@d.Name", "@d.Unit", "@d.Unit", "@carton" ]);
+ }
+ else
+ {
+     @:products.push(["@d.Id", "@d.Name", "@d.Unit", "@carton,@piece"]);
+ }
+ @:productsBarcodes.push(["@d.Id", "@d.BarCode"]);
+
+        }
+     }
+
+     var i;
+     var sodCount = "@Model.SubItem.Count()";
+     for (i = 0; i < sodCount; i++)
+     {
+
+         txtSerialNum = i;
+         OnTypeName('#name' + i);
+         TriggerBodyEvents();
+     }
+
+
+
+        $('.from-date-picker').datetimepicker({
+            dateFormat: "dd-M-yy",
+            timeFormat: "hh:mm tt",
+            showOn: "both",
+            timeInput: true,
+            stepHour: 1,
+            stepMinute: 5,
+            oneLine: true,
+            //changeMonth: true,
+            //changeYear: true,
+            controlType: 'select',
+            buttonImageOnly: true,
+            buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif",
+            buttonText: "Select date"
+        });
+
+
+
+
+         $("#NewData").dialog({
+            autoOpen: false,
+             title: 'Should not sell-out, already rented on thses dates',
+            closeText: '', //Changes the text of the titlebar-close button to hello instead of default Close
+            width: 500,
+            Height:500
+
+        });
+
+        function FetchProductRentStatus() {
+        //alert('wwww');
+
+            var date = new Date();
+            var day = date.getDate();       // yields date
+            var month = date.getMonth() + 1;    // yields month (add one as '.getMonth()' is zero indexed)
+            var year = date.getFullYear();  // yields year
+            var hour = date.getHours();     // yields hours
+            var minute = date.getMinutes(); // yields minutes
+            var second = date.getSeconds(); // yields seconds
+
+            // After this construct a string with the above results as below
+            var sellDate = day + "/" + month + "/" + year;// + " " + hour + ':' + minute + ':' + second;
+
+            var prodId = $('#idn' + clickedIdNum).val();
+
+
+
+
+            $.ajax({
+                url: "@Url.Action("ProductRentStatus","SOSR")",
+                data: { 'prodId': prodId, 'sellDate': sellDate},
+                type: "GET",
+                cache: false,
+                success: function (data) {
+                    //toastr.success('Hi! I am success message.');
+                    //var abc = data;
+                    //alert(data);
+                    if (data.indexOf('12:00:00 AM') != -1) {
+
+                        $("#NewData").html(data);
+                        $("#NewData").dialog("open");
+                    //}
+                    }
+
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    //$('#lblCommentsNotification').text("Error encountered while saving the comments.");
+                    alert('Data provided was not valid');
+                }
+            });
+        }
+
+        //alert(IsReturn);
+
+        $('#isService').on('change', function () {
+            if (this.value == 'true')
+            //.....................^.......
+            {
+                $("#pprice").hide();
+                $("#stk").hide();
+            }
+            else {
+                $("#pprice").show();
+                $("#stk").show();
+            }
+        });
+
+</script>
+@*@section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }*@

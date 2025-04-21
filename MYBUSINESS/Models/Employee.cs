@@ -22,9 +22,9 @@ namespace MYBUSINESS.Models
             this.ProductionOrders = new HashSet<ProductionOrder>();
             this.Rents = new HashSet<Rent>();
             this.Services = new HashSet<Service>();
-            this.SOes = new HashSet<SO>();
             this.PORecivers = new HashSet<POReciver>();
             this.POes = new HashSet<PO>();
+            this.SOes = new HashSet<SO>();
         }
     
         public decimal Id { get; set; }
@@ -62,10 +62,10 @@ namespace MYBUSINESS.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Service> Services { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SO> SOes { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<POReciver> PORecivers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PO> POes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SO> SOes { get; set; }
     }
 }

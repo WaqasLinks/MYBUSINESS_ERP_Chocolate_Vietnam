@@ -46,5 +46,8 @@ namespace MYBUSINESS.Models
         public Nullable<decimal> PrevBalance { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
         public string Remarks { get; set; }
+        public string StoreCompanyName { get; set; }
+        public string StoreCompanyAddress { get; set; }
+        public string StoreCompanyVatNumber { get; set; }
     }
 }

@@ -47,12 +47,16 @@ namespace MYBUSINESS.Models
         public string VatNumber { get; set; }
         public Nullable<decimal> VatAmountInPercent { get; set; }
         public Nullable<decimal> SaleOrderAmountWithVaT { get; set; }
+        public string SaleOrderAmountWithC { get; set; }
+        public Nullable<bool> IsCancelled { get; set; }
+        public string OrigionalId { get; set; }
     
         public virtual BankAccount BankAccount { get; set; }
         public virtual Customer Customer { get; set; }
         public virtual Employee Employee { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Payment> Payments { get; set; }
+        public virtual Store Store { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SOD> SODs { get; set; }
     }

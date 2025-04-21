@@ -1,0 +1,59 @@
+﻿@model IEnumerable<MYBUSINESS.Models.PPBOM>
+
+<div id="SelectedBOMData">
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box">
+                    <div class="box-body">
+                        <table class="table table-hover cell-border" id="SelectedBOMIndex">
+                            <thead>
+                                <tr>
+                                    <th>@Html.DisplayNameFor(model => model.First().Id)</th>
+                                    <th>@Html.DisplayNameFor(model => model.First().Remarks)</th>
+                                    <th>@Html.DisplayNameFor(model => model.First().Saleable)</th>
+                                    <th>@Html.DisplayNameFor(model => model.First().Purchasable)</th>
+                                    <th>@Html.DisplayNameFor(model => model.First().Manufacturable)</th>
+                                    <th>@Html.DisplayNameFor(model => model.First().ShelfLife)</th>
+                                    <th>@Html.DisplayNameFor(model => model.First().TimeUnit)</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@Html.DisplayFor(modelItem => item.Id)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Remarks)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Saleable)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Purchasable)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Manufacturable)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.ShelfLife)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.TimeUnit)</td>
+                                        <td>
+                                            @Html.ActionLink("Update", "Edit", new { id = item.Id }, new { @class = "btn btn-info" }) |
+                                            @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#SelectedBOMIndex').DataTable({
+            "scrollY": "400px",
+            "scrollCollapse": true,
+            "paging": false,
+            "bInfo": false,
+            "order": [[0, "desc"]],
+            "searching": true
+        });
+    });
+</script>

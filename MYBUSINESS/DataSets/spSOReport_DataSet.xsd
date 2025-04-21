@@ -57,6 +57,9 @@
               <Mapping SourceColumn="PrevBalance" DataSetColumn="PrevBalance" />
               <Mapping SourceColumn="Date" DataSetColumn="Date" />
               <Mapping SourceColumn="Remarks" DataSetColumn="Remarks" />
+              <Mapping SourceColumn="StoreCompanyName" DataSetColumn="StoreCompanyName" />
+              <Mapping SourceColumn="StoreCompanyAddress" DataSetColumn="StoreCompanyAddress" />
+              <Mapping SourceColumn="StoreCompanyVatNumber" DataSetColumn="StoreCompanyVatNumber" />
             </Mappings>
             <Sources />
           </TableAdapter>
@@ -203,6 +206,27 @@
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="500" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="StoreCompanyName" msprop:Generator_ColumnPropNameInRow="StoreCompanyName" msprop:Generator_ColumnPropNameInTable="StoreCompanyNameColumn" msprop:Generator_ColumnVarNameInTable="columnStoreCompanyName" msprop:Generator_UserColumnName="StoreCompanyName" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="200" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="StoreCompanyAddress" msprop:Generator_ColumnPropNameInRow="StoreCompanyAddress" msprop:Generator_ColumnPropNameInTable="StoreCompanyAddressColumn" msprop:Generator_ColumnVarNameInTable="columnStoreCompanyAddress" msprop:Generator_UserColumnName="StoreCompanyAddress" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="200" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="StoreCompanyVatNumber" msprop:Generator_ColumnPropNameInRow="StoreCompanyVatNumber" msprop:Generator_ColumnPropNameInTable="StoreCompanyVatNumberColumn" msprop:Generator_ColumnVarNameInTable="columnStoreCompanyVatNumber" msprop:Generator_UserColumnName="StoreCompanyVatNumber" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="200" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>

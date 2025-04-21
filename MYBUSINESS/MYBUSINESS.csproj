@@ -366,11 +366,20 @@
     <Compile Include="Controllers\BankAccountsController.cs" />
     <Compile Include="Controllers\BankAccountLedgerController.cs" />
     <Compile Include="Controllers\BOMController.cs" />
+    <Compile Include="Controllers\ColorController.cs" />
     <Compile Include="Controllers\CustomerLedgerController.cs" />
     <Compile Include="Controllers\CurrenciesController.cs" />
     <Compile Include="Controllers\NewProductionController.cs" />
+    <Compile Include="Controllers\PackagingProductionController.cs" />
     <Compile Include="Controllers\POPRReciverController.cs" />
     <Compile Include="Controllers\PostProductionController.cs" />
+    <Compile Include="Controllers\PPBOMController.cs" />
+    <Compile Include="Controllers\PrintedPackagingController.cs" />
+    <Compile Include="Controllers\PrintedPackagingReciverController.cs" />
+    <Compile Include="Controllers\ScanCreditCardController.cs" />
+    <Compile Include="Controllers\ScanMoneyInputController.cs" />
+    <Compile Include="Controllers\ShopManageController.cs" />
+    <Compile Include="Controllers\SPackagingController.cs" />
     <Compile Include="Controllers\StoresController.cs" />
     <Compile Include="Controllers\PurchaseQuotationController.cs" />
     <Compile Include="Controllers\SaleQuotationController.cs" />
@@ -460,6 +469,10 @@
     <Compile Include="Models\BusinessInfo.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Color.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ColorViewModel.cs" />
     <Compile Include="Models\Currency.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -471,6 +484,8 @@
     <Compile Include="Models\DailyBalanceVnd.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DailyCashSummaryViewModel.cs" />
+    <Compile Include="Models\DashboardStatsViewModel.cs" />
     <Compile Include="Models\Department.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -513,6 +528,16 @@
     </Compile>
     <Compile Include="Models\NewProductionViewModel.cs" />
     <Compile Include="Models\BOMViewModel.cs" />
+    <Compile Include="Models\PackagingProduction.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PackagingProductionViewModel.cs" />
+    <Compile Include="Models\PackagingSubItem.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PaperColor.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Payment.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -525,6 +550,8 @@
     <Compile Include="Models\PODReciver.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\POPRViewModel.cs" />
+    <Compile Include="Models\POPViewModel.cs" />
     <Compile Include="Models\POReciver.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -532,6 +559,27 @@
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\PostProductionViewModel.cs" />
+    <Compile Include="Models\PPBOM.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PPBOMViewModel.cs" />
+    <Compile Include="Models\PPReceiver.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PPReciverDetail.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PPSubItem.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PrintedPackaging.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PrintedPackagingDetail.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PrintedPackagingReciverViewModel.cs" />
+    <Compile Include="Models\PrintedPackagingViewModel.cs" />
     <Compile Include="Models\Product.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -550,6 +598,7 @@
     <Compile Include="Models\ProductionOrderDetail.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ProductSaleInfoViewModel.cs" />
     <Compile Include="Models\ProductType.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -569,6 +618,18 @@
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\RentViewModel.cs" />
+    <Compile Include="Models\ScanBankDeposit.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ScanBankDepostViewModel.cs" />
+    <Compile Include="Models\ScanCreditCard.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ScanCreditCardViewModel.cs" />
+    <Compile Include="Models\ScanMoneyInput.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ScanMoneyInputViewModel.cs" />
     <Compile Include="Models\Service.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -585,6 +646,13 @@
     <Compile Include="Models\SOD.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SPackaging.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SPackagingDetail.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SPackagingViewModel.cs" />
     <Compile Include="Models\spBankDepositReport_Result.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -3094,6 +3162,7 @@
     <Content Include="Content\custom\clientSOSR.js" />
     <Content Include="Content\custom\creditorPOPR.js" />
     <Content Include="Content\custom\newProduction.js" />
+    <Content Include="Content\custom\Packagingproduction.js" />
     <Content Include="Content\custom\productDetail.js" />
     <Content Include="Content\custom\shared.js" />
     <Content Include="Content\custom\stores.js" />
@@ -3803,6 +3872,154 @@
     <Content Include="Views\PostProduction\_SelectedProducts1.cshtml" />
     <Content Include="Views\Shared\_BankDepositPopup.cshtml" />
     <Content Include="Views\Shared\_MoneyInputPopup.cshtml" />
+    <Content Include="Views\Dashboard\DashboardStats.cshtml" />
+    <Content Include="Views\PackagingProduction\BOMEdit.cshtml" />
+    <Content Include="Views\PackagingProduction\Create - Copy %282%29.cshtml" />
+    <Content Include="Views\PackagingProduction\Create - Copy %283%29 - Copy.cshtml" />
+    <Content Include="Views\PackagingProduction\Create - Copy %283%29.cshtml" />
+    <Content Include="Views\PackagingProduction\Create - Copy.cshtml" />
+    <Content Include="Views\PackagingProduction\Create.cshtml" />
+    <Content Include="Views\PackagingProduction\CreateService.cshtml" />
+    <Content Include="Views\PackagingProduction\Delete.cshtml" />
+    <Content Include="Views\PackagingProduction\DeleteBOM.cshtml" />
+    <Content Include="Views\PackagingProduction\Details.cshtml" />
+    <Content Include="Views\PackagingProduction\Edit - Copy %282%29.cshtml" />
+    <Content Include="Views\PackagingProduction\Edit - Copy.cshtml" />
+    <Content Include="Views\PackagingProduction\Edit.cshtml" />
+    <Content Include="Views\PackagingProduction\EditBOM.cshtml" />
+    <Content Include="Views\PackagingProduction\EditService.cshtml" />
+    <Content Include="Views\PackagingProduction\FinalExcess.cshtml" />
+    <Content Include="Views\PackagingProduction\Index - Copy.cshtml" />
+    <Content Include="Views\PackagingProduction\Index.cshtml" />
+    <Content Include="Views\PackagingProduction\IndexComponents.cshtml" />
+    <Content Include="Views\PackagingProduction\_IndexComponents.cshtml" />
+    <Content Include="Views\PackagingProduction\_SelectedNewProduction.cshtml" />
+    <Content Include="Views\PackagingProduction\_SelectedProducts1.cshtml" />
+    <Content Include="Views\SPackaging\Create - Copy.cshtml" />
+    <Content Include="Views\SPackaging\Create Old.cshtml" />
+    <Content Include="Views\SPackaging\Create.cshtml" />
+    <Content Include="Views\SPackaging\Delete.cshtml" />
+    <Content Include="Views\SPackaging\Details.cshtml" />
+    <Content Include="Views\SPackaging\Edit - Copy %282%29.cshtml" />
+    <Content Include="Views\SPackaging\Edit - Copy.cshtml" />
+    <Content Include="Views\SPackaging\Edit.cshtml" />
+    <Content Include="Views\SPackaging\EditPOPR.cshtml" />
+    <Content Include="Views\SPackaging\Index.cshtml" />
+    <Content Include="Views\SPackaging\PerMonthPurchase.cshtml" />
+    <Content Include="Views\SPackaging\ReceiverCreate.cshtml" />
+    <Content Include="Views\SPackaging\_SelectedPOPR.cshtml" />
+    <Content Include="Views\SPackaging\_SelectedSOSR - Copy.cshtml" />
+    <Content Include="Views\Stores\ShopDashboard.cshtml" />
+    <Content Include="Views\Stores\GetDailyCashSummary.cshtml" />
+    <Content Include="Views\Stores\DailySummary.cshtml" />
+    <Content Include="Views\ShopManage\Create.cshtml" />
+    <Content Include="Views\ShopManage\_IndexComponents.cshtml" />
+    <Content Include="Views\ShopManage\_SelectedProducts.cshtml" />
+    <Content Include="Views\ShopManage\_SelectedProducts1.cshtml" />
+    <Content Include="Views\ShopManage\Delete.cshtml" />
+    <Content Include="Views\ShopManage\DeleteBOM.cshtml" />
+    <Content Include="Views\ShopManage\Details.cshtml" />
+    <Content Include="Views\ShopManage\Edit - Copy.cshtml" />
+    <Content Include="Views\ShopManage\Edit.cshtml" />
+    <Content Include="Views\ShopManage\EditBOM.cshtml" />
+    <Content Include="Views\ShopManage\EditService.cshtml" />
+    <Content Include="Views\ShopManage\Index - Copy.cshtml" />
+    <Content Include="Views\ShopManage\Index.cshtml" />
+    <Content Include="Views\ShopManage\IndexComponents.cshtml" />
+    <Content Include="Views\ScanMoneyInput\Create.cshtml" />
+    <Content Include="Views\ScanMoneyInput\Delete.cshtml" />
+    <Content Include="Views\ScanMoneyInput\DeleteBOM.cshtml" />
+    <Content Include="Views\ScanMoneyInput\Details.cshtml" />
+    <Content Include="Views\ScanMoneyInput\Edit - Copy.cshtml" />
+    <Content Include="Views\ScanMoneyInput\Edit.cshtml" />
+    <Content Include="Views\ScanMoneyInput\EditBOM.cshtml" />
+    <Content Include="Views\ScanMoneyInput\EditService.cshtml" />
+    <Content Include="Views\ScanMoneyInput\Index - Copy.cshtml" />
+    <Content Include="Views\ScanMoneyInput\Index.cshtml" />
+    <Content Include="Views\ScanMoneyInput\IndexComponents.cshtml" />
+    <Content Include="Views\ScanMoneyInput\_IndexComponents.cshtml" />
+    <Content Include="Views\ScanMoneyInput\_SelectedProducts.cshtml" />
+    <Content Include="Views\ScanMoneyInput\_SelectedProducts1.cshtml" />
+    <Content Include="Views\ScanCreditCard\Create.cshtml" />
+    <Content Include="Views\ScanCreditCard\Delete.cshtml" />
+    <Content Include="Views\ScanCreditCard\DeleteBOM.cshtml" />
+    <Content Include="Views\ScanCreditCard\Details.cshtml" />
+    <Content Include="Views\ScanCreditCard\Edit - Copy.cshtml" />
+    <Content Include="Views\ScanCreditCard\Edit.cshtml" />
+    <Content Include="Views\ScanCreditCard\EditBOM.cshtml" />
+    <Content Include="Views\ScanCreditCard\EditService.cshtml" />
+    <Content Include="Views\ScanCreditCard\Index - Copy.cshtml" />
+    <Content Include="Views\ScanCreditCard\Index.cshtml" />
+    <Content Include="Views\ScanCreditCard\IndexComponents.cshtml" />
+    <Content Include="Views\ScanCreditCard\_IndexComponents.cshtml" />
+    <Content Include="Views\ScanCreditCard\_SelectedProducts.cshtml" />
+    <Content Include="Views\ScanCreditCard\_SelectedProducts1.cshtml" />
+    <Content Include="Views\PrintedPackaging\Create - Copy.cshtml" />
+    <Content Include="Views\PrintedPackaging\Create Old.cshtml" />
+    <Content Include="Views\PrintedPackaging\Create.cshtml" />
+    <Content Include="Views\PrintedPackaging\Delete.cshtml" />
+    <Content Include="Views\PrintedPackaging\Details.cshtml" />
+    <Content Include="Views\PrintedPackaging\Edit - Copy %282%29.cshtml" />
+    <Content Include="Views\PrintedPackaging\Edit - Copy.cshtml" />
+    <Content Include="Views\PrintedPackaging\Edit.cshtml" />
+    <Content Include="Views\PrintedPackaging\EditPOPR.cshtml" />
+    <Content Include="Views\PrintedPackaging\Index.cshtml" />
+    <Content Include="Views\PrintedPackaging\PerMonthPurchase.cshtml" />
+    <Content Include="Views\PrintedPackaging\ReceiverCreate.cshtml" />
+    <Content Include="Views\PrintedPackaging\_SelectedPOPR.cshtml" />
+    <Content Include="Views\PrintedPackaging\_SelectedSOSR - Copy.cshtml" />
+    <Content Include="Views\PrintedPackagingReciver\Create - Copy %282%29.cshtml" />
+    <Content Include="Views\PrintedPackagingReciver\Create - Copy %283%29.cshtml" />
+    <Content Include="Views\PrintedPackagingReciver\Create - Copy.cshtml" />
+    <Content Include="Views\PrintedPackagingReciver\Create.cshtml" />
+    <Content Include="Views\PrintedPackagingReciver\Delete.cshtml" />
+    <Content Include="Views\PrintedPackagingReciver\Details.cshtml" />
+    <Content Include="Views\PrintedPackagingReciver\Edit - Copy %282%29.cshtml" />
+    <Content Include="Views\PrintedPackagingReciver\Edit - Copy %283%29.cshtml" />
+    <Content Include="Views\PrintedPackagingReciver\Edit - Copy %284%29.cshtml" />
+    <Content Include="Views\PrintedPackagingReciver\Edit - Copy %285%29.cshtml" />
+    <Content Include="Views\PrintedPackagingReciver\Edit - Copy.cshtml" />
+    <Content Include="Views\PrintedPackagingReciver\Edit.cshtml" />
+    <Content Include="Views\PrintedPackagingReciver\EditPOPR.cshtml" />
+    <Content Include="Views\PrintedPackagingReciver\Index.cshtml" />
+    <Content Include="Views\PrintedPackagingReciver\PerMonthPurchase.cshtml" />
+    <Content Include="Views\PrintedPackagingReciver\_SelectedPOPR.cshtml" />
+    <Content Include="Views\PrintedPackagingReciver\_SelectedSOSR - Copy.cshtml" />
+    <Content Include="Views\PPBOM\Create - Copy.cshtml" />
+    <Content Include="Views\PPBOM\Create.cshtml" />
+    <Content Include="Views\PPBOM\CreateBOM.cshtml" />
+    <Content Include="Views\PPBOM\CreateService.cshtml" />
+    <Content Include="Views\PPBOM\Create_old.cshtml" />
+    <Content Include="Views\PPBOM\Delete.cshtml" />
+    <Content Include="Views\PPBOM\DeleteBOM.cshtml" />
+    <Content Include="Views\PPBOM\Details.cshtml" />
+    <Content Include="Views\PPBOM\Edit - Copy.cshtml" />
+    <Content Include="Views\PPBOM\Edit.cshtml" />
+    <Content Include="Views\PPBOM\EditBOM.cshtml" />
+    <Content Include="Views\PPBOM\EditService.cshtml" />
+    <Content Include="Views\PPBOM\Index - Copy.cshtml" />
+    <Content Include="Views\PPBOM\Index.cshtml" />
+    <Content Include="Views\PPBOM\IndexComponents.cshtml" />
+    <Content Include="Views\PPBOM\_IndexComponents.cshtml" />
+    <Content Include="Views\PPBOM\_SelectedProducts.cshtml" />
+    <Content Include="Views\PPBOM\_SelectedProducts1.cshtml" />
+    <Content Include="Views\Color\Index.cshtml" />
+    <Content Include="Views\Color\_IndexComponents.cshtml" />
+    <Content Include="Views\Color\_SelectedProducts.cshtml" />
+    <Content Include="Views\Color\_SelectedProducts1.cshtml" />
+    <Content Include="Views\Color\Create - Copy.cshtml" />
+    <Content Include="Views\Color\Create.cshtml" />
+    <Content Include="Views\Color\CreateBOM.cshtml" />
+    <Content Include="Views\Color\CreateService.cshtml" />
+    <Content Include="Views\Color\Create_old.cshtml" />
+    <Content Include="Views\Color\Delete.cshtml" />
+    <Content Include="Views\Color\DeleteBOM.cshtml" />
+    <Content Include="Views\Color\Details.cshtml" />
+    <Content Include="Views\Color\Edit - Copy.cshtml" />
+    <Content Include="Views\Color\Edit.cshtml" />
+    <Content Include="Views\Color\EditBOM.cshtml" />
+    <Content Include="Views\Color\EditService.cshtml" />
+    <Content Include="Views\Color\Index - Copy.cshtml" />
     <None Include="Web.Debug.Config">
       <DependentUpon>Web.Config</DependentUpon>
     </None>

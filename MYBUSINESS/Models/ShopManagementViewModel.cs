@@ -26,5 +26,6 @@ namespace MYBUSINESS.Models
         public int USDQuantity { get; set; }
         public int JPYQuantity { get; set; }
         public string CurrencyName { get; set; }
+       
     }
 }

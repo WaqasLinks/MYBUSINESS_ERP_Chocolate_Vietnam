@@ -45,6 +45,14 @@
           <Property Name="Mobile" Type="nvarchar" MaxLength="500" />
           <Property Name="email" Type="nvarchar" MaxLength="500" />
         </EntityType>
+        <EntityType Name="Colors">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="ColorName" Type="nvarchar(max)" />
+          <Property Name="ColorCode" Type="nvarchar(max)" />
+        </EntityType>
         <EntityType Name="Currency">
           <Key>
             <PropertyRef Name="Id" />
@@ -278,6 +286,44 @@
           <Property Name="Validate" Type="bit" />
           <Property Name="ProductionDate" Type="datetime" />
         </EntityType>
+        <EntityType Name="PackagingProduction">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="ProductName" Type="nvarchar" MaxLength="100" />
+          <Property Name="Unit" Type="nvarchar" MaxLength="500" />
+          <Property Name="ProductId" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Quantity" Type="decimal" Precision="38" Scale="30" />
+          <Property Name="Validate" Type="bit" />
+          <Property Name="PProdDate" Type="datetime" />
+          <Property Name="Box" Type="nvarchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="PackagingSubItems">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="ParentProductId" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="ProductId" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Quantity" Type="decimal" Precision="18" Scale="6" />
+          <Property Name="PakColoredId" Type="int" />
+          <Property Name="Unit" Type="nvarchar" MaxLength="50" />
+          <Property Name="AvailableInventory" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="QuantityRequested" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="QuantitytoPrepare" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="ProductType" Type="tinyint" />
+        </EntityType>
+        <EntityType Name="PaperColor">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Color" Type="nvarchar(max)" />
+          <Property Name="Quantity" Type="numeric" Precision="18" Scale="0" />
+          <Property Name="ProductId" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="PackagingProductionId" Type="int" />
+        </EntityType>
         <EntityType Name="Payment">
           <Key>
             <PropertyRef Name="Id" />
@@ -335,6 +381,7 @@
           <Property Name="PurchasingDate" Type="datetime" />
           <Property Name="Unit" Type="nvarchar" MaxLength="50" />
           <Property Name="QtyReceived" Type="int" />
+          <Property Name="Validate" Type="bit" />
         </EntityType>
         <EntityType Name="PODReciver">
           <Key>
@@ -355,6 +402,7 @@
           <Property Name="PurchasingDate" Type="datetime" />
           <Property Name="Unit" Type="nvarchar" MaxLength="50" />
           <Property Name="QtyReceived" Type="decimal" Precision="18" Scale="3" />
+          <Property Name="Validate" Type="bit" />
         </EntityType>
         <EntityType Name="POReciver">
           <Key>
@@ -397,6 +445,136 @@
           <Property Name="Note" Type="varchar(max)" />
           <Property Name="Validate" Type="bit" />
         </EntityType>
+        <EntityType Name="PPBOM">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Remarks" Type="nvarchar" MaxLength="500" />
+          <Property Name="Saleable" Type="bit" Nullable="false" />
+          <Property Name="Purchasable" Type="bit" Nullable="false" />
+          <Property Name="Manufacturable" Type="bit" Nullable="false" />
+          <Property Name="ShelfLife" Type="int" />
+          <Property Name="TimeUnit" Type="nvarchar" MaxLength="500" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="UpdateDate" Type="datetime" />
+          <Property Name="ProductionProcessCateogry" Type="nchar" MaxLength="10" />
+          <Property Name="ProductionProcessDescription" Type="nvarchar(max)" />
+          <Property Name="ProductName" Type="nvarchar" MaxLength="300" />
+          <Property Name="ProductId" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Unit" Type="nvarchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="PPReceiver">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="POSerial" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="BillAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="BillPaid" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Discount" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="Balance" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="PrevBalance" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="Date" Type="datetime" />
+          <Property Name="PurchaseReturn" Type="bit" Nullable="false" />
+          <Property Name="SupplierId" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="PurchaseOrderAmount" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="PurchaseOrderQty" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="PaymentMethod" Type="nvarchar" MaxLength="100" />
+          <Property Name="PaymentDetail" Type="nvarchar" MaxLength="500" />
+          <Property Name="Remarks" Type="nvarchar" MaxLength="500" />
+          <Property Name="Remarks2" Type="nvarchar" MaxLength="500" />
+          <Property Name="EmployeeId" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="FundingSourceId" Type="int" />
+          <Property Name="BankAccountId" Type="nvarchar" MaxLength="36" />
+          <Property Name="Quotation" Type="bit" />
+          <Property Name="StoreId" Type="int" />
+          <Property Name="Status" Type="nvarchar" MaxLength="15" />
+        </EntityType>
+        <EntityType Name="PPReciverDetail">
+          <Key>
+            <PropertyRef Name="Auto" />
+          </Key>
+          <Property Name="Auto" Type="numeric" Precision="18" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PPReciverId" Type="varchar" MaxLength="50" />
+          <Property Name="PPDReciverId" Type="int" />
+          <Property Name="ProductId" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="OpeningStock" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="Quantity" Type="int" />
+          <Property Name="PurchasePrice" Type="numeric" Precision="18" Scale="2" />
+          <Property Name="PerPack" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="IsPack" Type="bit" />
+          <Property Name="SaleType" Type="bit" />
+          <Property Name="Remarks" Type="nvarchar" MaxLength="500" />
+          <Property Name="ExpiryDate" Type="datetime" />
+          <Property Name="PurchasingDate" Type="datetime" />
+          <Property Name="Unit" Type="nvarchar" MaxLength="50" />
+          <Property Name="QtyReceived" Type="decimal" Precision="18" Scale="3" />
+          <Property Name="Validate" Type="bit" />
+        </EntityType>
+        <EntityType Name="PPSubItem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="ParentProductId" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="ProductId" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Quantity" Type="decimal" Precision="18" Scale="6" />
+          <Property Name="PPBOMId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Unit" Type="nvarchar" MaxLength="50" />
+          <Property Name="AvailableInventory" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="QuantityRequested" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="QuantitytoPrepare" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="ProductType" Type="tinyint" />
+        </EntityType>
+        <EntityType Name="PrintedPackaging">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="POSerial" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="BillAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="BillPaid" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Discount" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="Balance" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="PrevBalance" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="Date" Type="datetime" />
+          <Property Name="PurchaseReturn" Type="bit" Nullable="false" />
+          <Property Name="SupplierId" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="PurchaseOrderAmount" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="PurchaseOrderQty" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="PaymentMethod" Type="nvarchar" MaxLength="100" />
+          <Property Name="PaymentDetail" Type="nvarchar" MaxLength="500" />
+          <Property Name="Remarks" Type="nvarchar" MaxLength="500" />
+          <Property Name="Remarks2" Type="nvarchar" MaxLength="500" />
+          <Property Name="EmployeeId" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="FundingSourceId" Type="int" />
+          <Property Name="BankAccountId" Type="nvarchar" MaxLength="36" />
+          <Property Name="Quotation" Type="bit" />
+          <Property Name="StoreId" Type="int" />
+          <Property Name="Status" Type="nvarchar" MaxLength="15" />
+        </EntityType>
+        <EntityType Name="PrintedPackagingDetail">
+          <Key>
+            <PropertyRef Name="Auto" />
+          </Key>
+          <Property Name="Auto" Type="numeric" Precision="18" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PrintedPackagingId" Type="varchar" MaxLength="50" />
+          <Property Name="PrintedPackagingDetailId" Type="int" />
+          <Property Name="ProductId" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="OpeningStock" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="Quantity" Type="int" />
+          <Property Name="PurchasePrice" Type="numeric" Precision="18" Scale="2" />
+          <Property Name="PerPack" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="IsPack" Type="bit" />
+          <Property Name="SaleType" Type="bit" />
+          <Property Name="Remarks" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="ExpiryDate" Type="datetime" />
+          <Property Name="PurchasingDate" Type="datetime" />
+          <Property Name="Unit" Type="nvarchar" MaxLength="50" />
+          <Property Name="QtyReceived" Type="int" />
+          <Property Name="Validate" Type="bit" />
+        </EntityType>
         <EntityType Name="Product">
           <Key>
             <PropertyRef Name="Id" />
@@ -427,6 +605,7 @@
           <Property Name="VarProdParentId" Type="int" />
           <Property Name="EInvoicePCode" Type="nvarchar" MaxLength="500" />
           <Property Name="PVATName" Type="nvarchar" MaxLength="300" />
+          <Property Name="Supplier" Type="nvarchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="ProductCategory">
           <Key>
@@ -571,6 +750,32 @@
           <Property Name="Profit" Type="decimal" Precision="18" Scale="2" />
           <Property Name="Remarks" Type="nvarchar" MaxLength="500" />
         </EntityType>
+        <EntityType Name="ScanBankDeposit">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StoreId" Type="int" />
+          <Property Name="Note" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="ScanCreditCard">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StoreId" Type="int" />
+          <Property Name="Note" Type="nvarchar(max)" />
+          <Property Name="Date" Type="date" />
+          <Property Name="Amount" Type="decimal" Precision="18" Scale="0" />
+        </EntityType>
+        <EntityType Name="ScanMoneyInput">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="StoreId" Type="int" />
+          <Property Name="Note" Type="nvarchar(max)" />
+        </EntityType>
         <EntityType Name="Service">
           <Key>
             <PropertyRef Name="Id" />
@@ -658,6 +863,9 @@
           <Property Name="VatNumber" Type="nvarchar" MaxLength="200" />
           <Property Name="VatAmountInPercent" Type="decimal" Precision="18" Scale="8" />
           <Property Name="SaleOrderAmountWithVaT" Type="decimal" Precision="18" Scale="8" />
+          <Property Name="SaleOrderAmountWithC" Type="nchar" MaxLength="10" />
+          <Property Name="IsCancelled" Type="bit" />
+          <Property Name="OrigionalId" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="SOD">
           <Key>
@@ -677,6 +885,54 @@
           <Property Name="Profit" Type="decimal" Precision="18" Scale="2" />
           <Property Name="Remarks" Type="nvarchar" MaxLength="500" />
         </EntityType>
+        <EntityType Name="SPackaging">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="POSerial" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="BillAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="BillPaid" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Discount" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="Balance" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="PrevBalance" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="Date" Type="datetime" />
+          <Property Name="PurchaseReturn" Type="bit" Nullable="false" />
+          <Property Name="SupplierId" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="PurchaseOrderAmount" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="PaymentMethod" Type="nvarchar" MaxLength="100" />
+          <Property Name="PaymentDetail" Type="nvarchar" MaxLength="500" />
+          <Property Name="Remarks" Type="nvarchar" MaxLength="500" />
+          <Property Name="Remarks2" Type="nvarchar" MaxLength="500" />
+          <Property Name="EmployeeId" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="FundingSourceId" Type="int" />
+          <Property Name="BankAccountId" Type="nvarchar" MaxLength="36" />
+          <Property Name="Quotation" Type="bit" />
+          <Property Name="StoreId" Type="int" />
+          <Property Name="Status" Type="nvarchar" MaxLength="15" />
+          <Property Name="PurchaseOrderQty" Type="decimal" Precision="18" Scale="2" />
+        </EntityType>
+        <EntityType Name="SPackagingDetail">
+          <Key>
+            <PropertyRef Name="Auto" />
+          </Key>
+          <Property Name="Auto" Type="numeric" Precision="18" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SPackagingId" Type="varchar" MaxLength="50" />
+          <Property Name="SPDId" Type="int" />
+          <Property Name="ProductId" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="OpeningStock" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="Quantity" Type="int" />
+          <Property Name="PurchasePrice" Type="numeric" Precision="18" Scale="2" />
+          <Property Name="PerPack" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="IsPack" Type="bit" />
+          <Property Name="SaleType" Type="bit" />
+          <Property Name="Remarks" Type="nvarchar" MaxLength="500" />
+          <Property Name="ExpiryDate" Type="datetime" />
+          <Property Name="PurchasingDate" Type="datetime" />
+          <Property Name="Unit" Type="nvarchar" MaxLength="50" />
+          <Property Name="QtyReceived" Type="int" />
+          <Property Name="Validate" Type="bit" />
+        </EntityType>
         <EntityType Name="Store">
           <Key>
             <PropertyRef Name="Id" />
@@ -692,6 +948,9 @@
           <Property Name="VatNumber" Type="nvarchar" MaxLength="200" />
           <Property Name="CompanyName" Type="nvarchar" MaxLength="200" />
           <Property Name="CompanyAddress" Type="nvarchar" MaxLength="200" />
+          <Property Name="CompanyVatNumber" Type="nvarchar" MaxLength="200" />
+          <Property Name="StoreShortCode" Type="nvarchar" MaxLength="200" />
+          <Property Name="StoreShortName" Type="nvarchar" MaxLength="200" />
         </EntityType>
         <EntityType Name="StoreProduct">
           <Key>
@@ -781,6 +1040,30 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="BOM">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Color_PackagingProduction">
+          <End Role="PackagingProduction" Type="Self.PackagingProduction" Multiplicity="0..1" />
+          <End Role="PaperColor" Type="Self.PaperColor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PackagingProduction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PaperColor">
+              <PropertyRef Name="PackagingProductionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Color_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+          <End Role="PaperColor" Type="Self.PaperColor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PaperColor">
               <PropertyRef Name="ProductId" />
             </Dependent>
           </ReferentialConstraint>
@@ -959,6 +1242,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_PackagingProduction_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+          <End Role="PackagingProduction" Type="Self.PackagingProduction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PackagingProduction">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Payment_SO">
           <End Role="SO" Type="Self.SO" Multiplicity="0..1" />
           <End Role="Payment" Type="Self.Payment" Multiplicity="*" />
@@ -1107,6 +1402,114 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="PostProduction">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPBOM_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+          <End Role="PPBOM" Type="Self.PPBOM" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PPBOM">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPReceiver_Supplier">
+          <End Role="Supplier" Type="Self.Supplier" Multiplicity="0..1" />
+          <End Role="PPReceiver" Type="Self.PPReceiver" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PPReceiver">
+              <PropertyRef Name="SupplierId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPReciverDetail_PPReceiver">
+          <End Role="PPReceiver" Type="Self.PPReceiver" Multiplicity="0..1" />
+          <End Role="PPReciverDetail" Type="Self.PPReciverDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPReceiver">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PPReciverDetail">
+              <PropertyRef Name="PPReciverId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPReciverDetail_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+          <End Role="PPReciverDetail" Type="Self.PPReciverDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PPReciverDetail">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPSubItem_PPBOM">
+          <End Role="PPBOM" Type="Self.PPBOM" Multiplicity="1" />
+          <End Role="PPSubItem" Type="Self.PPSubItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPBOM">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PPSubItem">
+              <PropertyRef Name="PPBOMId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPSubItem_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+          <End Role="PPSubItem" Type="Self.PPSubItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PPSubItem">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PrintedPackaging_Supplier">
+          <End Role="Supplier" Type="Self.Supplier" Multiplicity="0..1" />
+          <End Role="PrintedPackaging" Type="Self.PrintedPackaging" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PrintedPackaging">
+              <PropertyRef Name="SupplierId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PrintedPackagingDetail_PrintedPackaging">
+          <End Role="PrintedPackaging" Type="Self.PrintedPackaging" Multiplicity="0..1" />
+          <End Role="PrintedPackagingDetail" Type="Self.PrintedPackagingDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PrintedPackaging">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PrintedPackagingDetail">
+              <PropertyRef Name="PrintedPackagingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PrintedPackagingDetail_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+          <End Role="PrintedPackagingDetail" Type="Self.PrintedPackagingDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PrintedPackagingDetail">
               <PropertyRef Name="ProductId" />
             </Dependent>
           </ReferentialConstraint>
@@ -1417,6 +1820,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SO_Store">
+          <End Role="Store" Type="Self.Store" Multiplicity="0..1" />
+          <End Role="SO" Type="Self.SO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Store">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SO">
+              <PropertyRef Name="StoreId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_SOD_Product1">
           <End Role="Product" Type="Self.Product" Multiplicity="0..1">
             <OnDelete Action="Cascade" />
@@ -1440,6 +1855,42 @@
             </Principal>
             <Dependent Role="SOD">
               <PropertyRef Name="SOId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SPackaging_Supplier">
+          <End Role="Supplier" Type="Self.Supplier" Multiplicity="0..1" />
+          <End Role="SPackaging" Type="Self.SPackaging" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SPackaging">
+              <PropertyRef Name="SupplierId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SPackagingDetail_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+          <End Role="SPackagingDetail" Type="Self.SPackagingDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SPackagingDetail">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SPackagingDetail_SPackaging">
+          <End Role="SPackaging" Type="Self.SPackaging" Multiplicity="0..1" />
+          <End Role="SPackagingDetail" Type="Self.SPackagingDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SPackaging">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SPackagingDetail">
+              <PropertyRef Name="SPackagingId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1578,6 +2029,7 @@
           <EntitySet Name="BankAccount" EntityType="Self.BankAccount" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BOM" EntityType="Self.BOM" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BusinessInfo" EntityType="Self.BusinessInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Colors" EntityType="Self.Colors" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Currency" EntityType="Self.Currency" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DailyBalanceVnd" EntityType="Self.DailyBalanceVnd" Schema="dbo" store:Type="Tables" />
@@ -1592,12 +2044,21 @@
           <EntitySet Name="MetaDetaDescription" EntityType="Self.MetaDetaDescription" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MyBusinessInfo" EntityType="Self.MyBusinessInfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="NewProduction" EntityType="Self.NewProduction" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PackagingProduction" EntityType="Self.PackagingProduction" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PackagingSubItems" EntityType="Self.PackagingSubItems" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PaperColor" EntityType="Self.PaperColor" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Payment" EntityType="Self.Payment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PO" EntityType="Self.PO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="POD" EntityType="Self.POD" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PODReciver" EntityType="Self.PODReciver" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="POReciver" EntityType="Self.POReciver" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PostProduction" EntityType="Self.PostProduction" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPBOM" EntityType="Self.PPBOM" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPReceiver" EntityType="Self.PPReceiver" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPReciverDetail" EntityType="Self.PPReciverDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPSubItem" EntityType="Self.PPSubItem" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PrintedPackaging" EntityType="Self.PrintedPackaging" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PrintedPackagingDetail" EntityType="Self.PrintedPackagingDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductCategory" EntityType="Self.ProductCategory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductDetail" EntityType="Self.ProductDetail" Schema="dbo" store:Type="Tables" />
@@ -1608,11 +2069,16 @@
           <EntitySet Name="QuantityToProduce" EntityType="Self.QuantityToProduce" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Rent" EntityType="Self.Rent" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RentDetail" EntityType="Self.RentDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ScanBankDeposit" EntityType="Self.ScanBankDeposit" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ScanCreditCard" EntityType="Self.ScanCreditCard" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ScanMoneyInput" EntityType="Self.ScanMoneyInput" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Service" EntityType="Self.Service" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ServiceDetail" EntityType="Self.ServiceDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ShopManage" EntityType="Self.ShopManage" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SO" EntityType="Self.SO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SOD" EntityType="Self.SOD" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SPackaging" EntityType="Self.SPackaging" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SPackagingDetail" EntityType="Self.SPackagingDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Store" EntityType="Self.Store" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StoreProduct" EntityType="Self.StoreProduct" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SubItem" EntityType="Self.SubItem" Schema="dbo" store:Type="Tables" />
@@ -1623,6 +2089,14 @@
           <AssociationSet Name="FK_BOM_Product1" Association="Self.FK_BOM_Product1">
             <End Role="Product" EntitySet="Product" />
             <End Role="BOM" EntitySet="BOM" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Color_PackagingProduction" Association="Self.FK_Color_PackagingProduction">
+            <End Role="PackagingProduction" EntitySet="PackagingProduction" />
+            <End Role="PaperColor" EntitySet="PaperColor" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Color_Product" Association="Self.FK_Color_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="PaperColor" EntitySet="PaperColor" />
           </AssociationSet>
           <AssociationSet Name="FK_Customer_Business" Association="Self.FK_Customer_Business">
             <End Role="BusinessInfo" EntitySet="BusinessInfo" />
@@ -1680,6 +2154,10 @@
             <End Role="Product" EntitySet="Product" />
             <End Role="NewProduction" EntitySet="NewProduction" />
           </AssociationSet>
+          <AssociationSet Name="FK_PackagingProduction_Product" Association="Self.FK_PackagingProduction_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="PackagingProduction" EntitySet="PackagingProduction" />
+          </AssociationSet>
           <AssociationSet Name="FK_Payment_SO" Association="Self.FK_Payment_SO">
             <End Role="SO" EntitySet="SO" />
             <End Role="Payment" EntitySet="Payment" />
@@ -1727,6 +2205,42 @@
           <AssociationSet Name="FK_PostProduction_Product1" Association="Self.FK_PostProduction_Product1">
             <End Role="Product" EntitySet="Product" />
             <End Role="PostProduction" EntitySet="PostProduction" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPBOM_Product" Association="Self.FK_PPBOM_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="PPBOM" EntitySet="PPBOM" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPReceiver_Supplier" Association="Self.FK_PPReceiver_Supplier">
+            <End Role="Supplier" EntitySet="Supplier" />
+            <End Role="PPReceiver" EntitySet="PPReceiver" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPReciverDetail_PPReceiver" Association="Self.FK_PPReciverDetail_PPReceiver">
+            <End Role="PPReceiver" EntitySet="PPReceiver" />
+            <End Role="PPReciverDetail" EntitySet="PPReciverDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPReciverDetail_Product" Association="Self.FK_PPReciverDetail_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="PPReciverDetail" EntitySet="PPReciverDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPSubItem_PPBOM" Association="Self.FK_PPSubItem_PPBOM">
+            <End Role="PPBOM" EntitySet="PPBOM" />
+            <End Role="PPSubItem" EntitySet="PPSubItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPSubItem_Product" Association="Self.FK_PPSubItem_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="PPSubItem" EntitySet="PPSubItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PrintedPackaging_Supplier" Association="Self.FK_PrintedPackaging_Supplier">
+            <End Role="Supplier" EntitySet="Supplier" />
+            <End Role="PrintedPackaging" EntitySet="PrintedPackaging" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PrintedPackagingDetail_PrintedPackaging" Association="Self.FK_PrintedPackagingDetail_PrintedPackaging">
+            <End Role="PrintedPackaging" EntitySet="PrintedPackaging" />
+            <End Role="PrintedPackagingDetail" EntitySet="PrintedPackagingDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PrintedPackagingDetail_Product" Association="Self.FK_PrintedPackagingDetail_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="PrintedPackagingDetail" EntitySet="PrintedPackagingDetail" />
           </AssociationSet>
           <AssociationSet Name="FK_ProductCategory_Product1" Association="Self.FK_ProductCategory_Product1">
             <End Role="Product" EntitySet="Product" />
@@ -1824,6 +2338,10 @@
             <End Role="Employee" EntitySet="Employee" />
             <End Role="SO" EntitySet="SO" />
           </AssociationSet>
+          <AssociationSet Name="FK_SO_Store" Association="Self.FK_SO_Store">
+            <End Role="Store" EntitySet="Store" />
+            <End Role="SO" EntitySet="SO" />
+          </AssociationSet>
           <AssociationSet Name="FK_SOD_Product1" Association="Self.FK_SOD_Product1">
             <End Role="Product" EntitySet="Product" />
             <End Role="SOD" EntitySet="SOD" />
@@ -1831,6 +2349,18 @@
           <AssociationSet Name="FK_SOD_SO" Association="Self.FK_SOD_SO">
             <End Role="SO" EntitySet="SO" />
             <End Role="SOD" EntitySet="SOD" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SPackaging_Supplier" Association="Self.FK_SPackaging_Supplier">
+            <End Role="Supplier" EntitySet="Supplier" />
+            <End Role="SPackaging" EntitySet="SPackaging" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SPackagingDetail_Product" Association="Self.FK_SPackagingDetail_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="SPackagingDetail" EntitySet="SPackagingDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SPackagingDetail_SPackaging" Association="Self.FK_SPackagingDetail_SPackaging">
+            <End Role="SPackaging" EntitySet="SPackaging" />
+            <End Role="SPackagingDetail" EntitySet="SPackagingDetail" />
           </AssociationSet>
           <AssociationSet Name="FK_StoreProduct_Product" Association="Self.FK_StoreProduct_Product">
             <End Role="Product" EntitySet="Product" />
@@ -1933,7 +2463,6 @@
           <EntitySet Name="Services" EntityType="Models.Service" />
           <EntitySet Name="ServiceDetails" EntityType="Models.ServiceDetail" />
           <EntitySet Name="SODs" EntityType="Models.SOD" />
-          <EntitySet Name="Stores" EntityType="Models.Store" />
           <EntitySet Name="StoreProducts" EntityType="Models.StoreProduct" />
           <EntitySet Name="Suppliers" EntityType="Models.Supplier" />
           <EntitySet Name="sysdiagrams" EntityType="Models.sysdiagram" />
@@ -2014,10 +2543,6 @@
             <End Role="Service" EntitySet="Services" />
             <End Role="ServiceDetail" EntitySet="ServiceDetails" />
           </AssociationSet>
-          <AssociationSet Name="FK_StoreProduct_Store" Association="Models.FK_StoreProduct_Store">
-            <End Role="Store" EntitySet="Stores" />
-            <End Role="StoreProduct" EntitySet="StoreProducts" />
-          </AssociationSet>
           <EntitySet Name="ProductTypes" EntityType="Models.ProductType" />
           <AssociationSet Name="FK_ProductType_BOM" Association="Models.FK_ProductType_BOM">
             <End Role="BOM" EntitySet="BOMs" />
@@ -2025,7 +2550,6 @@
           </AssociationSet>
           <EntitySet Name="ProductionDetails" EntityType="Models.ProductionDetail" />
           <EntitySet Name="PostProductions" EntityType="Models.PostProduction" />
-          <EntitySet Name="ProductDetails" EntityType="Models.ProductDetail" />
           <EntitySet Name="SubItems" EntityType="Models.SubItem" />
           <AssociationSet Name="FK_SubItem_BOM" Association="Models.FK_SubItem_BOM">
             <End Role="BOM" EntitySet="BOMs" />
@@ -2045,48 +2569,62 @@
             <End Role="PostProduction" EntitySet="PostProductions" />
             <End Role="QuantityToProduce" EntitySet="QuantityToProduces" />
           </AssociationSet>
-          <AssociationSet Name="FK_QuantityToProduce_ProductDetail" Association="Models.FK_QuantityToProduce_ProductDetail">
-            <End Role="ProductDetail" EntitySet="ProductDetails" />
-            <End Role="QuantityToProduce" EntitySet="QuantityToProduces" />
-          </AssociationSet>
           <EntitySet Name="NewProductions" EntityType="Models.NewProduction" />
           <AssociationSet Name="FK_PostProduction_NewProduction" Association="Models.FK_PostProduction_NewProduction">
             <End Role="NewProduction" EntitySet="NewProductions" />
             <End Role="PostProduction" EntitySet="PostProductions" />
           </AssociationSet>
-          <AssociationSet Name="FK_ProductDetail_NewProduction" Association="Models.FK_ProductDetail_NewProduction">
-            <End Role="NewProduction" EntitySet="NewProductions" />
-            <End Role="ProductDetail" EntitySet="ProductDetails" />
-          </AssociationSet>
           <AssociationSet Name="FK_ProductionDetail_NewProduction" Association="Models.FK_ProductionDetail_NewProduction">
             <End Role="NewProduction" EntitySet="NewProductions" />
             <End Role="ProductionDetail" EntitySet="ProductionDetails" />
           </AssociationSet>
-          <EntitySet Name="SOes" EntityType="Models.SO" />
-          <AssociationSet Name="FK_SO_Account" Association="Models.FK_SO_Account">
-            <End Role="BankAccount" EntitySet="BankAccounts" />
-            <End Role="SO" EntitySet="SOes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SO_Customer" Association="Models.FK_SO_Customer">
-            <End Role="Customer" EntitySet="Customers" />
-            <End Role="SO" EntitySet="SOes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SO_Employee" Association="Models.FK_SO_Employee">
-            <End Role="Employee" EntitySet="Employees" />
-            <End Role="SO" EntitySet="SOes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Payment_SO" Association="Models.FK_Payment_SO">
-            <End Role="SO" EntitySet="SOes" />
-            <End Role="Payment" EntitySet="Payments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SOD_SO" Association="Models.FK_SOD_SO">
-            <End Role="SO" EntitySet="SOes" />
-            <End Role="SOD" EntitySet="SODs" />
-          </AssociationSet>
           <EntitySet Name="MyBusinessInfoes" EntityType="Models.MyBusinessInfo" />
+          <EntitySet Name="PORecivers" EntityType="Models.POReciver" />
+          <AssociationSet Name="FK_POReciver_Employee" Association="Models.FK_POReciver_Employee">
+            <End Role="Employee" EntitySet="Employees" />
+            <End Role="POReciver" EntitySet="PORecivers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_POReciver_Supplier" Association="Models.FK_POReciver_Supplier">
+            <End Role="Supplier" EntitySet="Suppliers" />
+            <End Role="POReciver" EntitySet="PORecivers" />
+          </AssociationSet>
+          <EntitySet Name="POes" EntityType="Models.PO" />
+          <AssociationSet Name="FK_PO_Account" Association="Models.FK_PO_Account">
+            <End Role="BankAccount" EntitySet="BankAccounts" />
+            <End Role="PO" EntitySet="POes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PO_Employee" Association="Models.FK_PO_Employee">
+            <End Role="Employee" EntitySet="Employees" />
+            <End Role="PO" EntitySet="POes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PO_Supplier" Association="Models.FK_PO_Supplier">
+            <End Role="Supplier" EntitySet="Suppliers" />
+            <End Role="PO" EntitySet="POes" />
+          </AssociationSet>
+          <EntitySet Name="DailyBalanceVnds" EntityType="Models.DailyBalanceVnd" />
+          <FunctionImport Name="spBankDepositReport" ReturnType="Collection(Models.spBankDepositReport_Result)">
+          <Parameter Name="BankDepositId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="ShopManages" EntityType="Models.ShopManage" />
           <FunctionImport Name="spSOReport" ReturnType="Collection(Models.spSOReport_Result)">
           <Parameter Name="SaleOrderID" Mode="In" Type="String" />
           </FunctionImport>
+          <EntitySet Name="PODs" EntityType="Models.POD" />
+          <AssociationSet Name="FK_POD_PO" Association="Models.FK_POD_PO">
+            <End Role="PO" EntitySet="POes" />
+            <End Role="POD" EntitySet="PODs" />
+          </AssociationSet>
+          <EntitySet Name="PODRecivers" EntityType="Models.PODReciver" />
+          <AssociationSet Name="FK_PODReciver_POReciver" Association="Models.FK_PODReciver_POReciver">
+            <End Role="POReciver" EntitySet="PORecivers" />
+            <End Role="PODReciver" EntitySet="PODRecivers" />
+          </AssociationSet>
+          <EntitySet Name="PackagingSubItems" EntityType="Models.PackagingSubItem" />
+          <EntitySet Name="Stores" EntityType="Models.Store" />
+          <AssociationSet Name="FK_StoreProduct_Store" Association="Models.FK_StoreProduct_Store">
+            <End Role="Store" EntitySet="Stores" />
+            <End Role="StoreProduct" EntitySet="StoreProducts" />
+          </AssociationSet>
           <EntitySet Name="Products" EntityType="Models.Product" />
           <AssociationSet Name="FK_BOM_Product1" Association="Models.FK_BOM_Product1">
             <End Role="Product" EntitySet="Products" />
@@ -2108,6 +2646,14 @@
             <End Role="Product" EntitySet="Products" />
             <End Role="NewProduction" EntitySet="NewProductions" />
           </AssociationSet>
+          <AssociationSet Name="FK_POD_Product" Association="Models.FK_POD_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="POD" EntitySet="PODs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PODReciver_Product1" Association="Models.FK_PODReciver_Product1">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="PODReciver" EntitySet="PODRecivers" />
+          </AssociationSet>
           <AssociationSet Name="FK_PostProduction_Product1" Association="Models.FK_PostProduction_Product1">
             <End Role="Product" EntitySet="Products" />
             <End Role="PostProduction" EntitySet="PostProductions" />
@@ -2115,10 +2661,6 @@
           <AssociationSet Name="FK_ProductCategory_Product1" Association="Models.FK_ProductCategory_Product1">
             <End Role="Product" EntitySet="Products" />
             <End Role="ProductCategory" EntitySet="ProductCategories" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductDetail_Product" Association="Models.FK_ProductDetail_Product">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="ProductDetail" EntitySet="ProductDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_ProductionDetail_Product1" Association="Models.FK_ProductionDetail_Product1">
             <End Role="Product" EntitySet="Products" />
@@ -2160,51 +2702,118 @@
             <End Role="Product" EntitySet="Products" />
             <End Role="SubItemProduction" EntitySet="SubItemProductions" />
           </AssociationSet>
-          <EntitySet Name="PORecivers" EntityType="Models.POReciver" />
-          <AssociationSet Name="FK_POReciver_Employee" Association="Models.FK_POReciver_Employee">
-            <End Role="Employee" EntitySet="Employees" />
-            <End Role="POReciver" EntitySet="PORecivers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_POReciver_Supplier" Association="Models.FK_POReciver_Supplier">
-            <End Role="Supplier" EntitySet="Suppliers" />
-            <End Role="POReciver" EntitySet="PORecivers" />
-          </AssociationSet>
-          <EntitySet Name="PODRecivers" EntityType="Models.PODReciver" />
-          <AssociationSet Name="FK_PODReciver_POReciver" Association="Models.FK_PODReciver_POReciver">
-            <End Role="POReciver" EntitySet="PORecivers" />
-            <End Role="PODReciver" EntitySet="PODRecivers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PODReciver_Product1" Association="Models.FK_PODReciver_Product1">
+          <EntitySet Name="PackagingProductions" EntityType="Models.PackagingProduction" />
+          <AssociationSet Name="FK_PackagingProduction_Product" Association="Models.FK_PackagingProduction_Product">
             <End Role="Product" EntitySet="Products" />
-            <End Role="PODReciver" EntitySet="PODRecivers" />
+            <End Role="PackagingProduction" EntitySet="PackagingProductions" />
           </AssociationSet>
-          <EntitySet Name="POes" EntityType="Models.PO" />
-          <AssociationSet Name="FK_PO_Account" Association="Models.FK_PO_Account">
+          <EntitySet Name="PaperColors" EntityType="Models.PaperColor" />
+          <AssociationSet Name="FK_Color_PackagingProduction" Association="Models.FK_Color_PackagingProduction">
+            <End Role="PackagingProduction" EntitySet="PackagingProductions" />
+            <End Role="PaperColor" EntitySet="PaperColors" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Color_Product" Association="Models.FK_Color_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="PaperColor" EntitySet="PaperColors" />
+          </AssociationSet>
+          <EntitySet Name="SOes" EntityType="Models.SO" />
+          <AssociationSet Name="FK_SO_Account" Association="Models.FK_SO_Account">
             <End Role="BankAccount" EntitySet="BankAccounts" />
-            <End Role="PO" EntitySet="POes" />
+            <End Role="SO" EntitySet="SOes" />
           </AssociationSet>
-          <AssociationSet Name="FK_PO_Employee" Association="Models.FK_PO_Employee">
+          <AssociationSet Name="FK_SO_Customer" Association="Models.FK_SO_Customer">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="SO" EntitySet="SOes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SO_Employee" Association="Models.FK_SO_Employee">
             <End Role="Employee" EntitySet="Employees" />
-            <End Role="PO" EntitySet="POes" />
+            <End Role="SO" EntitySet="SOes" />
           </AssociationSet>
-          <AssociationSet Name="FK_PO_Supplier" Association="Models.FK_PO_Supplier">
-            <End Role="Supplier" EntitySet="Suppliers" />
-            <End Role="PO" EntitySet="POes" />
+          <AssociationSet Name="FK_Payment_SO" Association="Models.FK_Payment_SO">
+            <End Role="SO" EntitySet="SOes" />
+            <End Role="Payment" EntitySet="Payments" />
           </AssociationSet>
-          <EntitySet Name="PODs" EntityType="Models.POD" />
-          <AssociationSet Name="FK_POD_PO" Association="Models.FK_POD_PO">
-            <End Role="PO" EntitySet="POes" />
-            <End Role="POD" EntitySet="PODs" />
+          <AssociationSet Name="FK_SO_Store" Association="Models.FK_SO_Store">
+            <End Role="Store" EntitySet="Stores" />
+            <End Role="SO" EntitySet="SOes" />
           </AssociationSet>
-          <AssociationSet Name="FK_POD_Product" Association="Models.FK_POD_Product">
+          <AssociationSet Name="FK_SOD_SO" Association="Models.FK_SOD_SO">
+            <End Role="SO" EntitySet="SOes" />
+            <End Role="SOD" EntitySet="SODs" />
+          </AssociationSet>
+          <EntitySet Name="SPackagingDetails" EntityType="Models.SPackagingDetail" />
+          <AssociationSet Name="FK_SPackagingDetail_Product" Association="Models.FK_SPackagingDetail_Product">
             <End Role="Product" EntitySet="Products" />
-            <End Role="POD" EntitySet="PODs" />
+            <End Role="SPackagingDetail" EntitySet="SPackagingDetails" />
           </AssociationSet>
-          <EntitySet Name="DailyBalanceVnds" EntityType="Models.DailyBalanceVnd" />
-          <FunctionImport Name="spBankDepositReport" ReturnType="Collection(Models.spBankDepositReport_Result)">
-          <Parameter Name="BankDepositId" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <EntitySet Name="ShopManages" EntityType="Models.ShopManage" />
+          <EntitySet Name="ProductDetails" EntityType="Models.ProductDetail" />
+          <AssociationSet Name="FK_ProductDetail_NewProduction" Association="Models.FK_ProductDetail_NewProduction">
+            <End Role="NewProduction" EntitySet="NewProductions" />
+            <End Role="ProductDetail" EntitySet="ProductDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductDetail_Product" Association="Models.FK_ProductDetail_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="ProductDetail" EntitySet="ProductDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_QuantityToProduce_ProductDetail" Association="Models.FK_QuantityToProduce_ProductDetail">
+            <End Role="ProductDetail" EntitySet="ProductDetails" />
+            <End Role="QuantityToProduce" EntitySet="QuantityToProduces" />
+          </AssociationSet>
+          <EntitySet Name="SPackagings" EntityType="Models.SPackaging" />
+          <AssociationSet Name="FK_SPackaging_Supplier" Association="Models.FK_SPackaging_Supplier">
+            <End Role="Supplier" EntitySet="Suppliers" />
+            <End Role="SPackaging" EntitySet="SPackagings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SPackagingDetail_SPackaging" Association="Models.FK_SPackagingDetail_SPackaging">
+            <End Role="SPackaging" EntitySet="SPackagings" />
+            <End Role="SPackagingDetail" EntitySet="SPackagingDetails" />
+          </AssociationSet>
+          <EntitySet Name="ScanBankDeposits" EntityType="Models.ScanBankDeposit" />
+          <EntitySet Name="ScanMoneyInputs" EntityType="Models.ScanMoneyInput" />
+          <EntitySet Name="ScanCreditCards" EntityType="Models.ScanCreditCard" />
+          <EntitySet Name="PrintedPackagingDetails" EntityType="Models.PrintedPackagingDetail" />
+          <AssociationSet Name="FK_PrintedPackagingDetail_Product" Association="Models.FK_PrintedPackagingDetail_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="PrintedPackagingDetail" EntitySet="PrintedPackagingDetails" />
+          </AssociationSet>
+          <EntitySet Name="PrintedPackagings" EntityType="Models.PrintedPackaging" />
+          <AssociationSet Name="FK_PrintedPackaging_Supplier" Association="Models.FK_PrintedPackaging_Supplier">
+            <End Role="Supplier" EntitySet="Suppliers" />
+            <End Role="PrintedPackaging" EntitySet="PrintedPackagings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PrintedPackagingDetail_PrintedPackaging" Association="Models.FK_PrintedPackagingDetail_PrintedPackaging">
+            <End Role="PrintedPackaging" EntitySet="PrintedPackagings" />
+            <End Role="PrintedPackagingDetail" EntitySet="PrintedPackagingDetails" />
+          </AssociationSet>
+          <EntitySet Name="PPReceivers" EntityType="Models.PPReceiver" />
+          <EntitySet Name="PPReciverDetails" EntityType="Models.PPReciverDetail" />
+          <AssociationSet Name="FK_PPReceiver_Supplier" Association="Models.FK_PPReceiver_Supplier">
+            <End Role="Supplier" EntitySet="Suppliers" />
+            <End Role="PPReceiver" EntitySet="PPReceivers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPReciverDetail_PPReceiver" Association="Models.FK_PPReciverDetail_PPReceiver">
+            <End Role="PPReceiver" EntitySet="PPReceivers" />
+            <End Role="PPReciverDetail" EntitySet="PPReciverDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPReciverDetail_Product" Association="Models.FK_PPReciverDetail_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="PPReciverDetail" EntitySet="PPReciverDetails" />
+          </AssociationSet>
+          <EntitySet Name="PPBOMs" EntityType="Models.PPBOM" />
+          <EntitySet Name="PPSubItems" EntityType="Models.PPSubItem" />
+          <AssociationSet Name="FK_PPBOM_Product" Association="Models.FK_PPBOM_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="PPBOM" EntitySet="PPBOMs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPSubItem_PPBOM" Association="Models.FK_PPSubItem_PPBOM">
+            <End Role="PPBOM" EntitySet="PPBOMs" />
+            <End Role="PPSubItem" EntitySet="PPSubItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPSubItem_Product" Association="Models.FK_PPSubItem_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="PPSubItem" EntitySet="PPSubItems" />
+          </AssociationSet>
+          <EntitySet Name="Colors" EntityType="Models.Color" />
           </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
           <Property Type="Int32" Name="version" Nullable="true" />
@@ -2360,8 +2969,8 @@
           <Property Name="AccountType" Type="Int32" />
           <Property Name="Balance" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="SOes" Relationship="Models.FK_SO_Account" FromRole="BankAccount" ToRole="SO" />
           <NavigationProperty Name="POes" Relationship="Models.FK_PO_Account" FromRole="BankAccount" ToRole="PO" />
+          <NavigationProperty Name="SOes" Relationship="Models.FK_SO_Account" FromRole="BankAccount" ToRole="SO" />
         </EntityType>
         <EntityType Name="BOM">
           <Key>
@@ -2486,9 +3095,9 @@
           <NavigationProperty Name="ProductionOrders" Relationship="Models.FK_ProductionOrder_Employee" FromRole="Employee" ToRole="ProductionOrder" />
           <NavigationProperty Name="Rents" Relationship="Models.FK_Rent_Employee" FromRole="Employee" ToRole="Rent" />
           <NavigationProperty Name="Services" Relationship="Models.FK_Service_Employee" FromRole="Employee" ToRole="Service" />
-          <NavigationProperty Name="SOes" Relationship="Models.FK_SO_Employee" FromRole="Employee" ToRole="SO" />
           <NavigationProperty Name="PORecivers" Relationship="Models.FK_POReciver_Employee" FromRole="Employee" ToRole="POReciver" />
           <NavigationProperty Name="POes" Relationship="Models.FK_PO_Employee" FromRole="Employee" ToRole="PO" />
+          <NavigationProperty Name="SOes" Relationship="Models.FK_SO_Employee" FromRole="Employee" ToRole="SO" />
         </EntityType>
         <EntityType Name="Expense">
           <Key>
@@ -2789,25 +3398,8 @@
           <Property Name="SaleType" Type="Boolean" />
           <Property Name="Profit" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="SO" Relationship="Models.FK_SOD_SO" FromRole="SOD" ToRole="SO" />
           <NavigationProperty Name="Product" Relationship="Models.FK_SOD_Product1" FromRole="SOD" ToRole="Product" />
-        </EntityType>
-        <EntityType Name="Store">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="DateCreated" Type="DateTime" Precision="3" />
-          <Property Name="DateModified" Type="DateTime" Precision="3" />
-          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Address" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="PhoneNumber" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="StoreProducts" Relationship="Models.FK_StoreProduct_Store" FromRole="Store" ToRole="StoreProduct" />
-          <Property Name="VatNumber" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="CompanyName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="CompanyAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="SO" Relationship="Models.FK_SOD_SO" FromRole="SOD" ToRole="SO" />
         </EntityType>
         <EntityType Name="StoreProduct">
           <Key>
@@ -2840,6 +3432,9 @@
           <NavigationProperty Name="Loans" Relationship="Models.FK_Loan_Supplier" FromRole="Supplier" ToRole="Loan" />
           <NavigationProperty Name="PORecivers" Relationship="Models.FK_POReciver_Supplier" FromRole="Supplier" ToRole="POReciver" />
           <NavigationProperty Name="POes" Relationship="Models.FK_PO_Supplier" FromRole="Supplier" ToRole="PO" />
+          <NavigationProperty Name="SPackagings" Relationship="Models.FK_SPackaging_Supplier" FromRole="Supplier" ToRole="SPackaging" />
+          <NavigationProperty Name="PrintedPackagings" Relationship="Models.FK_PrintedPackaging_Supplier" FromRole="Supplier" ToRole="PrintedPackaging" />
+          <NavigationProperty Name="PPReceivers" Relationship="Models.FK_PPReceiver_Supplier" FromRole="Supplier" ToRole="PPReceiver" />
         </EntityType>
         <EntityType Name="sysdiagram">
           <Key>
@@ -3089,18 +3684,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_StoreProduct_Store">
-          <End Type="Models.Store" Role="Store" Multiplicity="0..1" />
-          <End Type="Models.StoreProduct" Role="StoreProduct" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Store">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="StoreProduct">
-              <PropertyRef Name="StoreId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="ProductType">
           <Key>
             <PropertyRef Name="Id" />
@@ -3158,22 +3741,6 @@
           <NavigationProperty Name="QuantityToProduces" Relationship="Models.FK_QuantityToProduce_PostProduction" FromRole="PostProduction" ToRole="QuantityToProduce" />
           <NavigationProperty Name="NewProduction" Relationship="Models.FK_PostProduction_NewProduction" FromRole="PostProduction" ToRole="NewProduction" />
           <NavigationProperty Name="Product" Relationship="Models.FK_PostProduction_Product1" FromRole="PostProduction" ToRole="Product" />
-        </EntityType>
-        <EntityType Name="ProductDetail">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Decimal" Nullable="false" Precision="10" Scale="0" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="Shape" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Weight" Type="Decimal" Precision="18" Scale="6" />
-          <Property Name="RentId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="RentStartDate" Type="DateTime" Precision="3" />
-          <Property Name="RentEndDate" Type="DateTime" Precision="3" />
-          <Property Name="ProductionId" Type="Int32" />
-          <NavigationProperty Name="QuantityToProduces" Relationship="Models.FK_QuantityToProduce_ProductDetail" FromRole="ProductDetail" ToRole="QuantityToProduce" />
-          <NavigationProperty Name="NewProduction" Relationship="Models.FK_ProductDetail_NewProduction" FromRole="ProductDetail" ToRole="NewProduction" />
-          <NavigationProperty Name="Product" Relationship="Models.FK_ProductDetail_Product" FromRole="ProductDetail" ToRole="Product" />
         </EntityType>
         <EntityType Name="SubItem">
           <Key>
@@ -3263,8 +3830,8 @@
           <Property Name="PostProductionId" Type="Int32" />
           <Property Name="Weight" Type="Decimal" Precision="18" Scale="6" />
           <NavigationProperty Name="PostProduction" Relationship="Models.FK_QuantityToProduce_PostProduction" FromRole="QuantityToProduce" ToRole="PostProduction" />
-          <NavigationProperty Name="ProductDetail" Relationship="Models.FK_QuantityToProduce_ProductDetail" FromRole="QuantityToProduce" ToRole="ProductDetail" />
           <NavigationProperty Name="Product" Relationship="Models.FK_QuantityToProduce_Product" FromRole="QuantityToProduce" ToRole="Product" />
+          <NavigationProperty Name="ProductDetail" Relationship="Models.FK_QuantityToProduce_ProductDetail" FromRole="QuantityToProduce" ToRole="ProductDetail" />
         </EntityType>
         <Association Name="FK_QuantityToProduce_PostProduction">
           <End Type="Models.PostProduction" Role="PostProduction" Multiplicity="0..1" />
@@ -3275,18 +3842,6 @@
             </Principal>
             <Dependent Role="QuantityToProduce">
               <PropertyRef Name="PostProductionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_QuantityToProduce_ProductDetail">
-          <End Type="Models.ProductDetail" Role="ProductDetail" Multiplicity="0..1" />
-          <End Type="Models.QuantityToProduce" Role="QuantityToProduce" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ProductDetail">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="QuantityToProduce">
-              <PropertyRef Name="ProductDetailId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3302,9 +3857,9 @@
           <Property Name="Validate" Type="Boolean" />
           <Property Name="ProductionDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="PostProductions" Relationship="Models.FK_PostProduction_NewProduction" FromRole="NewProduction" ToRole="PostProduction" />
-          <NavigationProperty Name="ProductDetails" Relationship="Models.FK_ProductDetail_NewProduction" FromRole="NewProduction" ToRole="ProductDetail" />
           <NavigationProperty Name="ProductionDetails" Relationship="Models.FK_ProductionDetail_NewProduction" FromRole="NewProduction" ToRole="ProductionDetail" />
           <NavigationProperty Name="Product" Relationship="Models.FK_NewProduction_Product" FromRole="NewProduction" ToRole="Product" />
+          <NavigationProperty Name="ProductDetails" Relationship="Models.FK_ProductDetail_NewProduction" FromRole="NewProduction" ToRole="ProductDetail" />
         </EntityType>
         <Association Name="FK_PostProduction_NewProduction">
           <End Type="Models.NewProduction" Role="NewProduction" Multiplicity="0..1" />
@@ -3318,18 +3873,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ProductDetail_NewProduction">
-          <End Type="Models.NewProduction" Role="NewProduction" Multiplicity="0..1" />
-          <End Type="Models.ProductDetail" Role="ProductDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="NewProduction">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ProductDetail">
-              <PropertyRef Name="ProductionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ProductionDetail_NewProduction">
           <End Type="Models.NewProduction" Role="NewProduction" Multiplicity="0..1" />
           <End Type="Models.ProductionDetail" Role="ProductionDetail" Multiplicity="*" />
@@ -3339,104 +3882,6 @@
             </Principal>
             <Dependent Role="ProductionDetail">
               <PropertyRef Name="ProdctuionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="SO">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="SOSerial" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="BillAmount" Type="Decimal" Nullable="false" Precision="18" Scale="8" />
-          <Property Name="BillPaid" Type="Decimal" Nullable="false" Precision="18" Scale="8" />
-          <Property Name="Discount" Type="Decimal" Precision="18" Scale="8" />
-          <Property Name="Balance" Type="Decimal" Precision="18" Scale="8" />
-          <Property Name="PrevBalance" Type="Decimal" Precision="18" Scale="8" />
-          <Property Name="Date" Type="DateTime" Precision="3" />
-          <Property Name="SaleReturn" Type="Boolean" Nullable="false" />
-          <Property Name="CustomerId" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="SaleOrderAmount" Type="Decimal" Precision="18" Scale="8" />
-          <Property Name="SaleOrderQty" Type="Decimal" Precision="18" Scale="8" />
-          <Property Name="Profit" Type="Decimal" Precision="18" Scale="8" />
-          <Property Name="PaymentMethod" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="PaymentDetail" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Remarks2" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="EmployeeId" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="BankAccountId" Type="String" MaxLength="36" FixedLength="false" Unicode="true" />
-          <Property Name="Quotation" Type="Boolean" />
-          <Property Name="StoreId" Type="Int32" />
-          <Property Name="BillPaidByCash" Type="Decimal" Precision="18" Scale="8" />
-          <Property Name="UserId" Type="Int32" />
-          <Property Name="VatNumber" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="VatAmountInPercent" Type="Decimal" Precision="18" Scale="8" />
-          <Property Name="SaleOrderAmountWithVaT" Type="Decimal" Precision="18" Scale="8" />
-          <NavigationProperty Name="BankAccount" Relationship="Models.FK_SO_Account" FromRole="SO" ToRole="BankAccount" />
-          <NavigationProperty Name="Customer" Relationship="Models.FK_SO_Customer" FromRole="SO" ToRole="Customer" />
-          <NavigationProperty Name="Employee" Relationship="Models.FK_SO_Employee" FromRole="SO" ToRole="Employee" />
-          <NavigationProperty Name="Payments" Relationship="Models.FK_Payment_SO" FromRole="SO" ToRole="Payment" />
-          <NavigationProperty Name="SODs" Relationship="Models.FK_SOD_SO" FromRole="SO" ToRole="SOD" />
-        </EntityType>
-        <Association Name="FK_SO_Account">
-          <End Type="Models.BankAccount" Role="BankAccount" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="Models.SO" Role="SO" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="BankAccount">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="SO">
-              <PropertyRef Name="BankAccountId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SO_Customer">
-          <End Type="Models.Customer" Role="Customer" Multiplicity="0..1" />
-          <End Type="Models.SO" Role="SO" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Customer">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="SO">
-              <PropertyRef Name="CustomerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SO_Employee">
-          <End Type="Models.Employee" Role="Employee" Multiplicity="0..1" />
-          <End Type="Models.SO" Role="SO" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Employee">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="SO">
-              <PropertyRef Name="EmployeeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Payment_SO">
-          <End Type="Models.SO" Role="SO" Multiplicity="0..1" />
-          <End Type="Models.Payment" Role="Payment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SO">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Payment">
-              <PropertyRef Name="SOId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SOD_SO">
-          <End Type="Models.SO" Role="SO" Multiplicity="0..1" />
-          <End Type="Models.SOD" Role="SOD" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SO">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="SOD">
-              <PropertyRef Name="SOId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3456,6 +3901,182 @@
           <Property Name="CompanyAddress" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="CompanyTaxNumber" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="TaxInPercent" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+        </EntityType>
+        <EntityType Name="POReciver">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="POSerial" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="BillAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="BillPaid" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Discount" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Balance" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="PrevBalance" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <Property Name="PurchaseReturn" Type="Boolean" Nullable="false" />
+          <Property Name="SupplierId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="PurchaseOrderAmount" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="PurchaseOrderQty" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="PaymentMethod" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="PaymentDetail" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Remarks2" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="EmployeeId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="FundingSourceId" Type="Int32" />
+          <Property Name="BankAccountId" Type="String" MaxLength="36" FixedLength="false" Unicode="true" />
+          <Property Name="Quotation" Type="Boolean" />
+          <Property Name="StoreId" Type="Int32" />
+          <Property Name="Status" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Employee" Relationship="Models.FK_POReciver_Employee" FromRole="POReciver" ToRole="Employee" />
+          <NavigationProperty Name="Supplier" Relationship="Models.FK_POReciver_Supplier" FromRole="POReciver" ToRole="Supplier" />
+          <NavigationProperty Name="PODRecivers" Relationship="Models.FK_PODReciver_POReciver" FromRole="POReciver" ToRole="PODReciver" />
+        </EntityType>
+        <Association Name="FK_POReciver_Employee">
+          <End Type="Models.Employee" Role="Employee" Multiplicity="0..1" />
+          <End Type="Models.POReciver" Role="POReciver" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="POReciver">
+              <PropertyRef Name="EmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_POReciver_Supplier">
+          <End Type="Models.Supplier" Role="Supplier" Multiplicity="0..1" />
+          <End Type="Models.POReciver" Role="POReciver" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="POReciver">
+              <PropertyRef Name="SupplierId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="PO">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="POSerial" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="BillAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="BillPaid" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Discount" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Balance" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="PrevBalance" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <Property Name="PurchaseReturn" Type="Boolean" Nullable="false" />
+          <Property Name="SupplierId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="PurchaseOrderAmount" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="PurchaseOrderQty" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="PaymentMethod" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="PaymentDetail" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Remarks2" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="EmployeeId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="FundingSourceId" Type="Int32" />
+          <Property Name="BankAccountId" Type="String" MaxLength="36" FixedLength="false" Unicode="true" />
+          <Property Name="Quotation" Type="Boolean" />
+          <Property Name="StoreId" Type="Int32" />
+          <Property Name="Status" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="BankAccount" Relationship="Models.FK_PO_Account" FromRole="PO" ToRole="BankAccount" />
+          <NavigationProperty Name="Employee" Relationship="Models.FK_PO_Employee" FromRole="PO" ToRole="Employee" />
+          <NavigationProperty Name="Supplier" Relationship="Models.FK_PO_Supplier" FromRole="PO" ToRole="Supplier" />
+          <NavigationProperty Name="PODs" Relationship="Models.FK_POD_PO" FromRole="PO" ToRole="POD" />
+        </EntityType>
+        <Association Name="FK_PO_Account">
+          <End Type="Models.BankAccount" Role="BankAccount" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Models.PO" Role="PO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BankAccount">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PO">
+              <PropertyRef Name="BankAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PO_Employee">
+          <End Type="Models.Employee" Role="Employee" Multiplicity="0..1" />
+          <End Type="Models.PO" Role="PO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PO">
+              <PropertyRef Name="EmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PO_Supplier">
+          <End Type="Models.Supplier" Role="Supplier" Multiplicity="0..1" />
+          <End Type="Models.PO" Role="PO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PO">
+              <PropertyRef Name="SupplierId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="DailyBalanceVnd">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OpeningDate" Type="DateTime" Precision="3" />
+          <Property Name="OpeningBalance" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="ClosingBalance" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="ClosingDate" Type="DateTime" Precision="3" />
+          <Property Name="StoreId" Type="Int32" />
+          <Property Name="UserId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="OpeningCurrencyDetail" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="ClosingCurrencyDetail" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="VNDQuantity" Type="Int32" />
+          <Property Name="USDQuantity" Type="Int32" />
+          <Property Name="JPYQuantity" Type="Int32" />
+          <Property Name="CurrencyName" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <ComplexType Name="spBankDepositReport_Result">
+          <Property Type="Int32" Name="BankDepositId" Nullable="false" />
+          <Property Type="DateTime" Name="ClosingDate" Nullable="true" Precision="23" />
+          <Property Type="Decimal" Name="ClosingBalance" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="String" Name="ClosingCurrencyDetail" Nullable="true" MaxLength="1000" />
+          <Property Type="Int32" Name="Qty" Nullable="true" />
+          <Property Type="Int32" Name="VNDQuantity" Nullable="true" />
+          <Property Type="Int32" Name="USDQuantity" Nullable="true" />
+          <Property Type="Int32" Name="JPYQuantity" Nullable="true" />
+          <Property Type="String" Name="CurrencyName" Nullable="true" MaxLength="1000" />
+          <Property Type="String" Name="StoreName" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="StoreAddress" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="StorePhone" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="CustomerName" Nullable="true" MaxLength="300" />
+          <Property Type="String" Name="CustomerEmail" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="CustomerAddress" Nullable="true" MaxLength="500" />
+        </ComplexType>
+        <EntityType Name="ShopManage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Balance" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="ShoreId" Type="Int32" Nullable="false" />
+          <Property Name="TransactionType" Type="Byte" />
+          <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CurrencyName" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="JPYQuantity" Type="Int32" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="VNDQuantity" Type="Int32" />
+          <Property Name="USDQuantity" Type="Int32" />
+          <Property Name="Date" Type="DateTime" Precision="0" />
         </EntityType>
         <ComplexType Name="spSOReport_Result">
           <Property Type="String" Name="Id" Nullable="false" MaxLength="50" />
@@ -3491,7 +4112,128 @@
           <Property Type="Decimal" Name="PrevBalance" Nullable="true" Precision="18" Scale="8" />
           <Property Type="DateTime" Name="Date" Nullable="true" Precision="23" />
           <Property Type="String" Name="Remarks" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="StoreCompanyName" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="StoreCompanyAddress" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="StoreCompanyVatNumber" Nullable="true" MaxLength="200" />
         </ComplexType>
+        <EntityType Name="POD">
+          <Key>
+            <PropertyRef Name="Auto" />
+          </Key>
+          <Property Name="Auto" Type="Decimal" Nullable="false" Precision="18" Scale="0" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="POId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PODId" Type="Int32" />
+          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="OpeningStock" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="PurchasePrice" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="PerPack" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="IsPack" Type="Boolean" />
+          <Property Name="SaleType" Type="Boolean" />
+          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ExpiryDate" Type="DateTime" Precision="3" />
+          <Property Name="PurchasingDate" Type="DateTime" Precision="3" />
+          <Property Name="Unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="QtyReceived" Type="Int32" />
+          <Property Name="Validate" Type="Boolean" />
+          <NavigationProperty Name="PO" Relationship="Models.FK_POD_PO" FromRole="POD" ToRole="PO" />
+          <NavigationProperty Name="Product" Relationship="Models.FK_POD_Product" FromRole="POD" ToRole="Product" />
+        </EntityType>
+        <Association Name="FK_POD_PO">
+          <End Type="Models.PO" Role="PO" Multiplicity="0..1" />
+          <End Type="Models.POD" Role="POD" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PO">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="POD">
+              <PropertyRef Name="POId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="PODReciver">
+          <Key>
+            <PropertyRef Name="Auto" />
+          </Key>
+          <Property Name="Auto" Type="Decimal" Nullable="false" Precision="18" Scale="0" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="POReciverId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PODReciverId" Type="Int32" />
+          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="OpeningStock" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="PurchasePrice" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="PerPack" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="IsPack" Type="Boolean" />
+          <Property Name="SaleType" Type="Boolean" />
+          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ExpiryDate" Type="DateTime" Precision="3" />
+          <Property Name="PurchasingDate" Type="DateTime" Precision="3" />
+          <Property Name="Unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="QtyReceived" Type="Decimal" Precision="18" Scale="3" />
+          <Property Name="Validate" Type="Boolean" />
+          <NavigationProperty Name="POReciver" Relationship="Models.FK_PODReciver_POReciver" FromRole="PODReciver" ToRole="POReciver" />
+          <NavigationProperty Name="Product" Relationship="Models.FK_PODReciver_Product1" FromRole="PODReciver" ToRole="Product" />
+        </EntityType>
+        <Association Name="FK_PODReciver_POReciver">
+          <End Type="Models.POReciver" Role="POReciver" Multiplicity="0..1" />
+          <End Type="Models.PODReciver" Role="PODReciver" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="POReciver">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PODReciver">
+              <PropertyRef Name="POReciverId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="PackagingSubItem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="ParentProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Quantity" Type="Decimal" Precision="18" Scale="6" />
+          <Property Name="PakColoredId" Type="Int32" />
+          <Property Name="Unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AvailableInventory" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="QuantityRequested" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="QuantitytoPrepare" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="ProductType" Type="Byte" />
+        </EntityType>
+        <EntityType Name="Store">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="DateCreated" Type="DateTime" Precision="3" />
+          <Property Name="DateModified" Type="DateTime" Precision="3" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="VatNumber" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyVatNumber" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="StoreShortCode" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="StoreShortName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="StoreProducts" Relationship="Models.FK_StoreProduct_Store" FromRole="Store" ToRole="StoreProduct" />
+          <NavigationProperty Name="SOes" Relationship="Models.FK_SO_Store" FromRole="Store" ToRole="SO" />
+        </EntityType>
+        <Association Name="FK_StoreProduct_Store">
+          <End Type="Models.Store" Role="Store" Multiplicity="0..1" />
+          <End Type="Models.StoreProduct" Role="StoreProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Store">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="StoreProduct">
+              <PropertyRef Name="StoreId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityType Name="Product">
           <Key>
             <PropertyRef Name="Id" />
@@ -3522,14 +4264,16 @@
           <Property Name="VarProdParentId" Type="Int32" />
           <Property Name="EInvoicePCode" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="PVATName" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="Supplier" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="BOMs" Relationship="Models.FK_BOM_Product1" FromRole="Product" ToRole="BOM" />
           <NavigationProperty Name="ExpenseDetails" Relationship="Models.FK_ExpenseDetail_Product1" FromRole="Product" ToRole="ExpenseDetail" />
           <NavigationProperty Name="FinalProductions" Relationship="Models.FK_FinalProduction_Product" FromRole="Product" ToRole="FinalProduction" />
           <NavigationProperty Name="LoanDetails" Relationship="Models.FK_LoanDetail_Product1" FromRole="Product" ToRole="LoanDetail" />
           <NavigationProperty Name="NewProductions" Relationship="Models.FK_NewProduction_Product" FromRole="Product" ToRole="NewProduction" />
+          <NavigationProperty Name="PODs" Relationship="Models.FK_POD_Product" FromRole="Product" ToRole="POD" />
+          <NavigationProperty Name="PODRecivers" Relationship="Models.FK_PODReciver_Product1" FromRole="Product" ToRole="PODReciver" />
           <NavigationProperty Name="PostProductions" Relationship="Models.FK_PostProduction_Product1" FromRole="Product" ToRole="PostProduction" />
           <NavigationProperty Name="ProductCategories" Relationship="Models.FK_ProductCategory_Product1" FromRole="Product" ToRole="ProductCategory" />
-          <NavigationProperty Name="ProductDetails" Relationship="Models.FK_ProductDetail_Product" FromRole="Product" ToRole="ProductDetail" />
           <NavigationProperty Name="ProductionDetails" Relationship="Models.FK_ProductionDetail_Product1" FromRole="Product" ToRole="ProductionDetail" />
           <NavigationProperty Name="ProductionOrderDetails" Relationship="Models.FK_ProductionOrderDetail_Product1" FromRole="Product" ToRole="ProductionOrderDetail" />
           <NavigationProperty Name="ProductTypes" Relationship="Models.FK_ProductType_Product" FromRole="Product" ToRole="ProductType" />
@@ -3540,8 +4284,14 @@
           <NavigationProperty Name="StoreProducts" Relationship="Models.FK_StoreProduct_Product" FromRole="Product" ToRole="StoreProduct" />
           <NavigationProperty Name="SubItems" Relationship="Models.FK_SubItem_Product" FromRole="Product" ToRole="SubItem" />
           <NavigationProperty Name="SubItemProductions" Relationship="Models.FK_SubItemProduction_Product1" FromRole="Product" ToRole="SubItemProduction" />
-          <NavigationProperty Name="PODRecivers" Relationship="Models.FK_PODReciver_Product1" FromRole="Product" ToRole="PODReciver" />
-          <NavigationProperty Name="PODs" Relationship="Models.FK_POD_Product" FromRole="Product" ToRole="POD" />
+          <NavigationProperty Name="PackagingProductions" Relationship="Models.FK_PackagingProduction_Product" FromRole="Product" ToRole="PackagingProduction" />
+          <NavigationProperty Name="PaperColors" Relationship="Models.FK_Color_Product" FromRole="Product" ToRole="PaperColor" />
+          <NavigationProperty Name="SPackagingDetails" Relationship="Models.FK_SPackagingDetail_Product" FromRole="Product" ToRole="SPackagingDetail" />
+          <NavigationProperty Name="ProductDetails" Relationship="Models.FK_ProductDetail_Product" FromRole="Product" ToRole="ProductDetail" />
+          <NavigationProperty Name="PrintedPackagingDetails" Relationship="Models.FK_PrintedPackagingDetail_Product" FromRole="Product" ToRole="PrintedPackagingDetail" />
+          <NavigationProperty Name="PPReciverDetails" Relationship="Models.FK_PPReciverDetail_Product" FromRole="Product" ToRole="PPReciverDetail" />
+          <NavigationProperty Name="PPBOMs" Relationship="Models.FK_PPBOM_Product" FromRole="Product" ToRole="PPBOM" />
+          <NavigationProperty Name="PPSubItems" Relationship="Models.FK_PPSubItem_Product" FromRole="Product" ToRole="PPSubItem" />
         </EntityType>
         <Association Name="FK_BOM_Product1">
           <End Type="Models.Product" Role="Product" Multiplicity="0..1">
@@ -3611,6 +4361,34 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_POD_Product">
+          <End Type="Models.Product" Role="Product" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Models.POD" Role="POD" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="POD">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PODReciver_Product1">
+          <End Type="Models.Product" Role="Product" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Models.PODReciver" Role="PODReciver" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PODReciver">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_PostProduction_Product1">
           <End Type="Models.Product" Role="Product" Multiplicity="0..1">
             <OnDelete Action="Cascade" />
@@ -3635,20 +4413,6 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="ProductCategory">
-              <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductDetail_Product">
-          <End Type="Models.Product" Role="Product" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="Models.ProductDetail" Role="ProductDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ProductDetail">
               <PropertyRef Name="ProductId" />
             </Dependent>
           </ReferentialConstraint>
@@ -3791,184 +4555,190 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="POReciver">
+        <EntityType Name="PackagingProduction">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="POSerial" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="BillAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="BillPaid" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="Discount" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="Balance" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="PrevBalance" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="Date" Type="DateTime" Precision="3" />
-          <Property Name="PurchaseReturn" Type="Boolean" Nullable="false" />
-          <Property Name="SupplierId" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="PurchaseOrderAmount" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="PurchaseOrderQty" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="PaymentMethod" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="PaymentDetail" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Remarks2" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="EmployeeId" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="FundingSourceId" Type="Int32" />
-          <Property Name="BankAccountId" Type="String" MaxLength="36" FixedLength="false" Unicode="true" />
-          <Property Name="Quotation" Type="Boolean" />
-          <Property Name="StoreId" Type="Int32" />
-          <Property Name="Status" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Employee" Relationship="Models.FK_POReciver_Employee" FromRole="POReciver" ToRole="Employee" />
-          <NavigationProperty Name="Supplier" Relationship="Models.FK_POReciver_Supplier" FromRole="POReciver" ToRole="Supplier" />
-          <NavigationProperty Name="PODRecivers" Relationship="Models.FK_PODReciver_POReciver" FromRole="POReciver" ToRole="PODReciver" />
-        </EntityType>
-        <Association Name="FK_POReciver_Employee">
-          <End Type="Models.Employee" Role="Employee" Multiplicity="0..1" />
-          <End Type="Models.POReciver" Role="POReciver" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Employee">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="POReciver">
-              <PropertyRef Name="EmployeeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_POReciver_Supplier">
-          <End Type="Models.Supplier" Role="Supplier" Multiplicity="0..1" />
-          <End Type="Models.POReciver" Role="POReciver" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Supplier">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="POReciver">
-              <PropertyRef Name="SupplierId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="PODReciver">
-          <Key>
-            <PropertyRef Name="Auto" />
-          </Key>
-          <Property Name="Auto" Type="Decimal" Nullable="false" Precision="18" Scale="0" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="POReciverId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="PODReciverId" Type="Int32" />
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="ProductName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Unit" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="OpeningStock" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="Quantity" Type="Int32" />
-          <Property Name="PurchasePrice" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="PerPack" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="IsPack" Type="Boolean" />
-          <Property Name="SaleType" Type="Boolean" />
-          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ExpiryDate" Type="DateTime" Precision="3" />
-          <Property Name="PurchasingDate" Type="DateTime" Precision="3" />
-          <Property Name="Unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="QtyReceived" Type="Decimal" Precision="18" Scale="3" />
-          <NavigationProperty Name="POReciver" Relationship="Models.FK_PODReciver_POReciver" FromRole="PODReciver" ToRole="POReciver" />
-          <NavigationProperty Name="Product" Relationship="Models.FK_PODReciver_Product1" FromRole="PODReciver" ToRole="Product" />
+          <Property Name="Quantity" Type="Decimal" Precision="38" Scale="30" />
+          <Property Name="Validate" Type="Boolean" />
+          <Property Name="PProdDate" Type="DateTime" Precision="3" />
+          <Property Name="Box" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Product" Relationship="Models.FK_PackagingProduction_Product" FromRole="PackagingProduction" ToRole="Product" />
+          <NavigationProperty Name="PaperColors" Relationship="Models.FK_Color_PackagingProduction" FromRole="PackagingProduction" ToRole="PaperColor" />
         </EntityType>
-        <Association Name="FK_PODReciver_POReciver">
-          <End Type="Models.POReciver" Role="POReciver" Multiplicity="0..1" />
-          <End Type="Models.PODReciver" Role="PODReciver" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="POReciver">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="PODReciver">
-              <PropertyRef Name="POReciverId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PODReciver_Product1">
-          <End Type="Models.Product" Role="Product" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="Models.PODReciver" Role="PODReciver" Multiplicity="*" />
+        <Association Name="FK_PackagingProduction_Product">
+          <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="Models.PackagingProduction" Role="PackagingProduction" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Product">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="PODReciver">
+            <Dependent Role="PackagingProduction">
               <PropertyRef Name="ProductId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="PO">
+        <EntityType Name="PaperColor">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Color" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Quantity" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="PackagingProductionId" Type="Int32" />
+          <NavigationProperty Name="PackagingProduction" Relationship="Models.FK_Color_PackagingProduction" FromRole="PaperColor" ToRole="PackagingProduction" />
+          <NavigationProperty Name="Product" Relationship="Models.FK_Color_Product" FromRole="PaperColor" ToRole="Product" />
+        </EntityType>
+        <Association Name="FK_Color_PackagingProduction">
+          <End Type="Models.PackagingProduction" Role="PackagingProduction" Multiplicity="0..1" />
+          <End Type="Models.PaperColor" Role="PaperColor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PackagingProduction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PaperColor">
+              <PropertyRef Name="PackagingProductionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Color_Product">
+          <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="Models.PaperColor" Role="PaperColor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PaperColor">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="SO">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="POSerial" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="BillAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="BillPaid" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="Discount" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="Balance" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="PrevBalance" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="SOSerial" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="BillAmount" Type="Decimal" Nullable="false" Precision="18" Scale="8" />
+          <Property Name="BillPaid" Type="Decimal" Nullable="false" Precision="18" Scale="8" />
+          <Property Name="Discount" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="Balance" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="PrevBalance" Type="Decimal" Precision="18" Scale="8" />
           <Property Name="Date" Type="DateTime" Precision="3" />
-          <Property Name="PurchaseReturn" Type="Boolean" Nullable="false" />
-          <Property Name="SupplierId" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="PurchaseOrderAmount" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="PurchaseOrderQty" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="SaleReturn" Type="Boolean" Nullable="false" />
+          <Property Name="CustomerId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="SaleOrderAmount" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="SaleOrderQty" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="Profit" Type="Decimal" Precision="18" Scale="8" />
           <Property Name="PaymentMethod" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="PaymentDetail" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Remarks2" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="EmployeeId" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="FundingSourceId" Type="Int32" />
           <Property Name="BankAccountId" Type="String" MaxLength="36" FixedLength="false" Unicode="true" />
           <Property Name="Quotation" Type="Boolean" />
           <Property Name="StoreId" Type="Int32" />
-          <Property Name="Status" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="BankAccount" Relationship="Models.FK_PO_Account" FromRole="PO" ToRole="BankAccount" />
-          <NavigationProperty Name="Employee" Relationship="Models.FK_PO_Employee" FromRole="PO" ToRole="Employee" />
-          <NavigationProperty Name="Supplier" Relationship="Models.FK_PO_Supplier" FromRole="PO" ToRole="Supplier" />
-          <NavigationProperty Name="PODs" Relationship="Models.FK_POD_PO" FromRole="PO" ToRole="POD" />
+          <Property Name="BillPaidByCash" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="VatNumber" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="VatAmountInPercent" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="SaleOrderAmountWithVaT" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="SaleOrderAmountWithC" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="IsCancelled" Type="Boolean" />
+          <Property Name="OrigionalId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="BankAccount" Relationship="Models.FK_SO_Account" FromRole="SO" ToRole="BankAccount" />
+          <NavigationProperty Name="Customer" Relationship="Models.FK_SO_Customer" FromRole="SO" ToRole="Customer" />
+          <NavigationProperty Name="Employee" Relationship="Models.FK_SO_Employee" FromRole="SO" ToRole="Employee" />
+          <NavigationProperty Name="Payments" Relationship="Models.FK_Payment_SO" FromRole="SO" ToRole="Payment" />
+          <NavigationProperty Name="Store" Relationship="Models.FK_SO_Store" FromRole="SO" ToRole="Store" />
+          <NavigationProperty Name="SODs" Relationship="Models.FK_SOD_SO" FromRole="SO" ToRole="SOD" />
         </EntityType>
-        <Association Name="FK_PO_Account">
+        <Association Name="FK_SO_Account">
           <End Type="Models.BankAccount" Role="BankAccount" Multiplicity="0..1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Type="Models.PO" Role="PO" Multiplicity="*" />
+          <End Type="Models.SO" Role="SO" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="BankAccount">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="PO">
+            <Dependent Role="SO">
               <PropertyRef Name="BankAccountId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_PO_Employee">
+        <Association Name="FK_SO_Customer">
+          <End Type="Models.Customer" Role="Customer" Multiplicity="0..1" />
+          <End Type="Models.SO" Role="SO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SO">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SO_Employee">
           <End Type="Models.Employee" Role="Employee" Multiplicity="0..1" />
-          <End Type="Models.PO" Role="PO" Multiplicity="*" />
+          <End Type="Models.SO" Role="SO" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Employee">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="PO">
+            <Dependent Role="SO">
               <PropertyRef Name="EmployeeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_PO_Supplier">
-          <End Type="Models.Supplier" Role="Supplier" Multiplicity="0..1" />
-          <End Type="Models.PO" Role="PO" Multiplicity="*" />
+        <Association Name="FK_Payment_SO">
+          <End Type="Models.SO" Role="SO" Multiplicity="0..1" />
+          <End Type="Models.Payment" Role="Payment" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Supplier">
+            <Principal Role="SO">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="PO">
-              <PropertyRef Name="SupplierId" />
+            <Dependent Role="Payment">
+              <PropertyRef Name="SOId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="POD">
+        <Association Name="FK_SO_Store">
+          <End Type="Models.Store" Role="Store" Multiplicity="0..1" />
+          <End Type="Models.SO" Role="SO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Store">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SO">
+              <PropertyRef Name="StoreId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SOD_SO">
+          <End Type="Models.SO" Role="SO" Multiplicity="0..1" />
+          <End Type="Models.SOD" Role="SOD" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SO">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SOD">
+              <PropertyRef Name="SOId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="SPackagingDetail">
           <Key>
             <PropertyRef Name="Auto" />
           </Key>
           <Property Name="Auto" Type="Decimal" Nullable="false" Precision="18" Scale="0" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="POId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="PODId" Type="Int32" />
+          <Property Name="SPackagingId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SPDId" Type="Int32" />
           <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="OpeningStock" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="Quantity" Type="Int32" />
@@ -3981,87 +4751,412 @@
           <Property Name="PurchasingDate" Type="DateTime" Precision="3" />
           <Property Name="Unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="QtyReceived" Type="Int32" />
-          <NavigationProperty Name="PO" Relationship="Models.FK_POD_PO" FromRole="POD" ToRole="PO" />
-          <NavigationProperty Name="Product" Relationship="Models.FK_POD_Product" FromRole="POD" ToRole="Product" />
+          <Property Name="Validate" Type="Boolean" />
+          <NavigationProperty Name="Product" Relationship="Models.FK_SPackagingDetail_Product" FromRole="SPackagingDetail" ToRole="Product" />
+          <NavigationProperty Name="SPackaging" Relationship="Models.FK_SPackagingDetail_SPackaging" FromRole="SPackagingDetail" ToRole="SPackaging" />
         </EntityType>
-        <Association Name="FK_POD_PO">
-          <End Type="Models.PO" Role="PO" Multiplicity="0..1" />
-          <End Type="Models.POD" Role="POD" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PO">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="POD">
-              <PropertyRef Name="POId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_POD_Product">
-          <End Type="Models.Product" Role="Product" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="Models.POD" Role="POD" Multiplicity="*" />
+        <Association Name="FK_SPackagingDetail_Product">
+          <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="Models.SPackagingDetail" Role="SPackagingDetail" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Product">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="POD">
+            <Dependent Role="SPackagingDetail">
               <PropertyRef Name="ProductId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="DailyBalanceVnd">
+        <EntityType Name="ProductDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Decimal" Nullable="false" Precision="10" Scale="0" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Shape" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Weight" Type="Decimal" Precision="18" Scale="6" />
+          <Property Name="RentId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="RentStartDate" Type="DateTime" Precision="3" />
+          <Property Name="RentEndDate" Type="DateTime" Precision="3" />
+          <Property Name="ProductionId" Type="Int32" />
+          <NavigationProperty Name="NewProduction" Relationship="Models.FK_ProductDetail_NewProduction" FromRole="ProductDetail" ToRole="NewProduction" />
+          <NavigationProperty Name="Product" Relationship="Models.FK_ProductDetail_Product" FromRole="ProductDetail" ToRole="Product" />
+          <NavigationProperty Name="QuantityToProduces" Relationship="Models.FK_QuantityToProduce_ProductDetail" FromRole="ProductDetail" ToRole="QuantityToProduce" />
+        </EntityType>
+        <Association Name="FK_ProductDetail_NewProduction">
+          <End Type="Models.NewProduction" Role="NewProduction" Multiplicity="0..1" />
+          <End Type="Models.ProductDetail" Role="ProductDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NewProduction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductDetail">
+              <PropertyRef Name="ProductionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductDetail_Product">
+          <End Type="Models.Product" Role="Product" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Models.ProductDetail" Role="ProductDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductDetail">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_QuantityToProduce_ProductDetail">
+          <End Type="Models.ProductDetail" Role="ProductDetail" Multiplicity="0..1" />
+          <End Type="Models.QuantityToProduce" Role="QuantityToProduce" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="QuantityToProduce">
+              <PropertyRef Name="ProductDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="SPackaging">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="POSerial" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="BillAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="BillPaid" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Discount" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Balance" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="PrevBalance" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <Property Name="PurchaseReturn" Type="Boolean" Nullable="false" />
+          <Property Name="SupplierId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="PurchaseOrderAmount" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="PaymentMethod" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="PaymentDetail" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Remarks2" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="EmployeeId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="FundingSourceId" Type="Int32" />
+          <Property Name="BankAccountId" Type="String" MaxLength="36" FixedLength="false" Unicode="true" />
+          <Property Name="Quotation" Type="Boolean" />
+          <Property Name="StoreId" Type="Int32" />
+          <Property Name="Status" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="PurchaseOrderQty" Type="Decimal" Precision="18" Scale="2" />
+          <NavigationProperty Name="Supplier" Relationship="Models.FK_SPackaging_Supplier" FromRole="SPackaging" ToRole="Supplier" />
+          <NavigationProperty Name="SPackagingDetails" Relationship="Models.FK_SPackagingDetail_SPackaging" FromRole="SPackaging" ToRole="SPackagingDetail" />
+        </EntityType>
+        <Association Name="FK_SPackaging_Supplier">
+          <End Type="Models.Supplier" Role="Supplier" Multiplicity="0..1" />
+          <End Type="Models.SPackaging" Role="SPackaging" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SPackaging">
+              <PropertyRef Name="SupplierId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SPackagingDetail_SPackaging">
+          <End Type="Models.SPackaging" Role="SPackaging" Multiplicity="0..1" />
+          <End Type="Models.SPackagingDetail" Role="SPackagingDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SPackaging">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SPackagingDetail">
+              <PropertyRef Name="SPackagingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ScanBankDeposit">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="OpeningDate" Type="DateTime" Precision="3" />
-          <Property Name="OpeningBalance" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="ClosingBalance" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="ClosingDate" Type="DateTime" Precision="3" />
           <Property Name="StoreId" Type="Int32" />
-          <Property Name="UserId" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="OpeningCurrencyDetail" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
-          <Property Name="ClosingCurrencyDetail" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
-          <Property Name="Quantity" Type="Int32" />
-          <Property Name="VNDQuantity" Type="Int32" />
-          <Property Name="USDQuantity" Type="Int32" />
-          <Property Name="JPYQuantity" Type="Int32" />
-          <Property Name="CurrencyName" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
-          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
-        <ComplexType Name="spBankDepositReport_Result">
-          <Property Type="Int32" Name="BankDepositId" Nullable="false" />
-          <Property Type="DateTime" Name="ClosingDate" Nullable="true" Precision="23" />
-          <Property Type="Decimal" Name="ClosingBalance" Nullable="true" Precision="18" Scale="2" />
-          <Property Type="String" Name="ClosingCurrencyDetail" Nullable="true" MaxLength="1000" />
-          <Property Type="Int32" Name="Qty" Nullable="true" />
-          <Property Type="Int32" Name="VNDQuantity" Nullable="true" />
-          <Property Type="Int32" Name="USDQuantity" Nullable="true" />
-          <Property Type="Int32" Name="JPYQuantity" Nullable="true" />
-          <Property Type="String" Name="CurrencyName" Nullable="true" MaxLength="1000" />
-          <Property Type="String" Name="StoreName" Nullable="true" MaxLength="200" />
-          <Property Type="String" Name="StoreAddress" Nullable="true" MaxLength="200" />
-          <Property Type="String" Name="StorePhone" Nullable="true" MaxLength="200" />
-          <Property Type="String" Name="CustomerName" Nullable="true" MaxLength="300" />
-          <Property Type="String" Name="CustomerEmail" Nullable="true" MaxLength="500" />
-          <Property Type="String" Name="CustomerAddress" Nullable="true" MaxLength="500" />
-        </ComplexType>
-        <EntityType Name="ShopManage">
+        <EntityType Name="ScanMoneyInput">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
-          <Property Name="Balance" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="ShoreId" Type="Int32" Nullable="false" />
-          <Property Name="TransactionType" Type="Byte" />
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="StoreId" Type="Int32" />
           <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="CurrencyName" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
-          <Property Name="JPYQuantity" Type="Int32" />
-          <Property Name="Quantity" Type="Int32" />
-          <Property Name="VNDQuantity" Type="Int32" />
-          <Property Name="USDQuantity" Type="Int32" />
+        </EntityType>
+        <EntityType Name="ScanCreditCard">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StoreId" Type="Int32" />
+          <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Date" Type="DateTime" Precision="0" />
+          <Property Name="Amount" Type="Decimal" Precision="18" Scale="0" />
+        </EntityType>
+        <EntityType Name="PrintedPackagingDetail">
+          <Key>
+            <PropertyRef Name="Auto" />
+          </Key>
+          <Property Name="Auto" Type="Decimal" Nullable="false" Precision="18" Scale="0" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PrintedPackagingId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PrintedPackagingDetailId" Type="Int32" />
+          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="OpeningStock" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="PurchasePrice" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="PerPack" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="IsPack" Type="Boolean" />
+          <Property Name="SaleType" Type="Boolean" />
+          <Property Name="Remarks" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ExpiryDate" Type="DateTime" Precision="3" />
+          <Property Name="PurchasingDate" Type="DateTime" Precision="3" />
+          <Property Name="Unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="QtyReceived" Type="Int32" />
+          <Property Name="Validate" Type="Boolean" />
+          <NavigationProperty Name="Product" Relationship="Models.FK_PrintedPackagingDetail_Product" FromRole="PrintedPackagingDetail" ToRole="Product" />
+          <NavigationProperty Name="PrintedPackaging" Relationship="Models.FK_PrintedPackagingDetail_PrintedPackaging" FromRole="PrintedPackagingDetail" ToRole="PrintedPackaging" />
+        </EntityType>
+        <Association Name="FK_PrintedPackagingDetail_Product">
+          <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="Models.PrintedPackagingDetail" Role="PrintedPackagingDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PrintedPackagingDetail">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="PrintedPackaging">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="POSerial" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="BillAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="BillPaid" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Discount" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Balance" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="PrevBalance" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <Property Name="PurchaseReturn" Type="Boolean" Nullable="false" />
+          <Property Name="SupplierId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="PurchaseOrderAmount" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="PurchaseOrderQty" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="PaymentMethod" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="PaymentDetail" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Remarks2" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="EmployeeId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="FundingSourceId" Type="Int32" />
+          <Property Name="BankAccountId" Type="String" MaxLength="36" FixedLength="false" Unicode="true" />
+          <Property Name="Quotation" Type="Boolean" />
+          <Property Name="StoreId" Type="Int32" />
+          <Property Name="Status" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Supplier" Relationship="Models.FK_PrintedPackaging_Supplier" FromRole="PrintedPackaging" ToRole="Supplier" />
+          <NavigationProperty Name="PrintedPackagingDetails" Relationship="Models.FK_PrintedPackagingDetail_PrintedPackaging" FromRole="PrintedPackaging" ToRole="PrintedPackagingDetail" />
+        </EntityType>
+        <Association Name="FK_PrintedPackaging_Supplier">
+          <End Type="Models.Supplier" Role="Supplier" Multiplicity="0..1" />
+          <End Type="Models.PrintedPackaging" Role="PrintedPackaging" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PrintedPackaging">
+              <PropertyRef Name="SupplierId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PrintedPackagingDetail_PrintedPackaging">
+          <End Type="Models.PrintedPackaging" Role="PrintedPackaging" Multiplicity="0..1" />
+          <End Type="Models.PrintedPackagingDetail" Role="PrintedPackagingDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PrintedPackaging">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PrintedPackagingDetail">
+              <PropertyRef Name="PrintedPackagingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="PPReceiver">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="POSerial" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="BillAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="BillPaid" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Discount" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Balance" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="PrevBalance" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <Property Name="PurchaseReturn" Type="Boolean" Nullable="false" />
+          <Property Name="SupplierId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="PurchaseOrderAmount" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="PurchaseOrderQty" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="PaymentMethod" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="PaymentDetail" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Remarks2" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="EmployeeId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="FundingSourceId" Type="Int32" />
+          <Property Name="BankAccountId" Type="String" MaxLength="36" FixedLength="false" Unicode="true" />
+          <Property Name="Quotation" Type="Boolean" />
+          <Property Name="StoreId" Type="Int32" />
+          <Property Name="Status" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Supplier" Relationship="Models.FK_PPReceiver_Supplier" FromRole="PPReceiver" ToRole="Supplier" />
+          <NavigationProperty Name="PPReciverDetails" Relationship="Models.FK_PPReciverDetail_PPReceiver" FromRole="PPReceiver" ToRole="PPReciverDetail" />
+        </EntityType>
+        <EntityType Name="PPReciverDetail">
+          <Key>
+            <PropertyRef Name="Auto" />
+          </Key>
+          <Property Name="Auto" Type="Decimal" Nullable="false" Precision="18" Scale="0" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PPReciverId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PPDReciverId" Type="Int32" />
+          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="OpeningStock" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="PurchasePrice" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="PerPack" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="IsPack" Type="Boolean" />
+          <Property Name="SaleType" Type="Boolean" />
+          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ExpiryDate" Type="DateTime" Precision="3" />
+          <Property Name="PurchasingDate" Type="DateTime" Precision="3" />
+          <Property Name="Unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="QtyReceived" Type="Decimal" Precision="18" Scale="3" />
+          <Property Name="Validate" Type="Boolean" />
+          <NavigationProperty Name="PPReceiver" Relationship="Models.FK_PPReciverDetail_PPReceiver" FromRole="PPReciverDetail" ToRole="PPReceiver" />
+          <NavigationProperty Name="Product" Relationship="Models.FK_PPReciverDetail_Product" FromRole="PPReciverDetail" ToRole="Product" />
+        </EntityType>
+        <Association Name="FK_PPReceiver_Supplier">
+          <End Type="Models.Supplier" Role="Supplier" Multiplicity="0..1" />
+          <End Type="Models.PPReceiver" Role="PPReceiver" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PPReceiver">
+              <PropertyRef Name="SupplierId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPReciverDetail_PPReceiver">
+          <End Type="Models.PPReceiver" Role="PPReceiver" Multiplicity="0..1" />
+          <End Type="Models.PPReciverDetail" Role="PPReciverDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPReceiver">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PPReciverDetail">
+              <PropertyRef Name="PPReciverId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPReciverDetail_Product">
+          <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="Models.PPReciverDetail" Role="PPReciverDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PPReciverDetail">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="PPBOM">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Saleable" Type="Boolean" Nullable="false" />
+          <Property Name="Purchasable" Type="Boolean" Nullable="false" />
+          <Property Name="Manufacturable" Type="Boolean" Nullable="false" />
+          <Property Name="ShelfLife" Type="Int32" />
+          <Property Name="TimeUnit" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="3" />
+          <Property Name="ProductionProcessCateogry" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="ProductionProcessDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ProductName" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Unit" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Product" Relationship="Models.FK_PPBOM_Product" FromRole="PPBOM" ToRole="Product" />
+          <NavigationProperty Name="PPSubItems" Relationship="Models.FK_PPSubItem_PPBOM" FromRole="PPBOM" ToRole="PPSubItem" />
+        </EntityType>
+        <EntityType Name="PPSubItem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="ParentProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Quantity" Type="Decimal" Precision="18" Scale="6" />
+          <Property Name="PPBOMId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AvailableInventory" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="QuantityRequested" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="QuantitytoPrepare" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="ProductType" Type="Byte" />
+          <NavigationProperty Name="PPBOM" Relationship="Models.FK_PPSubItem_PPBOM" FromRole="PPSubItem" ToRole="PPBOM" />
+          <NavigationProperty Name="Product" Relationship="Models.FK_PPSubItem_Product" FromRole="PPSubItem" ToRole="Product" />
+        </EntityType>
+        <Association Name="FK_PPBOM_Product">
+          <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="Models.PPBOM" Role="PPBOM" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PPBOM">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPSubItem_PPBOM">
+          <End Type="Models.PPBOM" Role="PPBOM" Multiplicity="1" />
+          <End Type="Models.PPSubItem" Role="PPSubItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPBOM">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PPSubItem">
+              <PropertyRef Name="PPBOMId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPSubItem_Product">
+          <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="Models.PPSubItem" Role="PPSubItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PPSubItem">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Color">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="ColorName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ColorCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -4660,23 +5755,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Stores">
-            <EntityTypeMapping TypeName="Models.Store">
-              <MappingFragment StoreEntitySet="Store">
-                <ScalarProperty Name="CompanyAddress" ColumnName="CompanyAddress" />
-                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
-                <ScalarProperty Name="VatNumber" ColumnName="VatNumber" />
-                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="StoreProducts">
             <EntityTypeMapping TypeName="Models.StoreProduct">
               <MappingFragment StoreEntitySet="StoreProduct">
@@ -4767,20 +5845,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ProductDetails">
-            <EntityTypeMapping TypeName="Models.ProductDetail">
-              <MappingFragment StoreEntitySet="ProductDetail">
-                <ScalarProperty Name="ProductionId" ColumnName="ProductionId" />
-                <ScalarProperty Name="RentEndDate" ColumnName="RentEndDate" />
-                <ScalarProperty Name="RentStartDate" ColumnName="RentStartDate" />
-                <ScalarProperty Name="RentId" ColumnName="RentId" />
-                <ScalarProperty Name="Weight" ColumnName="Weight" />
-                <ScalarProperty Name="Shape" ColumnName="Shape" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="SubItems">
             <EntityTypeMapping TypeName="Models.SubItem">
               <MappingFragment StoreEntitySet="SubItem">
@@ -4844,38 +5908,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="SOes">
-            <EntityTypeMapping TypeName="Models.SO">
-              <MappingFragment StoreEntitySet="SO">
-                <ScalarProperty Name="SaleOrderAmountWithVaT" ColumnName="SaleOrderAmountWithVaT" />
-                <ScalarProperty Name="VatAmountInPercent" ColumnName="VatAmountInPercent" />
-                <ScalarProperty Name="VatNumber" ColumnName="VatNumber" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="BillPaidByCash" ColumnName="BillPaidByCash" />
-                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
-                <ScalarProperty Name="Quotation" ColumnName="Quotation" />
-                <ScalarProperty Name="BankAccountId" ColumnName="BankAccountId" />
-                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
-                <ScalarProperty Name="Remarks2" ColumnName="Remarks2" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="PaymentDetail" ColumnName="PaymentDetail" />
-                <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
-                <ScalarProperty Name="Profit" ColumnName="Profit" />
-                <ScalarProperty Name="SaleOrderQty" ColumnName="SaleOrderQty" />
-                <ScalarProperty Name="SaleOrderAmount" ColumnName="SaleOrderAmount" />
-                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
-                <ScalarProperty Name="SaleReturn" ColumnName="SaleReturn" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="PrevBalance" ColumnName="PrevBalance" />
-                <ScalarProperty Name="Balance" ColumnName="Balance" />
-                <ScalarProperty Name="Discount" ColumnName="Discount" />
-                <ScalarProperty Name="BillPaid" ColumnName="BillPaid" />
-                <ScalarProperty Name="BillAmount" ColumnName="BillAmount" />
-                <ScalarProperty Name="SOSerial" ColumnName="SOSerial" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="MyBusinessInfoes">
             <EntityTypeMapping TypeName="Models.MyBusinessInfo">
               <MappingFragment StoreEntitySet="MyBusinessInfo">
@@ -4890,77 +5922,6 @@
                 <ScalarProperty Name="Mobile" ColumnName="Mobile" />
                 <ScalarProperty Name="BizAddress" ColumnName="BizAddress" />
                 <ScalarProperty Name="BizName" ColumnName="BizName" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="spSOReport" FunctionName="Models.Store.spSOReport">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="Models.spSOReport_Result">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="SOSerial" ColumnName="SOSerial" />
-                <ScalarProperty Name="SaleOrderQty" ColumnName="SaleOrderQty" />
-                <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
-                <ScalarProperty Name="SaleOrderAmountWithVaT" ColumnName="SaleOrderAmountWithVaT" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="CustomerRemarks" ColumnName="CustomerRemarks" />
-                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
-                <ScalarProperty Name="SalePrice" ColumnName="SalePrice" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="PerPack" ColumnName="PerPack" />
-                <ScalarProperty Name="IsPack" ColumnName="IsPack" />
-                <ScalarProperty Name="BizName" ColumnName="BizName" />
-                <ScalarProperty Name="BizAddress" ColumnName="BizAddress" />
-                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Website" ColumnName="Website" />
-                <ScalarProperty Name="Tagline" ColumnName="Tagline" />
-                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
-                <ScalarProperty Name="CompanyAddress" ColumnName="CompanyAddress" />
-                <ScalarProperty Name="VatNumber" ColumnName="VatNumber" />
-                <ScalarProperty Name="TaxInPercent" ColumnName="TaxInPercent" />
-                <ScalarProperty Name="ItemTotal" ColumnName="ItemTotal" />
-                <ScalarProperty Name="SaleType" ColumnName="SaleType" />
-                <ScalarProperty Name="SaleOrderAmount" ColumnName="SaleOrderAmount" />
-                <ScalarProperty Name="BillPaid" ColumnName="BillPaid" />
-                <ScalarProperty Name="BillPaidByCash" ColumnName="BillPaidByCash" />
-                <ScalarProperty Name="Discount" ColumnName="Discount" />
-                <ScalarProperty Name="Balance" ColumnName="Balance" />
-                <ScalarProperty Name="PrevBalance" ColumnName="PrevBalance" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <EntitySetMapping Name="Products">
-            <EntityTypeMapping TypeName="Models.Product">
-              <MappingFragment StoreEntitySet="Product">
-                <ScalarProperty Name="PVATName" ColumnName="PVATName" />
-                <ScalarProperty Name="EInvoicePCode" ColumnName="EInvoicePCode" />
-                <ScalarProperty Name="VarProdParentId" ColumnName="VarProdParentId" />
-                <ScalarProperty Name="PType" ColumnName="PType" />
-                <ScalarProperty Name="Unit" ColumnName="Unit" />
-                <ScalarProperty Name="Category" ColumnName="Category" />
-                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="ShowIn" ColumnName="ShowIn" />
-                <ScalarProperty Name="IsService" ColumnName="IsService" />
-                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="LocationId" ColumnName="LocationId" />
-                <ScalarProperty Name="ReOrder" ColumnName="ReOrder" />
-                <ScalarProperty Name="BarCode" ColumnName="BarCode" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="Image" ColumnName="Image" />
-                <ScalarProperty Name="RackPosition" ColumnName="RackPosition" />
-                <ScalarProperty Name="totalPiece" ColumnName="totalPiece" />
-                <ScalarProperty Name="PerPack" ColumnName="PerPack" />
-                <ScalarProperty Name="Stock" ColumnName="Stock" />
-                <ScalarProperty Name="WholeSalePrice" ColumnName="WholeSalePrice" />
-                <ScalarProperty Name="SalePrice" ColumnName="SalePrice" />
-                <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -4993,27 +5954,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="PODRecivers">
-            <EntityTypeMapping TypeName="Models.PODReciver">
-              <MappingFragment StoreEntitySet="PODReciver">
-                <ScalarProperty Name="QtyReceived" ColumnName="QtyReceived" />
-                <ScalarProperty Name="Unit" ColumnName="Unit" />
-                <ScalarProperty Name="PurchasingDate" ColumnName="PurchasingDate" />
-                <ScalarProperty Name="ExpiryDate" ColumnName="ExpiryDate" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="SaleType" ColumnName="SaleType" />
-                <ScalarProperty Name="IsPack" ColumnName="IsPack" />
-                <ScalarProperty Name="PerPack" ColumnName="PerPack" />
-                <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="OpeningStock" ColumnName="OpeningStock" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-                <ScalarProperty Name="PODReciverId" ColumnName="PODReciverId" />
-                <ScalarProperty Name="POReciverId" ColumnName="POReciverId" />
-                <ScalarProperty Name="Auto" ColumnName="Auto" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="POes">
             <EntityTypeMapping TypeName="Models.PO">
               <MappingFragment StoreEntitySet="PO">
@@ -5039,27 +5979,6 @@
                 <ScalarProperty Name="BillAmount" ColumnName="BillAmount" />
                 <ScalarProperty Name="POSerial" ColumnName="POSerial" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PODs">
-            <EntityTypeMapping TypeName="Models.POD">
-              <MappingFragment StoreEntitySet="POD">
-                <ScalarProperty Name="QtyReceived" ColumnName="QtyReceived" />
-                <ScalarProperty Name="Unit" ColumnName="Unit" />
-                <ScalarProperty Name="PurchasingDate" ColumnName="PurchasingDate" />
-                <ScalarProperty Name="ExpiryDate" ColumnName="ExpiryDate" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="SaleType" ColumnName="SaleType" />
-                <ScalarProperty Name="IsPack" ColumnName="IsPack" />
-                <ScalarProperty Name="PerPack" ColumnName="PerPack" />
-                <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="OpeningStock" ColumnName="OpeningStock" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-                <ScalarProperty Name="PODId" ColumnName="PODId" />
-                <ScalarProperty Name="POId" ColumnName="POId" />
-                <ScalarProperty Name="Auto" ColumnName="Auto" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -5118,6 +6037,459 @@
                 <ScalarProperty Name="TransactionType" ColumnName="TransactionType" />
                 <ScalarProperty Name="ShoreId" ColumnName="ShoreId" />
                 <ScalarProperty Name="Balance" ColumnName="Balance" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="spSOReport" FunctionName="Models.Store.spSOReport">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Models.spSOReport_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="SOSerial" ColumnName="SOSerial" />
+                <ScalarProperty Name="SaleOrderQty" ColumnName="SaleOrderQty" />
+                <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
+                <ScalarProperty Name="SaleOrderAmountWithVaT" ColumnName="SaleOrderAmountWithVaT" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="CustomerRemarks" ColumnName="CustomerRemarks" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="SalePrice" ColumnName="SalePrice" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="PerPack" ColumnName="PerPack" />
+                <ScalarProperty Name="IsPack" ColumnName="IsPack" />
+                <ScalarProperty Name="BizName" ColumnName="BizName" />
+                <ScalarProperty Name="BizAddress" ColumnName="BizAddress" />
+                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Website" ColumnName="Website" />
+                <ScalarProperty Name="Tagline" ColumnName="Tagline" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="CompanyAddress" ColumnName="CompanyAddress" />
+                <ScalarProperty Name="VatNumber" ColumnName="VatNumber" />
+                <ScalarProperty Name="TaxInPercent" ColumnName="TaxInPercent" />
+                <ScalarProperty Name="ItemTotal" ColumnName="ItemTotal" />
+                <ScalarProperty Name="SaleType" ColumnName="SaleType" />
+                <ScalarProperty Name="SaleOrderAmount" ColumnName="SaleOrderAmount" />
+                <ScalarProperty Name="BillPaid" ColumnName="BillPaid" />
+                <ScalarProperty Name="BillPaidByCash" ColumnName="BillPaidByCash" />
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="Balance" ColumnName="Balance" />
+                <ScalarProperty Name="PrevBalance" ColumnName="PrevBalance" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="StoreCompanyName" ColumnName="StoreCompanyName" />
+                <ScalarProperty Name="StoreCompanyAddress" ColumnName="StoreCompanyAddress" />
+                <ScalarProperty Name="StoreCompanyVatNumber" ColumnName="StoreCompanyVatNumber" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="PODs">
+            <EntityTypeMapping TypeName="Models.POD">
+              <MappingFragment StoreEntitySet="POD">
+                <ScalarProperty Name="Validate" ColumnName="Validate" />
+                <ScalarProperty Name="QtyReceived" ColumnName="QtyReceived" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="PurchasingDate" ColumnName="PurchasingDate" />
+                <ScalarProperty Name="ExpiryDate" ColumnName="ExpiryDate" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="SaleType" ColumnName="SaleType" />
+                <ScalarProperty Name="IsPack" ColumnName="IsPack" />
+                <ScalarProperty Name="PerPack" ColumnName="PerPack" />
+                <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="OpeningStock" ColumnName="OpeningStock" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="PODId" ColumnName="PODId" />
+                <ScalarProperty Name="POId" ColumnName="POId" />
+                <ScalarProperty Name="Auto" ColumnName="Auto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PODRecivers">
+            <EntityTypeMapping TypeName="Models.PODReciver">
+              <MappingFragment StoreEntitySet="PODReciver">
+                <ScalarProperty Name="Validate" ColumnName="Validate" />
+                <ScalarProperty Name="QtyReceived" ColumnName="QtyReceived" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="PurchasingDate" ColumnName="PurchasingDate" />
+                <ScalarProperty Name="ExpiryDate" ColumnName="ExpiryDate" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="SaleType" ColumnName="SaleType" />
+                <ScalarProperty Name="IsPack" ColumnName="IsPack" />
+                <ScalarProperty Name="PerPack" ColumnName="PerPack" />
+                <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="OpeningStock" ColumnName="OpeningStock" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="PODReciverId" ColumnName="PODReciverId" />
+                <ScalarProperty Name="POReciverId" ColumnName="POReciverId" />
+                <ScalarProperty Name="Auto" ColumnName="Auto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PackagingSubItems">
+            <EntityTypeMapping TypeName="Models.PackagingSubItem">
+              <MappingFragment StoreEntitySet="PackagingSubItems">
+                <ScalarProperty Name="ProductType" ColumnName="ProductType" />
+                <ScalarProperty Name="QuantitytoPrepare" ColumnName="QuantitytoPrepare" />
+                <ScalarProperty Name="QuantityRequested" ColumnName="QuantityRequested" />
+                <ScalarProperty Name="AvailableInventory" ColumnName="AvailableInventory" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="PakColoredId" ColumnName="PakColoredId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ParentProductId" ColumnName="ParentProductId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Stores">
+            <EntityTypeMapping TypeName="Models.Store">
+              <MappingFragment StoreEntitySet="Store">
+                <ScalarProperty Name="StoreShortName" ColumnName="StoreShortName" />
+                <ScalarProperty Name="StoreShortCode" ColumnName="StoreShortCode" />
+                <ScalarProperty Name="CompanyVatNumber" ColumnName="CompanyVatNumber" />
+                <ScalarProperty Name="CompanyAddress" ColumnName="CompanyAddress" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="VatNumber" ColumnName="VatNumber" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="Models.Product">
+              <MappingFragment StoreEntitySet="Product">
+                <ScalarProperty Name="Supplier" ColumnName="Supplier" />
+                <ScalarProperty Name="PVATName" ColumnName="PVATName" />
+                <ScalarProperty Name="EInvoicePCode" ColumnName="EInvoicePCode" />
+                <ScalarProperty Name="VarProdParentId" ColumnName="VarProdParentId" />
+                <ScalarProperty Name="PType" ColumnName="PType" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ShowIn" ColumnName="ShowIn" />
+                <ScalarProperty Name="IsService" ColumnName="IsService" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="LocationId" ColumnName="LocationId" />
+                <ScalarProperty Name="ReOrder" ColumnName="ReOrder" />
+                <ScalarProperty Name="BarCode" ColumnName="BarCode" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="Image" ColumnName="Image" />
+                <ScalarProperty Name="RackPosition" ColumnName="RackPosition" />
+                <ScalarProperty Name="totalPiece" ColumnName="totalPiece" />
+                <ScalarProperty Name="PerPack" ColumnName="PerPack" />
+                <ScalarProperty Name="Stock" ColumnName="Stock" />
+                <ScalarProperty Name="WholeSalePrice" ColumnName="WholeSalePrice" />
+                <ScalarProperty Name="SalePrice" ColumnName="SalePrice" />
+                <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PackagingProductions">
+            <EntityTypeMapping TypeName="Models.PackagingProduction">
+              <MappingFragment StoreEntitySet="PackagingProduction">
+                <ScalarProperty Name="Box" ColumnName="Box" />
+                <ScalarProperty Name="PProdDate" ColumnName="PProdDate" />
+                <ScalarProperty Name="Validate" ColumnName="Validate" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PaperColors">
+            <EntityTypeMapping TypeName="Models.PaperColor">
+              <MappingFragment StoreEntitySet="PaperColor">
+                <ScalarProperty Name="PackagingProductionId" ColumnName="PackagingProductionId" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SOes">
+            <EntityTypeMapping TypeName="Models.SO">
+              <MappingFragment StoreEntitySet="SO">
+                <ScalarProperty Name="OrigionalId" ColumnName="OrigionalId" />
+                <ScalarProperty Name="IsCancelled" ColumnName="IsCancelled" />
+                <ScalarProperty Name="SaleOrderAmountWithC" ColumnName="SaleOrderAmountWithC" />
+                <ScalarProperty Name="SaleOrderAmountWithVaT" ColumnName="SaleOrderAmountWithVaT" />
+                <ScalarProperty Name="VatAmountInPercent" ColumnName="VatAmountInPercent" />
+                <ScalarProperty Name="VatNumber" ColumnName="VatNumber" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="BillPaidByCash" ColumnName="BillPaidByCash" />
+                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
+                <ScalarProperty Name="Quotation" ColumnName="Quotation" />
+                <ScalarProperty Name="BankAccountId" ColumnName="BankAccountId" />
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+                <ScalarProperty Name="Remarks2" ColumnName="Remarks2" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="PaymentDetail" ColumnName="PaymentDetail" />
+                <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
+                <ScalarProperty Name="Profit" ColumnName="Profit" />
+                <ScalarProperty Name="SaleOrderQty" ColumnName="SaleOrderQty" />
+                <ScalarProperty Name="SaleOrderAmount" ColumnName="SaleOrderAmount" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="SaleReturn" ColumnName="SaleReturn" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="PrevBalance" ColumnName="PrevBalance" />
+                <ScalarProperty Name="Balance" ColumnName="Balance" />
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="BillPaid" ColumnName="BillPaid" />
+                <ScalarProperty Name="BillAmount" ColumnName="BillAmount" />
+                <ScalarProperty Name="SOSerial" ColumnName="SOSerial" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SPackagingDetails">
+            <EntityTypeMapping TypeName="Models.SPackagingDetail">
+              <MappingFragment StoreEntitySet="SPackagingDetail">
+                <ScalarProperty Name="Validate" ColumnName="Validate" />
+                <ScalarProperty Name="QtyReceived" ColumnName="QtyReceived" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="PurchasingDate" ColumnName="PurchasingDate" />
+                <ScalarProperty Name="ExpiryDate" ColumnName="ExpiryDate" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="SaleType" ColumnName="SaleType" />
+                <ScalarProperty Name="IsPack" ColumnName="IsPack" />
+                <ScalarProperty Name="PerPack" ColumnName="PerPack" />
+                <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="OpeningStock" ColumnName="OpeningStock" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="SPDId" ColumnName="SPDId" />
+                <ScalarProperty Name="SPackagingId" ColumnName="SPackagingId" />
+                <ScalarProperty Name="Auto" ColumnName="Auto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductDetails">
+            <EntityTypeMapping TypeName="Models.ProductDetail">
+              <MappingFragment StoreEntitySet="ProductDetail">
+                <ScalarProperty Name="ProductionId" ColumnName="ProductionId" />
+                <ScalarProperty Name="RentEndDate" ColumnName="RentEndDate" />
+                <ScalarProperty Name="RentStartDate" ColumnName="RentStartDate" />
+                <ScalarProperty Name="RentId" ColumnName="RentId" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="Shape" ColumnName="Shape" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SPackagings">
+            <EntityTypeMapping TypeName="Models.SPackaging">
+              <MappingFragment StoreEntitySet="SPackaging">
+                <ScalarProperty Name="PurchaseOrderQty" ColumnName="PurchaseOrderQty" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
+                <ScalarProperty Name="Quotation" ColumnName="Quotation" />
+                <ScalarProperty Name="BankAccountId" ColumnName="BankAccountId" />
+                <ScalarProperty Name="FundingSourceId" ColumnName="FundingSourceId" />
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+                <ScalarProperty Name="Remarks2" ColumnName="Remarks2" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="PaymentDetail" ColumnName="PaymentDetail" />
+                <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
+                <ScalarProperty Name="PurchaseOrderAmount" ColumnName="PurchaseOrderAmount" />
+                <ScalarProperty Name="SupplierId" ColumnName="SupplierId" />
+                <ScalarProperty Name="PurchaseReturn" ColumnName="PurchaseReturn" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="PrevBalance" ColumnName="PrevBalance" />
+                <ScalarProperty Name="Balance" ColumnName="Balance" />
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="BillPaid" ColumnName="BillPaid" />
+                <ScalarProperty Name="BillAmount" ColumnName="BillAmount" />
+                <ScalarProperty Name="POSerial" ColumnName="POSerial" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ScanBankDeposits">
+            <EntityTypeMapping TypeName="Models.ScanBankDeposit">
+              <MappingFragment StoreEntitySet="ScanBankDeposit">
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ScanMoneyInputs">
+            <EntityTypeMapping TypeName="Models.ScanMoneyInput">
+              <MappingFragment StoreEntitySet="ScanMoneyInput">
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ScanCreditCards">
+            <EntityTypeMapping TypeName="Models.ScanCreditCard">
+              <MappingFragment StoreEntitySet="ScanCreditCard">
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PrintedPackagingDetails">
+            <EntityTypeMapping TypeName="Models.PrintedPackagingDetail">
+              <MappingFragment StoreEntitySet="PrintedPackagingDetail">
+                <ScalarProperty Name="Validate" ColumnName="Validate" />
+                <ScalarProperty Name="QtyReceived" ColumnName="QtyReceived" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="PurchasingDate" ColumnName="PurchasingDate" />
+                <ScalarProperty Name="ExpiryDate" ColumnName="ExpiryDate" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="SaleType" ColumnName="SaleType" />
+                <ScalarProperty Name="IsPack" ColumnName="IsPack" />
+                <ScalarProperty Name="PerPack" ColumnName="PerPack" />
+                <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="OpeningStock" ColumnName="OpeningStock" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="PrintedPackagingDetailId" ColumnName="PrintedPackagingDetailId" />
+                <ScalarProperty Name="PrintedPackagingId" ColumnName="PrintedPackagingId" />
+                <ScalarProperty Name="Auto" ColumnName="Auto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PrintedPackagings">
+            <EntityTypeMapping TypeName="Models.PrintedPackaging">
+              <MappingFragment StoreEntitySet="PrintedPackaging">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
+                <ScalarProperty Name="Quotation" ColumnName="Quotation" />
+                <ScalarProperty Name="BankAccountId" ColumnName="BankAccountId" />
+                <ScalarProperty Name="FundingSourceId" ColumnName="FundingSourceId" />
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+                <ScalarProperty Name="Remarks2" ColumnName="Remarks2" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="PaymentDetail" ColumnName="PaymentDetail" />
+                <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
+                <ScalarProperty Name="PurchaseOrderQty" ColumnName="PurchaseOrderQty" />
+                <ScalarProperty Name="PurchaseOrderAmount" ColumnName="PurchaseOrderAmount" />
+                <ScalarProperty Name="SupplierId" ColumnName="SupplierId" />
+                <ScalarProperty Name="PurchaseReturn" ColumnName="PurchaseReturn" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="PrevBalance" ColumnName="PrevBalance" />
+                <ScalarProperty Name="Balance" ColumnName="Balance" />
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="BillPaid" ColumnName="BillPaid" />
+                <ScalarProperty Name="BillAmount" ColumnName="BillAmount" />
+                <ScalarProperty Name="POSerial" ColumnName="POSerial" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPReceivers">
+            <EntityTypeMapping TypeName="Models.PPReceiver">
+              <MappingFragment StoreEntitySet="PPReceiver">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
+                <ScalarProperty Name="Quotation" ColumnName="Quotation" />
+                <ScalarProperty Name="BankAccountId" ColumnName="BankAccountId" />
+                <ScalarProperty Name="FundingSourceId" ColumnName="FundingSourceId" />
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+                <ScalarProperty Name="Remarks2" ColumnName="Remarks2" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="PaymentDetail" ColumnName="PaymentDetail" />
+                <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
+                <ScalarProperty Name="PurchaseOrderQty" ColumnName="PurchaseOrderQty" />
+                <ScalarProperty Name="PurchaseOrderAmount" ColumnName="PurchaseOrderAmount" />
+                <ScalarProperty Name="SupplierId" ColumnName="SupplierId" />
+                <ScalarProperty Name="PurchaseReturn" ColumnName="PurchaseReturn" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="PrevBalance" ColumnName="PrevBalance" />
+                <ScalarProperty Name="Balance" ColumnName="Balance" />
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="BillPaid" ColumnName="BillPaid" />
+                <ScalarProperty Name="BillAmount" ColumnName="BillAmount" />
+                <ScalarProperty Name="POSerial" ColumnName="POSerial" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPReciverDetails">
+            <EntityTypeMapping TypeName="Models.PPReciverDetail">
+              <MappingFragment StoreEntitySet="PPReciverDetail">
+                <ScalarProperty Name="Validate" ColumnName="Validate" />
+                <ScalarProperty Name="QtyReceived" ColumnName="QtyReceived" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="PurchasingDate" ColumnName="PurchasingDate" />
+                <ScalarProperty Name="ExpiryDate" ColumnName="ExpiryDate" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="SaleType" ColumnName="SaleType" />
+                <ScalarProperty Name="IsPack" ColumnName="IsPack" />
+                <ScalarProperty Name="PerPack" ColumnName="PerPack" />
+                <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="OpeningStock" ColumnName="OpeningStock" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="PPDReciverId" ColumnName="PPDReciverId" />
+                <ScalarProperty Name="PPReciverId" ColumnName="PPReciverId" />
+                <ScalarProperty Name="Auto" ColumnName="Auto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPBOMs">
+            <EntityTypeMapping TypeName="Models.PPBOM">
+              <MappingFragment StoreEntitySet="PPBOM">
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="ProductionProcessDescription" ColumnName="ProductionProcessDescription" />
+                <ScalarProperty Name="ProductionProcessCateogry" ColumnName="ProductionProcessCateogry" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="TimeUnit" ColumnName="TimeUnit" />
+                <ScalarProperty Name="ShelfLife" ColumnName="ShelfLife" />
+                <ScalarProperty Name="Manufacturable" ColumnName="Manufacturable" />
+                <ScalarProperty Name="Purchasable" ColumnName="Purchasable" />
+                <ScalarProperty Name="Saleable" ColumnName="Saleable" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPSubItems">
+            <EntityTypeMapping TypeName="Models.PPSubItem">
+              <MappingFragment StoreEntitySet="PPSubItem">
+                <ScalarProperty Name="ProductType" ColumnName="ProductType" />
+                <ScalarProperty Name="QuantitytoPrepare" ColumnName="QuantitytoPrepare" />
+                <ScalarProperty Name="QuantityRequested" ColumnName="QuantityRequested" />
+                <ScalarProperty Name="AvailableInventory" ColumnName="AvailableInventory" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="PPBOMId" ColumnName="PPBOMId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ParentProductId" ColumnName="ParentProductId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Colors">
+            <EntityTypeMapping TypeName="Models.Color">
+              <MappingFragment StoreEntitySet="Colors">
+                <ScalarProperty Name="ColorCode" ColumnName="ColorCode" />
+                <ScalarProperty Name="ColorName" ColumnName="ColorName" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

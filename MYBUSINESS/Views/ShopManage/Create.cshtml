@@ -1,0 +1,326 @@
+﻿@*@model MYBUSINESS.Models.BOM*@
+@model MYBUSINESS.Models.ScanBankDepostViewModel
+@{
+    ViewBag.Title = "Scan BankDeposit";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Content Wrapper. Contains page content -->
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <section class="content">
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-6">
+                <!-- general form elements -->
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Scan Deposit</h3>
+                    </div>
+
+
+                    <div class="box-body">
+
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @Html.LabelFor(model => Model.ScanBankDeposit.Id, htmlAttributes: new { @class = "control-label" })
+
+                            @Html.EditorFor(model => Model.ScanBankDeposit.Id, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.SuggestedId, @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => Model.ScanBankDeposit.Id, "", new { @class = "text-danger" })
+
+                        </div>
+
+                        @*<div class="form-group">
+                                @Html.LabelFor(model => model.BOM.ProductId, "Select Product", new { @class = "control-label" })
+                                @Html.DropDownListFor(
+                                    model => model.BOM.ProductId,
+                                    (SelectList)ViewBag.ProductList, // Use the correct ViewBag property
+                                    "Select a Product", // Placeholder text
+                                    new { @class = "form-control" }
+                                )
+                            </div>*@
+                        @*<div class="form-group">
+                                @Html.LabelFor(model => model.BOM.ProductId, "Select Product", new { @class = "control-label" })
+                                @Html.DropDownListFor(
+                                    model => model.BOM.ProductId,
+                                    (SelectList)ViewBag.ProductList,
+                                    "Select a Product",
+                                    new { @class = "form-control product-dropdown", @id = "productDropdown" }
+                                )
+                                @Html.ValidationMessageFor(model => model.BOM.ProductId, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label("Unit", new { @class = "control-label" })
+                                <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
+                                @Html.HiddenFor(model => model.BOM.Unit, new { @id = "unitHiddenField" })
+                                @Html.ValidationMessageFor(model => model.BOM.Unit, "", new { @class = "text-danger" })
+                            </div>*@
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ScanBankDeposit.StoreId, "Select Store", new { @class = "control-label" })
+
+                            @if (((SelectList)ViewBag.StoreList).Any())
+                            {
+                                @Html.DropDownListFor(
+                                    model => model.ScanBankDeposit.StoreId,
+                                    (SelectList)ViewBag.StoreList,
+                                    "Select a Store",
+                                    new { @class = "form-control", @id = "storeDropdown" }
+                                )
+                            }
+                            else
+                            {
+                                <p class="text-danger">No stores available for selection.</p>
+                            }
+
+                            @Html.ValidationMessageFor(model => model.ScanBankDeposit.StoreId, "", new { @class = "text-danger" })
+                        </div>
+
+
+
+
+
+                    </div>
+
+                    <div class="box-footer">
+                        <input type="submit" value="Create" id="CreateProduct" class="btn btn-primary" />
+                        @Html.ActionLink("Back to List", "Index")
+                    </div>
+
+
+
+
+
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <!-- general form elements -->
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Notes</h3>
+                    </div>
+
+                    <div class="box-body">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @Html.TextAreaFor(model => model.ScanBankDeposit.Note, new
+                            {
+    @class = "form-control",
+    id = "compose_textarea",
+    rows = "1",
+    cols = "100",
+    placeholder = "Notes/Pictures",
+    data_toggle = "tooltip",
+    data_placement = "top",
+    title = "Notes"
+})
+                            @Html.ValidationMessageFor(model => model.ScanBankDeposit.Note, "", new { @class = "text-danger" })
+
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+}
+
+<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.css">
+<script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="//code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-sliderAccess.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.js"></script>
+<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.css">
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js"></script>
+
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+
+
+<link href="@Url.Content("~/Content/custom/custom.css")" rel="stylesheet" type="text/css" />
+<script src="~/Content/custom/subItem_BOM.js"></script>
+<script src="~/Content/custom/downloads/jquery.mcautocomplete.js"></script>
+<script src="~/Content/custom/downloads/jquery.scannerdetection.js"></script>
+
+
+
+<script>
+
+  $(document).ready(function () {
+    document.getElementById('SOCreate').reset(); // has to be handle
+  });
+        $('#compose_textarea').summernote({
+            height: 400,
+            callbacks: {
+                onImageUpload: function (files) {
+                    uploadImage(files[0]);
+                }
+            }
+        });
+
+        // Sync Summernote content before form submit
+        $('form').on('submit', function () {
+            var code = $('#compose_textarea').summernote('code');
+            $('#compose_textarea').val(code);
+        });
+
+        function uploadImage(file) {
+            var data = new FormData();
+            data.append("file", file);
+
+            $.ajax({
+                url: '@Url.Action("UploadImage", "ShopManage")',
+                type: "POST",
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (imageUrl) {
+                    $('#compose_textarea').summernote('insertImage', imageUrl);
+                },
+                error: function () {
+                    alert("Image upload failed.");
+                }
+            });
+        }
+    
+
+ $('#productDropdown').change(function () {
+    var productId = $(this).val(); // Get selected product ID
+
+    if (productId) {
+        $.ajax({
+            url: '@Url.Action("GetProductUnit", "BOM")', // Corrected API method
+            type: 'GET',
+            data: { id: productId },
+            success: function (data) {
+                $('#unitField').val(data.unit);
+                $('#unitHiddenField').val(data.unit);
+                //$('#variableProductIdField').val(data.variableProductName); // Show Name instead of ID
+                //$('#variableProductIdHiddenField').val(data.variableProductName);
+            },
+            error: function () {
+              /*  alert('Failed to fetch product details.');*/
+            }
+        });
+    } else {
+        $('#unitField').val('');
+        $('#unitHiddenField').val('');
+        //$('#variableProductIdField').val('');
+        //$('#variableProductIdHiddenField').val('');
+    }
+ });
+
+    txtSerialNum = 0;
+    TriggerBodyEvents();
+
+    var getPrevBalanceUrl = '@Url.Action("GetPreviousBalance", "SOSR")';                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     //OpenDialogue('#name0');
+
+
+
+
+        IsReturn = '@(ViewBag.IsReturn)';
+
+
+        $('.from-date-picker').datetimepicker({
+            dateFormat: "dd-M-yy",
+            timeFormat: "hh:mm tt",
+            showOn: "both",
+            timeInput: true,
+            stepHour: 1,
+            stepMinute: 5,
+            oneLine: true,
+            //changeMonth: true,
+            //changeYear: true,
+            controlType: 'select',
+            buttonImageOnly: true,
+            buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif",
+            buttonText: "Select date"
+        });
+
+
+
+
+         $("#NewData").dialog({
+            autoOpen: false,
+             title: 'Should not sell-out, already rented on thses dates',
+            closeText: '', //Changes the text of the titlebar-close button to hello instead of default Close
+            width: 500,
+            Height:500
+
+        });
+
+        function FetchProductRentStatus() {
+        //alert('wwww');
+
+            var date = new Date();
+            var day = date.getDate();       // yields date
+            var month = date.getMonth() + 1;    // yields month (add one as '.getMonth()' is zero indexed)
+            var year = date.getFullYear();  // yields year
+            var hour = date.getHours();     // yields hours
+            var minute = date.getMinutes(); // yields minutes
+            var second = date.getSeconds(); // yields seconds
+
+            // After this construct a string with the above results as below
+            var sellDate = day + "/" + month + "/" + year;// + " " + hour + ':' + minute + ':' + second;
+
+            var prodId = $('#idn' + clickedIdNum).val();
+
+
+
+
+            $.ajax({
+                url: "@Url.Action("ProductRentStatus","SOSR")",
+                data: { 'prodId': prodId, 'sellDate': sellDate},
+                type: "GET",
+                cache: false,
+                success: function (data) {
+                    //toastr.success('Hi! I am success message.');
+                    //var abc = data;
+                    //alert(data);
+                    if (data.indexOf('12:00:00 AM') != -1) {
+
+                        $("#NewData").html(data);
+                        $("#NewData").dialog("open");
+                    //}
+                    }
+
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    //$('#lblCommentsNotification').text("Error encountered while saving the comments.");
+                   /* alert('Data provided was not valid');*/
+                }
+            });
+        }
+
+        //alert(IsReturn);
+
+        $('#isService').on('change', function () {
+            if (this.value == 'true')
+            //.....................^.......
+            {
+                $("#pprice").hide();
+                $("#stk").hide();
+            }
+            else {
+                $("#pprice").show();
+                $("#stk").show();
+            }
+        });
+
+
+
+</script>
+

@@ -345,6 +345,12 @@ namespace MYBUSINESS.DataSets {
             
             private global::System.Data.DataColumn columnRemarks;
             
+            private global::System.Data.DataColumn columnStoreCompanyName;
+            
+            private global::System.Data.DataColumn columnStoreCompanyAddress;
+            
+            private global::System.Data.DataColumn columnStoreCompanyVatNumber;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public spSOReportDataTable() {
@@ -644,6 +650,30 @@ namespace MYBUSINESS.DataSets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn StoreCompanyNameColumn {
+                get {
+                    return this.columnStoreCompanyName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn StoreCompanyAddressColumn {
+                get {
+                    return this.columnStoreCompanyAddress;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn StoreCompanyVatNumberColumn {
+                get {
+                    return this.columnStoreCompanyVatNumber;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -712,7 +742,10 @@ namespace MYBUSINESS.DataSets {
                         decimal Balance, 
                         decimal PrevBalance, 
                         System.DateTime Date, 
-                        string Remarks) {
+                        string Remarks, 
+                        string StoreCompanyName, 
+                        string StoreCompanyAddress, 
+                        string StoreCompanyVatNumber) {
                 spSOReportRow rowspSOReportRow = ((spSOReportRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         Id,
@@ -747,7 +780,10 @@ namespace MYBUSINESS.DataSets {
                         Balance,
                         PrevBalance,
                         Date,
-                        Remarks};
+                        Remarks,
+                        StoreCompanyName,
+                        StoreCompanyAddress,
+                        StoreCompanyVatNumber};
                 rowspSOReportRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowspSOReportRow);
                 return rowspSOReportRow;
@@ -810,6 +846,9 @@ namespace MYBUSINESS.DataSets {
                 this.columnPrevBalance = base.Columns["PrevBalance"];
                 this.columnDate = base.Columns["Date"];
                 this.columnRemarks = base.Columns["Remarks"];
+                this.columnStoreCompanyName = base.Columns["StoreCompanyName"];
+                this.columnStoreCompanyAddress = base.Columns["StoreCompanyAddress"];
+                this.columnStoreCompanyVatNumber = base.Columns["StoreCompanyVatNumber"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -881,6 +920,12 @@ namespace MYBUSINESS.DataSets {
                 base.Columns.Add(this.columnDate);
                 this.columnRemarks = new global::System.Data.DataColumn("Remarks", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnRemarks);
+                this.columnStoreCompanyName = new global::System.Data.DataColumn("StoreCompanyName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnStoreCompanyName);
+                this.columnStoreCompanyAddress = new global::System.Data.DataColumn("StoreCompanyAddress", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnStoreCompanyAddress);
+                this.columnStoreCompanyVatNumber = new global::System.Data.DataColumn("StoreCompanyVatNumber", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnStoreCompanyVatNumber);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnId}, true));
                 this.columnId.AllowDBNull = false;
@@ -905,6 +950,9 @@ namespace MYBUSINESS.DataSets {
                 this.columnSaleType.MaxLength = 1;
                 this.columnBillPaid.AllowDBNull = false;
                 this.columnRemarks.MaxLength = 500;
+                this.columnStoreCompanyName.MaxLength = 200;
+                this.columnStoreCompanyAddress.MaxLength = 200;
+                this.columnStoreCompanyVatNumber.MaxLength = 200;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1565,6 +1613,54 @@ namespace MYBUSINESS.DataSets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string StoreCompanyName {
+                get {
+                    try {
+                        return ((string)(this[this.tablespSOReport.StoreCompanyNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'StoreCompanyName\' in table \'spSOReport\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablespSOReport.StoreCompanyNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string StoreCompanyAddress {
+                get {
+                    try {
+                        return ((string)(this[this.tablespSOReport.StoreCompanyAddressColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'StoreCompanyAddress\' in table \'spSOReport\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablespSOReport.StoreCompanyAddressColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string StoreCompanyVatNumber {
+                get {
+                    try {
+                        return ((string)(this[this.tablespSOReport.StoreCompanyVatNumberColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'StoreCompanyVatNumber\' in table \'spSOReport\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablespSOReport.StoreCompanyVatNumberColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsSOSerialNull() {
                 return this.IsNull(this.tablespSOReport.SOSerialColumn);
             }
@@ -1934,6 +2030,42 @@ namespace MYBUSINESS.DataSets {
             public void SetRemarksNull() {
                 this[this.tablespSOReport.RemarksColumn] = global::System.Convert.DBNull;
             }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsStoreCompanyNameNull() {
+                return this.IsNull(this.tablespSOReport.StoreCompanyNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetStoreCompanyNameNull() {
+                this[this.tablespSOReport.StoreCompanyNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsStoreCompanyAddressNull() {
+                return this.IsNull(this.tablespSOReport.StoreCompanyAddressColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetStoreCompanyAddressNull() {
+                this[this.tablespSOReport.StoreCompanyAddressColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsStoreCompanyVatNumberNull() {
+                return this.IsNull(this.tablespSOReport.StoreCompanyVatNumberColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetStoreCompanyVatNumberNull() {
+                this[this.tablespSOReport.StoreCompanyVatNumberColumn] = global::System.Convert.DBNull;
+            }
         }
         
         /// <summary>
@@ -2128,6 +2260,9 @@ namespace MYBUSINESS.DataSets.spSOReport_DataSetTableAdapters {
             tableMapping.ColumnMappings.Add("PrevBalance", "PrevBalance");
             tableMapping.ColumnMappings.Add("Date", "Date");
             tableMapping.ColumnMappings.Add("Remarks", "Remarks");
+            tableMapping.ColumnMappings.Add("StoreCompanyName", "StoreCompanyName");
+            tableMapping.ColumnMappings.Add("StoreCompanyAddress", "StoreCompanyAddress");
+            tableMapping.ColumnMappings.Add("StoreCompanyVatNumber", "StoreCompanyVatNumber");
             this._adapter.TableMappings.Add(tableMapping);
         }
         

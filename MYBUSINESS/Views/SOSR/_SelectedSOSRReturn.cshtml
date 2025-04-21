@@ -38,7 +38,12 @@
                                         <th>
                                             Order No.
                                         </th>
-
+                                        <th>
+                                            Bill No.
+                                        </th>
+                                        <th>
+                                            Store Name.
+                                        </th>
                                         <th style="width:15%;">
                                             @Html.DisplayName("Customer")
 
@@ -57,8 +62,8 @@
                                             @Html.DisplayNameFor(model => model.Discount)
                                         </th>
                                         @*<th>
-                                                Prev. Balance
-                                            </th>*@
+            Prev. Balance
+        </th>*@
                                         <th>
                                             @Html.DisplayNameFor(model => model.BillPaid)
                                         </th>
@@ -102,7 +107,12 @@
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.SOSerial)
                                             </td>
-
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Id)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Store.Name)
+                                            </td>
                                             <td class="CustomerNameForSearch">
                                                 @item.Customer.Name
 
@@ -158,19 +168,19 @@
                                                 }
                                             </td>
                                             @*<td>
-                                                    @Html.DisplayFor(modelItem => item.PrevBalance)
-                                                    @{
-                                                        if (item.SaleReturn == false)
-                                                        {
-                                                            PrevBalance += (decimal)item.PrevBalance;
-                                                        }
-                                                        else
-                                                        {
-                                                            PrevBalance -= (decimal)item.PrevBalance;
-                                                        }
+            @Html.DisplayFor(modelItem => item.PrevBalance)
+            @{
+                if (item.SaleReturn == false)
+                {
+                    PrevBalance += (decimal)item.PrevBalance;
+                }
+                else
+                {
+                    PrevBalance -= (decimal)item.PrevBalance;
+                }
 
-                                                    }
-                                                </td>*@
+            }
+        </td>*@
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.BillPaid)
                                                 @{
@@ -237,14 +247,14 @@
                                                 @{
 
                                                     @*if (LstMaxSerialNo != null && LstMaxSerialNo.ContainsValue((int)item.SOSerial))
-                                                        {
-                                                            @Html.ActionLink("Update", "Edit", new { id = item.Id, update = true }, new { @class = "btn btn-info" })
-                                                        }
-                                                        else
-                                                        {
+                {
+                    @Html.ActionLink("Update", "Edit", new { id = item.Id, update = true }, new { @class = "btn btn-info" })
+                }
+                else
+                {
 
-                                                            @Html.ActionLink(whtieSpace + "View", "Edit", new { id = item.Id, update = false }, new { @class = "btn btn-info" })
-                                                        }*@
+                    @Html.ActionLink(whtieSpace + "View", "Edit", new { id = item.Id, update = false }, new { @class = "btn btn-info" })
+                }*@
 
                                                     if (currentUser.EmployeeTypeId == 0)
                                                     {
@@ -265,8 +275,8 @@
                                                     id = item.Id
                                                 }, new { @class = "btn btn-warning" })
                                                 @*|
-                                                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                                                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })*@
+            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.Id })*@
                                             </td>
 
                                         </tr>
@@ -277,6 +287,8 @@
                                     <tr style="font-weight:bold">
                                         <td></td>
                                         <td>@Model.Count()</td>
+                                        <td></td>
+                                        <td></td>
                                         <td></td>
                                         <td></td>
                                         <td>@TotalSOQty</td>

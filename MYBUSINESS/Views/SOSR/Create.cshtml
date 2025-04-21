@@ -458,7 +458,9 @@
         </select>*@
                         <select class="form-control" name="SaleOrder.PaymentMethod" id="SaleOrder.PaymentMethod" data-toggle="tooltip" data-placement="top" title="Select Payment method" style="display:none;">
                             <option value="TM">TM</option>
-                            <option value="TM/CK">TM/CK</option>
+        <option value="TM/CK">TM/CK</option>
+                            @*<option value="Cash" selected>Cash</option>
+                            <option value="Card" selected>Cash</option>*@
                             <option value="Online">Online</option>
                             <option value="Cheque">Cheque</option>
                             <option value="Other">Other</option>
@@ -617,15 +619,25 @@
                                                 <br />
                                                 <form>
                                                     <div class="form-group">
-                                                        <label for="inputField">Card Vnd</label>
-                                                        <input type="text" autocomplete="off" class="form-control" name="SaleOrder.BillPaid" id="tm/ck" value="">
+                                                        <label for="inputField">Card VND(₫)</label>
+                                                        <input type="text" autocomplete="off" class="form-control" name="SaleOrder.BillPaid" id="cardvnd" value="">
                                                         @*<input type="text" autocomplete="off" class="form-control" placeholder="Card Vnd" name="SaleOrder.BillPaid" id="cardvnd" value="0">*@
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <label for="inputField">Cash Vnd</label>
-                                                        <input type="text" class="form-control" id="tm" value="">
+                                                        <label for="inputField">Cash VND(₫)</label>
+                                                        <input type="text" class="form-control" id="cashvnd" value="">
                                                     </div>
+                                                    <!--<div class="form-group">
+        <label for="inputField">Card Vnd</label>
+        <input type="text" autocomplete="off" class="form-control" name="SaleOrder.BillPaid" id="tm/ck" value="">-->
+                                                    @*<input type="text" autocomplete="off" class="form-control" placeholder="Card Vnd" name="SaleOrder.BillPaid" id="cardvnd" value="0">*@
+                                                    <!--</div>
+
+    <div class="form-group">
+        <label for="inputField">Cash Vnd</label>
+        <input type="text" class="form-control" id="tm" value="">
+    </div>-->
                                                     <div class="form-group hiddenCurrencyInputs" style="display:none;">
                                                         <label for="inputField">Cash USD($)</label>
                                                         <input type="text" autocomplete="off" class="form-control" name="cashUsd" id="cashUsd" value="">
@@ -1037,30 +1049,58 @@
     //});
 
     $(document).ready(function () {
-        // When "Pay all by card" is clicked
-        $('#payallbycard').on('click', function () {
-            $('#SaleOrder\\.PaymentMethod').val("TM/CK").trigger('change'); // Set dropdown to "TM/CK"
+        // When the Cash or Card field value changes
+        $('#cashvnd, #cardvnd').on('input', function () {
+            var cashValue = parseFloat($('#cashvnd').val()) || 0;
+            var cardValue = parseFloat($('#cardvnd').val()) || 0;
+
+            // Calculate the total value paid
+            var totalPayment = cashValue + cardValue;
+
+            // If both cash and card amounts are greater than 0, set payment method to "TM/CK"
+            if (cashValue > 0 && cardValue > 0) {
+                $('#SaleOrder\\.PaymentMethod').val('TM/CK').trigger('change');
+            }
+            // If only cash is entered, set payment method to "TM"
+            else if (cashValue > 0) {
+                $('#SaleOrder\\.PaymentMethod').val('TM').trigger('change');
+            }
+            // If only card is entered, set payment method to "Card"
+            else if (cardValue > 0) {
+                $('#SaleOrder\\.PaymentMethod').val('Card').trigger('change');
+            }
+            // If neither is entered, reset payment method
+            else {
+                $('#SaleOrder\\.PaymentMethod').val('').trigger('change');
+            }
+
+            console.log("Cash: " + cashValue + ", Card: " + cardValue + ", Total Payment: " + totalPayment);
         });
-        debugger
-        // When Payment Method is changed, update field names accordingly
+
+        // When the payment method changes
         $('#SaleOrder\\.PaymentMethod').on('change', function () {
             var selectedPayment = $(this).val();
-            console.log("Selected Payment Method: " + selectedPayment); // Debugging
-            debugger
+            console.log("Selected Payment Method: " + selectedPayment);
+
             if (selectedPayment === "TM/CK") {
-                $('#tm\\/ck').attr('name', 'SaleOrder.BillPaid'); // Assign name to Card VND
-                $('#tm').removeAttr('name'); // Remove name from Cash VND
-                console.log("Card VND selected, name assigned to #tm/ck");
+                $('#cashvnd').attr('name', 'SaleOrder.BillPaid'); // Cash VND
+                $('#cardvnd').attr('name', 'SaleOrder.BillPaid'); // Card VND
+                console.log("Mixed Payment (TM/CK), names assigned to both Cash and Card fields.");
             } else if (selectedPayment === "TM") {
-                $('#tm').attr('name', 'SaleOrder.BillPaid'); // Assign name to Cash VND
-                $('#tm\\/ck').removeAttr('name'); // Remove name from Card VND
-                console.log("Cash selected, name assigned to #tm");
+                $('#cashvnd').attr('name', 'SaleOrder.BillPaid'); // Cash VND
+                $('#cardvnd').removeAttr('name'); // Remove name from Card VND
+                console.log("Cash selected (TM), name assigned to Cash field.");
+            } else if (selectedPayment === "Card") {
+                $('#cardvnd').attr('name', 'SaleOrder.BillPaid'); // Card VND
+                $('#cashvnd').removeAttr('name'); // Remove name from Cash VND
+                console.log("Card selected, name assigned to Card field.");
             } else {
-                $('#tm, #tm\\/ck').removeAttr('name'); // Remove names if none match
-                console.log("Neither TM nor TM/CK selected, names removed.");
+                $('#cashvnd, #cardvnd').removeAttr('name'); // Remove names if no valid payment method
+                console.log("No valid payment method selected, names removed.");
             }
         });
     });
+
 
 
 

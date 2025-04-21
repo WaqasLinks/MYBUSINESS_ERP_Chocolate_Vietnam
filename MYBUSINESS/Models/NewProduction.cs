@@ -18,8 +18,8 @@ namespace MYBUSINESS.Models
         public NewProduction()
         {
             this.PostProductions = new HashSet<PostProduction>();
-            this.ProductDetails = new HashSet<ProductDetail>();
             this.ProductionDetails = new HashSet<ProductionDetail>();
+            this.ProductDetails = new HashSet<ProductDetail>();
         }
     
         public int Id { get; set; }
@@ -33,9 +33,9 @@ namespace MYBUSINESS.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PostProduction> PostProductions { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProductDetail> ProductDetails { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionDetail> ProductionDetails { get; set; }
         public virtual Product Product { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductDetail> ProductDetails { get; set; }
     }
 }

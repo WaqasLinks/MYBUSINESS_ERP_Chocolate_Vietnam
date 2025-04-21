@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -128,6 +129,79 @@ namespace MYBUSINESS.Controllers
 
 
         }
+
+        //public ActionResult DashboardStats(DateTime? startDate, DateTime? endDate)
+        //{
+        //    // Use user-selected dates if provided, otherwise default to last 7 days
+        //    var sDate = startDate ?? DateTime.Today.AddDays(-7);
+        //    var eDate = endDate ?? DateTime.Today;
+
+        //    var model = new DashboardStatsViewModel
+        //    {
+        //        StartDate = sDate,
+        //        EndDate = eDate,
+        //        TotalSalesWithoutVAT = db.SOes
+        //            .Where(so => so.Date >= sDate && so.Date <= eDate)
+        //            .Sum(so => (decimal?)so.SaleOrderAmount) ?? 0,
+        //        TotalSalesWithVAT = db.SOes
+        //            .Where(so => so.Date >= sDate && so.Date <= eDate)
+        //            .Sum(so => (decimal?)so.SaleOrderAmountWithVaT) ?? 0,
+        //        ProductSales = (from sod in db.SODs
+        //                        join so in db.SOes on sod.SOId equals so.Id
+        //                        join p in db.Products on sod.ProductId equals p.Id
+        //                        where so.Date >= sDate && so.Date <= eDate
+        //                        group new { sod, p } by new { sod.ProductId, p.Name } into g
+        //                        select new ProductSaleInfoViewModel
+        //                        {
+        //                            ProductName = g.Key.Name,
+        //                            TotalQuantity = g.Sum(x => (decimal?)x.sod.Quantity) ?? 0,
+        //                            TotalSaleValue = g.Sum(x => (decimal?)(x.sod.Quantity * x.sod.SalePrice)) ?? 0
+        //                        }).ToList()
+        //    };
+
+
+        //    return View(model);
+        //}
+
+        public ActionResult DashboardStats(DateTime? startDate, DateTime? endDate, int? storeId)
+        {
+            // Use user-selected dates if provided, otherwise default to last 7 days
+            var sDate = startDate ?? DateTime.Today.AddDays(-7);
+            var eDate = endDate ?? DateTime.Today;
+
+            // Fetch stores for the dropdown
+            ViewBag.Stores = new SelectList(db.Stores, "Id", "Name"); // Assuming your stores have 'Id' and 'Name'
+
+            var model = new DashboardStatsViewModel
+            {
+                StartDate = sDate,
+                EndDate = eDate,
+                StoreId = storeId, // Add this property to your ViewModel to hold the selected store ID
+                TotalSalesWithoutVAT = db.SOes
+                    .Where(so => so.Date >= sDate && so.Date <= eDate &&
+                                (storeId == null || so.StoreId == storeId)) // Filter by store if selected
+                    .Sum(so => (decimal?)so.SaleOrderAmount) ?? 0,
+                TotalSalesWithVAT = db.SOes
+                    .Where(so => so.Date >= sDate && so.Date <= eDate &&
+                                (storeId == null || so.StoreId == storeId)) // Filter by store if selected
+                    .Sum(so => (decimal?)so.SaleOrderAmountWithVaT) ?? 0,
+                ProductSales = (from sod in db.SODs
+                                join so in db.SOes on sod.SOId equals so.Id
+                                join p in db.Products on sod.ProductId equals p.Id
+                                where so.Date >= sDate && so.Date <= eDate &&
+                                      (storeId == null || so.StoreId == storeId) // Filter by store if selected
+                                group new { sod, p } by new { sod.ProductId, p.Name } into g
+                                select new ProductSaleInfoViewModel
+                                {
+                                    ProductName = g.Key.Name,
+                                    TotalQuantity = g.Sum(x => (decimal?)x.sod.Quantity) ?? 0,
+                                    TotalSaleValue = g.Sum(x => (decimal?)(x.sod.Quantity * x.sod.SalePrice)) ?? 0
+                                }).ToList()
+            };
+
+            return View(model);
+        }
+
 
 
     }

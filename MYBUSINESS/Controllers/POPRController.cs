@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Drawing.Printing;
+using System.EnterpriseServices.CompensatingResourceManager;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -92,7 +93,11 @@ namespace MYBUSINESS.Controllers
             var dtEndtDate = dtStartDate.AddMonths(1).AddSeconds(-1);
 
             //IQueryable<PO> pOes = db.POes.Include(s => s.Supplier);
-            IQueryable<PO> pOes = db.POes.Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate && x.SupplierId > 0).Include(s => s.Supplier);
+            //IQueryable<PO> pOes = db.POes.Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate && x.SupplierId > 0).Include(s => s.Supplier);
+            IQueryable<PO> pOes = db.POes
+     .Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate && x.SupplierId > 0)
+     .Include(s => s.Supplier)
+     .Include(p => p.PODs.Select(pod => pod.Product));
             //pOes.ForEachAsync(m => m.Id = Encryption.Encrypt(m.Id, "BZNS"));
             //var pOes = db.POes.Where(s => s.SaleReturn == false);
             GetTotalBalance(ref pOes);
@@ -703,7 +708,7 @@ namespace MYBUSINESS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //public ActionResult Edit([Bind(Prefix = "PurchaseOrder", Include = "BillAmount,Balance,BillPaid,Discount")] PO pO, [Bind(Prefix = "PurchaseOrderDetail", Include = "ProductId,Quantity,ExpiryDate,PurchasingDate")] List<POD> pOD)
+        //public ActionResult Edit([Bind(Prefix = "PurchaseOrder", Include = "BillAmount,Balance,BillPaid,Discount")] PO pO, [Bind(Prefix = "PurchaseOrderDetail", Include = "ProductId,Quantity,ExpiryDate,PurchasingDate,Validate")] List<POD> pOD)
         public ActionResult Edit(PurchaseOrderViewModel purchaseOrderViewModel1)
         {
             PO newPO = purchaseOrderViewModel1.PurchaseOrder;
@@ -932,7 +937,7 @@ namespace MYBUSINESS.Controllers
 
 
         // GET: POes/Edit/5
-        public ActionResult Edit(string id, bool update)
+        public ActionResult Edit(string id, bool? update, bool readonlyMode = false)
         {
 
             if (id == null)
@@ -1068,10 +1073,94 @@ namespace MYBUSINESS.Controllers
             decimal subTotal = (decimal)(pO.PurchaseOrderAmount - pO.Discount);
             ViewBag.SubTotal = subTotal;
             ViewBag.Total = subTotal + (decimal)pO.PrevBalance;
-            ViewBag.IsUpdate = update;
+            ViewBag.IsUpdate = update ?? false;
             ViewBag.IsReturn = pO.PurchaseReturn.ToString().ToLower();
             return View(purchaseOrderViewModel);
         }
+
+
+
+
+        [HttpPost]
+        
+        public JsonResult Validation(List<MYBUSINESS.Models.POPViewModel> LstProductionVM)
+        {
+            try
+            {
+                if (LstProductionVM == null || !LstProductionVM.Any())
+                {
+                    return Json(new { success = false, message = "No data received." });
+                }
+
+                foreach (var item in LstProductionVM)
+                {
+                    int prodId = item.productId;
+                    string poId = item.poId;
+
+                    // Find the matching POD record by POId and ProductId
+                    var podRecord = db.PODs.FirstOrDefault(p =>
+                        p.POId.ToString() == poId && p.ProductId == prodId);
+
+                    if (podRecord == null)
+                    {
+                        return Json(new { success = false, message = $"No POD found for ProductId {prodId} and POId {poId}." });
+                    }
+
+                    // Update the Validate field
+                    podRecord.Validate = true;
+
+                    // Mark the field as modified
+                    db.Entry(podRecord).Property(x => x.Validate).IsModified = true;
+                }
+
+                // Save all changes to the database
+                db.SaveChanges();
+
+                string redirectUrl = Url.Action("Index", "POPR");
+                return Json(new { success = true, message = "Validation completed and records updated.", redirectUrl = redirectUrl });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Server error: " + ex.Message });
+            }
+        }
+
+        // REMOVE or comment out [ValidateAntiForgeryToken]
+        //public JsonResult Validation(List<MYBUSINESS.Models.POPViewModel> LstProductionVM)
+        //{
+        //    try
+        //    {
+        //        if (LstProductionVM == null || !LstProductionVM.Any())
+        //        {
+        //            return Json(new { success = false, message = "No data received." });
+        //        }
+
+        //        foreach (var item in LstProductionVM)
+        //        {
+        //            int prodId = item.productId;
+        //            string poId = item.poId;
+
+        //            var product = db.Products.FirstOrDefault(p => p.Id == prodId);
+        //            var po = db.PODs.FirstOrDefault(p => p.POId.ToString() == poId);
+
+        //            if (product == null || po == null)
+        //            {
+        //                return Json(new { success = false, message = "Invalid product or PO." });
+        //            }
+        //            podRecord.Validate = true;
+
+        //            // Mark the field as modified
+        //            db.Entry(podRecord).Property(x => x.Validate).IsModified = true;
+        //            // Your logic here
+        //        }
+
+        //        return Json(new { success = true, message = "Validation complete." });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { success = false, message = "Server error: " + ex.Message });
+        //    }
+        //}
 
 
 

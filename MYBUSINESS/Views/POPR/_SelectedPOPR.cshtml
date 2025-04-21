@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<MYBUSINESS.Models.PO>
+@using System.Linq
 
 
 @{
@@ -39,7 +40,7 @@
                                         <th>
                                             @Html.DisplayName("Supplier")
                                         </th>
-
+                                        <th>Product</th>
                                         <th>@Html.DisplayNameFor(model => model.PurchaseReturn)</th>
                                         <th style="display:none;">
                                             @Html.DisplayNameFor(model => model.PurchaseOrderQty)
@@ -59,7 +60,7 @@
                                         </th>
 
                                         <th>
-                                            @Html.DisplayNameFor(model => model.Balance)
+                                        Status
                                         </th>
                                         @*<th>
                                                 User
@@ -91,7 +92,12 @@
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.Supplier.Name)
                                             </td>
-
+                                            <td>
+                                                @foreach (var pod in item.PODs)
+                                                {
+                                                    @pod.Product.Name
+                                                }
+                                            </td>
                                             <td>
                                                 @(item.PurchaseReturn ? "Return" : "Sale")
                                             </td>
@@ -159,62 +165,103 @@
                                             </td>
 
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.Balance)
-                                            </td>
-
-                                            @*
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.SaleReturn)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.PODId)
-                                                </td>*@
-                                            @*<td>
-                                                    @Html.DisplayFor(modelItem => item.Employee.Login)
-                                                </td>*@
-                                        <td class="noPrint">
-                                            @*@Html.ActionLink("View", "Edit", new { id = item.Id }) |*@
-
-                                            @{
-
-                                                @*if (LstMaxSerialNo != null && LstMaxSerialNo.ContainsValue((int)item.POSerial))
-            {
-                @Html.ActionLink("Update", "Edit", new { id = item.Id, update = true }, new { @class = "btn btn-info" })
-            }
-            else
-            {
-
-                @Html.ActionLink(whtieSpace + "View", "Edit", new { id = item.Id, update = false }, new { @class = "btn btn-info" })
-            }*@
-
-                                                if (currentUser.EmployeeTypeId == 0)
+                                                @{
+                                                    bool Validated = item.PODs != null && item.PODs.Any(p => p.Validate == true);
+                                                }
+                                                @if (Validated)
                                                 {
-                                                    @Html.ActionLink("Update", "Edit", new { id = item.Id, update = true }, new { @class = "btn btn-info" })
-
-                                                    @Html.ActionLink("Receving", "Create", "POPRReciver", new { id = item.Id,  update = true },
-    new { @class = "btn btn-warning text-dark fw-bold" }) <!-- Yellow color for Post Production -->
+                                                    <span class="badge bg-success">Validated</span>
                                                 }
                                                 else
                                                 {
-                                                    @Html.ActionLink(whtieSpace + "View", "Edit", new { id = item.Id, update = false }, new { @class = "btn btn-info" })
+                                                    <span class="badge bg-danger">Ongoing</span>
                                                 }
+                                            </td>
 
-                                            }
-                                            |
 
-                                            @Html.ActionLink("Print", "PrintSO3", new { id = item.Id }, new { @class = "btn btn-warning" })
-                                            @*|
-        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-        @Html.ActionLink("Delete", "Delete", new { id = item.Id })*@
-                                        </td>
-                                        </tr>
-                                        //Balance = TotalPOAmout - TotalPRAmout - BillPaid - Discount- PrevBalance;
-                                    }
+                                            @*
+        <td>
+            @Html.DisplayFor(modelItem => item.SaleReturn)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PODId)
+        </td>*@
+                                            @*<td>
+            @Html.DisplayFor(modelItem => item.Employee.Login)
+        </td>*@
+                                            <td class="noPrint">
+                                                @*@Html.ActionLink("View", "Edit", new { id = item.Id }) |*@
+
+                                                @{
+
+                                                    @*if (LstMaxSerialNo != null && LstMaxSerialNo.ContainsValue((int)item.POSerial))
+                {
+                    @Html.ActionLink("Update", "Edit", new { id = item.Id, update = true }, new { @class = "btn btn-info" })
+                }
+                else
+                {
+
+                    @Html.ActionLink(whtieSpace + "View", "Edit", new { id = item.Id, update = false }, new { @class = "btn btn-info" })
+                }*@
+
+                                                    <!--if (currentUser.EmployeeTypeId == 0)
+                                                       {
+                                                           @Html.ActionLink("Update", "Edit", new { id = item.Id, update = true }, new { @class = "btn btn-info" })
+
+                                                           @Html.ActionLink("Receving", "Create", "POPRReciver", new { id = item.Id, update = true },
+            new { @class = "btn btn-warning text-dark fw-bold" })--> <!-- Yellow color for Post Production -->
+                                                    <!--}
+            else
+            {
+                @Html.ActionLink(whtieSpace + "View", "Edit", new { id = item.Id, update = false }, new { @class = "btn btn-info" })
+            }-->
+
+                                                <td>
+                                                    @{
+                                                        bool isValidated = item.PODs != null && item.PODs.Any(p => p.Validate == true);
+
+
+                                                    }
+
+                                                    @if (isValidated)
+                                                    {
+                                                        @Html.ActionLink("View", "Edit", new { id = item.Id, readonlyMode = true },
+                                                            new { @class = "btn btn-primary text-white" })
+
+                                                        @Html.ActionLink("Receiving", "Create", "POPRReciver", new { id = item.Id, update = true },
+                                                            new { @class = "btn btn-warning text-dark fw-bold" })
+                                                    }
+                                                    else
+                                                    {
+                                                        @Html.ActionLink("Update", "Edit", new { id = item.Id, update = true },
+                                                            new { @class = "btn btn-info text-white" })
+                                                    }
+                                                </td>
+
+
+
+
+
+
+
+
+                                                }
+                                                |
+
+                                                @Html.ActionLink("Print", "PrintSO3", new { id = item.Id }, new { @class = "btn btn-warning" })
+                                                @*|
+            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.Id })*@
+                                                </td>
+                                            </tr>
+                                            //Balance = TotalPOAmout - TotalPRAmout - BillPaid - Discount- PrevBalance;
+                                        }
                                 </tbody>
                                 <tfoot>
                                     <tr style="font-weight:bold">
                                         <td></td>
                                         <td>@Model.Count()</td>
+                                        <td></td>
                                         <td></td>
                                         <td></td>
                                         <td style="display:none;">@TotalPOQty</td>
@@ -227,6 +274,7 @@
                                         <td>@*@ViewBag.TotalBalance*@</td>
 
                                         @*<td></td>*@
+                                        <td></td>
                                         <td></td>
                                     </tr>
                                 </tfoot>

@@ -50,7 +50,6 @@ namespace MYBUSINESS.Models
         public virtual DbSet<Service> Services { get; set; }
         public virtual DbSet<ServiceDetail> ServiceDetails { get; set; }
         public virtual DbSet<SOD> SODs { get; set; }
-        public virtual DbSet<Store> Stores { get; set; }
         public virtual DbSet<StoreProduct> StoreProducts { get; set; }
         public virtual DbSet<Supplier> Suppliers { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
@@ -58,20 +57,36 @@ namespace MYBUSINESS.Models
         public virtual DbSet<ProductType> ProductTypes { get; set; }
         public virtual DbSet<ProductionDetail> ProductionDetails { get; set; }
         public virtual DbSet<PostProduction> PostProductions { get; set; }
-        public virtual DbSet<ProductDetail> ProductDetails { get; set; }
         public virtual DbSet<SubItem> SubItems { get; set; }
         public virtual DbSet<SubItemProduction> SubItemProductions { get; set; }
         public virtual DbSet<QuantityToProduce> QuantityToProduces { get; set; }
         public virtual DbSet<NewProduction> NewProductions { get; set; }
-        public virtual DbSet<SO> SOes { get; set; }
         public virtual DbSet<MyBusinessInfo> MyBusinessInfoes { get; set; }
-        public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<POReciver> PORecivers { get; set; }
-        public virtual DbSet<PODReciver> PODRecivers { get; set; }
         public virtual DbSet<PO> POes { get; set; }
-        public virtual DbSet<POD> PODs { get; set; }
         public virtual DbSet<DailyBalanceVnd> DailyBalanceVnds { get; set; }
         public virtual DbSet<ShopManage> ShopManages { get; set; }
+        public virtual DbSet<POD> PODs { get; set; }
+        public virtual DbSet<PODReciver> PODRecivers { get; set; }
+        public virtual DbSet<PackagingSubItem> PackagingSubItems { get; set; }
+        public virtual DbSet<Store> Stores { get; set; }
+        public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<PackagingProduction> PackagingProductions { get; set; }
+        public virtual DbSet<PaperColor> PaperColors { get; set; }
+        public virtual DbSet<SO> SOes { get; set; }
+        public virtual DbSet<SPackagingDetail> SPackagingDetails { get; set; }
+        public virtual DbSet<ProductDetail> ProductDetails { get; set; }
+        public virtual DbSet<SPackaging> SPackagings { get; set; }
+        public virtual DbSet<ScanBankDeposit> ScanBankDeposits { get; set; }
+        public virtual DbSet<ScanMoneyInput> ScanMoneyInputs { get; set; }
+        public virtual DbSet<ScanCreditCard> ScanCreditCards { get; set; }
+        public virtual DbSet<PrintedPackagingDetail> PrintedPackagingDetails { get; set; }
+        public virtual DbSet<PrintedPackaging> PrintedPackagings { get; set; }
+        public virtual DbSet<PPReceiver> PPReceivers { get; set; }
+        public virtual DbSet<PPReciverDetail> PPReciverDetails { get; set; }
+        public virtual DbSet<PPBOM> PPBOMs { get; set; }
+        public virtual DbSet<PPSubItem> PPSubItems { get; set; }
+        public virtual DbSet<Color> Colors { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {
@@ -230,15 +245,6 @@ namespace MYBUSINESS.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spTest_Result>("spTest", param1Parameter);
         }
     
-        public virtual ObjectResult<spSOReport_Result> spSOReport(string saleOrderID)
-        {
-            var saleOrderIDParameter = saleOrderID != null ?
-                new ObjectParameter("SaleOrderID", saleOrderID) :
-                new ObjectParameter("SaleOrderID", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spSOReport_Result>("spSOReport", saleOrderIDParameter);
-        }
-    
         public virtual ObjectResult<spBankDepositReport_Result> spBankDepositReport(Nullable<int> bankDepositId)
         {
             var bankDepositIdParameter = bankDepositId.HasValue ?
@@ -246,6 +252,15 @@ namespace MYBUSINESS.Models
                 new ObjectParameter("BankDepositId", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spBankDepositReport_Result>("spBankDepositReport", bankDepositIdParameter);
+        }
+    
+        public virtual ObjectResult<spSOReport_Result> spSOReport(string saleOrderID)
+        {
+            var saleOrderIDParameter = saleOrderID != null ?
+                new ObjectParameter("SaleOrderID", saleOrderID) :
+                new ObjectParameter("SaleOrderID", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spSOReport_Result>("spSOReport", saleOrderIDParameter);
         }
     }
 }

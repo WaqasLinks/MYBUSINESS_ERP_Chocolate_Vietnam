@@ -55,6 +55,7 @@ namespace MYBUSINESS.Controllers
             //}
             //var parseId = int.Parse(storeId);
             //EnterProfit();
+             
             DateTime PKDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pakistan Standard Time"));
             var dtStartDate = new DateTime(PKDate.Year, PKDate.Month, 1);
             var dtEndtDate = dtStartDate.AddMonths(1).AddSeconds(-1);
@@ -84,8 +85,8 @@ namespace MYBUSINESS.Controllers
 
 
                 //itm.Id = Encryption.Encrypt(itm.Id, "BZNS");
-                itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(itm.Id, "BZNS")));
-            }
+                //itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(itm.Id, "BZNS")));
+                            }
 
             ViewBag.LstMaxSerialno = LstMaxSerialNo;
             ViewBag.Customers = DAL.dbCustomers;
@@ -163,6 +164,118 @@ namespace MYBUSINESS.Controllers
             //var indexReturn = sOes.OrderByDescending(i => i.Date).ToList(); //commented due to session issue
             return View(indexReturn);
         }
+
+        [HttpPost]
+        public ActionResult CancelBill(string soId)
+        {
+            // 1. Get SO (Sale Order)
+            var so = db.SOes.FirstOrDefault(x => x.Id == soId);
+
+            // Ensure SO exists and is not cancelled
+            if (so == null || (so.IsCancelled != null && so.IsCancelled == true))
+            {
+                return Content("Bill not found or already cancelled.");
+            }
+
+            // 2. Get related Sale Order Details
+            var sodItems = db.SODs.Where(x => x.SOId == soId).ToList();
+
+            // 3. Update product stock
+            foreach (var item in sodItems)
+            {
+                var product = db.Products.FirstOrDefault(p => p.Id == item.ProductId);
+                if (product != null)
+                {
+                    product.Stock += item.Quantity;
+                }
+            }
+
+            // 4. Update DailyBalanceVnd
+            var billDate = so.Date ?? DateTime.Now;
+
+            int storeIdInt = Convert.ToInt32(so.StoreId);
+
+            var balanceRecord = db.DailyBalanceVnds
+                .FirstOrDefault(b => b.StoreId == storeIdInt
+                    && b.OpeningDate.HasValue
+                    && b.OpeningDate.Value.Year == billDate.Year
+                    && b.OpeningDate.Value.Month == billDate.Month
+                    && b.OpeningDate.Value.Day == billDate.Day);
+
+
+            if (balanceRecord != null)
+            {
+                decimal totalBillAmount = (decimal)sodItems.Sum(i => i.Quantity * i.SalePrice);
+                balanceRecord.ClosingBalance -= totalBillAmount;
+            }
+
+            // 5. Mark SO as cancelled
+            so.IsCancelled = true;
+
+            db.SaveChanges();
+
+            return Content("Bill Cancelled Successfully");
+        }
+        //public ActionResult CancelBill(string soId)
+        //{
+        //    string decodedString = DecryptAsciiEncodedId(soId);
+
+        //    var so = db.SOes.FirstOrDefault(x => x.Id == decodedString);
+
+        //    if (so == null || (so.IsCancelled ?? false))
+        //    {
+        //        return Content("Bill not found or already cancelled.");
+        //    }
+
+        //    var sodItems = db.SODs.Where(x => x.SOId == decodedString).ToList();
+
+        //    foreach (var item in sodItems)
+        //    {
+        //        var product = db.Products.FirstOrDefault(p => p.Id == item.ProductId);
+        //        if (product != null)
+        //        {
+        //            product.Stock += item.Quantity;
+        //        }
+        //    }
+
+        //    var billDate = so.Date ?? DateTime.Now;
+        //    int storeIdInt = Convert.ToInt32(so.StoreId);
+
+        //    var balanceRecord = db.DailyBalanceVnds
+        //        .FirstOrDefault(b => b.StoreId == storeIdInt
+        //            && b.OpeningDate.HasValue
+        //            && b.OpeningDate.Value.Date == billDate.Date);
+
+        //    if (balanceRecord != null)
+        //    {
+        //        decimal totalBillAmount = (decimal)sodItems.Sum(i => i.Quantity * (i.SalePrice ?? 0));
+        //        balanceRecord.ClosingBalance -= totalBillAmount;
+        //    }
+
+        //    so.IsCancelled = true;
+        //    db.SaveChanges();
+
+        //    return Content("Bill Cancelled Successfully");
+        //}
+
+        private string DecryptAsciiEncodedId(string encoded)
+        {
+            var byteStrings = encoded.Split('-');
+            byte[] bytes = byteStrings.Select(b => Convert.ToByte(b)).ToArray();
+            string encryptedText = Encoding.ASCII.GetString(bytes);
+            return Encryption.Decrypt(encryptedText, "BZNS");
+        }
+
+
+        public string EncodeToBase64String(string plainText)
+        {
+            var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
+            return Convert.ToBase64String(plainTextBytes);  // Base64 encode the plain text ID
+        }
+
+
+
+
         public ActionResult ProductRentStatus(string prodId, string sellDate)
         {
             int intProdId;
@@ -906,7 +1019,7 @@ namespace MYBUSINESS.Controllers
         //{
         //public ActionResult Create(
         public async Task<ActionResult> Create(
-    [Bind(Prefix = "SaleOrder", Include = "Id,BillAmount,Balance,PrevBalance,BillPaid,BillPaidByCash,Discount,CustomerId,Remarks,Remarks2,PaymentMethod,PaymentDetail,SaleReturn,BankAccountId,Date,SaleOrderAmountWithVaT")] SO sO,
+    [Bind(Prefix = "SaleOrder", Include = "Id,BillAmount,Balance,PrevBalance,BillPaid,BillPaidByCash,Discount,CustomerId,Remarks,Remarks2,PaymentMethod,PaymentDetail,SaleReturn,BankAccountId,Date,SaleOrderAmountWithVaT,SaleOrderAmountWithC")] SO sO,
     [Bind(Prefix = "SaleOrderDetail", Include = "ProductId,SalePrice,PurchasePrice,Quantity,SaleType,PerPack,IsPack,Product.Name,Product")] List<SOD> sOD,
     [Bind(Prefix = "Customer", Include = "Id,Name,Address,Email,Vat,CompanyName")] Customer Customer,
     FormCollection collection
@@ -1003,7 +1116,7 @@ namespace MYBUSINESS.Controllers
                 sO.SaleOrderAmount = 0;
                 sO.SaleOrderAmountWithVaT = 0;
                 sO.SaleOrderQty = 0;
-
+                sO.SaleOrderAmountWithC = "";
                 sO.Profit = 0;
                 Employee emp = (Employee)Session["CurrentUser"];
                 sO.EmployeeId = emp.Id;
@@ -1032,6 +1145,8 @@ namespace MYBUSINESS.Controllers
 
                         // Reverse VAT removal (divide by 1 + VAT rate in decimal)
                         decimal salePriceWithoutVat = salePriceWithVat / (1 + vatTaxPercent / 100);
+                        sO.SaleOrderAmountWithC = (sO.BillPaid + sO.BillPaidByCash).ToString();
+
 
                         // Round to the nearest whole number
                         sod.SalePrice = Math.Round(salePriceWithoutVat); // This will give you the original price, e.g., 100
@@ -1110,6 +1225,7 @@ namespace MYBUSINESS.Controllers
                                 sO.SaleOrderAmount += (sod.Quantity * sod.SalePrice);
                                 //int pieceSold = (int)(sod.Quantity * product.Stock);
                                 sO.SaleOrderAmountWithVaT = sO.SaleOrderAmount + (sO.SaleOrderAmount * vatTaxPercent / 100);
+                                sO.SaleOrderAmountWithC = (sO.BillPaid + sO.BillPaidByCash).ToString();
                                 decimal qty = (decimal)sod.Quantity;// / (decimal)product.PerPack;
                                 storeProduct.Stock -= qty;
                                 //product.Stock -= qty;
@@ -1124,6 +1240,7 @@ namespace MYBUSINESS.Controllers
                                 storeProduct.Stock -= (int)sod.Quantity * sod.PerPack;
                                 //product.Stock -= (int)sod.Quantity * sod.PerPack;
                                 sO.SaleOrderAmountWithVaT = sO.SaleOrderAmount + (sO.SaleOrderAmount * vatTaxPercent / 100);
+                                sO.SaleOrderAmountWithC = (sO.BillPaid + sO.BillPaidByCash).ToString();
                                 sO.SaleOrderQty += (int)sod.Quantity * sod.PerPack;
                                 sO.Profit += (sod.Quantity * sod.SalePrice * sod.PerPack) - (decimal)(sod.Quantity * product.PurchasePrice * sod.PerPack); //- (decimal)(sO.Discount);
                             }
@@ -1134,6 +1251,7 @@ namespace MYBUSINESS.Controllers
                             {
                                 sO.SaleOrderAmount += (sod.Quantity * sod.SalePrice);
                                 sO.SaleOrderAmountWithVaT = sO.SaleOrderAmount + (sO.SaleOrderAmount * vatTaxPercent / 100);
+                                sO.SaleOrderAmountWithC = (sO.BillPaid + sO.BillPaidByCash).ToString();
                                 decimal qty = (decimal)sod.Quantity;// / (decimal)product.PerPack;
                                 storeProduct.Stock += qty;
                                 //product.Stock += qty;
@@ -1146,6 +1264,7 @@ namespace MYBUSINESS.Controllers
                                 storeProduct.Stock += (int)sod.Quantity * sod.PerPack;
                                 //product.Stock += (int)sod.Quantity * sod.PerPack;
                                 sO.SaleOrderAmountWithVaT = sO.SaleOrderAmount + (sO.SaleOrderAmount * vatTaxPercent / 100);
+                                sO.SaleOrderAmountWithC = (sO.BillPaid + sO.BillPaidByCash).ToString();
                                 sO.SaleOrderQty += (int)sod.Quantity * sod.PerPack;
                                 sO.Profit += (sod.Quantity * sod.SalePrice * sod.PerPack) - (decimal)(sod.Quantity * product.PurchasePrice * sod.PerPack); //- (decimal)(sO.Discount);
                             }
@@ -1575,11 +1694,16 @@ namespace MYBUSINESS.Controllers
             try
             {
                 var tax = 8;/*db.MyBusinessInfoes.TaxInPercent*/
-                var soId = db.SODs.Select(d => d.SOId).FirstOrDefault();
-                var dbsaleOrderDetails = db.SODs
-        .Include(d => d.Product)
-        .Where(d => d.SOId == soId)
-       .ToList();
+                //var soId = db.SODs.Select(d => d.SOId== saleOrder.Id).FirstOrDefault();
+               // var dbsaleOrderDetails = db.SODs
+               // .Include(d => d.Product)
+               // .Where(d => d.SOId == saleOrder.Id)
+               //.ToList();
+
+                foreach(SOD sod in saleOrderDetails)
+                {
+                    sod.Product = db.Products.FirstOrDefault(x => x.Id == sod.ProductId);
+                }
 
                 string url = "https://0401485182.minvoice.com.vn/api/InvoiceApi78/SaveV2"; //Real url working test env 
                 //string url = "https://0106026495-998.minvoice.pro/api/InvoiceApi780/Save"; //To check if webservice down / do not respond
@@ -1615,7 +1739,7 @@ namespace MYBUSINESS.Controllers
                     //    })
                     //    .ToList();
 
-                    var invoiceDetails = dbsaleOrderDetails
+                    var invoiceDetails = saleOrderDetails//dbsaleOrderDetails
                         .Where(detail => detail != null && detail.ProductId != null)
                         .Select(detail => new InvoiceDetail
 

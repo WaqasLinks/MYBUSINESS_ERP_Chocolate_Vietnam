@@ -42,6 +42,12 @@ namespace MYBUSINESS.CustomClasses
             get { return db.Products.Where(x => x.Status != "D"); }
             //set { products = value; }
         }
+        public IEnumerable<Color> dbColors
+        {
+            get { return db.Colors.ToList(); }
+            set { dbColors = value; }
+
+        }
         public IEnumerable<FinalProduction> dbFinalProductions
         {
             get { return db.FinalProductions.ToList(); }
@@ -53,12 +59,37 @@ namespace MYBUSINESS.CustomClasses
             get { return db.BOMs.ToList(); }
             set { dbBOMs = value; }
         }
+        public IEnumerable<PPBOM> dbPPBOMs
+        {
+            get { return db.PPBOMs.ToList(); }
+            set { dbPPBOMs = value; }
+        }
+        public IEnumerable<ScanBankDeposit> dbScanBankDeposit
+        {
+            get { return db.ScanBankDeposits.ToList(); }
+            set { dbScanBankDeposit = value; }
+        }
+        public IEnumerable<ScanMoneyInput> dbScanMoneyInput
+        {
+            get { return db.ScanMoneyInputs.ToList(); }
+            set { dbScanMoneyInput = value; }
+        }
+        public IEnumerable<ScanCreditCard> dbScanCreditCard
+        {
+            get { return db.ScanCreditCards.ToList(); }
+            set { dbScanCreditCard = value; }
+        }
         public IEnumerable<NewProduction> dbNewProductions
         {
             get { return db.NewProductions.ToList(); }
             set { dbNewProductions = value; }
         }
-    
+        public IEnumerable<PackagingProduction> dbPackagingProductions
+        {
+            get { return db.PackagingProductions.ToList(); }
+            set { dbPackagingProductions = value; }
+        }
+
         //private List<Store> stores;
         public IQueryable<Store> dbStore
         {

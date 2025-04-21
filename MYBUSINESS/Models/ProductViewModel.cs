@@ -15,5 +15,6 @@ namespace MYBUSINESS.Models
         public bool VariableProduct { get; set; } // Checkbox value
 
 
+        public string Supplier { get; set; }
     }
 }

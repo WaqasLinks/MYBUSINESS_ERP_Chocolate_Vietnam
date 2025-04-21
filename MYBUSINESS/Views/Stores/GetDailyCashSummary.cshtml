@@ -1,0 +1,54 @@
+﻿@model List<MYBUSINESS.Models.DailyCashSummaryViewModel>
+
+
+
+<h2 class="text-center">Daily Cash Summary - @DateTime.Today.ToShortDateString()</h2>
+
+<table class="table table-bordered text-center">
+    <thead>
+        <tr>
+            <th>Details</th>
+            @foreach (var store in Model)
+            {
+                <th>@store.StoreName</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Opening Balance</strong></td>
+            @foreach (var store in Model)
+            {
+                <td>@store.OpeningBalance</td>
+            }
+        </tr>
+        <tr>
+            <td><strong>Cash Sales</strong></td>
+            @foreach (var store in Model)
+            {
+                <td>@store.CashSales</td>
+            }
+        </tr>
+        <tr>
+            <td><strong>Money Input</strong></td>
+            @foreach (var store in Model)
+            {
+                <td>@store.MoneyInput</td>
+            }
+        </tr>
+        <tr>
+            <td><strong>Bank Deposit</strong></td>
+            @foreach (var store in Model)
+            {
+                <td>@store.BankDeposit</td>
+            }
+        </tr>
+        <tr>
+            <td><strong>Actual Closing Balance</strong></td>
+            @foreach (var store in Model)
+            {
+                <td>@store.ActualClosingBalance</td>
+            }
+        </tr>
+    </tbody>
+</table>

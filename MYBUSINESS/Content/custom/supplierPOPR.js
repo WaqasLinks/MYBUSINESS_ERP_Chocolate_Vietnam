@@ -14,6 +14,7 @@ var clickedIdNum = "";
 var x, y;
 var _total = 0;
 var IsReturn = "false";
+/*var selectedSupplierId = null;*/
 function OnTypeSupplierName(param) {
     $(param).mcautocomplete({
         showHeader: true,
@@ -22,7 +23,10 @@ function OnTypeSupplierName(param) {
         select: function (event, ui) {
             this.value = (ui.item ? ui.item[1] : '');
             //productName = this.value;
+            /*$('#idnSupplier').val(ui.item ? ui.item[0] : '');*/
+            /*selectedSupplierId = ui.item ? ui.item[0] : null;  // ✅ Store selected SupplierId*/
             $('#idnSupplier').val(ui.item ? ui.item[0] : '');
+
             $('#supplierAddress').val(ui.item ? ui.item[2] : '');
             $('#PreviousBalance').val(ui.item ? ui.item[3] : '');
             update_itemTotal();
@@ -52,6 +56,18 @@ function OnTypeName(param) {
         showHeader: true,
         columns: productColumns,
         source: products,
+        //source: function (request, response) {
+        //    if (!selectedSupplierId) {
+        //        response([]); // If no supplier selected, return empty list
+        //        return;
+        //    }
+
+        //    var filteredProducts = products.filter(function (prod) {
+        //        return prod[6] == selectedSupplierId; // ✅ Index 6 = SupplierId
+        //    });
+
+        //    response(filteredProducts);
+        //},
         select: function (event, ui) {
             pfound = 0;
             $('#selectedProducts > tbody  > tr').each(function () {
