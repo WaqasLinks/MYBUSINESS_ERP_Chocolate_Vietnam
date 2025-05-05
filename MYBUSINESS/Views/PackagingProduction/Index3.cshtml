@@ -1,0 +1,407 @@
+﻿@model List<MYBUSINESS.Models.PackagingProductionViewModel>
+@using Newtonsoft.Json
+@{
+    ViewData["Title"] = "Color Production Screen";
+    var colors = Model
+        .Select(m => m.ColorName)
+        .Distinct()
+        .ToList();
+
+    var colorPlannerQuantities = colors.ToDictionary(
+       c => c,
+       c => Model.Where(m => m.ColorName == c).Select(m => m.PlannerQuantity).FirstOrDefault()
+   );
+
+    var colorReceivedQuantities = colors.ToDictionary(
+        c => c,
+        c => Model.Where(m => m.ColorName == c).Sum(m => m.QuantityReceived)
+    );
+
+    var toReceiveDict = colors.ToDictionary(
+        color => color,
+        color =>
+        {
+            var planner = Model.Where(m => m.ColorName == color).Select(m => m.PlannerQuantity).FirstOrDefault();
+            var received = Model.Where(m => m.ColorName == color).Sum(m => m.QuantityReceived);
+            return planner - received;
+        });
+
+    var dates = Model
+.Where(m => m.ReceivedDate != null)
+.Select(m => m.ReceivedDate.Value.Date)
+.Distinct()
+.OrderBy(d => d)
+.ToList();
+}
+@*<link href="@Url.Content("~/Content/custom/downloads/jquery-ui-1.12.1.custom/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+    <script src="~/Content/custom/downloads/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>*@
+
+
+<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.css">
+<script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="//code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-sliderAccess.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.js"></script>
+
+<link href="@Url.Content("~/Content/custom/custom.css")" rel="stylesheet" type="text/css" />
+<script src="~/Content/custom/colorproduction.js"></script>
+
+<script src="~/Content/custom/downloads/jquery.mcautocomplete.js"></script>
+<script src="~/Content/custom/downloads/jquery.scannerdetection.js"></script>
+@*<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">*@
+
+@*@using (Html.BeginForm())*@
+@{
+    bool isReadonly = ViewBag.ReadonlyMode ?? false;
+}
+@using (Html.BeginForm(@*"CreateColor", "PackagingProduction", FormMethod.Post*@))
+{
+@Html.AntiForgeryToken()
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+<div class="container" id="container">
+    <div class="table-wrapper">
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-offset-5"><h2>Packaging Production Colors</h2></div>
+            </div>
+
+        </div>
+        <table id="production-table" class="table table-bordered">
+            <thead>
+                <tr class="table-info">
+                    <td style="width:10%"><strong>Planner Quantity</strong></td>
+                    @foreach (var color in colors)
+                    {
+                        var totalPlanner = Model
+                            .Where(m => m.ColorName == color)
+                            .Select(m => m.PlannerQuantity)
+                            .FirstOrDefault(); // Assuming same planner qty per color
+                        <td><strong>@totalPlanner</strong></td>
+                    }
+                </tr>
+            </thead>
+
+
+        </table>
+
+
+        <table id="selectedProducts" class="table table-bordered">
+            <thead>
+
+
+                <tr>
+
+
+                    <th style="width:2%;">#</th>
+
+                    <th style="width:9%;">
+                        Date
+                    </th>
+                    @for (int i = 0; i < Model.Count; i++)
+                    {
+                        <th style="width:5%;">
+                            <div style="display: flex; align-items: center; font-size:12px; ">
+                                @*<div style="width: 3px; height: 20px; border: 1px solid #ccc; background-color:@Model[i].ColorName;"></div>*@
+                                @Model[i].ColorName
+                            </div>
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr>
+
+                    <td id="SNo0">1</td>
+                    <td>
+                        <input type="datetime-local"
+                               class="form-control from-date-picker"
+                               value="@(ViewBag.StartDate != null ? ((DateTime)ViewBag.StartDate).ToString("yyyy-MM-ddTHH:mm") : "")"
+                               name="CPReceipts[0].ReceivedDate"
+                               id="receiveddate0">
+                    </td>
+                    @*<td style="display:none;"><input type="text" readonly class="form-control classBGcolor" name="CPReceipts[0].PackagingProductionId" id="idn0"></td>*@
+                    @for (int i = 0; i < colors.Count; i++)
+                    {
+                        <td>
+                            <!-- Hidden fields for this color -->
+                            <input type="hidden" name="@($"CPReceipts[0].Items[{i}].PaperColorId")" value="@Model[i].PaperColorId" />
+                            <input type="hidden" name="@($"CPReceipts[0].Items[{i}].PPSubItemId")" value="@Model[i].PPSubItemId" />
+                            <input type="hidden" name="@($"CPReceipts[0].Items[{i}].PackagingProductionId")" value="@Model[i].PackagingProductionId" />
+                            <input type="hidden" name="@($"CPReceipts[0].Items[{i}].ColorName")" value="@colors[i]" />
+
+                            <!-- Quantity input -->
+                            <input style="width:40px;" type="text" class="form-control qty-input"
+                                   name="@($"CPReceipts[0].Items[{i}].QuantityReceived")"
+                                   data-color="@colors[i]"
+                                   data-planner="@colorPlannerQuantities[colors[i]]"
+                                   value="0" />
+                        </td>
+                    }
+
+
+
+
+
+                    @*@for (int i = 0; i < colors.Count; i++)
+        {
+            <td>
+                <input type="number"
+                       class="form-control qty-input"
+                       name="CPReceipt[0].ColorQuantities[@i].QuantityReceived"
+                       id="quantityreceived0-@i"
+                       data-index="0-@i"
+                       data-color="@colors[i]"
+                       data-planner="@colorPlannerQuantities[colors[i]]"
+                       value="0" />
+
+            </td>
+        }*@
+                    @*<td class="input-set">
+            <input type="number" class="form-control qty-input" name="PPColorReceipts[0].QuantityReceived" id="quantityreceived0" />
+        </td>
+        <td class="input-set">
+            <input type="number" class="form-control qty-input" name="PPColorReceipts[0].QuantityReceived" id="quantityreceived0" />
+        </td>
+        <td class="input-set">
+            <input type="number" class="form-control qty-input" name="PPColorReceipts[0].QuantityReceived" id="quantityreceived0" />
+        </td>*@
+                </tr>
+
+            </tbody>
+
+        </table>
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-3">
+                    <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
+                </div>
+            </div>
+        </div>
+        <table id="production-table" class="table table-bordered">
+            <thead>
+                <tr class="table-warning">
+                    <td style="width:10%;"><strong>To Receive</strong></td>
+                    @for (int i = 0; i < colors.Count; i++)
+                    {
+                        var color = colors[i];
+                        <td>
+
+                            <h5 name="CPReceipt[0].ToReceived" id="toreceived0-@i">
+                                <span class="toreceive" data-color="@color">@toReceiveDict[color]</span>
+                                @*<span id="toreceive-0-@i">@toReceiveDict[color]*@
+
+                            </h5>
+                        </td>
+                    }
+
+                </tr>
+            </thead>
+
+
+        </table>
+        @*<button class="btn btn-success mt-3" onclick="saveAll()">Save</button>*@
+        <button type="button" class="btn btn-success mt-3" id="saveBtn">Save</button>
+
+
+    </div>
+
+
+</div>
+
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+
+    <script>
+      const plannerQuantities = @Html.Raw(JsonConvert.SerializeObject(colorPlannerQuantities));
+      const colorList = @Html.Raw(JsonConvert.SerializeObject(colors));
+        /*const packagingProductionId = document.getElementById("packagingProductionId").value;*/
+         const modelData = @Html.Raw(JsonConvert.SerializeObject(Model));
+
+        $(document).on("input", ".qty-input", function () {
+            const color = $(this).data("color");
+
+            // Get total received for this color
+            let totalReceived = 0;
+            $(`.qty-input[data-color="${color}"]`).each(function () {
+                const val = parseFloat($(this).val()) || 0;
+                totalReceived += val;
+            });
+
+            const plannerQty = plannerQuantities[color] || 0;
+            const toReceive = plannerQty - totalReceived;
+
+            // Update all to-receive spans for this color
+            $(`.toreceive[data-color="${color}"]`).text(toReceive);
+        });
+
+    $(document).on("click", "#saveBtn", function () {
+    console.log("Save button clicked!");
+    saveAll();
+  });
+    function saveAll() {
+    const rows = document.querySelectorAll("#selectedProducts tbody tr");
+    const receiptData = [];
+        debugger
+    rows.forEach((row, rowIndex) => {
+        const receivedDateInput = row.querySelector(`input[name="CPReceipts[${rowIndex}].ReceivedDate"]`);
+        const receivedDate = receivedDateInput ? receivedDateInput.value : null;
+
+        // Find all quantity inputs in this row
+        const quantityInputs = row.querySelectorAll('.qty-input');
+
+        quantityInputs.forEach((input, colorIndex) => {
+            const color = input.dataset.color;
+            const qty = parseFloat(input.value) || 0;
+
+            // Find the corresponding hidden fields for this color
+            const paperColorIdInput = row.querySelector(`input[name="CPReceipts[${rowIndex}].Items[${colorIndex}].PaperColorId"]`);
+            const ppSubItemIdInput = row.querySelector(`input[name="CPReceipts[${rowIndex}].Items[${colorIndex}].PPSubItemId"]`);
+            const packagingProductionIdInput = row.querySelector(`input[name="CPReceipts[${rowIndex}].Items[${colorIndex}].PackagingProductionId"]`);
+
+            receiptData.push({
+                PaperColorId: paperColorIdInput ? parseInt(paperColorIdInput.value) : 0,
+                PPSubItemId: ppSubItemIdInput ? parseInt(ppSubItemIdInput.value) : 0,
+                PackagingProductionId: packagingProductionIdInput ? parseInt(packagingProductionIdInput.value) : 0,
+                ColorName: color,
+                QuantityReceived: qty,
+                ReceivedDate: receivedDate,
+                PlannerQuantity: plannerQuantities[color] || 0,
+                ToReceive: (plannerQuantities[color] || 0) - qty
+            });
+        });
+    });
+
+    console.log("Data being sent:", receiptData);
+
+    fetch('@Url.Action("CreateColor", "PackagingProduction")', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+        },
+        body: JSON.stringify(receiptData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("Saved successfully!");
+            window.location.href = '@Url.Action("ColorIndex", "PackagingProduction")';
+        } else {
+            alert("Failed to save: " + (data.message || 'Unknown Error'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("Error occurred while saving.");
+    });
+}
+  @*function saveAll() {
+    const rows = document.querySelectorAll("#selectedProducts tbody tr");
+    const receiptData = [];
+    debugger;
+    if (rows.length === 0) {
+        alert("No rows found!");
+        return;
+    }
+      console.log(rows, "rowssssssssssss");
+      rows.forEach((row, rowIndex) => {
+          console.log(row, "single rowwwwwwww");
+
+      //const paperColorId = parseInt(row.getAttribute("data-paper-color-id")) || 0; // Ensure default value
+        //const ppSubItemId = parseInt(row.getAttribute("data-sub-item-id")) || 0;
+        const hiddenCell = row.querySelector("td[data-paper-color-id][data-sub-item-id]");
+        //const paperColorId = hiddenCell ? parseInt(hiddenCell.getAttribute("data-paper-color-id")) : 0;
+        //const ppSubItemId = hiddenCell ? parseInt(hiddenCell.getAttribute("data-sub-item-id")) : 0;
+        const paperColorId = paperColorInput ? parseInt(paperColorInput.value) : 0;
+        const ppSubItemId = subItemInput ? parseInt(subItemInput.value) : 0;
+      const receivedDateInput = row.querySelector(`input[name="CPReceipts[${rowIndex}].ReceivedDate"]`);
+      const receivedDate = receivedDateInput ? receivedDateInput.value : null;
+
+      colorList.forEach((color, colorIndex) => {
+        const qtyInput = row.querySelector(`#quantityreceived${rowIndex}-${colorIndex}`);
+        const qty = qtyInput ? parseFloat(qtyInput.value) || 0 : 0;
+        const plannerQty = plannerQuantities[color] || 0;
+        const toReceive = plannerQty - getTotalReceivedForColor(color);
+
+        receiptData.push({
+            PaperColorId: paperColorId,
+            PPSubItemId: ppSubItemId,
+            PackagingProductionId: packagingProductionId,
+            ColorName: color,
+            QuantityReceived: qty,
+            ReceivedDate: receivedDate,
+            PlannerQuantity: plannerQty,
+            ToReceive: toReceive > 0 ? toReceive : 0
+        });
+      });
+    });
+
+    console.log(receiptData);
+
+  fetch('@Url.Action("CreateColor", "PackagingProduction")', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(receiptData)
+})
+.then(response => response.json())
+.then(data => {
+    if (data.success) {
+        alert("Saved successfully!");
+        /*location.reload();*/
+        window.location.href = '@Url.Action("ColorIndex", "PackagingProduction")'
+    } else {
+        alert("Failed to save: " + (data.message || 'Unknown Error'));
+    }
+})
+.catch(error => {
+    console.error('Error:', error);
+    alert("Error occurred while saving.");
+});
+
+
+
+  }*@
+
+  function getTotalReceivedForColor(color) {
+    let total = 0;
+    $(`.qty-input[data-color="${color}"]`).each(function () {
+        total += parseFloat($(this).val()) || 0;
+    });
+    return total;
+  }
+    function getTotalReceivedForColor(color) {
+        let total = 0;
+        $(`.qty-input[data-color="${color}"]`).each(function () {
+            total += parseFloat($(this).val()) || 0;
+        });
+        return total;
+    }
+        //$(document).ready(function () {
+        //    $(".qty-input").on("input", function () {
+        //        const input = $(this);
+        //        const plannerQty = parseInt(input.data("planner")) || 0;
+        //        const receivedQty = parseInt(input.val()) || 0;
+        //        const index = input.data("index");
+        //        const toReceive = plannerQty - receivedQty;
+
+        //        $("#toreceive-" + index).text(toReceive);
+        //    });
+        //    bindQtyInputHandlers();
+        //});
+    </script>
+}
+
+
+
+
+
+

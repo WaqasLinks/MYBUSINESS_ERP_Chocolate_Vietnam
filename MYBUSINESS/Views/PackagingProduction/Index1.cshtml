@@ -1,0 +1,175 @@
+﻿@model List<MYBUSINESS.Models.PackagingProductionViewModel>
+
+@{
+    ViewData["Title"] = "Color Production Screen";
+}
+@Html.AntiForgeryToken()
+<h2 style="text-align:center">Packaging Production Colors</h2>
+
+<table class="table table-bordered" id="production-table">
+    <thead>
+        <tr id="header-row">
+            <th>Color</th>
+            <th>Planner Quantity</th>
+            <th class="insert-header">Insert Quantity Received</th>
+            <th class="to-header">To Received</th>
+            <th class="date-header">Date Received</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            <tr data-color-index="@i"
+                data-paper-color-id="@Model[i].PaperColorId"
+                data-sub-item-id="@Model[i].PPSubItemId">
+                >
+                <td>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 20px; height: 20px; border: 1px solid #ccc; background-color:@Model[i].ColorName;"></div>
+                        @Model[i].ColorName
+                    </div>
+                </td>
+
+                <td class="plannerQty" data-index="@i">@Model[i].PlannerQuantity</td>
+                <td class="input-set" data-index="@i">
+                    <input type="number" class="form-control qty-input" data-index="@i" />
+                </td>
+                <td class="to-received" data-index="@i">
+                    <input type="text" class="form-control" readonly />
+                </td>
+                <td class="date-received" data-index="@i">
+                    <input type="text" class="form-control" readonly />
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<button class="btn btn-success mt-3" onclick="saveAll()">Save</button>
+
+@section Scripts {
+    <script>
+            let receivedTotals = {};
+            let addedColumns = 1;
+
+            function saveAll() {
+                const rows = document.querySelectorAll("#production-table tbody tr");
+                let headerUpdated = false;
+                const receiptData = [];
+                /*debugger*/
+                for (const row of rows) {
+                    const index = row.dataset.colorIndex;
+                    const plannerQty = parseInt(row.querySelector('.plannerQty').innerText);
+
+                    const inputs = row.querySelectorAll(`.input-set[data-index="${index}"] input`);
+                    const input = inputs[inputs.length - 1];
+                    /*const qty = parseInt(input.value) || 0;*/
+                    let qty = 0;
+                    try {
+                        qty = parseInt(input.value) || 0;
+                    }
+                    catch (e)
+                    {
+                        console.log(e)
+                    }
+
+                    console.log(qty)
+
+                    if (isNaN(qty) || qty <= 0) {
+                        alert("Enter valid Insert Quantity Received for all rows.");
+                        return;
+                    }
+
+                    if (!receivedTotals[index]) receivedTotals[index] = 0;
+
+                    input.readOnly = true;
+                    receivedTotals[index] += qty;
+
+                    let toReceiveInput = row.querySelector(`.to-received[data-index="${index}"] input`);
+                    const dateInput = row.querySelector(`.date-received[data-index="${index}"] input`);
+                    const remaining = plannerQty - receivedTotals[index];
+                    const today = new Date().toISOString().split('T')[0];
+
+                    console.log(toReceiveInput)
+                    let toReceiveInputQty = toReceiveInput === null ? 0 :
+                        (parseInt(toReceiveInput.value) || 0);
+                    console.log(toReceiveInputQty)
+                    toReceiveInputQty = remaining > 0 ? remaining : 0;
+                    //dateInput.value = today;
+                    toReceiveInput.value = remaining > 0 ? remaining : 0;
+                    dateInput.value = today;
+                    receiptData.push({
+                        PaperColorId: parseInt(row.getAttribute("data-paper-color-id")),
+                        PPSubItemId: parseInt(row.getAttribute("data-sub-item-id")),
+                        QuantityReceived: qty,
+                        ReceivedDate: today,
+                        PannerQty: plannerQty,
+                        ToReceived: remaining > 0 ? remaining : 0
+                    });
+
+                    if (receivedTotals[index] < plannerQty) {
+                        row.insertBefore(createTD("input-set", index, `<input type="number" class="form-control qty-input" data-index="${index}" />`), row.querySelector(`.to-received[data-index="${index}"]`));
+
+                        if (!headerUpdated) {
+                            const headerRow = document.getElementById("header-row");
+                            headerRow.insertBefore(createHeaderTD("Insert Quantity Received"), headerRow.querySelector(".to-header"));
+                            headerUpdated = true;
+                            addedColumns++;
+                        }
+                    }
+                    //} else {
+                    //    debugger
+                    //    // Merge next cells and show "Completed"
+                    //    const completedTD = document.createElement("td");
+                    //    completedTD.colSpan = 3;
+
+                    //    completedTD.innerHTML = "<strong style='color: green;'>Completed</strong>";
+
+                    //    // Remove old cells before appending
+                    //    const toReceived = row.querySelector(`.to-received[data-index="${index}"]`);
+                    //    const dateReceived = row.querySelector(`.date-received[data-index="${index}"]`);
+                    //    //toReceived.remove();
+                    //    //dateReceived.remove();
+
+                    //    row.appendChild(completedTD);
+                    //}
+                }
+
+                fetch('@Url.Action("SaveReceipts", "PackagingProduction")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    body: JSON.stringify(receiptData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Saved successfully!");
+                    } else {
+                        alert("Failed to save.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("Error occurred while saving.");
+                });
+            }
+
+            function createTD(className, index, innerHTML) {
+                const td = document.createElement("td");
+                td.className = className;
+                td.setAttribute("data-index", index);
+                td.innerHTML = innerHTML;
+                return td;
+            }
+
+            function createHeaderTD(title) {
+                const th = document.createElement("th");
+                th.className = "insert-header";
+                th.innerText = title;
+                return th;
+            }
+    </script>
+}

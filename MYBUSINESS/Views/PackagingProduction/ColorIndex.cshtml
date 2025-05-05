@@ -1,21 +1,21 @@
-﻿@model IEnumerable<MYBUSINESS.Models.PPBOM>
+﻿@model IEnumerable<MYBUSINESS.Models.PackagingProduction>
 
 @{
-    ViewBag.Title = "PPBOMS";
+    ViewBag.Title = "Packaging Production";
     // Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<center><h2>PPBOMs</h2></center>
+<center><h2>Production List</h2></center>
 
 <div class="col-sm-12 noPrint">
     <a href="#" id="printMe" class="btn btn-info"><i class=""></i> Print</a>
-    <a href="/PPBOM/Create" id="createBOM" class="btn btn-success"><i class=""></i> New PPBOM</a> |
+    <a href="/NewProduction/Create" id="createNewProduction" class="btn btn-success"><i class=""></i> New Production</a> |
     @Html.ActionLink("Upload Excel", "Upload", new object { }, new { @class = "btn btn-warning" }) |
     <a href="/SOSR/Create?IsReturn=false" id="createSOSR" class=""><i class=""></i> New Sale</a> |
     <a href="/POPR/Create?IsReturn=false" id="createPOPR" class=""><i class=""></i> New Purchase</a>
 </div>
 
-@{Html.RenderPartial("_SelectedProducts", Model);}
+@{Html.RenderPartial("_SelectedColoredproduction", Model);}
 
 <style type="text/css" media="screen">
     .noPrint {

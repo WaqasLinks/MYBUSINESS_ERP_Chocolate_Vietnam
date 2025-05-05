@@ -18,6 +18,7 @@ namespace MYBUSINESS.Models
         public PackagingProduction()
         {
             this.PaperColors = new HashSet<PaperColor>();
+            this.CPReceipts = new HashSet<CPReceipt>();
         }
     
         public int Id { get; set; }
@@ -28,9 +29,12 @@ namespace MYBUSINESS.Models
         public Nullable<bool> Validate { get; set; }
         public Nullable<System.DateTime> PProdDate { get; set; }
         public string Box { get; set; }
+        public string ColorCode { get; set; }
     
-        public virtual Product Product { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PaperColor> PaperColors { get; set; }
+        public virtual Product Product { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CPReceipt> CPReceipts { get; set; }
     }
 }

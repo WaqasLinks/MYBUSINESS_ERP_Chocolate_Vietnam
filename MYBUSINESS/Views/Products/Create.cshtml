@@ -209,30 +209,38 @@
 
     </div>-->
 
-                                <div class="form-group">
-                                    <label>Finished Product</label>
-                                    <input type="checkbox" class="form-check-input" id="finishedproduct" name="FinishedProduct" value="4"
-                                           @(Model.Product.PType & 4)= =4 ? "checked" : "" />
+                            <div class="form-group">
+                                <label>Finished Product</label>
+                                <input type="checkbox" class="form-check-input" id="finishedproduct" name="FinishedProduct" value="4"
+                                       @(Model.Product.PType & 4)= =4 ? "checked" : "" />
 
-                                    <br />
+                                <br />
 
-                                    <label>Ingredient</label>
-                                    <input type="checkbox" class="form-check-input" id="ingredients" name="Ingredient" value="5"
-                                           @(Model.Product.PType & 5)= =5 ? "checked" : "" />
+                                <label>Ingredient</label>
+                                <input type="checkbox" class="form-check-input" id="ingredients" name="Ingredient" value="5"
+                                       @(Model.Product.PType & 5)= =5 ? "checked" : "" />
 
-                                    <br />
+                                <br />
 
-                                    <label>Intermediary Ingredient</label>
-                                    <input type="checkbox" class="form-check-input" id="intermediaryingredient" name="IntermediaryIngredient" value="6"
-                                           @(Model.Product.PType & 6)= =6 ? "checked" : "" />
+                                <label>Intermediary Ingredient</label>
+                                <input type="checkbox" class="form-check-input" id="intermediaryingredient" name="IntermediaryIngredient" value="6"
+                                       @(Model.Product.PType & 6)= =6 ? "checked" : "" />
 
-                                    <br />
+                                <br />
 
-                                    <label>Merchandise</label>
-                                    <input type="checkbox" class="form-check-input" id="merchandise" name="Merchandise" value="7"
-                                           @(Model.Product.PType & 7)= =7 ? "checked" : "" />
+                                <label>Merchandise</label>
+                                <input type="checkbox" class="form-check-input" id="merchandise" name="Merchandise" value="7"
+                                       @(Model.Product.PType & 7)= =7 ? "checked" : "" />
+                                <br />
+                                <label>Flat Packaging</label>
+                                <input type="checkbox" class="form-check-input" id="flatpackaging" name="FlatPackaging" value="8"
+                                       @(Model.Product.PType & 8)= =8 ? "checked" : "" />
 
-                                </div>
+                                <br />
+                                <label>Finish Packaging</label>
+                                <input type="checkbox" class="form-check-input" id="finishpackaging" name="FinishPackaging" value="9"
+                                       @(Model.Product.PType & 9)= =9 ? "checked" : "" />
+                            </div>
 
 
                                 <div class="form-group">
@@ -362,10 +370,10 @@
     <script>
         $(document).ready(function () {
             
-            $("#finishedproduct, #ingredients, #intermediaryingredient, #merchandise").on("change", function () {
+            $("#finishedproduct, #ingredients, #intermediaryingredient, #merchandise, #flatpackaging, #finishpackaging").on("change", function () {
                 if ($(this).is(":checked")) {
                     // Uncheck other main category checkboxes
-                    $("#finishedproduct, #ingredients, #intermediaryingredient, #merchandise").not(this).prop("checked", false);
+                    $("#finishedproduct, #ingredients, #intermediaryingredient, #merchandise,#flatpackaging, #finishpackaging").not(this).prop("checked", false);
 
                     // Hide dropdown container if any main category is selected
                     $('#productDropdownContainer').slideUp();
@@ -374,7 +382,7 @@
                     $("#variableProduct, #excessProduct, #byProduct").prop("checked", false).prop("disabled", true);
                 } else {
                     // Enable Variable, Excess, and ByProduct checkboxes only if no main category is selected
-                    if (!$("#finishedproduct, #ingredients, #intermediaryingredient, #merchandise").is(":checked")) {
+                    if (!$("#finishedproduct, #ingredients, #intermediaryingredient, #merchandise,#flatpackaging, #finishpackaging").is(":checked")) {
                         $("#variableProduct, #excessProduct, #byProduct").prop("disabled", false);
                     }
                 }

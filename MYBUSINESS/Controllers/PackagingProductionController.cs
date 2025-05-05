@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MYBUSINESS.CustomClasses;
 using MYBUSINESS.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -23,6 +24,16 @@ namespace MYBUSINESS.Controllers
         private PackagingProductionViewModel packagingproductionViewModel = new PackagingProductionViewModel();
         // GET: Products
         public ActionResult Index()
+        {
+            var packagingProductions = db.PackagingProductions
+                           .OrderByDescending(p => p.Id) // Sorting by Id in descending order
+                           .ToList();
+            //var newProductions = db.NewProductions.ToList();
+            ViewBag.Suppliers = DAL.dbSuppliers;
+
+            return View(packagingProductions);
+        }
+        public ActionResult ColorIndex()
         {
             var packagingProductions = db.PackagingProductions
                            .OrderByDescending(p => p.Id) // Sorting by Id in descending order
@@ -62,6 +73,543 @@ namespace MYBUSINESS.Controllers
             }
 
         }
+        //public ActionResult Index1(int? productId)
+        //{
+        //    var query = from pc in db.PaperColors
+        //                join pp in db.PackagingProductions on pc.PackagingProductionId equals pp.Id
+        //                join bom in db.PPSubItems
+        //                    on pc.ProductId equals bom.ParentProductId
+        //                where bom.Quantity != null
+        //                select new PackagingProductionViewModel
+        //                {
+        //                    PaperColorId = pc.Id,
+        //                    ColorName = pc.Color,
+        //                    ColorQuantity = (int)(pc.Quantity ?? 0m),
+        //                    BOMQuantity = (int)(bom.Quantity ?? 0m),
+        //                    PlannerQuantity = (int)((pc.Quantity ?? 0m) * (bom.Quantity ?? 0m)),
+        //                    ProductId = (int)(pc.ProductId ?? 0),
+        //                    SubItemId = (int)bom.Id
+        //                };
+
+        //    if (productId.HasValue)
+        //    {
+        //        query = query.Where(x => x.ProductId == productId.Value);
+        //    }
+
+
+        //    var model = query.ToList();
+        //    return View(model);
+        //}
+        //public ActionResult Index1(int? productId)
+        //{
+        //    var query = from pc in db.PaperColors
+        //                join pp in db.PackagingProductions on pc.PackagingProductionId equals pp.Id
+        //                join bom in db.PPSubItems on pc.ProductId equals bom.ParentProductId
+        //                where bom.Quantity != null
+        //                join receipt in db.PPColorReceipts
+        //                    on new { pcId = pc.Id, subItemId = bom.Id }
+        //                    equals new { pcId = receipt.PaperColorId ?? 0, subItemId = receipt.PPSubItemId ?? 0 }
+        //                    into receiptGroup
+        //                from r in receiptGroup.DefaultIfEmpty()
+        //                select new PackagingProductionViewModel
+        //                {
+        //                    PaperColorId = pc.Id,
+        //                    ColorName = pc.Color,
+        //                    // Explicitly convert nullable decimal to int using decimal? ?? 0m
+        //                    ColorQuantity = (int)(pc.Quantity ?? 0m),  // Convert nullable decimal to int
+        //                    BOMQuantity = (int)(bom.Quantity ?? 0m),   // Same for BOMQuantity
+        //                    PlannerQuantity = (int)((pc.Quantity ?? 0m) * (bom.Quantity ?? 0m)),  // Handle nullable decimal multiplication
+        //                    ProductId = (int)(pc.ProductId ?? 0),       // Handle nullable ProductId as int
+        //                    SubItemId = (int)(bom.Id),             // Ensure bom.Id is cast to int
+        //                    QuantityReceived = r != null ? (r.QuantityReceived ?? 0) : 0, // Handle nullable ints
+        //                    ToReceived = r != null ? (r.ToReceived ?? 0) : 0, // Handle nullable ints
+        //                    //ReceivedDate = r != null && r.ReceivedDate.HasValue ? r.ReceivedDate.Value.ToString("yyyy-MM-dd") : ""
+        //                    ReceivedDate = r.ReceivedDate,
+
+        //                };
+
+        //    if (productId.HasValue)
+        //    {
+        //        query = query.Where(x => x.ProductId == productId.Value);
+        //    }
+
+        //    var model = query.ToList();
+        //    return View(model);
+        //}
+        public ActionResult Index1(int? productId)
+        {
+            var query = from pc in db.PaperColors
+                        join pp in db.PackagingProductions on pc.PackagingProductionId equals pp.Id
+                        join bom in db.PPSubItems on pc.ProductId equals bom.ParentProductId
+                        where bom.Quantity != null
+                        join receipt in db.PPColorReceipts
+                            on new { pcId = pc.Id, subItemId = bom.Id }
+                            equals new
+                            {
+                                pcId = receipt.PaperColorId ?? 0,
+                                subItemId = receipt.PPSubItemId ?? 0
+                            }
+                            into receiptGroup
+                        from r in receiptGroup.DefaultIfEmpty()
+                        select new PackagingProductionViewModel
+                        {
+                            PaperColorId = pc.Id,
+                            ColorName = pc.Color,
+
+                            // Convert nullable decimal to int
+                            ColorQuantity = (int)(pc.Quantity ?? 0m),
+                            BOMQuantity = (int)(bom.Quantity ?? 0m),
+
+                            // Calculate Planner Quantity
+                            PlannerQuantity = (int)((pc.Quantity ?? 0m) * (bom.Quantity ?? 0m)),
+
+                            ProductId = (int)(pc.ProductId ?? 0),
+                            SubItemId = (int)bom.Id,
+
+                            // Handle nulls in QuantityReceived and ToReceived
+                            QuantityReceived = r != null ? (r.QuantityReceived ?? 0) : 0,
+                            ToReceived = r != null ? (r.ToReceived ?? 0) : 0,
+
+                            // Use nullable DateTime directly
+                            ReceivedDate = r.ReceivedDate,
+                        };
+
+            // Filter by productId if provided
+            if (productId.HasValue)
+            {
+                query = query.Where(x => x.ProductId == productId.Value);
+            }
+
+            var model = query.ToList();
+            return View(model);
+        }
+        //public ActionResult Index3(int? productId)
+        public ActionResult Index3(int? packagingProductionId)
+
+        {
+            var query = from pc in db.PaperColors
+                        join pp in db.PackagingProductions on pc.PackagingProductionId equals pp.Id
+                        join bom in db.PPSubItems on pc.ProductId equals bom.ParentProductId
+                        where bom.Quantity != null
+                        join receipt in db.PPColorReceipts
+                            on new { pcId = pc.Id, subItemId = bom.Id }
+                            equals new
+                            {
+                                pcId = receipt.PaperColorId ?? 0,
+                                subItemId = receipt.PPSubItemId ?? 0
+                            }
+                            into receiptGroup
+                        from r in receiptGroup.DefaultIfEmpty()
+                        select new PackagingProductionViewModel
+                        {
+                            PaperColorId = pc.Id,
+                            ColorName = pc.Color,
+
+                            ColorQuantity = (int)(pc.Quantity ?? 0m),
+                            BOMQuantity = (int)(bom.Quantity ?? 0m),
+                            PlannerQuantity = (int)((pc.Quantity ?? 0m) * (bom.Quantity ?? 0m)),
+
+                            ProductId = (int)(pc.ProductId ?? 0),
+                            SubItemId = (int)bom.Id,
+                            PPSubItemId = (decimal)bom.Id, // ✅ THIS LINE ADDED
+                            PackagingProductionId = pp.Id,
+
+                            QuantityReceived = r != null ? (r.QuantityReceived ?? 0) : 0,
+                            ToReceived = r != null ? (r.ToReceived ?? 0) : 0,
+                            ReceivedDate = r.ReceivedDate,
+                        };
+
+            if (packagingProductionId.HasValue)
+            {
+                query = query.Where(x => x.PaperColorId != 0 && db.PaperColors
+                    .Any(p => p.Id == x.PaperColorId && p.PackagingProductionId == packagingProductionId.Value));
+            }
+
+            DateTime PKDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pakistan Standard Time"));
+            var startDate = new DateTime(PKDate.Year, PKDate.Month, 1);
+            ViewBag.StartDate = startDate;
+            
+            ViewBag.Colors = db.PaperColors.ToList(); // if PaperColor already matches the Color model
+
+            var model = query.ToList();
+            return View(model);
+        }
+
+        //   [HttpPost]
+
+        //   [ValidateAntiForgeryToken]
+        //   public ActionResult CreateColor(  
+        //[Bind(Prefix = "CPReceipts", Include = "Id,PaperColorId,PPSubItemId,ReceivedDate,QuantityReceived,ToReceived")] List<CPReceipt> cpreceipts)
+        //   {
+        //       if (ModelState.IsValid)
+        //       {
+        //           db.CPReceipts.AddRange(cpreceipts);
+
+        //           db.SaveChanges();
+        //           return RedirectToAction("Index");
+
+        //       }
+
+
+
+        //       ViewBag.Suppliers = DAL.dbSuppliers;
+
+        //       var productList = db.Products.Select(p => new { p.Id, p.Name }).ToList();
+        //       ViewBag.ProductList = new SelectList(productList, "Id", "Name");
+
+        //       return View(packagingproductionViewModel);
+        //   }
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult CreateColor(List<PPColorReceiptViewModel> cpreceipts)
+        //{
+        //    if (cpreceipts == null || !cpreceipts.Any())
+        //    {
+        //        return Json(new { success = false, message = "No data received" });
+        //    }
+
+        //    try
+        //    {
+        //        foreach (var item in cpreceipts)
+        //        {
+        //            var receipt = new CPReceipt
+        //            {
+        //                PaperColorId = item.PaperColorId,
+        //                PPSubItemId = item.PPSubItemId,
+        //                QuantityReceived = item.QuantityReceived,
+        //                ToReceived = item.ToReceive,
+        //                // If you are using ReceivedDate, uncomment and adjust the parsing logic
+        //                // ReceivedDate = DateTime.TryParse(item.ReceivedDate, out var parsedDate)
+        //                //                 ? parsedDate
+        //                //                 : DateTime.Now
+        //            };
+
+        //            db.CPReceipts.Add(receipt);
+        //        }
+
+        //        db.SaveChanges();
+        //        return Json(new { success = true, message = "Saved successfully!" });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { success = false, message = $"Error: {ex.Message}" });
+        //    }
+        //}
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult CreateColor(List<PPColorReceiptViewModel> cpreceipts)
+        {
+            if (cpreceipts == null || !cpreceipts.Any())
+            {
+                return Json(new { success = false, message = "No data received" });
+            }
+
+            try
+            {
+                foreach (var item in cpreceipts)
+                {
+                    DateTime receivedDate;
+                    if (!DateTime.TryParse(item.ReceivedDate, out receivedDate))
+                    {
+                        // Handle invalid date string (you can skip or assign a default value)
+                        return Json(new { success = false, message = "Invalid date format" });
+                    }
+
+
+                    var receipt = new CPReceipt
+                    {
+                        PaperColorId = item.PaperColorId,
+                        PPSubItemId = (int)item.PPSubItemId, // Assuming PPSubItemId is int in CPReceipt
+                        QuantityReceived = item.QuantityReceived,
+                        ReceivedDate = receivedDate,
+                        // Uncomment below line only if your model supports it
+                        // PlannerQuantity = item.PlannerQuantity,
+                        ToReceived = item.ToReceive,
+                        PackagingProductionId = item.PackagingProductionId
+                    };
+
+                    db.CPReceipts.Add(receipt);
+                }
+
+                db.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        public ActionResult Index2(int? productId)
+        {
+            var query = from pc in db.PaperColors
+                        join pp in db.PackagingProductions on pc.PackagingProductionId equals pp.Id
+                        join bom in db.PPSubItems
+                            on pc.ProductId equals bom.ParentProductId
+                        where bom.Quantity != null
+                        select new PackagingProductionViewModel
+                        {
+                            PaperColorId = pc.Id,
+                            ColorName = pc.Color,
+                            ColorQuantity = (int)(pc.Quantity ?? 0m),
+                            BOMQuantity = (int)(bom.Quantity ?? 0m),
+                            PlannerQuantity = (int)((pc.Quantity ?? 0m) * (bom.Quantity ?? 0m)),
+                            ProductId = (int)(pc.ProductId ?? 0),
+                            SubItemId = (int)bom.Id
+                        };
+
+            if (productId.HasValue)
+            {
+                query = query.Where(x => x.ProductId == productId.Value);
+            }
+
+
+            var model = query.ToList();
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Create1(List<PPColorReceipt> PPColorReceipt)
+        {
+            if (ModelState.IsValid)
+            {
+                db.PPColorReceipts.AddRange(PPColorReceipt);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.Suppliers = DAL.dbSuppliers;
+
+            var productList = db.Products.Select(p => new { p.Id, p.Name }).ToList();
+            ViewBag.ProductList = new SelectList(productList, "Id", "Name");
+
+            return View();
+        }
+
+        //public ActionResult EditCreateColor(int? packagingProductionId)
+        //{
+        //    var query = from pc in db.PaperColors
+        //                join pp in db.PackagingProductions on pc.PackagingProductionId equals pp.Id
+        //                join bom in db.PPSubItems on pc.ProductId equals bom.ParentProductId
+        //                where bom.Quantity != null
+        //                join receipt in db.PPColorReceipts
+        //                    on new { pcId = pc.Id, subItemId = bom.Id }
+        //                    equals new
+        //                    {
+        //                        pcId = receipt.PaperColorId ?? 0,
+        //                        subItemId = receipt.PPSubItemId ?? 0
+        //                    }
+        //                    into receiptGroup
+        //                from r in receiptGroup.DefaultIfEmpty()
+        //                select new PackagingProductionViewModel
+        //                {
+        //                    PaperColorId = pc.Id,
+        //                    ColorName = pc.Color,
+        //                    ColorQuantity = (int)(pc.Quantity ?? 0m),
+        //                    BOMQuantity = (int)(bom.Quantity ?? 0m),
+        //                    PlannerQuantity = (int)((pc.Quantity ?? 0m) * (bom.Quantity ?? 0m)),
+        //                    ProductId = (int)(pc.ProductId ?? 0),
+        //                    SubItemId = (int)bom.Id,
+        //                    PPSubItemId = (decimal)bom.Id,
+        //                    QuantityReceived = r != null ? (r.QuantityReceived ?? 0) : 0,
+        //                    ToReceived = r != null ? (r.ToReceived ?? 0) : 0,
+        //                    ReceivedDate = r.ReceivedDate,
+        //                };
+
+        //    // Filter by productId (or other ID) in edit
+        //    if (packagingProductionId.HasValue)
+        //    {
+        //        query = query.Where(x => x.PaperColorId != 0 && db.PaperColors
+        //            .Any(p => p.Id == x.PaperColorId && p.PackagingProductionId == packagingProductionId.Value));
+        //    }
+
+        //    var model = query.ToList();
+        //    return View(model);
+        //}
+
+        public ActionResult EditColor(int packagingProductionId)
+        {
+            var query = from r in db.CPReceipts
+                        where r.PackagingProductionId == packagingProductionId
+                        join pc in db.PaperColors on r.PaperColorId equals pc.Id
+                        join bom in db.PPSubItems on r.PPSubItemId equals bom.Id
+                        join pp in db.PackagingProductions on r.PackagingProductionId equals pp.Id
+                        orderby r.ReceivedDate // Add ordering by date
+                        select new PackagingProductionViewModel
+                        {
+                            PaperColorId = pc.Id,
+                            ColorName = pc.Color,
+                            ColorQuantity = (int)(pc.Quantity ?? 0),
+                            BOMQuantity = (int)(bom.Quantity ?? 0),
+                            PlannerQuantity = (int)((pc.Quantity ?? 0m) * (bom.Quantity ?? 0m)),
+                            ProductId = (int)(pc.ProductId ?? 0),
+                            SubItemId = (int)bom.Id,
+                            PPSubItemId = (decimal)bom.Id,
+                            PackagingProductionId = pp.Id,
+                            QuantityReceived = r.QuantityReceived ?? 0,
+                            ToReceived = r.ToReceived ?? 0,
+                            ReceivedDate = r.ReceivedDate
+                        };
+
+            var model = query.ToList();
+
+            var colors = model.Select(m => m.ColorName).Distinct().ToList();
+            var colorPlannerQuantities = model.GroupBy(m => m.ColorName)
+                                            .ToDictionary(g => g.Key, g => g.First().PlannerQuantity);
+
+            // Calculate ToReceive per color (total planner - total received)
+            var toReceiveDict = colors.ToDictionary(
+                color => color,
+                color => colorPlannerQuantities[color] - model.Where(m => m.ColorName == color).Sum(m => m.QuantityReceived)
+            );
+
+            ViewBag.Colors = colors;
+            ViewBag.ColorPlannerQuantities = colorPlannerQuantities;
+            ViewBag.ToReceiveDict = toReceiveDict;
+            ViewBag.PackagingProductionId = packagingProductionId;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult EditColor(List<PPColorReceiptViewModel> receiptData)
+        {
+            if (receiptData == null || !receiptData.Any())
+            {
+                return Json(new { success = false, message = "No data received" });
+            }
+
+            try
+            {
+                // Get packagingProductionId from first item (all should have same value)
+                var packagingProductionId = receiptData.First().PackagingProductionId;
+
+                // First remove all existing receipts for this production
+                var existingReceipts = db.CPReceipts.Where(r => r.PackagingProductionId == packagingProductionId);
+                db.CPReceipts.RemoveRange(existingReceipts);
+
+                // Add the updated receipts
+                foreach (var item in receiptData)
+                {
+                    DateTime receivedDate;
+                    if (!DateTime.TryParse(item.ReceivedDate, out receivedDate))
+                    {
+                        return Json(new { success = false, message = "Invalid date format" });
+                    }
+
+                    var receipt = new CPReceipt
+                    {
+                        PaperColorId = item.PaperColorId,
+                        PPSubItemId = item.PPSubItemId,
+                        PackagingProductionId = packagingProductionId,
+                        QuantityReceived = item.QuantityReceived,
+                        ToReceived = item.ToReceive,
+                        ReceivedDate = receivedDate
+                    };
+
+                    db.CPReceipts.Add(receipt);
+                }
+
+                db.SaveChanges();
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "Error saving changes: " + ex.Message
+                });
+            }
+        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult EditColor(PPColorReceiptViewModel model)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return View(model);
+        //    }
+
+        //    try
+        //    {
+        //        var receipt = db.CPReceipts.FirstOrDefault(r => r.PaperColorId == model.PaperColorId && r.PPSubItemId == model.PPSubItemId);
+
+        //        if (receipt == null)
+        //        {
+        //            return HttpNotFound();
+        //        }
+
+        //        DateTime receivedDate;
+        //        if (!DateTime.TryParse(model.ReceivedDate, out receivedDate))
+        //        {
+        //            return Json(new { success = false, message = "Invalid date format" });
+        //        }
+
+        //        // Update fields
+        //        receipt.QuantityReceived = model.QuantityReceived;
+        //        receipt.ToReceived = model.ToReceive;
+        //        receipt.ReceivedDate = receivedDate;
+
+        //        db.SaveChanges();
+
+        //        return Json(new { success = true, message = "Record updated successfully" });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { success = false, message = ex.Message });
+        //    }
+        //}
+
+        [HttpPost]
+        public ActionResult SaveReceipts(List<PPColorReceiptViewModel> receipts)
+        {
+            foreach (var receipt in receipts)
+            {
+                var entity = new PPColorReceipt
+                {
+                    PaperColorId = (int?)receipt.PaperColorId,
+                    PPSubItemId = receipt.PPSubItemId,
+                    QuantityReceived = receipt.QuantityReceived,
+                    ReceivedDate = DateTime.Parse(receipt.ReceivedDate),
+                    PannerQty = receipt.PlannerQuantity,
+                    ToReceived = receipt.ToReceive,
+                    
+                };
+
+
+                db.PPColorReceipts.Add(entity);
+            }
+
+            db.SaveChanges();
+
+            return Json(new { success = true });
+        }
+
+
+
+
+        //public ActionResult Index1()
+        //{
+        //    var model = (from pc in db.PaperColors
+        //                 join pp in db.PackagingProductions on pc.PackagingProductionId equals pp.Id
+        //                 join bom in db.PPSubItems on pp.ProductId equals bom.ParentProductId into bomJoin
+        //                 from bom in bomJoin.DefaultIfEmpty()
+        //                 group bom by new { pc.Id, pc.Color, pc.Quantity } into g
+        //                 select new PackagingProductionViewModel
+        //                 {
+        //                     PaperColorId = g.Key.Id,
+        //                     ColorName = g.Key.Color,
+        //                     ColorQuantity = (int)(g.Key.Quantity ?? 0),
+        //                     BOMQuantity = g.Sum(x => x != null ? (x.Quantity ?? 0) : 0),
+        //                     PlannerQuantity = (int)(g.Key.Quantity ?? 0) * g.Sum(x => x != null ? (x.Quantity ?? 0) : 0)
+        //                 }).ToList();
+
+        //    return View(model);
+        //}
 
         //public ActionResult Create()
         //{
@@ -160,16 +708,17 @@ namespace MYBUSINESS.Controllers
             ViewBag.SuggestedId = maxId;  // Passing the suggested BOM ID to the view
             ViewBag.Suppliers = DAL.dbSuppliers;  // Assuming this contains the supplier list
 
-            var products = db.Products
-       .Where(p => p.PType == 4)
+            var productType8And9 = db.Products
+       .Where(p => p.PType == 8 || p.PType == 9)
        .Select(p => new
        {
-           Value = p.Id.ToString(),  // ID of the product
-           Text = p.Name            // Name of the product
+           p.Id,
+           p.Name
        })
        .ToList();
 
-            ViewBag.ProductList = new SelectList(products, "Value", "Text"); // Pass as a SelectList
+            ViewBag.ProductList = new SelectList(productType8And9, "Id", "Name");
+           
             var productDetails = db.ProductDetails.ToList();
 
             var remarks = db.BOMs
@@ -186,19 +735,7 @@ namespace MYBUSINESS.Controllers
             ViewBag.RemarksData = remarks;
 
 
-            var productList = db.Products
-                                    .Select(p => new
-                                    {
-                                        p.Id,
-                                        p.Name,
-                                        p.Stock,
-                                        p.Remarks, // Fetch remarks from BOM
-                                        p.Category,   // Fetch stock for AvailableInventory
-                                    })
-                                    .ToList();
-
-            ViewBag.ProductList = new SelectList(productList, "Id", "Name");
-
+           
             // Fetch data and then map to SubItem outside the LINQ query
             var subItems = db.Products
                              .Select(p => new
@@ -228,9 +765,6 @@ namespace MYBUSINESS.Controllers
             ViewBag.Colors = db.Colors.ToList(); // ✅ Add this line
             return View(viewModel);
         }
-
-
-
 
         //   [HttpPost]
         //   [ValidateAntiForgeryToken]
@@ -373,7 +907,7 @@ namespace MYBUSINESS.Controllers
             var packagingProduction = db.PackagingProductions
                                    .Include(np => np.Product) // Include related Products
                                    .FirstOrDefault(np => np.Id == id);
-
+            ViewBag.ProductList = new SelectList(db.Products, "Id", "Name", packagingProduction.ProductId);
 
             if (packagingProduction == null)
             {
@@ -396,41 +930,29 @@ namespace MYBUSINESS.Controllers
                     break;
             }
 
-            var PaperColor = db.PaperColors
-.Where(x => x.PackagingProductionId == packagingProduction.Id)
-.ToList();
+            var paperColors = db.PaperColors
+    .Where(x => x.PackagingProductionId == packagingProduction.Id)
+    .ToList();
 
-
-
-
-            //var totalWeight = quantityToProduce.Sum(x => x.CalculatedWeight) ?? 0;
-
-
-
-
-            //var subItems = db.SubItems.Where(s => s.ParentProductId == newProduction.ProductId).ToList();
-            //var subItemProductions = db.SubItemProductions.Where(s => s.NewProductionId == packagingProduction.Id).ToList();
-            //Console.WriteLine(packagingProduction.PProdDate); // Debugging line
-            // Get the list of products
-            var products = db.Products
-        .Where(p => p.PType == 4)
-        .Select(p => new { Value = p.Id.ToString(), Text = p.Name })
+            var productType8And9 = db.Products
+        .Where(p => p.PType == 8 || p.PType == 9)
+        .Select(p => new
+        {
+            p.Id,
+            p.Name
+        })
         .ToList();
 
-            // Pre-select the current product in the dropdown
-            ViewBag.ProductList = new SelectList(products, "Value", "Text", packagingProduction.ProductId);
+            ViewBag.ProductList = new SelectList(productType8And9, "Id", "Name");
 
             ViewBag.ReadonlyMode = readonlyMode;
             // Prepare ViewModel (including SubItems if needed)
             var viewModel = new PackagingProductionViewModel
             {
-                //SubItems = subItems,
-                SubItemProduction = db.SubItemProductions.Where(x => x.NewProductionId == packagingProduction.Id).ToList(),
                 PackagingProduction = packagingProduction,
-                Products = db.Products, // Include all products
-                /* SubItems = db.SubItems.Where(x => x.ParentProductId == newProduction.Id).ToList(), */// Get SubItems associated with this NewProduction
-                                                                                                        //TotalWeight = totalWeight,                                                                                    //QuantityToProduce = db.QuantityToProduces.Where(x => x.ProductId == newProduction.Id).ToList()                                                                                       //QuantityToProduce = quantityToProduce
-                PaperColor = new List<PaperColor> { new PaperColor() },
+                Products = db.Products,
+                SubItemProduction = db.SubItemProductions.Where(x => x.NewProductionId == packagingProduction.Id).ToList(),
+                PaperColor = paperColors, // <-- Assign the real list here
                 Color = db.Colors.ToList()
             };
 

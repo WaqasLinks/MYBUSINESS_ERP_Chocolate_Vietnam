@@ -102,10 +102,7 @@
         <AssociationConnector Association="Models.FK_StoreProduct_Product" />
         <AssociationConnector Association="Models.FK_SubItem_Product" />
         <AssociationConnector Association="Models.FK_SubItemProduction_Product1" />
-        <EntityTypeShape EntityType="Models.PackagingProduction" Width="1.5" PointX="7.5" PointY="38.625" />
-        <AssociationConnector Association="Models.FK_PackagingProduction_Product" />
         <EntityTypeShape EntityType="Models.PaperColor" Width="1.5" PointX="9.75" PointY="50.25" />
-        <AssociationConnector Association="Models.FK_Color_PackagingProduction" />
         <AssociationConnector Association="Models.FK_Color_Product" />
         <EntityTypeShape EntityType="Models.SO" Width="1.5" PointX="13.5" PointY="21.375" />
         <AssociationConnector Association="Models.FK_SO_Account" />
@@ -137,11 +134,20 @@
         <AssociationConnector Association="Models.FK_PPReciverDetail_PPReceiver" />
         <AssociationConnector Association="Models.FK_PPReciverDetail_Product" />
         <EntityTypeShape EntityType="Models.PPBOM" Width="1.5" PointX="7.5" PointY="70.5" />
-        <EntityTypeShape EntityType="Models.PPSubItem" Width="1.5" PointX="9.75" PointY="62.625" />
         <AssociationConnector Association="Models.FK_PPBOM_Product" />
+        <EntityTypeShape EntityType="Models.Color" Width="1.5" PointX="9.375" PointY="7.75" />
+        <EntityTypeShape EntityType="Models.PackagingProduction" Width="1.5" PointX="7.5" PointY="38" />
+        <AssociationConnector Association="Models.FK_Color_PackagingProduction" />
+        <AssociationConnector Association="Models.FK_PackagingProduction_Product" />
+        <EntityTypeShape EntityType="Models.PPSubItem" Width="1.5" PointX="9.75" PointY="62.625" />
         <AssociationConnector Association="Models.FK_PPSubItem_PPBOM" />
         <AssociationConnector Association="Models.FK_PPSubItem_Product" />
-        <EntityTypeShape EntityType="Models.Color" Width="1.5" PointX="9.375" PointY="7.75" />
+        <EntityTypeShape EntityType="Models.PPColorReceipt" Width="1.5" PointX="12" PointY="62.75" />
+        <AssociationConnector Association="Models.FK_PPColorReceipts_PaperColor" />
+        <EntityTypeShape EntityType="Models.CPReceipt" Width="1.5" PointX="18" PointY="56.625" />
+        <AssociationConnector Association="Models.FK_CPReceipts_PackagingProduction" />
+        <AssociationConnector Association="Models.FK_PPColorReceipt_PaperColor" />
+        <AssociationConnector Association="Models.FK_PPColorReceipt_PPSubItem" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

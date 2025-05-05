@@ -17,7 +17,7 @@
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Create New BOM</h3>
+                        <h3 class="box-title">Create New PPBOM</h3>
                     </div>
 
 
@@ -32,32 +32,7 @@
 
                         </div>
 
-                        @*<div class="form-group">
-            @Html.LabelFor(model => model.BOM.ProductId, "Select Product", new { @class = "control-label" })
-            @Html.DropDownListFor(
-                model => model.BOM.ProductId,
-                (SelectList)ViewBag.ProductList, // Use the correct ViewBag property
-                "Select a Product", // Placeholder text
-                new { @class = "form-control" }
-            )
-        </div>*@
-                        @*<div class="form-group">
-            @Html.LabelFor(model => model.BOM.ProductId, "Select Product", new { @class = "control-label" })
-            @Html.DropDownListFor(
-                model => model.BOM.ProductId,
-                (SelectList)ViewBag.ProductList,
-                "Select a Product",
-                new { @class = "form-control product-dropdown", @id = "productDropdown" }
-            )
-            @Html.ValidationMessageFor(model => model.BOM.ProductId, "", new { @class = "text-danger" })
-        </div>
 
-        <div class="form-group">
-            @Html.Label("Unit", new { @class = "control-label" })
-            <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
-            @Html.HiddenFor(model => model.BOM.Unit, new { @id = "unitHiddenField" })
-            @Html.ValidationMessageFor(model => model.BOM.Unit, "", new { @class = "text-danger" })
-        </div>*@
 
                         <div class="form-group">
                             @Html.LabelFor(model => model.PPBOM.ProductId, "Select Product", new { @class = "control-label" })
@@ -86,31 +61,31 @@
                             @Html.ValidationMessageFor(model => model.PPBOM.Unit, "", new { @class = "text-danger" })
                         </div>
                         @*<div class="form-group">
-                            @Html.Label("Variable Product ID", new { @class = "control-label" })
-                            <input type="text" id="variableProductIdField" class="form-control" readonly placeholder="Variable Product ID will be displayed here" />
-                            @Html.HiddenFor(model => Model.Product.VarProdParentId, new { @id = "variableProductIdHiddenField" })
-                        </div>*@
+                        @Html.Label("Variable Product ID", new { @class = "control-label" })
+                        <input type="text" id="variableProductIdField" class="form-control" readonly placeholder="Variable Product ID will be displayed here" />
+                        @Html.HiddenFor(model => Model.Product.VarProdParentId, new { @id = "variableProductIdHiddenField" })
+                    </div>*@
 
 
 
 
 
                         @*<div class="form-group">
-            @Html.LabelFor(model => model.BOM.ProductId, "Select Product", new { @class = "control-label" })
-            @Html.DropDownListFor(
-                model => model.BOM.ProductId,
-                (SelectList)ViewBag.ProductList,
-                "Select a Product",
-                new { @class = "form-control product-dropdown", @id = "productDropdown" }
-            )
-            @Html.ValidationMessageFor(model => model.BOM.ProductId, "", new { @class = "text-danger" })
-        </div>*@
+                        @Html.LabelFor(model => model.BOM.ProductId, "Select Product", new { @class = "control-label" })
+                        @Html.DropDownListFor(
+                            model => model.BOM.ProductId,
+                            (SelectList)ViewBag.ProductList,
+                            "Select a Product",
+                            new { @class = "form-control product-dropdown", @id = "productDropdown" }
+                        )
+                        @Html.ValidationMessageFor(model => model.BOM.ProductId, "", new { @class = "text-danger" })
+                    </div>*@
 
                         @*<div class="form-group">
-            @Html.Label("Unit", new { @class = "control-label" })
-            <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
-            <input type="hidden" name="BOM.Unit" id="unitHiddenField" />
-        </div>*@
+                        @Html.Label("Unit", new { @class = "control-label" })
+                        <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
+                        <input type="hidden" name="BOM.Unit" id="unitHiddenField" />
+                    </div>*@
 
 
 
@@ -123,7 +98,28 @@
                         </div>
 
 
-                       
+                        <!--<div class="form-group">
+                @Html.LabelFor(model => Model.PPBOM.Saleable, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => Model.PPBOM.Saleable)-->
+                        @*@Html.EditorFor(model => model.Saleable, new[] { new SelectListItem { Text = "Yes", Value = "True", Selected = true }, new SelectListItem { Text = "No", Value = "False" } })*@
+                        @*@Html.CheckBoxFor(m => m.Saleable, new { @value = "true" })*@
+                        <!--@Html.ValidationMessageFor(model => Model.PPBOM.Saleable, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => Model.PPBOM.Purchasable, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => Model.PPBOM.Purchasable)-->
+                        @*@Html.EditorFor(model => model.Saleable, new[] { new SelectListItem { Text = "Yes", Value = "True", Selected = true }, new SelectListItem { Text = "No", Value = "False" } })*@
+                        @*@Html.CheckBoxFor(m => m.Saleable, new { @value = "true" })*@
+                        <!--@Html.ValidationMessageFor(model => Model.PPBOM.Purchasable, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => Model.PPBOM.Manufacturable, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => Model.PPBOM.Manufacturable)-->
+                        @*@Html.EditorFor(model => model.Saleable, new[] { new SelectListItem { Text = "Yes", Value = "True", Selected = true }, new SelectListItem { Text = "No", Value = "False" } })*@
+                        @*@Html.CheckBoxFor(m => m.Saleable, new { @value = "true" })*@
+                        <!--@Html.ValidationMessageFor(model => Model.PPBOM.Manufacturable, "", new { @class = "text-danger" })
+                </div>-->
 
                         <div class="form-group">
                             @*@Html.LabelFor(model => Model.BOM.ProductionProcessCateogry, htmlAttributes: new { @class = "control-label" })*@
@@ -166,12 +162,12 @@
                         </div>
 
                         @*<div id="pprice" class="form-group">
-            @Html.LabelFor(model => Model.BOM.TimeUnit, htmlAttributes: new { @class = "control-label" })
+                        @Html.LabelFor(model => Model.BOM.TimeUnit, htmlAttributes: new { @class = "control-label" })
 
-            @Html.EditorFor(model => Model.BOM.TimeUnit, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => Model.BOM.TimeUnit, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => Model.BOM.TimeUnit, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => Model.BOM.TimeUnit, "", new { @class = "text-danger" })
 
-        </div>*@
+                    </div>*@
 
                     </div>
 
@@ -204,49 +200,77 @@
                                 <tr>
                                     <!--<th style="width:5%;">#</th>-->
                                     @*<th>Index</th>
-                                        <th>pId</th>*@
+        <th>pId</th>*@
                                     <!--<th style="width:60%;">Name</th>
 
 
-                                    <th style="width:20%;">Unit</th>
-                                    <th></th>-->
+    <th style="width:20%;">Unit</th>
+    <th></th>-->
                                     <th style="width: 5%;">#</th>
-                                    <th style="width: 35%;">Name</th>
-                                    <th style="width: 25%;">Qty</th>
-                                    <th style="width: 20%;">Unit</th>
+                                    <th style="width: 20%;">Name</th>
+                                    <th style="width: 15%;">Box Per Sheet</th>
+                                    <th style="width: 15%;">Unit</th>
+                                    <th style="width: 25%;">Color</th>
                                     <th style="width: 20%;"></th>
                                 </tr>
                             </thead>
                             <tbody>
-
                                 <tr>
-
                                     <td id="SNo0">1</td>
 
                                     <td style="display:none;"><input type="hidden" name="PPSubItem.Index" value="0" /></td>
                                     <td style="display:none;"><input type="text" readonly class="form-control classBGcolor" name="PPSubItem[0].ProductId" id="idn0"></td>
-                                    <td><input style="background-color: #f8f9fa;" type="text" autocomplete="off" class="form-control .bg-light" name="PPSubItem[0].Product.Name" id="name0" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name"></td>
-                                    <td><input type="number" step="0.00001" min="0"  autocomplete="off" class="form-control" name="PPSubItem[0].Quantity" id="quantity0"></td>
 
-                                    @*<td>
+                                    <td>
+                                        <input style="background-color: #f8f9fa;" type="text" autocomplete="off" class="form-control .bg-light" name="PPSubItem[0].Product.Name" id="name0" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name">
+                                    </td>
+
+                                    <td>
+                                        <input type="number" step="0.00001" min="0" autocomplete="off" class="form-control" name="PPSubItem[0].Quantity" id="quantity0">
+                                    </td>
+
+                                    <td>
+                                        <input type="text" autocomplete="off" class="form-control" name="PPSubItem[0].Unit" id="unit0">
+                                    </td>
+
+                                    <td>
+                                        @Html.DropDownList("PPSubItem[0].ColorId", (SelectList)ViewBag.ColorList, "Select", new { @class = "form-control" })
+                                    </td>
+
+                                    <td>
+                                        <button type="button" id="delete0" class="delete btn btn-default add-new">
+                                            <a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <!--<tr>
+
+        <td id="SNo0">1</td>
+
+        <td style="display:none;"><input type="hidden" name="SubItem.Index" value="0" /></td>
+        <td style="display:none;"><input type="text" readonly class="form-control classBGcolor" name="SubItem[0].ProductId" id="idn0"></td>
+        <td><input style="background-color: #f8f9fa;" type="text" autocomplete="off" class="form-control .bg-light" name="SubItem[0].Product.Name" id="name0" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name"></td>
+        <td><input type="number" step="0.00001" min="0" autocomplete="off" class="form-control" name="SubItem[0].Quantity" id="quantity0"></td>-->
+                                @*<td>
             <select class="form-control" name="SubItem[@i].Unit" id="SubItem_@(i)_Unit">
                 <option value="Kg" @(Model.SubItem[i].Unit == "Kg" ? "selected" : "")>Kg</option>
                 <option value="Gram" @(Model.SubItem[i].Unit == "Gram" ? "selected" : "")>Gram</option>
             </select>
         </td>*@
 
-                                    <td>
-                                        <input type="text" autocomplete="off" class="form-control" name="PPSubItem[0].Unit" id="unit0">
-                                    </td>
+                                <!--<td>
+            <input type="text" autocomplete="off" class="form-control" name="SubItem[0].Unit" id="unit0">
+        </td>
 
 
-                                    
-                                    <td>
-                                        <button type="button" id="delete0" class="delete btn btn-default add-new"><a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button>
-                                    </td>
+
+        <td>
+            <button type="button" id="delete0" class="delete btn btn-default add-new"><a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button>
+        </td>
 
 
-                                </tr>
+    </tr>-->
 
                             </tbody>
 
@@ -270,150 +294,9 @@
 
             </div>
 
-            <div class="col-md-6">
-                <!-- general form elements -->
-                <!-- general form elements -->
-                <div class="box box-primary">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Products Types</h3>
-                    </div>
-
-                    <div class="box-body">
+            
 
 
-
-                        <table id="selectedProduct1" class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <!--<th style="width:5%;">#</th>-->
-                                    @*<th>Index</th>
-                                        <th>pId</th>*@
-                                    <!--<th style="width:60%;">Name</th>
-
-
-                                    <th style="width:20%;">Unit</th>
-                                    <th></th>-->
-                                    <th style="width: 5%;">#</th>
-                                    <th style="width: 35%;">Name</th>
-                                    <th style="width: 25%;">Qty</th>
-                                    <th style="width: 20%;">Unit</th>
-                                    @*<th style="width: 12%;"></th>*@
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                <tr>
-                                    <td @*id="SNo0"*@></td>
-
-                                    <td style="display:none;"><input type="hidden" name="PPSubItem.Index" value="30" /></td>
-                                    @*<td style="display:none;"><input type="text" readonly class="form-control classBGcolor" name="SubItem[0].ProductId" id="idn0"></td>*@
-
-                                    @*<td><input type="text" autocomplete="off" class="form-control" name="SubItem[0].Product.Name" id="name0" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name"></td>*@
-                                    @*<td>
-                @Html.DropDownListFor(
-                    model => model.SubItem[30].ProductId,
-                    (SelectList)ViewBag.ProductList,
-                    "Select Variable Product",
-                    new { @class = "form-control product-dropdown", id = "idn30" }
-                )
-            </td>*@
-                                    @*<td>
-                <select id="variableProductDropdown0" class="form-control" name="SubItem[30].ProductId">
-                    <option value="">Select Variable Product</option>
-                </select>
-            </td>*@
-                                    <td>
-                                        <select style="" background-color: #f8f9fa;" id="variableProductDropdown0" class="form-control bg-light " name="PPSubItem[30].ProductId">
-                                            <option value="">Select Variable Product</option>
-                                        </select>
-                                    </td>
-
-
-                                    @*<td>
-                <input type="text" id="variableProductName0" class="form-control" readonly placeholder="Variable Product Name">
-                <input type="hidden" name="SubItem[30].ProductId" id="variableProductId0" value="0">
-            </td>*@
-
-
-                                    <td>
-                                        <input readonly type="number" step="0.000001" autocomplete="off" class="form-control" name="PPSubItem[30].Quantity" id="quantity30">
-                                    </td>
-
-                                    <td>
-                                        <input readonly type="text" autocomplete="off" class="form-control unit-field" name="PPSubItem[30].Unit" id="unit30">
-                                    </td>
-
-
-                                    @*@Html.HiddenFor(model => model.SubItem[30].Unit, new { id = "unitHiddenField30" })*@
-                                </tr>
-
-                                <tr>
-                                    <td @*id="SNo31"*@></td>
-
-                                    <td style="display:none;"><input type="hidden" name="SubItem.Index" value="31" /></td>
-
-                                    <td>
-                                        @Html.DropDownListFor(
-                                            model => model.PPSubItem[31].ProductId,
-                                            (SelectList)ViewBag.ExcessProductList, // Updated to use Excess Product List
-                                            "Select Excess Product",
-                                            new { @class = "form-control product-dropdown", id = "idn31" }
-                                        )
-                                    </td>
-
-                                    <td>
-                                        <input type="number" step="0.1" autocomplete="off" class="form-control" name="PPSubItem[31].Quantity" id="quantity31">
-                                    </td>
-
-                                    <td>
-                                        <input type="text" autocomplete="off" class="form-control unit-field" name="PPSubItem[31].Unit" id="unit31" readonly>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td @*id="SNo32"*@></td>
-
-                                    <td style="display:none;"><input type="hidden" name="SubItem.Index" value="32" /></td>
-
-                                    <td>
-                                        @Html.DropDownListFor(
-                                            model => model.PPSubItem[32].ProductId,
-                                            (SelectList)ViewBag.ByProductList, // Updated to use ByProduct List
-                                            "Select ByProduct",
-                                            new { @class = "form-control product-dropdown", id = "idn32" }
-                                        )
-                                    </td>
-
-                                    <td>
-                                        <input readonly type="number" step="0.1" autocomplete="off" class="form-control" name="PPSubItem[32].Quantity" id="quantity32">
-                                    </td>
-
-                                    <td>
-                                        <input type="text" autocomplete="off" class="form-control unit-field" name="PPSubItem[32].Unit" id="unit32" readonly>
-                                    </td>
-                                </tr>
-
-
-                            </tbody>
-
-                        </table>
-
-
-                        @*<div class="table-title">
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
-                                    </div>
-                                </div>
-                            </div>*@
-
-                    </div>
-
-
-
-
-                </div>
-            </div>
 
 
 
@@ -432,7 +315,7 @@
 
 
 
-<link href="@Url.Content("~/Content/custom/custom.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Content/custom/custom1.css")" rel="stylesheet" type="text/css" />
 <script src="~/Content/custom/subItem_BOM.js"></script>
 <script src="~/Content/custom/downloads/jquery.mcautocomplete.js"></script>
 <script src="~/Content/custom/downloads/jquery.scannerdetection.js"></script>

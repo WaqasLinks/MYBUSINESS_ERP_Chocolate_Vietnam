@@ -33,19 +33,19 @@
                                         <td>@Html.DisplayFor(modelItem => item.ProductName)</td>
                                         <td>@Html.DisplayFor(modelItem => item.Box)</td>
                                         @*<td>
-            @if (item.Validate ?? false)
-            {
-                @Html.ActionLink("View", "Edit", new { id = item.Id, readonlyMode = true }, new { @class = "btn btn-secondary" })
+                                                @if (item.Validate ?? false)
+                                                {
+                                                    @Html.ActionLink("View", "Edit", new { id = item.Id, readonlyMode = true }, new { @class = "btn btn-secondary" })
 
-            }
-            else
-            {
-                @Html.ActionLink("Update", "Edit", new { id = item.Id }, new { @class = "btn btn-info" })
-            }
-            |
-            @Html.ActionLink("Post Production", "Create", "PostProduction", new { id = item.Id }, new { @class = "btn btn-light text-dark" })
-            @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
-        </td>*@
+                                                }
+                                                else
+                                                {
+                                                    @Html.ActionLink("Update", "Edit", new { id = item.Id }, new { @class = "btn btn-info" })
+                                                }
+                                                |
+                                                @Html.ActionLink("Post Production", "Create", "PostProduction", new { id = item.Id }, new { @class = "btn btn-light text-dark" })
+                                                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+                                            </td>*@
                                         <td>
                                             @if (item.Validate ?? false)
                                             {
@@ -60,10 +60,10 @@
                                             {
                                                 @Html.ActionLink("Update", "Edit", new { id = item.Id },
                              new { @class = "btn btn-info text-white" }) <!-- Light Blue for Update -->
-                                        <td>
-                                            @Html.ActionLink("Next", "Index3", new { packagingProductionId = item.Id }, new { @class = "btn btn-success fw-bold" })
+                                            <td>
+                                                @Html.ActionLink("Next", "EditColor", new { packagingProductionId = item.Id }, new { @class = "btn btn-success fw-bold" })
 
-                                        </td>
+                                            </td>
 
                                         }
 
@@ -79,12 +79,12 @@
 
 
                                             @*<td>
-                @Html.ActionLink("Update", "Edit", new { id = item.Id }, new { @class = "btn btn-info" }) |
-                @Html.ActionLink("Post Production", "Create", "PostProduction", new { id = item.Id }, new { @class = "btn btn-light text-dark" })
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
-            </td>*@
+                                                    @Html.ActionLink("Update", "Edit", new { id = item.Id }, new { @class = "btn btn-info" }) |
+                                                    @Html.ActionLink("Post Production", "Create", "PostProduction", new { id = item.Id }, new { @class = "btn btn-light text-dark" })
+                                                    @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+                                                </td>*@
                                         </tr>
-                                }
+                                    }
                             </tbody>
                             <tfoot>
                                 <tr style="font-weight:bold">

@@ -1,0 +1,203 @@
+﻿@model List<MYBUSINESS.Models.PackagingProductionViewModel>
+@{
+    ViewBag.Title = "Create Color Production";
+}
+
+<!-- Content Wrapper. Contains page content -->
+@using (Html.BeginForm("Create1", "PackagingProduction", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <section class="content">
+        <div class="row">
+            <!-- left column -->
+            <div>
+                <!-- general form elements -->
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Create Color Production</h3>
+                    </div>
+
+                    <div class="box-body">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <table class="table table-bordered" id="production-table">
+                            <thead>
+                                <tr id="header-row">
+                                    <th>Color</th>
+                                    <th>Planner Quantity</th>
+                                    <th class="insert-header">Insert Quantity Received</th>
+                                    <th class="to-header">To Received</th>
+                                    <th class="date-header">Date Received</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.Count; i++)
+                                {
+                                    <tr data-color-index="@i">
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                <div style="width: 20px; height: 20px; border: 1px solid #ccc; background-color:@Model[i].ColorName;"></div>
+                                                @Model[i].ColorName
+                                            </div>
+                                        </td>
+                                        <td style="display:none;"><input type="hidden" name="PPColorReceipt.Index" value="0" /></td>
+                                        <td class="plannerQty" data-index="@i" name="PPColorReceipt[0].PannerQty" id="pannerQty0" value="@Model[i].PlannerQuantity">@Model[i].PlannerQuantity</td>
+                                        <td class="input-set" data-index="@i">
+                                            <input type="number" class="form-control qty-input" name="PPColorReceipt[0].QuantityReceived" id="quantityreceived@i" data-index="@i" />
+                                        </td>
+                                        <td class="to-received" data-index="@i">
+                                            <input type="text" class="form-control" name="PPColorReceipt[@i].ToReceived" id="toReceived@i" readonly />
+                                        </td>
+                                        <td class="date-received" data-index="@i">
+                                            <input type="text" class="form-control" name="PPColorReceipt[@i].ReceivedDate" id="receivedDate@i" readonly />
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                </div>
+            </div>
+            <!-- Right column for Sub Items -->
+            <button type="submit" class="btn btn-success mt-3" onclick="saveAll()">Save</button>
+
+
+
+
+
+        </div>
+    </section>
+    @*@Html.ActionLink("Validate", "ValidateStock", null, new { @class = "btn btn-secondary" })*@
+    @*<button id="validateBtn" class="btn btn-primary">Validate</button>*@
+}
+
+<!-- Your existing form content -->
+@*<button id="validateBtn" class="btn btn-primary">Validate</button>*@
+
+
+@*<button id="validateBtn" value="ValidateStock" class="btn btn-primary">Validate</button>*@
+
+
+
+<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.css">
+<script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="//code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-sliderAccess.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.js"></script>
+
+
+
+<link href="@Url.Content("~/Content/custom/custom.css")" rel="stylesheet" type="text/css" />
+<script src="~/Content/custom/Packagingproduction.js"></script>
+<script src="~/Content/custom/downloads/jquery.mcautocomplete.js"></script>
+<script src="~/Content/custom/downloads/jquery.scannerdetection.js"></script>
+<script>
+      $(document).ready(function () {
+    document.getElementById('SOCreate').reset(); // has to be handle
+  });
+
+
+
+
+  const receivedTotals = {};
+let addedColumns = 1; // Tracks how many InsertQR columns exist
+
+function saveAll() {
+    const rows = document.querySelectorAll("#production-table tbody tr");
+    let headerUpdated = false;
+
+    for (const row of rows) {
+        const index = row.dataset.colorIndex;
+        const plannerQty = parseInt(row.querySelector('.plannerQty').innerText);
+
+        let lastInput = row.querySelectorAll(`.input-set[data-index="${index}"] input`);
+        let input = lastInput[lastInput.length - 1]; // always target last added input
+        let qty = parseInt(input.value);
+
+        if (isNaN(qty) || qty <= 0) {
+            alert("Enter valid Insert Quantity Received for all rows.");
+            return;
+        }
+
+        if (!receivedTotals[index]) receivedTotals[index] = 0;
+
+        input.readOnly = true;
+        receivedTotals[index] += qty;
+
+        const toReceiveCell = row.querySelectorAll(`.to-received[data-index="${index}"] input`);
+        const dateCell = row.querySelectorAll(`.date-received[data-index="${index}"] input`);
+        const remaining = plannerQty - receivedTotals[index];
+        const today = new Date().toISOString().split('T')[0];
+
+        // Update latest ToReceived and Date
+        toReceiveCell[toReceiveCell.length - 1].value = remaining > 0 ? remaining : 0;
+        dateCell[dateCell.length - 1].value = `${today} (${qty})`;
+
+        if (receivedTotals[index] < plannerQty) {
+            // Append new input set
+            row.appendChild(createTD("input-set", index, `<input type="number" class="form-control qty-input" data-index="${index}" />`));
+            row.appendChild(createTD("to-received", index, `<input type="text" class="form-control" readonly />`));
+            row.appendChild(createTD("date-received", index, `<input type="text" class="form-control" readonly />`));
+
+            // Add headers ONLY ONCE per new set
+            if (!headerUpdated) {
+                const headerRow = document.getElementById("header-row");
+                headerRow.innerHTML += `
+                        <th class="insert-header">Insert Quantity Received</th>
+                        <th class="to-header">To Received</th>
+                        <th class="date-header">Date Received</th>`;
+                headerUpdated = true;
+                addedColumns++;
+            }
+        } else {
+            // All quantity received - show Completed
+            const completedTD = document.createElement("td");
+            completedTD.colSpan = 3;
+            completedTD.innerHTML = "<strong style='color: green;'>Completed</strong>";
+            row.appendChild(completedTD);
+        }
+    }
+}
+
+function createTD(className, index, innerHTML) {
+    const td = document.createElement("td");
+    td.className = className;
+    td.setAttribute("data-index", index);
+    td.innerHTML = innerHTML;
+    return td;
+}
+</script>
+@*@section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }*@
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const remarksDropdown = document.getElementById("remarksDropdown"); // The remarks dropdown
+        const unitField = document.getElementById("unitField");             // The Unit input field
+
+        // Parse the JSON data for remarks from the dropdown's data_remarks attribute
+        const remarksData = JSON.parse(remarksDropdown.dataset.remarks);
+
+        // Handle dropdown change event
+        remarksDropdown.addEventListener("change", function () {
+            const selectedRemark = this.value; // Get the selected remark value
+
+            // Find the matched data for the selected remark
+            const matchedData = remarksData.find(r => r.Value === selectedRemark);
+
+            if (matchedData) {
+                // Populate the Unit field with the matched Unit value
+                unitField.value = matchedData.Unit || "N/A"; // Default to "N/A" if no unit found
+            } else {
+                // Clear the field if no match is found
+                unitField.value = "";
+            }
+        });
+    });
+
+
+
+</script>

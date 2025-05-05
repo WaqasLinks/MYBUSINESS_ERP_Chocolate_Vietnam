@@ -14,13 +14,25 @@ namespace MYBUSINESS.Models
     
     public partial class PaperColor
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public PaperColor()
+        {
+            this.PPColorReceipts = new HashSet<PPColorReceipt>();
+            this.CPReceipts = new HashSet<CPReceipt>();
+        }
+    
         public int Id { get; set; }
         public string Color { get; set; }
         public Nullable<decimal> Quantity { get; set; }
         public Nullable<decimal> ProductId { get; set; }
         public Nullable<int> PackagingProductionId { get; set; }
+        public string ColorCode { get; set; }
     
-        public virtual PackagingProduction PackagingProduction { get; set; }
         public virtual Product Product { get; set; }
+        public virtual PackagingProduction PackagingProduction { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PPColorReceipt> PPColorReceipts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CPReceipt> CPReceipts { get; set; }
     }
 }

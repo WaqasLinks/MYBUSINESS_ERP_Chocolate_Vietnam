@@ -14,6 +14,12 @@ namespace MYBUSINESS.Models
     
     public partial class PPSubItem
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public PPSubItem()
+        {
+            this.CPReceipts = new HashSet<CPReceipt>();
+        }
+    
         public decimal Id { get; set; }
         public Nullable<decimal> ParentProductId { get; set; }
         public Nullable<decimal> ProductId { get; set; }
@@ -27,5 +33,7 @@ namespace MYBUSINESS.Models
     
         public virtual PPBOM PPBOM { get; set; }
         public virtual Product Product { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CPReceipt> CPReceipts { get; set; }
     }
 }

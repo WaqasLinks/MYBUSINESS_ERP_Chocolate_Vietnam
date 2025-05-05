@@ -286,7 +286,30 @@ namespace MYBUSINESS.Controllers
             //ViewBag.Suppliers = DAL.dbSuppliers;
             //return View(DAL.dbProducts.Include(x => x.StoreProducts).ToList());
         }
+        public ActionResult StockIndex()
+        {
+            int? storeId = Session["StoreId"] as int?;
+            //var storeId = Session["StoreId"] as string;
+            if (storeId == null)
+            {
+                return RedirectToAction("StoreNotFound", "UserManagement");
+            }
+            //var storeId = Session["StoreId"] as string; 
+            //if (storeId == null)
+            //{
+            //    return RedirectToAction("StoreNotFound", "UserManagement");
+            //}
+            //var parseId = int.Parse(storeId);
+            ViewBag.Suppliers = DAL.dbSuppliers;
+            return View(DAL.dbProducts.Include(x => x.StoreProducts).Where(x => x.StoreId == storeId).ToList());
 
+            //ViewBag.Suppliers = DAL.dbSuppliers;
+            //return View(DAL.dbProducts.Include(x => x.StoreProducts).Where(x => x.StoreId == parseId).ToList()); //commented due to session issue
+
+
+            //ViewBag.Suppliers = DAL.dbSuppliers;
+            //return View(DAL.dbProducts.Include(x => x.StoreProducts).ToList());
+        }
 
 
         //public ActionResult Index()
@@ -392,7 +415,7 @@ namespace MYBUSINESS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,StoreId,Category,Unit,Variable,Excess,ByProduct,PType,VarProdParentId,Ingredient,FinishedProduct,Merchandise,IntermediaryIngredient,EInvoicePCode,PVATName,Supplier")] Product product,
+        public ActionResult Create([Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,StoreId,Category,Unit,Variable,Excess,ByProduct,PType,VarProdParentId,Ingredient,FinishedProduct,Merchandise,IntermediaryIngredient,EInvoicePCode,PVATName,Supplier,FlatPackaging,FinishPackaging")] Product product,
         [Bind(Prefix = "ProductDetail", Include = "Id,ProductId,Shape,Weight")] List<ProductDetail> productDetails)
         {
             int productType = 0;
@@ -431,6 +454,14 @@ namespace MYBUSINESS.Controllers
             if (Request.Form["Merchandise"] != null)
             {
                 productType |= 7;
+            }
+            if (Request.Form["FlatPackaging"] != null)
+            {
+                productType |= 8;
+            }
+            if (Request.Form["FinishPackaging"] != null)
+            {
+                productType |= 9;
             }
             // Set final PType
             product.PType = (byte)productType;
@@ -608,7 +639,7 @@ namespace MYBUSINESS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(
-    [Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,Category,Unit,Variable,Excess,ByProduct,PType,VarProdParentId,Ingredient,FinishedProduct,Merchandise,IntermediaryIngredient,PVATName,ExcludedSalePrice")] Product product,
+    [Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,Category,Unit,Variable,Excess,ByProduct,PType,VarProdParentId,Ingredient,FinishedProduct,Merchandise,IntermediaryIngredient,PVATName,ExcludedSalePrice,FlatPackaging,FinishPackaging")] Product product,
     [Bind(Prefix = "ProductDetail", Include = "Id,ProductId,Shape,Weight")] List<ProductDetail> productDetails)
         {
             int productType = 0;
@@ -647,6 +678,14 @@ namespace MYBUSINESS.Controllers
             if (Request.Form["Merchandise"] != null)
             {
                 productType |= 7;
+            }
+            if (Request.Form["FlatPackaging"] != null)
+            {
+                productType |= 8;
+            }
+            if (Request.Form["FinishPackaging"] != null)
+            {
+                productType |= 9;
             }
             // Set final PType
             product.PType = (byte)productType;

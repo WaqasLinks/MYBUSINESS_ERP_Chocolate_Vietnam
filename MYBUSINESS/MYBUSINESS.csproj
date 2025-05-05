@@ -473,6 +473,9 @@
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ColorViewModel.cs" />
+    <Compile Include="Models\CPReceipt.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Currency.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -563,6 +566,10 @@
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\PPBOMViewModel.cs" />
+    <Compile Include="Models\PPColorReceipt.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PPColorReceiptViewModel.cs" />
     <Compile Include="Models\PPReceiver.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -3157,6 +3164,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\custom\bankdeposit.js" />
+    <Content Include="Content\custom\colorproduction.js" />
     <Content Include="Content\custom\menuHide.js" />
     <Content Include="Content\custom\custom.css" />
     <Content Include="Content\custom\clientSOSR.js" />
@@ -4020,6 +4028,14 @@
     <Content Include="Views\Color\EditBOM.cshtml" />
     <Content Include="Views\Color\EditService.cshtml" />
     <Content Include="Views\Color\Index - Copy.cshtml" />
+    <Content Include="Views\PackagingProduction\Index1.cshtml" />
+    <Content Include="Views\PackagingProduction\Index2.cshtml" />
+    <Content Include="Views\PackagingProduction\Index3.cshtml" />
+    <Content Include="Views\PackagingProduction\EditColor.cshtml" />
+    <Content Include="Views\PackagingProduction\_SelectedColoredproduction.cshtml" />
+    <Content Include="Views\PackagingProduction\ColorIndex.cshtml" />
+    <Content Include="Views\Products\StockIndex.cshtml" />
+    <Content Include="Views\Products\_SelectedStockProducts.cshtml" />
     <None Include="Web.Debug.Config">
       <DependentUpon>Web.Config</DependentUpon>
     </None>

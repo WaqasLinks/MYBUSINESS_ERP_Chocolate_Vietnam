@@ -22,8 +22,6 @@
 }
 @using (Html.BeginForm("Edit", "PackagingProduction", FormMethod.Post, new { id = "packagingProductionForm" }))
 {
-
-
     @Html.AntiForgeryToken()
 
     <section class="content">
@@ -52,16 +50,21 @@
                             @Html.ValidationMessageFor(model => Model.PackagingProduction.Id, "", new { @class = "text-danger" })
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => Model.PackagingProduction.ProductId, "Select Product", new { @class = "control-label" })
-                            @Html.DropDownListFor(
-                                model => model.PackagingProduction.ProductId,
-                                (SelectList)ViewBag.ProductList,
-                                "Select a Product",
-                                new { @class = "form-control product-dropdown", @id = "productDropdown", @readonly = isReadonly ? "readonly" : null }
+                            @if (!isReadonly)
+                            {
+                                @Html.DropDownListFor(
+                                    model => model.PackagingProduction.ProductId,
+                                    (SelectList)ViewBag.ProductList,
+                                    "Select a Product",
+                                    new { @class = "form-control", @id = "productDropdown" }
+                                )
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" value="@(Model.Products.FirstOrDefault(p => p.Id == Model.PackagingProduction.ProductId)?.Name)" readonly />
+                                @Html.HiddenFor(model => model.PackagingProduction.ProductId)
+                            }
 
-                            )
-                            @Html.HiddenFor(model => model.PackagingProduction.ProductId) <!-- Hidden field to send ProductId -->
-                            @Html.ValidationMessageFor(model => model.PackagingProduction.ProductId, "", new { @class = "text-danger" })
                         </div>
 
 
@@ -73,7 +76,7 @@
                             @Html.LabelFor(model => model.PackagingProduction.PProdDate, htmlAttributes: new { @class = "control-label" })
                             @{
                                 var attributes = new Dictionary<string, object>
-                                                                                                                    {
+                                                                                                                                    {
         { "class", "form-control" },
         { "type", "date" }
     };
@@ -84,27 +87,17 @@
                                 }
                             }
 
-                            @Html.TextBoxFor(model => model.PackagingProduction.PProdDate, attributes)
+                            @Html.TextBoxFor(model => model.PackagingProduction.PProdDate, new
+                            {
+     @class = "form-control",
+     @type = "date",
+     @Value = Model.PackagingProduction.PProdDate?.ToString("yyyy-MM-dd"),
+     @readonly = isReadonly ? "readonly" : null
+ })
+
 
                             @Html.ValidationMessageFor(model => model.PackagingProduction.PProdDate, "", new { @class = "text-danger" })
                         </div>
-
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.PackagingProduction.Box, htmlAttributes: new { @class = "control-label" })
-                            @Html.EditorFor(model => model.PackagingProduction.Box, new { htmlAttributes = new { @class = "form-control", type = "text" } })
-                            @Html.ValidationMessageFor(model => model.PackagingProduction.Box, "", new { @class = "text-danger" })
-                        </div>
-
-
-
-
-
-
-
-
-
-
-
 
                     </div>
 
@@ -165,19 +158,21 @@
                                                        name="PaperColor[@sNo].ProductId" id="idn@(sNo)">
                                             </td>
                                             <td>
-                                                <input type="text" autocomplete="off" value="@(item.Color)" class="form-control"
-                                                       name="PaperColor[@sNo].Color" id="color@(sNo)" placeholder="Type shape"
-                                                       data-toggle="tooltip" data-placement="top" title="Type shape">
+
+                                                <div style="background-color: @Model.PaperColor[@sNo].Color; color: #fff; padding: 5px;">
+                                                    @Model.PaperColor[@sNo].Color (@Model.PaperColor[@sNo].Color)
+                                                </div>
+                                                <input type="hidden" name="PaperColor[@sNo].Color" value="@Model.PaperColor[sNo].Color" />
                                             </td>
                                             <td>
                                                 <input type="number" step="any" autocomplete="off" value="@(item.Quantity)" class="form-control"
                                                        name="PaperColor[@sNo].Quantity" id="quantity@(sNo)" placeholder="Type weight"
                                                        data-toggle="tooltip" data-placement="top">
                                             </td>
-                                            <td>
+                                            @*<td>
 
                                                 <button type="button" id="delete@(sNo)" class="delete btn btn-default add-new"><a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button>
-                                            </td>
+                                            </td>*@
 
                                         </tr>
                                         sNo += 1;

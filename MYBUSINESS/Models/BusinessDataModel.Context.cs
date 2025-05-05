@@ -71,7 +71,6 @@ namespace MYBUSINESS.Models
         public virtual DbSet<PackagingSubItem> PackagingSubItems { get; set; }
         public virtual DbSet<Store> Stores { get; set; }
         public virtual DbSet<Product> Products { get; set; }
-        public virtual DbSet<PackagingProduction> PackagingProductions { get; set; }
         public virtual DbSet<PaperColor> PaperColors { get; set; }
         public virtual DbSet<SO> SOes { get; set; }
         public virtual DbSet<SPackagingDetail> SPackagingDetails { get; set; }
@@ -85,8 +84,11 @@ namespace MYBUSINESS.Models
         public virtual DbSet<PPReceiver> PPReceivers { get; set; }
         public virtual DbSet<PPReciverDetail> PPReciverDetails { get; set; }
         public virtual DbSet<PPBOM> PPBOMs { get; set; }
-        public virtual DbSet<PPSubItem> PPSubItems { get; set; }
         public virtual DbSet<Color> Colors { get; set; }
+        public virtual DbSet<PackagingProduction> PackagingProductions { get; set; }
+        public virtual DbSet<PPSubItem> PPSubItems { get; set; }
+        public virtual DbSet<PPColorReceipt> PPColorReceipts { get; set; }
+        public virtual DbSet<CPReceipt> CPReceipts { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {
