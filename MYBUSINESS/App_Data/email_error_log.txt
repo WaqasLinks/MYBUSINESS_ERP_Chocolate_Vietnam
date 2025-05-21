@@ -1,0 +1,7 @@
+System.Net.Mail.SmtpFailedRecipientException: Mailbox unavailable. The server response was: relay access denied - please authenticate
+   at System.Net.Mail.SmtpTransport.SendMail(MailAddress sender, MailAddressCollection recipients, String deliveryNotify, Boolean allowUnicode, SmtpFailedRecipientException& exception)
+   at System.Net.Mail.SmtpClient.Send(MailMessage message)
+   at MYBUSINESS.Controllers.StoreOrderController.TestEmail() in E:\Project1\MYBUSINESS_ERP_Chocolate_Vietnam\MYBUSINESS\Controllers\StoreOrderController.cs:line 2512025-05-15 09:30:44 - System.Net.Mail.SmtpFailedRecipientException: Mailbox unavailable. The server response was: relay access denied - please authenticate
+   at System.Net.Mail.SmtpTransport.SendMail(MailAddress sender, MailAddressCollection recipients, String deliveryNotify, Boolean allowUnicode, SmtpFailedRecipientException& exception)
+   at System.Net.Mail.SmtpClient.Send(MailMessage message)
+   at MYBUSINESS.Controllers.StoreOrderController.TestEmail() in E:\Project1\MYBUSINESS_ERP_Chocolate_Vietnam\MYBUSINESS\Controllers\StoreOrderController.cs:line 251

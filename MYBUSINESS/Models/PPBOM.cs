@@ -34,6 +34,7 @@ namespace MYBUSINESS.Models
         public string ProductName { get; set; }
         public Nullable<decimal> ProductId { get; set; }
         public string Unit { get; set; }
+        public string Status { get; set; }
     
         public virtual Product Product { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

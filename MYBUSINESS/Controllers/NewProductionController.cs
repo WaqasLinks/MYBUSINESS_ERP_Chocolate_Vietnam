@@ -149,6 +149,7 @@ namespace MYBUSINESS.Controllers
 
         //    return View(viewModel);
         //}
+
             [HttpGet]
             public ActionResult Create()
             {
@@ -271,7 +272,11 @@ namespace MYBUSINESS.Controllers
         {
             if (ModelState.IsValid)
             {
-
+                var product = db.Products.Find(newProduction.ProductId);
+                if (product != null)
+                {
+                    newProduction.ProductName = product.Name;
+                }
 
                 // Save the BOM and its SubItems
                 db.NewProductions.Add(newProduction);

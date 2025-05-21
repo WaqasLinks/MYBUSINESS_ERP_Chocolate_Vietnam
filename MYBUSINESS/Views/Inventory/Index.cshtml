@@ -1,0 +1,148 @@
+﻿@model MYBUSINESS.Models.InventoryViewModel
+
+<h2>Inventory Management</h2>
+
+<div class="form-group">
+    <label for="productTypeFilter">Filter by Product Type:</label>
+    @Html.DropDownList("productTypeFilter", Model.ProductTypes, new { @class = "form-control", id = "productTypeFilter" })
+</div>
+
+<table class="table table-bordered" id="inventoryTable">
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Current Stock Factory</th>
+            <th>Physical Quantity</th>
+            <th>Deviation</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody id="inventoryTableBody">
+        @foreach (var item in Model.Products)
+        {
+            <tr>
+                <td>
+                    @Html.Hidden("Id", item.Id, new { @class = "product-id" })
+                    @Html.Hidden("Name", item.Name, new { @class = "product-name" })
+                    @Html.Hidden("CurrentStock", item.CurrentStock, new { @class = "current-stock-value" })
+                    @item.Name
+                </td>
+                <td>
+                    <span class="current-stock">@item.CurrentStock</span>
+                </td>
+                <td>
+                    <input type="number" name="PhysicalQuantity" class="form-control physical-qty" style="width:100px;" />
+                </td>
+                <td>
+                    <span class="determination-display">0</span>
+                    <input type="hidden" name="Determination" class="determination-input" value="0" />
+                </td>
+                <td>
+                    <button type="button" class="btn btn-success save-btn">Save</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Handle product type filter change
+            $('#productTypeFilter').change(function () {
+                var selectedType = $(this).val();
+
+                $.ajax({
+                    url: '@Url.Action("FilterByProductType", "Inventory")',
+                    type: 'POST',
+                    data: { productType: selectedType },
+                    success: function (products) {
+                        $('#inventoryTableBody').empty();
+
+                        $.each(products, function(index, item) {
+                            var row = `
+                                <tr>
+                                    <td>
+                                        <input type="hidden" class="product-id" name="Id" value="${item.Id}" />
+                                        <input type="hidden" class="product-name" name="Name" value="${item.Name}" />
+                                        <input type="hidden" class="current-stock-value" name="CurrentStock" value="${item.CurrentStock}" />
+                                        ${item.Name}
+                                    </td>
+                                    <td>
+                                        <span class="current-stock">${item.CurrentStock}</span>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="PhysicalQuantity" class="form-control physical-qty" style="width:100px;" />
+                                    </td>
+                                    <td>
+                                        <span class="determination-display">0</span>
+                                        <input type="hidden" name="Determination" class="determination-input" value="0" />
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-success save-btn">Save</button>
+                                    </td>
+                                </tr>
+                            `;
+                            $('#inventoryTableBody').append(row);
+                        });
+
+                        attachCalculationHandlers();
+                        attachSaveHandlers();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error:", error);
+                    }
+                });
+            });
+
+            // Initial setup
+            attachCalculationHandlers();
+            attachSaveHandlers();
+        });
+
+        function attachCalculationHandlers() {
+            $('#inventoryTableBody').on('input', '.physical-qty', function() {
+                var row = $(this).closest('tr');
+                var physicalQty = parseFloat($(this).val()) || 0;
+                var currentStock = parseFloat(row.find('.current-stock').text()) || 0;
+                var determination = physicalQty - currentStock;
+
+                row.find('.determination-display').text(determination);
+                row.find('.determination-input').val(determination);
+            });
+        }
+
+        function attachSaveHandlers() {
+            $('#inventoryTableBody').on('click', '.save-btn', function() {
+                var row = $(this).closest('tr');
+                var formData = {
+                    Id: row.find('.product-id').val(),
+                    Name: row.find('.product-name').val(),
+                    CurrentStock: row.find('.current-stock-value').val(),
+                    PhysicalQuantity: row.find('.physical-qty').val(),
+                    Determination: row.find('.determination-input').val()
+                };
+
+                $.ajax({
+                    url: '@Url.Action("Save", "Inventory")',
+                    type: 'POST',
+                    data: formData,
+                    headers: {
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function(response) {
+                        alert('Saved successfully');
+                        // You might want to update the current stock display here
+                        row.find('.current-stock').text(formData.PhysicalQuantity);
+                        row.find('.current-stock-value').val(formData.PhysicalQuantity);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error:", error);
+                        alert('Error saving data');
+                    }
+                });
+            });
+        }
+    </script>
+}

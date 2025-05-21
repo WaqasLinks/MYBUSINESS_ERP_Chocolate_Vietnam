@@ -1,0 +1,94 @@
+﻿@model MYBUSINESS.Models.InventoryViewModel
+
+@{
+    ViewBag.Title = "Edit Inventory";
+}
+
+<h2>Edit Inventory</h2>
+
+<div class="form-group">
+    <table class="table table-bordered" id="inventoryTable">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Current Stock</th>
+                <th>Physical Quantity</th>
+                <th>Determination</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="inventoryTableBody">
+            @foreach (var item in Model.Products)
+            {
+                <tr>
+                    <td>
+                        @Html.HiddenFor(model => item.Id, new { @class = "product-id" })
+                        @Html.HiddenFor(model => item.Name, new { @class = "product-name" })
+                        @Html.HiddenFor(model => item.CurrentStock, new { @class = "current-stock-value" })
+                        @item.Name
+                    </td>
+                    <td>
+                        <span class="current-stock">@item.CurrentStock</span>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => item.PhysicalQuantity, new { @class = "form-control physical-qty", style = "width:100px;" })
+                    </td>
+                    <td>
+                        <span class="determination-display">@(item.PhysicalQuantity - item.CurrentStock)</span>
+                        @Html.HiddenFor(model => item.Determination, new { @class = "determination-input", Value = (item.PhysicalQuantity - item.CurrentStock) })
+                    </td>
+                    <td>
+                        <button type="submit" class="btn btn-success">Save</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div>
+    @Html.ActionLink("Back to List", "Index1", null, new { @class = "btn btn-secondary" })
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Handle quantity input changes
+            $('#inventoryTableBody').on('input', '.physical-qty', function () {
+                var row = $(this).closest('tr');
+                var physicalQty = parseFloat($(this).val()) || 0;
+                var currentStock = parseFloat(row.find('.current-stock').text()) || 0;
+                var determination = physicalQty - currentStock;
+
+                row.find('.determination-display').text(determination);
+                row.find('.determination-input').val(determination);
+            });
+
+            // Handle form submission
+            $('form').submit(function (e) {
+                e.preventDefault();
+
+                var formData = $(this).serialize();
+
+                $.ajax({
+                    url: '@Url.Action("Edit", "Inventory")',
+                    type: 'POST',
+                    data: formData,
+                    headers: {
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (response) {
+                        if (response.redirect) {
+                            window.location.href = response.redirect;
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error:", error);
+                        alert('Error saving data');
+                    }
+                });
+            });
+        });
+    </script>
+}

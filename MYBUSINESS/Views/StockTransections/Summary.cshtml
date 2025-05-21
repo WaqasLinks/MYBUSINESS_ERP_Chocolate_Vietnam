@@ -22,52 +22,51 @@
 <form name="registration_form_Product" id='registration_form_Product' class="form-inline noPrint">
     <center>
         <div class="row">
+            <div class="form-group">
+                <label>Store:</label>
+                @{
+                    var storesList = new List<SelectListItem>();
+                    // Add Factory option with value 0
+                    storesList.Add(new SelectListItem
+                    {
+                        Text = "Factory",
+                        Value = "0",
+                        Selected = ViewBag.CurrentStoreId == 0
+                    });
+
+                    // Add all stores from database
+                    foreach (var store in ViewBag.Stores)
+                    {
+                        storesList.Add(new SelectListItem
+                        {
+                            Text = store.Name,
+                            Value = store.Id.ToString(),
+                            Selected = store.Id == ViewBag.CurrentStoreId
+                        });
+                    }
+                }
+                @Html.DropDownList("storeId", storesList, new { @class = "form-control" })
+            </div>
+
             <input type="hidden" name="SaleOrder.CustomerId" id="idnCustomer" value="@ViewBag.CustomerId" />
-            @*@Html.Label("Customer Name", htmlAttributes: new { @class = "control-label col-md-2" })*@
-
-            @*@Html.Editor("custName", new { htmlAttributes = new { @class = "form-control", @placeholder = "Search by customer" } })*@
-
-            @*<input type="text" autocomplete="off" class="form-control" name="Customer.Name" id="customer" value="" placeholder="Search by customer" data-toggle="tooltip" data-placement="top" title="Search by customer">*@
             <input type="hidden" autocomplete="off" class="form-control" name="Customer.Name" id="customer" value="" placeholder="Search by customer" data-toggle="tooltip" data-placement="top" title="Search by customer">
 
-            @*@Html.Label("Time", htmlAttributes: new { @class = "control-label col-md-2" })*@
-
             @Html.Editor("startDate", new { htmlAttributes = new { @class = "form-control datepicker", @id = "datepickerStart", @placeholder = "Start date", @Value = ViewBag.StartDate } })
-
-
-            @*@Html.Label("Time", htmlAttributes: new { @class = "control-label col-md-2" })*@
 
             @Html.Editor("endDate", new { htmlAttributes = new { @class = "form-control datepicker", @id = "datepickerEnd", @placeholder = "End date", @Value = ViewBag.EndDate } })
 
             <input type="button" value="Go" id="btnSearch" class="btn btn-warning add-new" />
-
-            @*<input type="date" value="Search" id="btnSearch1" class="form-control " />*@
-
         </div>
     </center>
-    @*<button class="printMe" value="print">Print</button>*@
-    @*<a href="invoice-print.html" target="_blank" class="btn btn-default"><i class="fa fa-print"></i> Print</a>*@
 
-    @*<div style='float:right;'>
-            <button value="falsfja" style='position:fixed;'>heloo</button>
-        </div>*@
     <div class="row">
-        @*<div class="col-sm-8"><h2>Sale <b>Order</b></h2></div>*@
-
         <div class="col-sm-11">
-            @*<textarea name="SaleOrder.Remarks" rows="1" cols="100" class="form-control" placeholder="Remarks..." data-toggle="tooltip" data-placement="top" title="Text of this text box will also print on bill"></textarea>*@
+            <!-- Empty space -->
         </div>
-
         <div class="col-sm-1">
-            @*<button type="submit" id="CreateSO" class="btn btn-info add-new"><i class="fa fa-plus"></i>Save & Print</button>*@
-            <a href="#" id="printMe" class="btn btn-info "><i class=""></i> Print</a>
+            <a href="#" id="printMe" class="btn btn-info"><i class=""></i> Print</a>
         </div>
-
     </div>
-
-    @*<input type="button" onclick="printDiv('print-content')" value="print a div!" />*@
-    @*<button onclick="myFunction()">Print this page</button>*@
-
 </form>
 
 
@@ -107,110 +106,70 @@
 <script src="~/Content/custom/downloads/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
 
 <script type="text/javascript">
-
-
-    $(function () { // will trigger when the document is ready
-        //var date = $('.datepicker').datepicker({ dateFormat: 'dd-mm-yy' }).val();
+    $(function () {
+        // Initialize datepickers
         $('.datepicker').datepicker({
             dateFormat: 'dd-M-yy',
-            showOn: "both"//,
-            //buttonImageOnly: true,
-            //buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif",
-
-            //buttonText: "Select date"
+            showOn: "both"
         });
-
     });
 
     $(document).ready(function () {
-        //function myFunction() {
-        //    window.print();
-        //}
-        //$("#printMe").show();
-        //alert("abc");
+        // Print functionality
         $('#printMe').click(function () {
-
-
             if ($.fn.DataTable.isDataTable('#PWS')) {
                 $('#PWS').DataTable().destroy();
             }
-
-            //$("#printMe").hide();
-
             window.print();
-
         });
 
-
+        // Customer name click handler
         $('tr td.CustomerNameForSearch').click(function () {
-            //alert($(this).text());
-            //$('#idnCustomer').val();
             $('#customer').val($(this).text().trim());
             $('#idnCustomer').val($(this).closest("tr").find(".CustomerIdForSearch").text());
             SearchThis();
         });
 
+        // Search button click handler
         $('#btnSearch').click(function () {
             SearchThis();
         });
 
         function SearchThis() {
-            //alert($('#idnCustomer').val());
             var custId = $('#idnCustomer').val();
             var suppId = $('#supplierId').val();
+            var storeId = $('#storeId').val();
+
             if ($('#customer').val().trim() != "" && $('#idnCustomer').val() == "") {
                 alert('Customer not found. Please select customer from list');
                 return false;
-
             }
 
+            var startDate = $('#datepickerStart').datepicker({ dateFormat: 'dd-M-yy' }).val();
+            var endDate = $('#datepickerEnd').datepicker({ dateFormat: 'dd-M-yy' }).val();
 
-            //var startDate = $('#startDate').val();
-            //var endDate = $('#endDate').val();
+            $('#loadingIndicator').show();
 
-            var startDate = $('#datepickerStart').datepicker({ dateFormat: 'dd-mm-yy' }).val();
-            var endDate = $('#datepickerEnd').datepicker({ dateFormat: 'dd-mm-yy' }).val();
-
-            //if (startDate.trim() == "" && Date.parse(startDate)) {
-            //    //Valid date
-            //} else {
-            //    alert("Start date is not valid");
-            //    return false;
-            //}
-
-            //if (Date.parse(startDate)) {
-            //    //Valid date
-            //} else {
-            //    alert("End date is not valid");
-            //    return false;
-            //}
-
-            //$('#loading-image').show();
             $.ajax({
                 url: "@Url.Action("FilterIndex", "StockTransections")",
-                data: { 'custId': custId, 'suppId': suppId, 'startDate': startDate, 'endDate': endDate },
+                data: {
+                    'custId': custId,
+                    'suppId': suppId,
+                    'startDate': startDate,
+                    'endDate': endDate,
+                    'storeId': storeId
+                },
                 type: "GET",
                 cache: false,
                 success: function (data) {
-                    //alert(data);
                     $("#NewData").html(data);
-
-                    //$("#hdnOrigComments").val($('#txtComments').val());
-                    //$('#lblCommentsNotification').text(savingStatus);
+                    $('#loadingIndicator').hide();
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    //$('#lblCommentsNotification').text("Error encountered while saving the comments.");
-                    alert('Data provided was not valid');
+                    $('#loadingIndicator').hide();
+                    alert('Error loading data: ' + thrownError);
                 }
             });
         }
-
-        //$('#btnSearch').click(function () {
-
-
-        //});
-
     });
-
-
 </script>

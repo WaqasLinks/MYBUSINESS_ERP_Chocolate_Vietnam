@@ -45,6 +45,7 @@ namespace MYBUSINESS.Models
         public decimal PPSubItemId { get; set; }
         public int QuantityReceived { get; set; }
         public int ToReceived { get; set; }
+        public string ProductName { get; set; } // Add this property
         public DateTime? ReceivedDate { get; set; } // Original date
         public string ReceivedDateFormatted { get; set; } // For display
         public int PackagingProductionId { get; set; }

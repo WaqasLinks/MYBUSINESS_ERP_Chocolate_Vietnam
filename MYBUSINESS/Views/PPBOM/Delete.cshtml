@@ -1,4 +1,4 @@
-﻿@model MYBUSINESS.Models.Product
+﻿@model MYBUSINESS.Models.PPBOM
 
 @{
     ViewBag.Title = "Delete";
@@ -23,43 +23,35 @@
 
             <dl class="dl-horizontal">
                 <dt>
-                    @Html.DisplayNameFor(model => model.Name)
+                    @Html.DisplayNameFor(model => model.Remarks)
                 </dt>
 
                 <dd>
-                    @Html.DisplayFor(model => model.Name)
+                    @Html.DisplayFor(model => model.Remarks)
                 </dd>
 
                 <dt>
-                    @Html.DisplayNameFor(model => model.PurchasePrice)
+                    @Html.DisplayNameFor(model => model.ProductName)
                 </dt>
 
                 <dd>
-                    @Html.DisplayFor(model => model.PurchasePrice)
+                    @Html.DisplayFor(model => model.ProductName)
                 </dd>
 
                 <dt>
-                    @Html.DisplayNameFor(model => model.SalePrice)
+                    @Html.DisplayNameFor(model => model.ProductionProcessDescription)
                 </dt>
 
                 <dd>
-                    @Html.DisplayFor(model => model.SalePrice)
+                    @Html.DisplayFor(model => model.ProductionProcessDescription)
                 </dd>
 
                 <dt>
-                    @Html.DisplayNameFor(model => model.Stock)
+                    @Html.DisplayNameFor(model => model.ProductionProcessCateogry)
                 </dt>
 
                 <dd>
-                    @Html.DisplayFor(model => model.Stock)
-                </dd>
-
-                <dt>
-                    @Html.DisplayNameFor(model => model.Saleable)
-                </dt>
-
-                <dd>
-                    @Html.DisplayFor(model => model.Saleable)
+                    @Html.DisplayFor(model => model.ProductionProcessCateogry)
                 </dd>
 
             </dl>

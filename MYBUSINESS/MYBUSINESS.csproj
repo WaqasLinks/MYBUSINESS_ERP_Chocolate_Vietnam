@@ -369,6 +369,7 @@
     <Compile Include="Controllers\ColorController.cs" />
     <Compile Include="Controllers\CustomerLedgerController.cs" />
     <Compile Include="Controllers\CurrenciesController.cs" />
+    <Compile Include="Controllers\InventoryController.cs" />
     <Compile Include="Controllers\NewProductionController.cs" />
     <Compile Include="Controllers\PackagingProductionController.cs" />
     <Compile Include="Controllers\POPRReciverController.cs" />
@@ -380,6 +381,8 @@
     <Compile Include="Controllers\ScanMoneyInputController.cs" />
     <Compile Include="Controllers\ShopManageController.cs" />
     <Compile Include="Controllers\SPackagingController.cs" />
+    <Compile Include="Controllers\StoreOrderController.cs" />
+    <Compile Include="Controllers\StoreOrderReceiptController.cs" />
     <Compile Include="Controllers\StoresController.cs" />
     <Compile Include="Controllers\PurchaseQuotationController.cs" />
     <Compile Include="Controllers\SaleQuotationController.cs" />
@@ -417,6 +420,16 @@
     <Compile Include="CustomClasses\NoCache.cs" />
     <Compile Include="CustomClasses\Utilities.cs" />
     <Compile Include="CustomClasses\WebServiceResponse.cs" />
+    <Compile Include="DataSets\spGetOrderPProductDetailsDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>spGetOrderPProductDetailsDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\spGetOrderProductDetailsDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>spGetOrderProductDetailsDataSet.xsd</DependentUpon>
+    </Compile>
     <Compile Include="DataSets\spBankDepositReport_DataSet1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -451,6 +464,10 @@
     <Compile Include="Models\BOM.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\BOXProduction.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BoxProductionViewModel.cs" />
     <Compile Include="Models\BusinessDataModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -492,6 +509,7 @@
     <Compile Include="Models\Department.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\EditOrderCategoryViewModel.cs" />
     <Compile Include="Models\Employee.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -501,11 +519,17 @@
     <Compile Include="Models\ExpenseDetail.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\FinalBoxProductionViewModel.cs" />
     <Compile Include="Models\FinalProduction.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FinalProductionViewModel.cs" />
+    <Compile Include="Models\FlatBoxStockViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\Inventory.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\InventoryViewModel.cs" />
     <Compile Include="Models\InvoiceDetail.cs" />
     <Compile Include="Models\Loan.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
@@ -531,6 +555,21 @@
     </Compile>
     <Compile Include="Models\NewProductionViewModel.cs" />
     <Compile Include="Models\BOMViewModel.cs" />
+    <Compile Include="Models\Order.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\OrderItem.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\OrderItemPProduct.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\OrderItemViewModel.cs" />
+    <Compile Include="Models\OrderManagementViewModel.cs" />
+    <Compile Include="Models\OrderPProduct.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\OrderReceiptViewModel.cs" />
     <Compile Include="Models\PackagingProduction.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -593,6 +632,7 @@
     <Compile Include="Models\ProductCategory.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ProductCategoryViewModel.cs" />
     <Compile Include="Models\ProductDetail.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -606,6 +646,9 @@
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ProductSaleInfoViewModel.cs" />
+    <Compile Include="Models\ProductStockDetail.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ProductType.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -618,6 +661,7 @@
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\QuantityToProduceViewModel.cs" />
+    <Compile Include="Models\ReceiveOrderViewModel.cs" />
     <Compile Include="Models\Rent.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -666,6 +710,12 @@
     <Compile Include="Models\spExpenseReport_Result.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\spGetOrderPProductDetails_Result.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\spGetOrderProductDetails_Result.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\spLoanReport_Result.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -694,6 +744,10 @@
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\StoreBalanceViewModel.cs" />
+    <Compile Include="Models\StoreOrderReceipt.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\StoreOrderReceiptViewModel.cs" />
     <Compile Include="Models\StoreProduct.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -741,6 +795,7 @@
     <Content Include="App_Data\db\bmsZR_log.ldf">
       <DependentUpon>bmsZR.mdf</DependentUpon>
     </Content>
+    <Content Include="App_Data\email_error_log.txt.txt" />
     <Content Include="bower_components\bootstrap-slider\.bower.json" />
     <Content Include="bower_components\bootstrap-slider\bootstrap-slider.js" />
     <Content Include="bower_components\bootstrap-slider\bower.json" />
@@ -3165,8 +3220,9 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\custom\bankdeposit.js" />
     <Content Include="Content\custom\colorproduction.js" />
-    <Content Include="Content\custom\menuHide.js" />
     <Content Include="Content\custom\custom.css" />
+    <Content Include="Content\custom\menuHide.js" />
+    <Content Include="Content\custom\custom12.css" />
     <Content Include="Content\custom\clientSOSR.js" />
     <Content Include="Content\custom\creditorPOPR.js" />
     <Content Include="Content\custom\newProduction.js" />
@@ -3510,6 +3566,28 @@
     <Content Include="App_Data\db.zip" />
     <Content Include="DataSets\spBankDepositReport_DataSet1.xsc">
       <DependentUpon>spBankDepositReport_DataSet1.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\spGetOrderProductDetailsDataSet.xsc">
+      <DependentUpon>spGetOrderProductDetailsDataSet.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\spGetOrderPProductDetailsDataSet.xsc">
+      <DependentUpon>spGetOrderPProductDetailsDataSet.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\spGetOrderPProductDetailsDataSet.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>spGetOrderPProductDetailsDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="DataSets\spGetOrderPProductDetailsDataSet.xss">
+      <DependentUpon>spGetOrderPProductDetailsDataSet.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\spGetOrderProductDetailsDataSet.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>spGetOrderProductDetailsDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="DataSets\spGetOrderProductDetailsDataSet.xss">
+      <DependentUpon>spGetOrderProductDetailsDataSet.xsd</DependentUpon>
     </Content>
     <None Include="DataSets\spBankDepositReport_DataSet1.xsd">
       <SubType>Designer</SubType>
@@ -4036,6 +4114,28 @@
     <Content Include="Views\PackagingProduction\ColorIndex.cshtml" />
     <Content Include="Views\Products\StockIndex.cshtml" />
     <Content Include="Views\Products\_SelectedStockProducts.cshtml" />
+    <Content Include="Views\PackagingProduction\FlatBoxStockSummary.cshtml" />
+    <Content Include="Views\PackagingProduction\Index4.cshtml" />
+    <Content Include="Views\PackagingProduction\EditIndex4.cshtml" />
+    <Content Include="Views\PackagingProduction\ColorIndex4.cshtml" />
+    <Content Include="Views\PackagingProduction\_SelectedProductStock.cshtml" />
+    <Content Include="Views\PackagingProduction\EditProductStockDetail.cshtml" />
+    <Content Include="Views\Inventory\Index.cshtml" />
+    <Content Include="Views\Inventory\_SelectedProducts.cshtml" />
+    <Content Include="Views\Inventory\Index1.cshtml" />
+    <Content Include="Views\Inventory\Edit.cshtml" />
+    <Content Include="Views\Inventory\FilterByProductType.cshtml" />
+    <Content Include="Views\StoreOrder\CreateOrder.cshtml" />
+    <Content Include="Views\StoreOrder\CreatePackagingOrder.cshtml" />
+    <Content Include="Views\StoreOrder\_SelectedProducts.cshtml" />
+    <Content Include="Views\StoreOrder\Index.cshtml" />
+    <Content Include="Views\StoreOrder\Edit.cshtml" />
+    <Content Include="Views\StoreOrder\IndexOrderPP.cshtml" />
+    <Content Include="Views\StoreOrder\_SelectedProductsOrderPP.cshtml" />
+    <Content Include="Views\StoreOrder\EditOrderPP.cshtml" />
+    <Content Include="Views\StoreOrderReceipt\Create.cshtml" />
+    <Content Include="Views\StoreOrderReceipt\Edit.cshtml" />
+    <Content Include="Views\StoreOrder\ReceiveOrder.cshtml" />
     <None Include="Web.Debug.Config">
       <DependentUpon>Web.Config</DependentUpon>
     </None>
@@ -4092,10 +4192,14 @@
     <Content Include="Reports\Sale_Receipt.rdlc" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Reports\FinishProducts_Receipt.rdlc" />
+    <EmbeddedResource Include="Reports\PackagingProducts_Receipt.rdlc" />
     <EmbeddedResource Include="Reports\Report1.rdlc" />
     <EmbeddedResource Include="Reports\Sale_Receipt009.rdlc" />
     <Content Include="Reports\Sale_ReceiptBankDeposit.rdlc" />
     <Content Include="Reports\Sale_ReceiptMoneyInput.rdlc" />
+    <Content Include="Reports\Sale_ReceiptOrder.rdlc" />
+    <Content Include="Reports\Sale_ReceiptOrderPP.rdlc" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

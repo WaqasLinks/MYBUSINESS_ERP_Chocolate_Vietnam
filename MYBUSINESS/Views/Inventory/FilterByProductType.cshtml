@@ -1,0 +1,43 @@
+﻿@model IEnumerable<MYBUSINESS.Models.ProductInventoryItem>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Current Stock</th>
+            <th>Physical Quantity</th>
+            <th>Determination</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            using (Html.BeginForm("Save", "Inventory", FormMethod.Post, new { @class = "form-inline" }))
+            {
+                @Html.AntiForgeryToken()
+                <tr>
+                    <td>
+                        @Html.Hidden("Id", item.Id)
+                        @Html.Hidden("Name", item.Name)
+                        @Html.Hidden("CurrentStock", item.CurrentStock)
+                        @item.Name
+                    </td>
+                    <td>
+                        <span class="current-stock">@item.CurrentStock</span>
+                    </td>
+                    <td>
+                        <input type="number" name="PhysicalQuantity" class="form-control physical-qty" style="width:100px;" />
+                    </td>
+                    <td>
+                        <span class="determination-display">0</span>
+                        <input type="hidden" name="Determination" class="determination-input" value="0" />
+                    </td>
+                    <td>
+                        <button type="submit" class="btn btn-success">Save</button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

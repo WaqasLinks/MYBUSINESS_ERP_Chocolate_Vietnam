@@ -29,27 +29,27 @@
                             @Html.EditorFor(model => Model.PostProduction.Id, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.SuggestedId, @readonly = "readonly" } })
                             @Html.ValidationMessageFor(model => Model.PostProduction.Id, "", new { @class = "text-danger" })
                         </div>
-
+                        <div class="form-group">@Html.HiddenFor(model => Model.PostProduction.ProductionId, new { Value = Model.NewProduction.Id })</div>
 
                         @*<div class="form-group">
-                                @Html.Label("BOM Name", new { @class = "control-label" })
-                                @Html.DropDownList(
-                                    "SelectedRemark",
-                                    (SelectList)ViewBag.Remarks,
-                                    "Select a BOM Name",
-                                    new
-                                    {
-                                        @class = "form-control",
-                                        id = "remarksDropdown",
-                                        data_remarks = @Html.Raw(Json.Encode(ViewBag.RemarksData))
-                                    }
-                                )
-                            </div>
+            @Html.Label("BOM Name", new { @class = "control-label" })
+            @Html.DropDownList(
+                "SelectedRemark",
+                (SelectList)ViewBag.Remarks,
+                "Select a BOM Name",
+                new
+                {
+                    @class = "form-control",
+                    id = "remarksDropdown",
+                    data_remarks = @Html.Raw(Json.Encode(ViewBag.RemarksData))
+                }
+            )
+        </div>
 
-                            <div class="form-group">
-                                <label for="unitField" class="control-label">Unit</label>
-                                <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
-                            </div>*@
+        <div class="form-group">
+            <label for="unitField" class="control-label">Unit</label>
+            <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
+        </div>*@
                         <div class="form-group">
                             @Html.LabelFor(model => Model.PostProduction.ProductId, "Select Product", new { @class = "control-label" })
                             @Html.DropDownListFor(
@@ -93,12 +93,12 @@ new { @class = "form-control product-dropdown", @id = "productDropdown", @readon
                                         <tr>
                                             <!--<th style="width:5%;">#</th>-->
                                             @*<th>Index</th>
-                                                <th>pId</th>*@
+                            <th>pId</th>*@
                                             <!--<th style="width:60%;">Name</th>
 
 
-                                            <th style="width:20%;">Unit</th>
-                                            <th></th>-->
+                        <th style="width:20%;">Unit</th>
+                        <th></th>-->
                                             <th style="width: 5%;">#</th>
                                             <th style="width: 50%;">Shape</th>
                                             @*<th style="width: 12%;">Qty</th>*@
@@ -156,12 +156,12 @@ new { @class = "form-control product-dropdown", @id = "productDropdown", @readon
 
 
                                 @*<div class="table-title">
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
-                                            </div>
-                                        </div>
-                                    </div>*@
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
+                        </div>
+                    </div>
+                </div>*@
 
                             </div>
 
@@ -173,55 +173,55 @@ new { @class = "form-control product-dropdown", @id = "productDropdown", @readon
                             <p><strong>Total Weight: </strong><span id="totalWeightDisplay">@Model.TotalWeight.ToString("0.00")</span></p>
                         </div>
                         @*<div class="form-group">
-                                @Html.Label("BOM Name", new { @class = "control-label" })
-                                @Html.DropDownList(
-                                    "SelectedRemark",
-                                    (SelectList)ViewBag.Remarks,
-                                    "Select a Remark",
-                                    new
-                                    {
-                                        @class = "form-control",
-                                        id = "remarksDropdown",
-                                        data_remarks = @Html.Raw(Json.Encode(ViewBag.RemarksData))
-                                    }
-                                )
-                            </div>
+            @Html.Label("BOM Name", new { @class = "control-label" })
+            @Html.DropDownList(
+                "SelectedRemark",
+                (SelectList)ViewBag.Remarks,
+                "Select a Remark",
+                new
+                {
+                    @class = "form-control",
+                    id = "remarksDropdown",
+                    data_remarks = @Html.Raw(Json.Encode(ViewBag.RemarksData))
+                }
+            )
+        </div>
 
-                            <div class="form-group">
-                                <label for="unitField" class="control-label">Unit</label>
-                                <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
-                            </div>*@
-
-
+        <div class="form-group">
+            <label for="unitField" class="control-label">Unit</label>
+            <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
+        </div>*@
 
 
 
-                        @*<div class="form-group">
-                                @Html.LabelFor(model => Model.Product.Id, "Select Product", new { @class = "control-label" })
-                                @Html.DropDownListFor(
-                                    model => Model.NewProduction.ProductName,
-                                    (SelectList)ViewBag.ProductList,
-                                    "Select a Product",
-                                    new { @class = "form-control" }
-                                )
-                                @Html.ValidationMessageFor(model => Model.NewProduction.ProductName, "", new { @class = "text-danger" })
-                            </div>
 
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.NewProduction.Unit, htmlAttributes: new { @class = "control-label" })
-                                @Html.DropDownListFor(
-                                    model => model.NewProduction.Unit,
-                                    new SelectList(new List<string> { "Kg", "Gram", "Square", "Bar" }),
-                                    new { @class = "form-control" }
-                                )
-                                @Html.ValidationMessageFor(model => model.NewProduction.Unit, "", new { @class = "text-danger" })
-                            </div>*@
 
                         @*<div class="form-group">
-                                @Html.LabelFor(model => Model.NewProduction.QuantityToProduce, htmlAttributes: new { @class = "control-label" })
-                                @Html.EditorFor(model => Model.NewProduction.QuantityToProduce, new { htmlAttributes = new { @class = "form-control" } })
-                                @Html.ValidationMessageFor(model => Model.NewProduction.QuantityToProduce, "", new { @class = "text-danger" })
-                            </div>*@
+            @Html.LabelFor(model => Model.Product.Id, "Select Product", new { @class = "control-label" })
+            @Html.DropDownListFor(
+                model => Model.NewProduction.ProductName,
+                (SelectList)ViewBag.ProductList,
+                "Select a Product",
+                new { @class = "form-control" }
+            )
+            @Html.ValidationMessageFor(model => Model.NewProduction.ProductName, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NewProduction.Unit, htmlAttributes: new { @class = "control-label" })
+            @Html.DropDownListFor(
+                model => model.NewProduction.Unit,
+                new SelectList(new List<string> { "Kg", "Gram", "Square", "Bar" }),
+                new { @class = "form-control" }
+            )
+            @Html.ValidationMessageFor(model => model.NewProduction.Unit, "", new { @class = "text-danger" })
+        </div>*@
+
+                        @*<div class="form-group">
+            @Html.LabelFor(model => Model.NewProduction.QuantityToProduce, htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => Model.NewProduction.QuantityToProduce, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => Model.NewProduction.QuantityToProduce, "", new { @class = "text-danger" })
+        </div>*@
                     </div>
 
                     <div class="box-footer">

@@ -1,0 +1,130 @@
+﻿@model List<MYBUSINESS.Models.EditOrderCategoryViewModel>
+
+<h2 style="text-align:center; margin-top: 20px;">Edit Finish Product Order</h2>
+@{
+    bool isReadonly = ViewBag.ReadonlyMode ?? false;
+    int currentStoreId = ViewBag.CurrentStoreId;
+}
+@using (Html.BeginForm("Edit", "StoreOrder", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title" style="text-align:center;">Finished Product List</h3>
+                </div>
+                <div class="box-body">
+                    @if (!isReadonly)
+                    {
+                        <div class="form-group">
+                            <label>Store:</label>
+                            @Html.DropDownList("storeId", ViewBag.Stores as SelectList, new { @class = "form-control" })
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <label>Store:</label>
+                            <input type="text" class="form-control" value="@((ViewBag.Stores as SelectList)?.FirstOrDefault(s => s.Value == currentStoreId.ToString())?.Text)" readonly />
+                            @Html.Hidden("storeId", currentStoreId)
+                        </div>
+                    }
+
+                    @for (int c = 0; c < Model.Count; c++)
+                    {
+                        <h3>@Model[c].CategoryName</h3>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th style="width:10%;">Product</th>
+                                    <th style="width:10%;">Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model[c].Items.Count; i++)
+                                {
+                                    <tr>
+                                        <td style="width: 80px;">
+                                            @Model[c].Items[i].ProductName
+                                            @Html.Hidden($"items[{i}].Id", Model[c].Items[i].Id)
+                                            @Html.Hidden($"items[{i}].ProductId", Model[c].Items[i].ProductId)
+                                            @Html.Hidden($"items[{i}].OrderId", Model[c].Items[i].OrderId)
+                                        </td>
+                                        <td>
+                                            <input type="number"
+                                                   name="items[@i].Quantity"
+                                                   value="@Model[c].Items[i].Quantity"
+                                                   class="form-control @(isReadonly ? "readonly" : "")"
+                                                   min="1"
+                                                   style="width: 80px;"
+                                                   @(isReadonly ? "readonly" : "") />
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div> <!-- Closing box-body -->
+
+                <div class="box-footer">
+                    @if (!isReadonly)
+                    {
+                        <button type="submit" class="btn btn-success">Save Changes</button>
+                    }
+                    <button type="button" class="btn btn-primary" id="btnValidate">Validate</button>
+                </div>
+            </div> <!-- Closing box -->
+        </section> <!-- Closing content -->
+    </div> <!-- Closing content-wrapper -->
+}
+<script>
+    $("#btnValidate").click(function () {
+        alert('Validating...');
+
+        let productUpdates = [];
+
+        // Loop through each table row inside all .table-bordered tables
+        $(".table-bordered tbody tr").each(function () {
+            // Get all required values from the row
+            let id = $(this).find('input[name*=".Id"]').val();
+            let productId = $(this).find('input[name*=".ProductId"]').val();
+            let orderId = $(this).find('input[name*=".OrderId"]').val();
+            let quantity = $(this).find('input[name*=".Quantity"]').val();
+
+            // Only add the item if all values are present
+            if (id && productId && orderId && quantity) {
+                productUpdates.push({
+                    Id: parseInt(id),
+                    ProductId: parseInt(productId),
+                    OrderId: parseInt(orderId),
+                    Quantity: parseInt(quantity)
+                });
+            }
+        });
+
+        console.log("Sending Data:", JSON.stringify({ LstProductionVM: productUpdates }));
+
+        // Send AJAX request
+        $.ajax({
+            url: '@Url.Action("Validation", "StoreOrder")',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ LstProductionVM: productUpdates }),
+            headers: {
+                'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+            },
+            success: function (response) {
+                alert(response.message);
+                if (response.success) {
+                    window.location.href = response.redirectUrl;
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+                alert("An error occurred while validating. Please try again.");
+            }
+        });
+    });
+</script>
+

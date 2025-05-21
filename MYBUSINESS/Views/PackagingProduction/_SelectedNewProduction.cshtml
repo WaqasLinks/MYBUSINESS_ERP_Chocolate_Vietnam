@@ -50,20 +50,28 @@
                                             @if (item.Validate ?? false)
                                             {
                                                 @Html.ActionLink("View", "Edit", new { id = item.Id, readonlyMode = true },
-                             new { @class = "btn btn-primary text-white" }) <!-- Blue color for View -->
+new { @class = "btn btn-primary text-white" }) <!-- Blue color for View -->
 
                                                 <!-- Show Post Production button only when Validate is true -->
                                                 @Html.ActionLink("Post Production", "Create", "PostProduction", new { id = item.Id },
-                             new { @class = "btn btn-warning text-dark fw-bold" }) <!-- Yellow color for Post Production -->
+new { @class = "btn btn-warning text-dark fw-bold" }) <!-- Yellow color for Post Production -->
                                             }
                                             else
                                             {
                                                 @Html.ActionLink("Update", "Edit", new { id = item.Id },
-                             new { @class = "btn btn-info text-white" }) <!-- Light Blue for Update -->
-                                        <td>
-                                            @Html.ActionLink("Next", "Index3", new { packagingProductionId = item.Id }, new { @class = "btn btn-success fw-bold" })
+new { @class = "btn btn-info text-white" }) <!-- Light Blue for Update -->
+                                            <td>
+                                                @Html.ActionLink("Next", "Index3", new { packagingProductionId = item.Id }, new { @class = "btn btn-success fw-bold" })
 
-                                        </td>
+                                            </td>
+                                            <td>
+                                                @Html.ActionLink("Phse3", "FlatBoxStockSummary", new { packagingProductionId = item.Id }, new { @class = "btn btn-success fw-bold" })
+
+                                            </td>
+                                            <td>
+                                                @Html.ActionLink("Phse4", "Index4", new { packagingProductionId = item.Id }, new { @class = "btn btn-success fw-bold" })
+
+                                            </td>
 
                                         }
 

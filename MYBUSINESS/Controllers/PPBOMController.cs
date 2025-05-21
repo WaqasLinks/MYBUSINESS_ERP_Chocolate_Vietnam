@@ -71,7 +71,7 @@ namespace MYBUSINESS.Controllers
 
             // Get products without BOM
             var productsWithoutBOM = db.Products
-                .Where(p => (p.PType == 8 || p.PType == 9) && !db.PPBOMs.Any(b => b.ProductId == p.Id)) // Filter out products with existing BOMs
+                .Where(p => (p.PType == 8 || p.PType == 9) /*&& !db.PPBOMs.Any(b => b.ProductId == p.Id)*/) // Filter out products with existing BOMs
                 .Select(p => new { Value = p.Id.ToString(), Text = p.Name }) // Prepare for SelectList
                 .ToList();
 
@@ -180,7 +180,7 @@ namespace MYBUSINESS.Controllers
 
             // Fetch products without BOM (filtered by PType 4)
             var productsWithoutBOM = db.Products
-                .Where(p => p.PType == 4 && (!db.PPBOMs.Any(b => b.ProductId == p.Id) || p.Id == bom.ProductId))
+                .Where(p => p.PType == 8 || p.PType == 9)
                 .Select(p => new { Value = p.Id.ToString(), Text = p.Name })
                 .ToList();
 
@@ -268,36 +268,69 @@ namespace MYBUSINESS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product product = db.Products.Find(id);
-            if (product == null)
+            PPBOM ppbom = db.PPBOMs.Find(id);
+            if (ppbom == null)
             {
                 return HttpNotFound();
             }
-            return View(product);
+            return View(ppbom);
         }
 
-        // POST: Products/Delete/5
+        //// POST: Products/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult DeleteConfirmed(decimal id)
+        //{
+        //    PPBOM ppbom = db.PPBOMs.Find(id);
+        //    bool isPresent = false;
+        //    if (db.PODs.FirstOrDefault(x => x.ProductId == id) != null || db.SODs.FirstOrDefault(x => x.ProductId == id) != null)
+        //    {
+        //        isPresent = true;
+        //    }
+
+        //    if (isPresent == false)
+        //    {
+        //        db.PPBOMs.Remove(ppbom);
+        //    }
+        //    else
+        //    {
+        //        ppbom.Status = "D";
+        //        db.Entry(ppbom).Property(x => x.Status).IsModified = true;
+
+        //    }
+        //    db.SaveChanges();
+        //    return RedirectToAction("Index");
+        //}
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(decimal id)
         {
-            Product product = db.Products.Find(id);
-            bool isPresent = false;
-            if (db.PODs.FirstOrDefault(x => x.ProductId == id) != null || db.SODs.FirstOrDefault(x => x.ProductId == id) != null)
+            PPBOM ppbom = db.PPBOMs.Find(id);
+
+            if (ppbom == null)
             {
-                isPresent = true;
+                return HttpNotFound();
             }
 
-            if (isPresent == false)
+            // First check if used in PODs or SODs
+            bool isPresent = db.PODs.Any(x => x.ProductId == id) ||
+                            db.SODs.Any(x => x.ProductId == id);
+
+            if (!isPresent)
             {
-                db.Products.Remove(product);
+                // Delete all related PPSubItems first
+                var subItems = db.PPSubItems.Where(x => x.PPBOMId == id).ToList();
+                db.PPSubItems.RemoveRange(subItems);
+
+                // Then delete the PPBOM
+                db.PPBOMs.Remove(ppbom);
             }
             else
             {
-                product.Status = "D";
-                db.Entry(product).Property(x => x.Status).IsModified = true;
-
+                ppbom.Status = "D";
+                db.Entry(ppbom).Property(x => x.Status).IsModified = true;
             }
+
             db.SaveChanges();
             return RedirectToAction("Index");
         }

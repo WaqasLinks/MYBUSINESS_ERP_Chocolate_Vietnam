@@ -1,0 +1,49 @@
+﻿@model List<MYBUSINESS.Models.OrderItemPProduct>
+
+@{
+    ViewBag.Title = "Edit Order Items";
+}
+
+<h2 style="text-align:center; margin-top: 20px;">Edit Packaging Products Order</h2>
+
+@using (Html.BeginForm("EditOrderPP", "StoreOrder", FormMethod.Post))
+{
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Packaging Products List</h3>
+                </div>
+                <div class="box-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Count; i++)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(m => m[i].Product.Name) <!-- Display product name -->
+                                        @Html.HiddenFor(m => m[i].Id)
+                                        @Html.HiddenFor(m => m[i].OrderId)
+                                        @Html.HiddenFor(m => m[i].ProductId)
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(m => m[i].Quantity, new { @class = "form-control", type = "number", min = "1" })
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="box-footer">
+                    <button type="submit" class="btn btn-success">Save Changes</button>
+                </div>
+            </div>
+        </section>
+    </div>
+}

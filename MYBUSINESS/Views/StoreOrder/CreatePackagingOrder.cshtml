@@ -1,0 +1,44 @@
+﻿@model List<MYBUSINESS.Models.Product>
+
+<h2 style="text-align:center; margin-top: 20px;">Packaging Producs Order</h2>
+
+@using (Html.BeginForm("SubmitOrderPP", "StoreOrder", FormMethod.Post))
+{
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Packaging Products List</h3>
+                </div>
+                <div class="box-body">
+                    <table id="productTable" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th style="width:10%;">Name</th>
+                                @*<th>Stock</th>*@
+                                <th style="width:10%;">Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Count; i++)
+                            {
+                                <tr>
+                                    <td style="width: 80px;">@Model[i].Name</td>
+                                    @*<td>@Model[i].Stock</td>*@
+                                    <td>
+                                        <input type="hidden" name="orderitem[@i].ProductId" value="@Model[i].Id" />
+                                        <input type="number" name="orderitem[@i].Quantity" class="form-control" min="1" style="width: 80px;"/>
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="box-footer">
+                    <button type="submit" class="btn btn-primary">Submit Order</button>
+                </div>
+            </div>
+        </section>
+    </div>
+}

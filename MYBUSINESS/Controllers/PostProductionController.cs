@@ -249,13 +249,19 @@ namespace MYBUSINESS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(
-     [Bind(Prefix = "PostProduction", Include = "Id,ProductionDate,ProductName,Unit,Quantity,ProductId,Note")] PostProduction postProduction,
+     [Bind(Prefix = "PostProduction", Include = "Id,ProductionDate,ProductName,Unit,Quantity,ProductId,ProductionId,Note")] PostProduction postProduction,
      //[Bind(Prefix = "SubItem", Include = "Id,ParentProductId,ProductId,Quantity,Unit,AvailableInventory,QuantitytoPrepare,QuantityRequested")] List<SubItem> subItems,
      [Bind(Prefix = "SubItemProduction", Include = "Id,ParentProductId,ProductId,Quantity,Unit,AvailableInventory,QuantitytoPrepare,QuantityRequested")] List<SubItemProduction> subItemProductions,
      [Bind(Prefix = "QuantityToProduce", Include = "Id,ProductionQty,BOMId,ProductDetailId,Shape,CalculatedWeight,ProductId")] List<QuantityToProduce> quantityToProduces)
         {
             if (ModelState.IsValid)
             {
+                var product = db.Products.Find(postProduction.ProductId);
+                if (product != null)
+                {
+                    postProduction.ProductName = product.Name;
+                }
+
 
                 postProduction.ProductionId = postProduction.ProductionId;
                 // Save the BOM and its SubItems

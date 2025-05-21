@@ -15,48 +15,48 @@ namespace MYBUSINESS.Controllers
         private BusinessContext db = new BusinessContext();
 
         // GET: Employees
-        //public ActionResult Index()
-        //{
-        //    return View(db.Employees.ToList());
-        //}
+        public ActionResult Index()
+        {
+            return View(db.Employees.ToList());
+        }
 
         //// GET: Employees/Details/5
-        //public ActionResult Details(decimal id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Employee employee = db.Employees.Find(id);
-        //    if (employee == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(employee);
-        //}
+        public ActionResult Details(decimal id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Employee employee = db.Employees.Find(id);
+            if (employee == null)
+            {
+                return HttpNotFound();
+            }
+            return View(employee);
+        }
 
         // GET: Employees/Create
-        //public ActionResult Create()
-        //{
-        //    return View();
-        //}
+        public ActionResult Create()
+        {
+            return View();
+        }
 
         //// POST: Employees/Create
         //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         //// more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Create([Bind(Include = "Id,FirstName,LastName,Gender,Login,Password,Email,EmployeeTypeId,RightId,RankId,DepartmentId,Designation,Probation,RegistrationDate,Casual,Earned,IsActive,tblCreatedDate,tblModifiedDate")] Employee employee)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.Employees.Add(employee);
-        //        db.SaveChanges();
-        //        return RedirectToAction("Index");
-        //    }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "Id,FirstName,LastName,Gender,Login,Password,Email,EmployeeTypeId,RightId,RankId,DepartmentId,Designation,Probation,RegistrationDate,Casual,Earned,IsActive,tblCreatedDate,tblModifiedDate")] Employee employee)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Employees.Add(employee);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
 
-        //    return View(employee);
-        //}
+            return View(employee);
+        }
 
         // GET: Employees/Edit/5
         public ActionResult Edit(decimal id)

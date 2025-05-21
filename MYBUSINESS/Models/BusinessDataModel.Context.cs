@@ -69,7 +69,6 @@ namespace MYBUSINESS.Models
         public virtual DbSet<POD> PODs { get; set; }
         public virtual DbSet<PODReciver> PODRecivers { get; set; }
         public virtual DbSet<PackagingSubItem> PackagingSubItems { get; set; }
-        public virtual DbSet<Store> Stores { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<PaperColor> PaperColors { get; set; }
         public virtual DbSet<SO> SOes { get; set; }
@@ -83,12 +82,21 @@ namespace MYBUSINESS.Models
         public virtual DbSet<PrintedPackaging> PrintedPackagings { get; set; }
         public virtual DbSet<PPReceiver> PPReceivers { get; set; }
         public virtual DbSet<PPReciverDetail> PPReciverDetails { get; set; }
-        public virtual DbSet<PPBOM> PPBOMs { get; set; }
         public virtual DbSet<Color> Colors { get; set; }
         public virtual DbSet<PackagingProduction> PackagingProductions { get; set; }
         public virtual DbSet<PPSubItem> PPSubItems { get; set; }
         public virtual DbSet<PPColorReceipt> PPColorReceipts { get; set; }
         public virtual DbSet<CPReceipt> CPReceipts { get; set; }
+        public virtual DbSet<PPBOM> PPBOMs { get; set; }
+        public virtual DbSet<ProductStockDetail> ProductStockDetails { get; set; }
+        public virtual DbSet<BOXProduction> BOXProductions { get; set; }
+        public virtual DbSet<Inventory> Inventories { get; set; }
+        public virtual DbSet<OrderItem> OrderItems { get; set; }
+        public virtual DbSet<OrderItemPProduct> OrderItemPProducts { get; set; }
+        public virtual DbSet<OrderPProduct> OrderPProducts { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
+        public virtual DbSet<StoreOrderReceipt> StoreOrderReceipts { get; set; }
+        public virtual DbSet<Store> Stores { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {
@@ -263,6 +271,24 @@ namespace MYBUSINESS.Models
                 new ObjectParameter("SaleOrderID", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spSOReport_Result>("spSOReport", saleOrderIDParameter);
+        }
+    
+        public virtual ObjectResult<spGetOrderPProductDetails_Result> spGetOrderPProductDetails(Nullable<int> orderId)
+        {
+            var orderIdParameter = orderId.HasValue ?
+                new ObjectParameter("OrderId", orderId) :
+                new ObjectParameter("OrderId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetOrderPProductDetails_Result>("spGetOrderPProductDetails", orderIdParameter);
+        }
+    
+        public virtual ObjectResult<spGetOrderProductDetails_Result> spGetOrderProductDetails(Nullable<int> orderId)
+        {
+            var orderIdParameter = orderId.HasValue ?
+                new ObjectParameter("OrderId", orderId) :
+                new ObjectParameter("OrderId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetOrderProductDetails_Result>("spGetOrderProductDetails", orderIdParameter);
         }
     }
 }

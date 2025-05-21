@@ -40,45 +40,73 @@ namespace MYBUSINESS.Controllers
 
         }
 
+        //[HttpPost]
+        //public ActionResult Login(Employee emp)
+        ////public ActionResult Login(Employee emp, Right right)
+        //{
+        //    // Test what your encryption produces for "user123"
+        //    string testEncryption = Encryption.Encrypt("user123", "d3A#");
+        //    Console.WriteLine(testEncryption); // Should output "2+TlTYztXz8="
+        //    string unl = Encryption.Decrypt("WuQ65MCb4JWsdtu2Sypl6g==", "d3A#");//abc123
+
+        //    if (emp.Password == null) { emp.Password = string.Empty; }
+        //    emp.Password = Encryption.Encrypt(emp.Password, "d3A#");
+
+        //    //it sounds singelordefault will give error if value is more than one.
+        //    MYBUSINESS.Models.Employee user = db.Employees.SingleOrDefault(usr => ((usr.Login == emp.Login) && (usr.Password == emp.Password)));
+        //    if (user != null)
+        //    {
+        //        //MYBUSINESS.Models.EmployeeLeaveViewModel elViewModel = new  MYBUSINESS.Models.EmployeeLeaveViewModel();
+        //        //user = db.Employees.FirstOrDefault();
+        //        Session.Add("CurrentUser", user);
+        //        //return RedirectToAction("Create", "SOSR",new {IsReturn="false" });//change it from 'if condtion' to here
+        //        if (emp.Login == "admin")
+        //        {
+        //            //return RedirectToAction("Index", "Dashboard");//change it from 'if condtion' to here
+        //            return RedirectToAction("StoreDashboard", "Stores");//change it from 'if condtion' to here
+        //        }
+        //        else
+        //        {
+        //            return RedirectToAction("Create", "SOSR");//change it from 'if condtion' to here
+        //        }
+
+        //        //return View("Index", "DashBoard",user);
+        //    }
+        //    else
+        //    {
+        //        TempData["message"] = "Password is not valid";
+        //        return RedirectToAction("Login", "UserManagement");
+        //    }
+
+        //    //return RedirectToAction("RecoverPassword", "UserManagement");
+
+        //    //return RenderAction("Login", "UserManagement");
+        //}
         [HttpPost]
         public ActionResult Login(Employee emp)
-        //public ActionResult Login(Employee emp, Right right)
         {
-
-            string unl = Encryption.Decrypt("WuQ65MCb4JWsdtu2Sypl6g==", "d3A#");//abc123
-
             if (emp.Password == null) { emp.Password = string.Empty; }
-            emp.Password = Encryption.Encrypt(emp.Password, "d3A#");
 
-            //it sounds singelordefault will give error if value is more than one.
-            MYBUSINESS.Models.Employee user = db.Employees.SingleOrDefault(usr => ((usr.Login == emp.Login) && (usr.Password == emp.Password)));
+            // First get the user by login (without password check)
+            var user = db.Employees.FirstOrDefault(usr => usr.Login == emp.Login);
+
             if (user != null)
             {
-                //MYBUSINESS.Models.EmployeeLeaveViewModel elViewModel = new  MYBUSINESS.Models.EmployeeLeaveViewModel();
-                //user = db.Employees.FirstOrDefault();
-                Session.Add("CurrentUser", user);
-                //return RedirectToAction("Create", "SOSR",new {IsReturn="false" });//change it from 'if condtion' to here
-                if (emp.Login == "admin")
-                {
-                    //return RedirectToAction("Index", "Dashboard");//change it from 'if condtion' to here
-                    return RedirectToAction("StoreDashboard", "Stores");//change it from 'if condtion' to here
-                }
-                else
-                {
-                    return RedirectToAction("Create", "SOSR");//change it from 'if condtion' to here
-                }
+                // Now compare passwords in memory (not in LINQ-to-Entities)
+                bool passwordMatches = user.Password == emp.Password ||
+                                     user.Password == Encryption.Encrypt(emp.Password, "d3A#");
 
-                //return View("Index", "DashBoard",user);
-            }
-            else
-            {
-                TempData["message"] = "Password is not valid";
-                return RedirectToAction("Login", "UserManagement");
+                if (passwordMatches)
+                {
+                    Session.Add("CurrentUser", user);
+                    return (emp.Login == "admin")
+                        ? RedirectToAction("StoreDashboard", "Stores")
+                        : RedirectToAction("Create", "SOSR");
+                }
             }
 
-            //return RedirectToAction("RecoverPassword", "UserManagement");
-
-            //return RenderAction("Login", "UserManagement");
+            TempData["message"] = "Invalid username or password";
+            return RedirectToAction("Login", "UserManagement");
         }
 
         //// GET: /UserManagement/

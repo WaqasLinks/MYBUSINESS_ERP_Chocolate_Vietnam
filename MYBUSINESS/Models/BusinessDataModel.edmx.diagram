@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="a584e9a2f9434e69aac2e1c9ca294c92" Name="Diagram1" ZoomLevel="74">
+      <Diagram DiagramId="a584e9a2f9434e69aac2e1c9ca294c92" Name="Diagram1" ZoomLevel="47">
         <EntityTypeShape EntityType="Models.BankAccount" Width="1.5" PointX="8.25" PointY="15.25" />
         <EntityTypeShape EntityType="Models.BOM" Width="1.5" PointX="7.5" PointY="64.375" />
         <EntityTypeShape EntityType="Models.BusinessInfo" Width="1.5" PointX="0.75" PointY="37.25" />
@@ -80,8 +80,6 @@
         <EntityTypeShape EntityType="Models.PODReciver" Width="1.5" PointX="12.75" PointY="35.75" />
         <AssociationConnector Association="Models.FK_PODReciver_POReciver" />
         <EntityTypeShape EntityType="Models.PackagingSubItem" Width="1.5" PointX="9.375" PointY="0.75" />
-        <EntityTypeShape EntityType="Models.Store" Width="1.5" PointX="11.25" PointY="11.875" />
-        <AssociationConnector Association="Models.FK_StoreProduct_Store" />
         <EntityTypeShape EntityType="Models.Product" Width="1.5" PointX="5.25" PointY="47.875" />
         <AssociationConnector Association="Models.FK_BOM_Product1" />
         <AssociationConnector Association="Models.FK_ExpenseDetail_Product1" />
@@ -109,7 +107,6 @@
         <AssociationConnector Association="Models.FK_SO_Customer" />
         <AssociationConnector Association="Models.FK_SO_Employee" />
         <AssociationConnector Association="Models.FK_Payment_SO" />
-        <AssociationConnector Association="Models.FK_SO_Store" />
         <AssociationConnector Association="Models.FK_SOD_SO" />
         <EntityTypeShape EntityType="Models.SPackagingDetail" Width="1.5" PointX="12.5" PointY="53" />
         <AssociationConnector Association="Models.FK_SPackagingDetail_Product" />
@@ -133,14 +130,11 @@
         <AssociationConnector Association="Models.FK_PPReceiver_Supplier" />
         <AssociationConnector Association="Models.FK_PPReciverDetail_PPReceiver" />
         <AssociationConnector Association="Models.FK_PPReciverDetail_Product" />
-        <EntityTypeShape EntityType="Models.PPBOM" Width="1.5" PointX="7.5" PointY="70.5" />
-        <AssociationConnector Association="Models.FK_PPBOM_Product" />
         <EntityTypeShape EntityType="Models.Color" Width="1.5" PointX="9.375" PointY="7.75" />
         <EntityTypeShape EntityType="Models.PackagingProduction" Width="1.5" PointX="7.5" PointY="38" />
         <AssociationConnector Association="Models.FK_Color_PackagingProduction" />
         <AssociationConnector Association="Models.FK_PackagingProduction_Product" />
         <EntityTypeShape EntityType="Models.PPSubItem" Width="1.5" PointX="9.75" PointY="62.625" />
-        <AssociationConnector Association="Models.FK_PPSubItem_PPBOM" />
         <AssociationConnector Association="Models.FK_PPSubItem_Product" />
         <EntityTypeShape EntityType="Models.PPColorReceipt" Width="1.5" PointX="12" PointY="62.75" />
         <AssociationConnector Association="Models.FK_PPColorReceipts_PaperColor" />
@@ -148,6 +142,35 @@
         <AssociationConnector Association="Models.FK_CPReceipts_PackagingProduction" />
         <AssociationConnector Association="Models.FK_PPColorReceipt_PaperColor" />
         <AssociationConnector Association="Models.FK_PPColorReceipt_PPSubItem" />
+        <EntityTypeShape EntityType="Models.PPBOM" Width="1.5" PointX="7.5" PointY="70.5" />
+        <EntityTypeShape EntityType="Models.ProductStockDetail" Width="1.5" PointX="19" PointY="41.25" />
+        <AssociationConnector Association="Models.FK_ProductStockDetail_PackagingProduction" />
+        <AssociationConnector Association="Models.FK_ProductStockDetail_PaperColor" />
+        <AssociationConnector Association="Models.FK_PPBOM_Product" />
+        <AssociationConnector Association="Models.FK_PPSubItem_PPBOM" />
+        <AssociationConnector Association="Models.FK_ProductStockDetail_Product" />
+        <EntityTypeShape EntityType="Models.BOXProduction" Width="1.5" PointX="21" PointY="50.75" />
+        <AssociationConnector Association="Models.FK_BOXProduction_PackagingProduction" />
+        <AssociationConnector Association="Models.FK_BOXProduction_PaperColor" />
+        <AssociationConnector Association="Models.FK_BOXProduction_PPSubItem" />
+        <EntityTypeShape EntityType="Models.Inventory" Width="1.5" PointX="7.5" PointY="75.75" />
+        <AssociationConnector Association="Models.FK_Inventory_Product" />
+        <EntityTypeShape EntityType="Models.OrderItem" Width="1.5" PointX="15.75" PointY="35.5" />
+        <AssociationConnector Association="Models.FK_OrderItems_Product" />
+        <EntityTypeShape EntityType="Models.OrderItemPProduct" Width="1.5" PointX="18.75" PointY="35.125" />
+        <EntityTypeShape EntityType="Models.OrderPProduct" Width="1.5" PointX="13.5" PointY="16.125" />
+        <AssociationConnector Association="Models.FK_OrderItemPProducts_OrderPProducts" />
+        <AssociationConnector Association="Models.FK_OrderItemPProducts_Product" />
+        <EntityTypeShape EntityType="Models.Order" Width="1.5" PointX="13.5" PointY="13.125" />
+        <AssociationConnector Association="Models.FK_OrderItems_Orders" />
+        <EntityTypeShape EntityType="Models.StoreOrderReceipt" Width="1.5" PointX="15.75" PointY="13.125" />
+        <AssociationConnector Association="Models.FK_StoreOrderReceipt_Orders" />
+        <EntityTypeShape EntityType="Models.Store" Width="1.5" PointX="5.25" PointY="34.875" />
+        <AssociationConnector Association="Models.FK_OrderPProducts_Store" />
+        <AssociationConnector Association="Models.FK_Orders_Store" />
+        <AssociationConnector Association="Models.FK_SO_Store" />
+        <AssociationConnector Association="Models.FK_StoreOrderReceipt_Store" />
+        <AssociationConnector Association="Models.FK_StoreProduct_Store" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

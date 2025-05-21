@@ -1,0 +1,386 @@
+﻿@model IEnumerable<MYBUSINESS.Models.Order>
+@{
+    double TotalSalePrice = 0;
+    double TotalPurchasePrice = 0;
+    int TotalStock = 0;
+    int carton = 0;
+    int piece = 0;
+    MYBUSINESS.Models.Employee currentUser = (MYBUSINESS.Models.Employee)HttpContext.Current.Session["CurrentUser"];
+}
+
+<div id="NewData">
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box">
+                    <div class="box-body">
+                        <table class="table table-hover cell-border" id="ProductIndex">
+                            <thead>
+                                <tr>
+                                    <th>@Html.DisplayNameFor(model => model.Id)</th>
+                                    <th>Store Name</th>
+                                    <th>@Html.DisplayNameFor(model => model.OrderDate)</th>
+                                    <th>Status</th>
+                                    <th class="no-print">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    // Check if order has been received (has UniqueCode)
+                                    bool isReceived = ViewBag.ReceivedOrderIds.Contains(item.Id);
+
+                                    <tr>
+                                        <td class="ProductIdForSearch">
+                                            @Html.DisplayFor(modelItem => item.Id)
+                                        </td>
+                                        <td>
+                                            @if (item.Store == null)
+                                            {
+                                                <span style="color: red">Store is NULL</span>
+                                            }
+                                            else if (item.Store.Name == null)
+                                            {
+                                                <span style="color: orange">Store.Name is NULL</span>
+                                            }
+                                            else
+                                            {
+                                                @item.Store.Name
+                                            }
+                                        </td>
+                                        <td class="ProductNameForSearch">
+                                            @Html.DisplayFor(modelItem => item.OrderDate)
+                                        </td>
+                                        <td>
+                                            @if (isReceived)
+                                            {
+                                                <span class="label label-success">Completed</span>
+                                            }
+                                            else if (item.Validate == true)
+                                            {
+                                                <span class="label label-primary">Validated</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="label label-default">New</span>
+                                            }
+                                        </td>
+                                        <td class="no-print">
+                                            @if (item.Validate == true)
+                                            {
+                                                @Html.ActionLink("View", "Edit", new { orderId = item.Id }, new { @class = "btn btn-primary" })
+                                                if (!isReceived)
+                                                {
+                                                    @Html.ActionLink("Receive", "ReceiveOrder", new { orderId = item.Id }, new { @class = "btn btn-warning" })
+                                                }
+                                            }
+                                            else
+                                            {
+                                                @Html.ActionLink("Update", "Edit", new { orderId = item.Id }, new { @class = "btn btn-info" })
+                                            }
+
+                                            @Html.ActionLink("Print", "PrintOrderPdf", new { orderId = item.Id }, new { @class = "btn btn-success" })
+                                            @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+                                            <button class="btn btn-violet api-integration-btn" data-orderid="@item.Id">Generate Invoice</button>
+                                            <div class="dropdown">
+                                                <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    more ...
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <a class="dropdown-item" href="@Url.Action("SearchProduct", "SOSR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product in Sales">Search in Sales History</a>
+                                                    <a class="dropdown-item" href="@Url.Action("SearchProduct", "POPR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product in Purchasess">Search in Purchases History</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr style="font-weight:bold">
+                                    <td>@Model.Count()</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<link href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/buttons/2.1.0/css/buttons.dataTables.min.css" rel="stylesheet" />
+
+@*<script src="https://code.jquery.com/jquery-3.5.1.js"></script>*@
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.print.min.js"></script>
+
+
+<link href="https://cdn.datatables.net/rowreorder/1.2.8/css/rowReorder.dataTables.min.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css" rel="stylesheet" />
+
+<script src="https://cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.api-integration-btn').click(function() {
+    var orderId = $(this).data('orderid');
+    var btn = $(this);
+
+    btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Processing...');
+
+    // First call the login API
+    $.ajax({
+        url: '@Url.Action("LoginToWebServiceAsync", "StoreOrder")',
+        type: 'POST',
+        success: function(loginResponse) {
+            if (loginResponse.Success) {
+                // If login successful, call the invoice API
+                $.ajax({
+                    url: '@Url.Action("GenerateInvoice", "StoreOrder")',
+                    type: 'POST',
+                    data: { orderId: orderId, authToken: loginResponse.Token },
+                    success: function(invoiceResponse) {
+                        if (invoiceResponse.Success) {
+                            alert('Invoice generated successfully!');
+
+                            // Open the PDF in a new tab
+                            if (invoiceResponse.PdfUrl) {
+                                window.open(invoiceResponse.PdfUrl, '_blank');
+                            }
+
+                            console.log(invoiceResponse.Data);
+                        } else {
+                            alert('Error generating invoice: ' + invoiceResponse.Message);
+                        }
+                    },
+                    error: function() {
+                        alert('Error calling invoice API');
+                    },
+                    complete: function() {
+                        btn.prop('disabled', false).html('Generate Invoice');
+                    }
+                });
+            } else {
+                alert('Login failed: ' + loginResponse.Message);
+                btn.prop('disabled', false).html('Generate Invoice');
+            }
+        },
+        error: function() {
+            alert('Error calling login API');
+            btn.prop('disabled', false).html('Generate Invoice');
+        }
+    });
+});
+          @*$('.api-integration-btn').click(function() {
+                var orderId = $(this).data('orderid');
+                var btn = $(this);
+
+                btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Processing...');
+
+                // First call the login API
+                $.ajax({
+                    url: '@Url.Action("LoginToWebServiceAsync", "StoreOrder")',
+                    type: 'POST',
+                    success: function(loginResponse) {
+                        if (loginResponse.Success) {
+                            // If login successful, call the invoice API
+                            $.ajax({
+                                url: '@Url.Action("GenerateInvoice", "StoreOrder")',
+                                type: 'POST',
+                                data: { orderId: orderId, authToken: loginResponse.Token },
+                                success: function(invoiceResponse) {
+                                    if (invoiceResponse.Success) {
+                                        alert('Invoice generated successfully!');
+                                        // You can display the response data if needed
+                                        console.log(invoiceResponse.Data);
+                                    } else {
+                                        alert('Error generating invoice: ' + invoiceResponse.Message);
+                                    }
+                                },
+                                error: function() {
+                                    alert('Error calling invoice API');
+                                },
+                                complete: function() {
+                                    btn.prop('disabled', false).html('Generate Invoice');
+                                }
+                            });
+                        } else {
+                            alert('Login failed: ' + loginResponse.Message);
+                            btn.prop('disabled', false).html('Generate Invoice');
+                        }
+                    },
+                    error: function() {
+                        alert('Error calling login API');
+                        btn.prop('disabled', false).html('Generate Invoice');
+                    }
+                });
+            });*@
+
+        $('#printMe').click(function () {
+            if ($.fn.DataTable.isDataTable('#ProductIndex')) {
+                $('#ProductIndex').DataTable().destroy();
+            }
+            //$("#printMe").hide();
+            window.print();
+        });
+
+        //$('#SOSRIndex').DataTable({
+        //    fixedHeader: {
+        //        footer: true
+        //    }
+        //});
+
+        //$('#ProductIndex').DataTable({
+        //    //fixedHeader: {
+        //    //    header: true,
+        //    //    footer: true
+        //    //},
+        //    "scrollY": "400px",
+        //    "scrollCollapse": true,
+        //    "paging": false,
+        //    "bInfo": false,
+        //    "order": [[0, "desc"]],
+        //    "searching": true
+
+        //});
+
+        $('#ProductIndex').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "pageLength": 100,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            rowReorder: {
+                selector: 'td:nth-child(2)'
+            },
+            "responsive": true,
+            "autoWidth": false,
+            "order": [[0, "desc"]],
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'copyHtml5',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+                    }
+                },
+                {
+                    extend: 'csvHtml5',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+                    }
+                },
+                {
+                    extend: 'excelHtml5',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+                    }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    orientation: 'landscape',
+                    pageSize: 'LEGAL',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+                    }
+                },
+                {
+                    extend: 'print',
+                    exportOptions: {
+                        columns: [0, 3, 5, 6]
+                    }
+                },
+                'colvis'
+            ],
+
+            "footerCallback": function (row, data, start, end, display) {
+                var api = this.api(), data;
+
+                // Remove the formatting to get integer data for summation
+                var intVal = function (i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                            i : 0;
+                };
+
+
+                // Order Qty
+                pageTotal = api
+                    .column(4, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+                $(api.column(4).footer()).html(pageTotal);
+
+
+
+                // Order Amount
+                pageTotal = api
+                    .column(5, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+                $(api.column(5).footer()).html(pageTotal);
+
+                // Return Qty
+                pageTotal = api
+                    .column(6, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+                $(api.column(6).footer()).html(pageTotal);
+
+                // Return amnt
+                pageTotal = api
+                    .column(7, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+                $(api.column(7).footer()).html(pageTotal);
+
+                // Discount
+                pageTotal = api
+                    .column(8, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+                $(api.column(8).footer()).html(pageTotal);
+
+                // Bill paid
+                pageTotal = api
+                    .column(9, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+                $(api.column(9).footer()).html(pageTotal);
+
+
+
+            }
+
+
+        });
+
+    });
+
+</script>

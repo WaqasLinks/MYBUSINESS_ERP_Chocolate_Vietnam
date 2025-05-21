@@ -286,7 +286,7 @@ namespace MYBUSINESS.Controllers
             //ViewBag.Suppliers = DAL.dbSuppliers;
             //return View(DAL.dbProducts.Include(x => x.StoreProducts).ToList());
         }
-        public ActionResult StockIndex()
+        public ActionResult IndexFactory()
         {
             int? storeId = Session["StoreId"] as int?;
             //var storeId = Session["StoreId"] as string;
@@ -310,8 +310,62 @@ namespace MYBUSINESS.Controllers
             //ViewBag.Suppliers = DAL.dbSuppliers;
             //return View(DAL.dbProducts.Include(x => x.StoreProducts).ToList());
         }
+        //public ActionResult StockIndex()
+        //{
+        //    int? storeId = Session["StoreId"] as int?;
+        //    //var storeId = Session["StoreId"] as string;
+        //    if (storeId == null)
+        //    {
+        //        return RedirectToAction("StoreNotFound", "UserManagement");
+        //    }
+        //    //var storeId = Session["StoreId"] as string; 
+        //    //if (storeId == null)
+        //    //{
+        //    //    return RedirectToAction("StoreNotFound", "UserManagement");
+        //    //}
+        //    //var parseId = int.Parse(storeId);
+        //    ViewBag.Suppliers = DAL.dbSuppliers;
+        //    return View(DAL.dbProducts.Include(x => x.StoreProducts).Where(x => x.StoreId == storeId).ToList());
+
+        //    //ViewBag.Suppliers = DAL.dbSuppliers;
+        //    //return View(DAL.dbProducts.Include(x => x.StoreProducts).Where(x => x.StoreId == parseId).ToList()); //commented due to session issue
 
 
+        //    //ViewBag.Suppliers = DAL.dbSuppliers;
+        //    //return View(DAL.dbProducts.Include(x => x.StoreProducts).ToList());
+        //}
+
+        public ActionResult StockIndex(int? storeId = null)
+        {
+            // Get all stores for the dropdown
+            ViewBag.Stores = db.Stores.ToList();
+
+            // Use session storeId if no storeId parameter is provided
+            if (storeId == null)
+            {
+                storeId = Session["StoreId"] as int?;
+                if (storeId == null)
+                {
+                    return RedirectToAction("StoreNotFound", "UserManagement");
+                }
+            }
+            else
+            {
+                // Update session with the selected store
+                Session["StoreId"] = storeId;
+            }
+
+            ViewBag.Suppliers = DAL.dbSuppliers;
+            ViewBag.CurrentStoreId = storeId;
+
+            // Get products for the selected store
+            var products = DAL.dbProducts
+                .Include(x => x.StoreProducts)
+                .Where(x => x.StoreId == storeId)
+                .ToList();
+
+            return View(products);
+        }
         //public ActionResult Index()
         //{
         //    int? storeId = Session["StoreId"] as int?;

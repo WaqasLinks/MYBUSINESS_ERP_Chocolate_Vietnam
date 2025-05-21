@@ -18,6 +18,7 @@ namespace MYBUSINESS.Models
         public PPSubItem()
         {
             this.CPReceipts = new HashSet<CPReceipt>();
+            this.BOXProductions = new HashSet<BOXProduction>();
         }
     
         public decimal Id { get; set; }
@@ -31,9 +32,11 @@ namespace MYBUSINESS.Models
         public Nullable<decimal> QuantitytoPrepare { get; set; }
         public Nullable<byte> ProductType { get; set; }
     
-        public virtual PPBOM PPBOM { get; set; }
         public virtual Product Product { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CPReceipt> CPReceipts { get; set; }
+        public virtual PPBOM PPBOM { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BOXProduction> BOXProductions { get; set; }
     }
 }

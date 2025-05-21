@@ -44,7 +44,7 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-sliderAccess.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.js"></script>
 
-<link href="@Url.Content("~/Content/custom/custom.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Content/custom/custom12.css")" rel="stylesheet" type="text/css" />
 <script src="~/Content/custom/colorproduction.js"></script>
 
 <script src="~/Content/custom/downloads/jquery.mcautocomplete.js"></script>
@@ -63,7 +63,11 @@
     <div class="table-wrapper">
         <div class="table-title">
             <div class="row">
-                <div class="col-sm-offset-5"><h2>Packaging Production Colors</h2></div>
+                <div class="col-sm-offset-5">
+                    <h3>Product: @Model.FirstOrDefault().ProductName</h3>
+                    <h2>
+                    Packaging Production Colors</h2>
+                </div>
             </div>
 
         </div>

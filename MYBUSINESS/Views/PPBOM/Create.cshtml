@@ -210,7 +210,6 @@
                                     <th style="width: 20%;">Name</th>
                                     <th style="width: 15%;">Box Per Sheet</th>
                                     <th style="width: 15%;">Unit</th>
-                                    <th style="width: 25%;">Color</th>
                                     <th style="width: 20%;"></th>
                                 </tr>
                             </thead>
@@ -231,10 +230,6 @@
 
                                     <td>
                                         <input type="text" autocomplete="off" class="form-control" name="PPSubItem[0].Unit" id="unit0">
-                                    </td>
-
-                                    <td>
-                                        @Html.DropDownList("PPSubItem[0].ColorId", (SelectList)ViewBag.ColorList, "Select", new { @class = "form-control" })
                                     </td>
 
                                     <td>

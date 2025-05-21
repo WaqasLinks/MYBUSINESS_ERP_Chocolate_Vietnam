@@ -3,13 +3,14 @@
 }*/
 body {
     color: #404E67;
-    /*background: #F5F7FA;*/
     font-family: 'Open Sans', sans-serif;
+    overflow-x: auto; /* allow horizontal scrolling if needed */
 }
 
 .table-wrapper {
-    /* width: 1000px;700px */
-    margin: 30px auto;
+    overflow-x: auto;
+    white-space: nowrap;
+    width: 100%;
     background: #fff;
     padding: 20px;
     box-shadow: 0 1px 1px rgba(0,0,0,.05);
@@ -18,6 +19,7 @@ body {
 .table-title {
     padding-bottom: 10px;
     margin: 0 0 10px;
+    white-space: normal;
 }
 
     .table-title h2 {
@@ -30,18 +32,22 @@ body {
         height: 30px;
         font-weight: bold;
         font-size: 12px;
-        text-shadow: none;
         min-width: 100px;
         border-radius: 50px;
         line-height: 13px;
     }
 
         .table-title .add-new i {
-            margin-right: 4px;
+             padding-bottom: 10px;
+    margin: 0 0 10px;
+    white-space: normal;
         }
 
 table.table {
-    table-layout: fixed;
+    /*table-layout: fixed;*/
+    width: 100%;
+    min-width: 2000px; /* Ensure enough width for 20+ columns */
+    table-layout: fixed; /* Makes column width consistent */
 }
 
     table.table tr th, table.table tr td {
@@ -93,6 +99,8 @@ table.table {
         line-height: 32px;
         box-shadow: none;
         border-radius: 2px;
+        font-size: 13px;
+        padding: 3px;
     }
 
         table.table .form-control.error {
@@ -172,7 +180,10 @@ tr.highlighted td {
 input[type=text]::-ms-clear {
     display: none;
 }
-
+input.qty-input {
+    width: 60px !important;
+    text-align: center;
+}
 /*@media print {
     .header-print {
         display: table-header-group;

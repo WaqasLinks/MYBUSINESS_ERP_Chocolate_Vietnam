@@ -1,0 +1,173 @@
+﻿@model List<MYBUSINESS.Models.FlatBoxStockViewModel>
+@using Newtonsoft.Json
+
+<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.css">
+<script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="//code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-sliderAccess.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.js"></script>
+
+<link href="@Url.Content("~/Content/custom/custom.css")" rel="stylesheet" type="text/css" />
+<script src="~/Content/custom/colorproduction.js"></script>
+
+<script src="~/Content/custom/downloads/jquery.mcautocomplete.js"></script>
+<script src="~/Content/custom/downloads/jquery.scannerdetection.js"></script>
+
+@{
+    bool isReadonly = ViewBag.ReadonlyMode ?? false;
+    var production = Model.FirstOrDefault();
+}
+@using (Html.BeginForm("FinishProduction", "PackagingProduction", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="container" id="container">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-offset-5">
+                        <h3>Product: </h3>
+                        <h2>Finish Production</h2>
+                    </div>
+                </div>
+            </div>
+
+            <table id="production-table" class="table table-bordered">
+                <thead>
+                    <tr class="table-info">
+                        <td style="width:10%"><strong>Flat Box in Stock</strong></td>
+                        @foreach (var color in production.ColorComponents)
+                        {
+
+                            <td>@color.Quantity</td>
+                        }
+                    </tr>
+                </thead>
+
+            </table>
+
+            <table id="selectedProducts" class="table table-bordered">
+                <thead>
+                    <tr class="table-info">
+                        <th style="width:2%;">#</th>
+                        <th style="width:8%">Colors</th>
+                        @foreach (var color in production.ColorComponents)
+                        {
+                            <th>@color.ColorName</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr>
+
+                        <td id="SNo0">1</td>
+                        <td><strong>Assembly Order</strong></td>
+                        @for (int i = 0; i < production.ColorComponents.Count; i++)
+                        {
+                            var color = production.ColorComponents[i];
+                            <td>
+                                <input type="hidden" name="@($"ProductStockDetail[0].Items[{i}].PaperColorId")" value="@color.ColorId" />
+                                <input type="hidden" name="@($"ProductStockDetail[0].Items[{i}].PPSubItemId")" value="@production.PPSubItemId" />
+                                <input type="hidden" name="@($"ProductStockDetail[0].Items[{i}].PackagingProductionId")" value="@production.PackagingProductionId" />
+                                <input type="number"
+                                       name="@($"ProductStockDetail[0].Items[{i}].Quantity")"
+                                       class="form-control produced-qty"
+                                       value="0"
+                                       min="0" />
+                            </td>
+                        }
+                    </tr>
+
+                </tbody>
+
+            </table>
+            <div class="form-group">
+                <button type="submit" class="btn btn-success mt-3" id="saveBtn">Finish Production</button>
+                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default mt-3" })
+            </div>
+        </div>
+    </div>
+}
+@section Scripts {
+
+    <script>
+const modelData = @Html.Raw(JsonConvert.SerializeObject(Model));
+
+$(document).on("click", "#saveBtn", function(e) {
+    e.preventDefault(); // Prevent default form submission
+    console.log("Save button clicked!");
+    saveProductionData();
+});
+
+function saveProductionData() {
+    const formData = [];
+    const productionId = modelData[0]?.PackagingProductionId || 0;
+
+    // Get all color components from the first item in modelData
+    const colorComponents = modelData[0]?.ColorComponents || [];
+
+    // Get the quantities from the inputs
+    colorComponents.forEach((color, index) => {
+        const quantityInput = document.querySelector(`input[name="ProductStockDetail[0].Items[${index}].Quantity"]`);
+        const paperColorIdInput = document.querySelector(`input[name="ProductStockDetail[0].Items[${index}].PaperColorId"]`);
+        const ppSubItemIdInput = document.querySelector(`input[name="ProductStockDetail[0].Items[${index}].PPSubItemId"]`);
+        const packagingProductionIdInput = document.querySelector(`input[name="ProductStockDetail[0].Items[${index}].PackagingProductionId"]`);
+
+        formData.push({
+            PaperColorId: paperColorIdInput ? parseInt(paperColorIdInput.value) : 0,
+            PPSubItemId: ppSubItemIdInput ? parseInt(ppSubItemIdInput.value) : 0,
+            PackagingProductionId: packagingProductionIdInput ? parseInt(packagingProductionIdInput.value) : 0,
+            Quantity: quantityInput ? parseInt(quantityInput.value) || 0 : 0,
+            ProductId: modelData[0]?.ProductId || 0,
+            ProductName: modelData[0]?.ProductName || "",
+            ColorId: color.ColorId,
+            ColorName: color.ColorName
+        });
+    });
+
+    console.log("Data being sent:", formData);
+
+    fetch('@Url.Action("ProductStockDetail", "PackagingProduction")', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("Production data saved successfully!");
+            window.location.href = '@Url.Action("ColorIndex4", "PackagingProduction")';
+        } else {
+            alert("Failed to save: " + (data.message || 'Unknown Error'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("Error occurred while saving.");
+    });
+}
+
+
+  function getTotalReceivedForColor(color) {
+    let total = 0;
+    $(`.qty-input[data-color="${color}"]`).each(function () {
+        total += parseFloat($(this).val()) || 0;
+    });
+    return total;
+  }
+    function getTotalReceivedForColor(color) {
+        let total = 0;
+        $(`.qty-input[data-color="${color}"]`).each(function () {
+            total += parseFloat($(this).val()) || 0;
+        });
+        return total;
+    }
+
+    </script>
+}
