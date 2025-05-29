@@ -335,34 +335,83 @@ namespace MYBUSINESS.Controllers
         //    //return View(DAL.dbProducts.Include(x => x.StoreProducts).ToList());
         //}
 
-        public ActionResult StockIndex(int? storeId = null)
+        public ActionResult StockIndex(int? pType = null)
         {
-            // Get all stores for the dropdown
-            ViewBag.Stores = db.Stores.ToList();
+            // 1. Get all necessary data for dropdowns
+            var productTypes = new List<SelectListItem>
+    {
+        new SelectListItem { Value = "1", Text = "VariableProduct" },
+        new SelectListItem { Value = "2", Text = "ExcessProduct" },
+        new SelectListItem { Value = "3", Text = "ByProduct" },
+        new SelectListItem { Value = "4", Text = "FinishedProduct" },
+        new SelectListItem { Value = "5", Text = "IngredientProduct" },
+        new SelectListItem { Value = "6", Text = "IntermedataryProduct" },
+        new SelectListItem { Value = "7", Text = "Merchendise" }
+    };
 
-            // Use session storeId if no storeId parameter is provided
+            // 2. Maintain all ViewBag items that the view expects
+            ViewBag.ProductTypes = productTypes;
+            ViewBag.CurrentPType = pType;
+            ViewBag.Suppliers = DAL.dbSuppliers; // This is required by your view
+
+            // 3. Get current store from session
+            int? storeId = Session["StoreId"] as int?;
             if (storeId == null)
             {
-                storeId = Session["StoreId"] as int?;
-                if (storeId == null)
-                {
-                    return RedirectToAction("StoreNotFound", "UserManagement");
-                }
-            }
-            else
-            {
-                // Update session with the selected store
-                Session["StoreId"] = storeId;
+                return RedirectToAction("StoreNotFound", "UserManagement");
             }
 
-            ViewBag.Suppliers = DAL.dbSuppliers;
-            ViewBag.CurrentStoreId = storeId;
-
-            // Get products for the selected store
-            var products = DAL.dbProducts
+            // 4. Query products with filters
+            var query = DAL.dbProducts
                 .Include(x => x.StoreProducts)
-                .Where(x => x.StoreId == storeId)
-                .ToList();
+                .Where(x => x.StoreId == storeId);
+
+            if (pType != null)
+            {
+                query = query.Where(x => x.PType == pType);
+            }
+
+            var products = query.ToList();
+
+            return View(products);
+        }
+        public ActionResult IndexStock(int? pType = null)
+        {
+            // 1. Get all necessary data for dropdowns
+            var productTypes = new List<SelectListItem>
+    {
+        new SelectListItem { Value = "1", Text = "VariableProduct" },
+        new SelectListItem { Value = "2", Text = "ExcessProduct" },
+        new SelectListItem { Value = "3", Text = "ByProduct" },
+        new SelectListItem { Value = "4", Text = "FinishedProduct" },
+        new SelectListItem { Value = "5", Text = "IngredientProduct" },
+        new SelectListItem { Value = "6", Text = "IntermedataryProduct" },
+        new SelectListItem { Value = "7", Text = "Merchendise" }
+    };
+
+            // 2. Maintain all ViewBag items that the view expects
+            ViewBag.ProductTypes = productTypes;
+            ViewBag.CurrentPType = pType;
+            ViewBag.Suppliers = DAL.dbSuppliers; // This is required by your view
+
+            // 3. Get current store from session
+            int? storeId = Session["StoreId"] as int?;
+            if (storeId == null)
+            {
+                return RedirectToAction("StoreNotFound", "UserManagement");
+            }
+
+            // 4. Query products with filters
+            var query = DAL.dbProducts
+                .Include(x => x.StoreProducts)
+                .Where(x => x.StoreId == storeId);
+
+            if (pType != null)
+            {
+                query = query.Where(x => x.PType == pType);
+            }
+
+            var products = query.ToList();
 
             return View(products);
         }
@@ -469,56 +518,22 @@ namespace MYBUSINESS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,StoreId,Category,Unit,Variable,Excess,ByProduct,PType,VarProdParentId,Ingredient,FinishedProduct,Merchandise,IntermediaryIngredient,EInvoicePCode,PVATName,Supplier,FlatPackaging,FinishPackaging")] Product product,
-        [Bind(Prefix = "ProductDetail", Include = "Id,ProductId,Shape,Weight")] List<ProductDetail> productDetails)
+        public ActionResult Create(
+     [Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,StoreId,Category,Unit,Variable,Excess,ByProduct,PType,VarProdParentId,Ingredient,FinishedProduct,Merchandise,IntermediaryIngredient,EInvoicePCode,PVATName,Supplier,FlatPackaging,FinishPackaging")] Product product,
+     [Bind(Prefix = "ProductDetail", Include = "Id,ProductId,Shape,Weight")] List<ProductDetail> productDetails)
         {
-            int productType = 0;
-
-            if (Request.Form["VariableProduct"] != null)
+            // ✅ FIX: Assign PType from dropdown
+            int selectedType;
+            if (int.TryParse(Request.Form["ProductType"], out selectedType))
             {
-                productType |= 1;
-                //product.Variable = true;
+                product.PType = (byte)selectedType;
             }
             else
             {
-                //product.Variable = false;
-            }
-            if (Request.Form["ExcessProduct"] != null)
-            {
-                productType |= 2;
-            }
-
-            // Handle ByProduct
-            if (Request.Form["ByProduct"] != null)
-            {
-                productType |= 3;
-            }
-            if (Request.Form["FinishedProduct"] != null)
-            {
-                productType |= 4;
-            }
-            if (Request.Form["Ingredient"] != null)
-            {
-                productType |= 5;
-            }
-            if (Request.Form["IntermediaryIngredient"] != null)
-            {
-                productType |= 6;
-            }
-            if (Request.Form["Merchandise"] != null)
-            {
-                productType |= 7;
-            }
-            if (Request.Form["FlatPackaging"] != null)
-            {
-                productType |= 8;
-            }
-            if (Request.Form["FinishPackaging"] != null)
-            {
-                productType |= 9;
+                product.PType = 0;
             }
             // Set final PType
-            product.PType = (byte)productType;
+
             //if (Request.Form["ExcessProduct"] != null) product.PType |= 2;
             //if (Request.Form["ByProduct"] != null) product.PType |= 4;
             decimal vatRate = 8m;
@@ -615,13 +630,19 @@ namespace MYBUSINESS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             //var storeId = Session["StoreId"] as string;  //commented due to session issue
             //if (storeId == null)
             //{
             //    return RedirectToAction("StoreNotFound", "UserManagement");
             //}
             //var parseId = int.Parse(storeId);
+
             Product product = db.Products.Find(id);
+            if (product.PType == null)
+            {
+                product.PType = 4; // Default value if not set
+            }
             ViewBag.ProductList = db.Products
         .Select(p => new SelectListItem
         {
@@ -629,6 +650,7 @@ namespace MYBUSINESS.Controllers
             Text = p.Name
         })
         .ToList();
+          
             StoreProduct storeProdcut = db.StoreProducts.FirstOrDefault(x => x.ProductId == id);
             if (storeProdcut == null)
             {
@@ -693,56 +715,18 @@ namespace MYBUSINESS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(
-    [Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,Category,Unit,Variable,Excess,ByProduct,PType,VarProdParentId,Ingredient,FinishedProduct,Merchandise,IntermediaryIngredient,PVATName,ExcludedSalePrice,FlatPackaging,FinishPackaging")] Product product,
+    [Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,Category,Unit,Variable,Excess,ByProduct,PType,VarProdParentId,Ingredient,FinishedProduct,Merchandise,IntermediaryIngredient,PVATName,ExcludedSalePrice,FlatPackaging,FinishPackaging,EInvoicePCode,Supplier")] Product product,
     [Bind(Prefix = "ProductDetail", Include = "Id,ProductId,Shape,Weight")] List<ProductDetail> productDetails)
         {
-            int productType = 0;
-
-            if (Request.Form["VariableProduct"] != null)
+            int selectedType;
+            if (int.TryParse(Request.Form["ProductType"], out selectedType))
             {
-                productType |= 1;
-                //product.Variable = true;
+                product.PType = (byte)selectedType;
             }
             else
             {
-                //product.Variable = false;
+                product.PType = 0;
             }
-            if (Request.Form["ExcessProduct"] != null)
-            {
-                productType |= 2;
-            }
-
-            // Handle ByProduct
-            if (Request.Form["ByProduct"] != null)
-            {
-                productType |= 3;
-            }
-            if (Request.Form["FinishedProduct"] != null)
-            {
-                productType |= 4;
-            }
-            if (Request.Form["Ingredient"] != null)
-            {
-                productType |= 5;
-            }
-            if (Request.Form["IntermediaryIngredient"] != null)
-            {
-                productType |= 6;
-            }
-            if (Request.Form["Merchandise"] != null)
-            {
-                productType |= 7;
-            }
-            if (Request.Form["FlatPackaging"] != null)
-            {
-                productType |= 8;
-            }
-            if (Request.Form["FinishPackaging"] != null)
-            {
-                productType |= 9;
-            }
-            // Set final PType
-            product.PType = (byte)productType;
             int? storeId = Session["StoreId"] as int?;
             if (storeId == null)
             {

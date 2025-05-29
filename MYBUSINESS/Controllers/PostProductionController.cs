@@ -200,6 +200,10 @@ namespace MYBUSINESS.Controllers
                 //SubItems = subItems,
                 SubItemProduction = db.SubItemProductions.Where(x => x.NewProductionId == newProduction.Id).ToList(),
                 NewProduction = newProduction,
+                PostProduction = new PostProduction
+                {
+                    Unit = newProduction.Unit // <-- Make sure to copy this value into the correct object
+                },
                 Products = db.Products, // Include all products
                 /* SubItems = db.SubItems.Where(x => x.ParentProductId == newProduction.Id).ToList(), */// Get SubItems associated with this NewProduction
                 TotalWeight = totalWeight,                                                                                    //QuantityToProduce = db.QuantityToProduces.Where(x => x.ProductId == newProduction.Id).ToList()

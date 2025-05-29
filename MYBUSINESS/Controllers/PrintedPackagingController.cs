@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Data.SqlClient;
 using System.Drawing.Printing;
 using System.EnterpriseServices.CompensatingResourceManager;
@@ -321,7 +322,7 @@ namespace MYBUSINESS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Prefix = "Supplier", Include = "Name,Address")] Supplier Supplier, [Bind(Prefix = "PurchaseOrder", Include = "BillAmount,Balance,PrevBalance,BillPaid,Discount,SupplierId,Remarks,Remarks2,PaymentMethod,PaymentDetail,PurchaseReturn,FundingSourceId,BankAccountId,Date")] PrintedPackaging printedpackaging, [Bind(Prefix = "PurchaseOrderDetail", Include = "ProductId,Quantity,SaleType,PerPack,IsPack,PurchasePrice,ExpiryDate,PurchasingDate,Unit")] List<PrintedPackagingDetail> printedpackagingDetail)
+        public ActionResult Create([Bind(Prefix = "Supplier", Include = "Name,Address")] Supplier Supplier, [Bind(Prefix = "PrintedPackaging", Include = "BillAmount,Balance,PrevBalance,BillPaid,Discount,SupplierId,Remarks,Remarks2,PaymentMethod,PaymentDetail,PurchaseReturn,FundingSourceId,BankAccountId,Date")] PrintedPackaging pO, [Bind(Prefix = "PrintedPackagingDetail", Include = "ProductId,Quantity,SaleType,PerPack,IsPack,PurchasePrice,ExpiryDate,PurchasingDate,Unit")] List<PrintedPackagingDetail> pOD)
         {
             //PO pO = new PO();
 
@@ -337,7 +338,7 @@ namespace MYBUSINESS.Controllers
             //    return RedirectToAction("StoreNotFound", "UserManagement");
             //}
             //var parseId = int.Parse(storeId);
-            Supplier supp = db.Suppliers.FirstOrDefault(x => x.Id == printedpackaging.SupplierId);
+            Supplier supp = db.Suppliers.FirstOrDefault(x => x.Id == pO.SupplierId);
             if (supp == null)
             {//its means new customer
              //pO.SupplierId = 10;
@@ -345,7 +346,7 @@ namespace MYBUSINESS.Controllers
                 decimal maxId = db.Suppliers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
                 maxId += 1;
                 Supplier.Id = maxId;
-                Supplier.Balance = printedpackaging.Balance;
+                Supplier.Balance = pO.Balance;
                 Supplier.StoreId = storeId;
                 //Supplier.StoreId = parseId; //commented due to session issue
                 db.Suppliers.Add(Supplier);
@@ -356,7 +357,7 @@ namespace MYBUSINESS.Controllers
              //Supplier.Id = (int)pO.SupplierId;
              //supp.StoreId = parseId; //commented due to session issue
                 supp.StoreId = storeId;
-                supp.Balance = printedpackaging.Balance;
+                supp.Balance = pO.Balance;
                 db.Entry(supp).State = EntityState.Modified;
                 //db.SaveChanges();
 
@@ -369,99 +370,109 @@ namespace MYBUSINESS.Controllers
             }
 
             ////////////////////////////////////////
-            BankAccount bankAccount = db.BankAccounts.FirstOrDefault(x => x.Id == printedpackaging.BankAccountId);
-            bankAccount.Balance -= printedpackaging.BillPaid;
+            BankAccount bankAccount = db.BankAccounts.FirstOrDefault(x => x.Id == pO.BankAccountId);
+            bankAccount.Balance -= pO.BillPaid;
             db.BankAccounts.Attach(bankAccount);
             db.Entry(bankAccount).Property(x => x.Balance).IsModified = true;
             ////////////////////////////////////////
             //int maxId = db.POes.Max(p => p.Auto);
             decimal maxId1 = (int)db.PrintedPackagings.DefaultIfEmpty().Max(p => p == null ? 0 : p.POSerial);
             maxId1 += 1;
-            printedpackaging.POSerial = maxId1;
+            pO.POSerial = maxId1;
             //pO.Date = DateTime.Now;
-            if (string.IsNullOrEmpty(Convert.ToString(printedpackaging.Date)))
+            if (string.IsNullOrEmpty(Convert.ToString(pO.Date)))
             {
-                printedpackaging.Date = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pakistan Standard Time"));
+                pO.Date = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pakistan Standard Time"));
             }
             //pO.SaleReturn = false;
-            printedpackaging.Id = System.Guid.NewGuid().ToString().ToUpper();
-            printedpackaging.PurchaseOrderAmount = 0;
+            pO.Id = System.Guid.NewGuid().ToString().ToUpper();
+            pO.PurchaseOrderAmount = 0;
 
-            printedpackaging.PurchaseOrderQty = 0;
-            printedpackaging.StoreId = storeId;
+            pO.PurchaseOrderQty = 0;
+            pO.StoreId = storeId;
             //pO.StoreId = parseId; //commented due to session issue
             //pO.StoreId = 1;
             Employee emp = (Employee)Session["CurrentUser"];
-            printedpackaging.EmployeeId = emp.Id;
-            db.PrintedPackagings.Add(printedpackaging);
+            pO.EmployeeId = emp.Id;
+            db.PrintedPackagings.Add(pO);
             //db.SaveChanges();
             int sno = 0;
-            if (printedpackagingDetail != null)
+            if (pOD != null)
             {
                 //pOD.RemoveAll(so => so.ProductId == null);
-                foreach (PrintedPackagingDetail printedpackagingdetail in printedpackagingDetail)
+                foreach (PrintedPackagingDetail pod in pOD)
                 {
                     sno += 1;
-                    printedpackagingdetail.PrintedPackagingDetailId = sno;
-                    printedpackagingdetail.PrintedPackaging = printedpackaging;
-                    printedpackagingdetail.PrintedPackagingId = printedpackaging.Id;
+                    pod.PrintedPackagingDetailId = sno;
+                    pod.PrintedPackaging = pO;
+                    pod.PrintedPackagingId = pO.Id;
 
-                    Product product = db.Products.FirstOrDefault(x => x.Id == printedpackagingdetail.ProductId);
+                    Product product = db.Products.FirstOrDefault(x => x.Id == pod.ProductId);
 
                     //dont do this. when user made a bill and chnage sale price. it does not reflect in bill and calculations geting wrong
                     //pod.PurchasePrice = product.PurchasePrice;
-                    if (printedpackagingdetail.Quantity == null) { printedpackagingdetail.Quantity = 0; }
-                    printedpackagingdetail.OpeningStock = product.Stock;
-                    printedpackagingdetail.PerPack = 1;
-                    if (printedpackagingdetail.SaleType == false)//purchase
+                    if (pod.Quantity == null) { pod.Quantity = 0; }
+                    pod.OpeningStock = product.Stock;
+                    pod.PerPack = 1;
+                    if (pod.SaleType == false)//purchase
                     {
 
-                        if (printedpackagingdetail.IsPack == false)
+                        if (pod.IsPack == false)
                         {//piece
-                            printedpackaging.PurchaseOrderAmount += (decimal)(printedpackagingdetail.Quantity * printedpackagingdetail.PurchasePrice);
+                            pO.PurchaseOrderAmount += (decimal)(pod.Quantity * pod.PurchasePrice);
                             //int pieceSold = (int)(sod.Quantity * product.Stock);
-                            decimal qty = (decimal)printedpackagingdetail.Quantity;// / (decimal)product.PerPack;
+                            decimal qty = (decimal)pod.Quantity;// / (decimal)product.PerPack;
                             product.Stock += qty;
 
-                            printedpackaging.PurchaseOrderQty += qty;//(int)sod.Quantity;
+                            pO.PurchaseOrderQty += qty;//(int)sod.Quantity;
 
                         }
                         else
                         {//pack
 
-                            printedpackaging.PurchaseOrderAmount += (decimal)(printedpackagingdetail.Quantity * printedpackagingdetail.PurchasePrice * printedpackagingdetail.PerPack);
-                            product.Stock += (int)printedpackagingdetail.Quantity * printedpackagingdetail.PerPack;
+                            pO.PurchaseOrderAmount += (decimal)(pod.Quantity * pod.PurchasePrice * pod.PerPack);
+                            product.Stock += (int)pod.Quantity * pod.PerPack;
 
-                            printedpackaging.PurchaseOrderQty += (int)printedpackagingdetail.Quantity * printedpackagingdetail.PerPack;
+                            pO.PurchaseOrderQty += (int)pod.Quantity * pod.PerPack;
 
                         }
 
                     }
                     else//return
                     {
-                        if (printedpackagingdetail.IsPack == false)
+                        if (pod.IsPack == false)
                         {
-                            printedpackaging.PurchaseOrderAmount += (decimal)(printedpackagingdetail.Quantity * printedpackagingdetail.PurchasePrice);
-                            decimal qty = (decimal)printedpackagingdetail.Quantity;// / (decimal)product.PerPack;
+                            pO.PurchaseOrderAmount += (decimal)(pod.Quantity * pod.PurchasePrice);
+                            decimal qty = (decimal)pod.Quantity;// / (decimal)product.PerPack;
                             product.Stock -= qty;
-                            printedpackaging.PurchaseOrderQty += qty;//(int)sod.Quantity;
+                            pO.PurchaseOrderQty += qty;//(int)sod.Quantity;
 
                         }
                         else
                         {
-                            printedpackaging.PurchaseOrderAmount += (decimal)(printedpackagingdetail.Quantity * printedpackagingdetail.PurchasePrice * printedpackagingdetail.PerPack);
-                            product.Stock -= (int)printedpackagingdetail.Quantity * printedpackagingdetail.PerPack;
+                            pO.PurchaseOrderAmount += (decimal)(pod.Quantity * pod.PurchasePrice * pod.PerPack);
+                            product.Stock -= (int)pod.Quantity * pod.PerPack;
 
-                            printedpackaging.PurchaseOrderQty += (int)printedpackagingdetail.Quantity * printedpackagingdetail.PerPack;
+                            pO.PurchaseOrderQty += (int)pod.Quantity * pod.PerPack;
 
                         }
 
                     }
 
 
-                    db.PrintedPackagingDetails.AddRange(printedpackagingDetail);
+                    db.PrintedPackagingDetails.AddRange(pOD);
                 }
-                db.SaveChanges();
+
+                //db.SaveChanges();
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    var inner = ex.InnerException?.InnerException?.Message ?? ex.Message;
+                    throw new Exception("Error saving data: " + inner, ex);
+                }
                 return RedirectToAction("Index");
 
                 //SqlParameter param1 = new SqlParameter("@PurchaseOrderID", pO.Id);
@@ -486,25 +497,24 @@ namespace MYBUSINESS.Controllers
                 /////////////////////////////////////
 
 
-                string POId = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(printedpackaging.Id, "BZNS")));
+                string POId = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(pO.Id, "BZNS")));
                 //return PrintSO(POId);
                 //return PrintSO3(POId);
                 //return RedirectToAction("PrintSO3", new { id = POId });
-                TempData["ReportId"] = printedpackaging.Id;
+                TempData["ReportId"] = pO.Id;
                 return RedirectToAction("Create", new { IsReturn = "false" });
                 //return RedirectToAction("Index");
             }
 
             //ViewBag.SupplierId = new SelectList(db.Suppliers, "Id", "Name", pO.SupplierId);
             //return View(pO);
-            PrintedPackagingViewModel printedpackagingViewModel = new PrintedPackagingViewModel();
-            printedpackagingViewModel.Suppliers = DAL.dbSuppliers;
-            printedpackagingViewModel.Products = DAL.dbProducts.Where(x => (x.PType == 4 || x.PType == 7) && x.IsService == false);
-            return View(printedpackagingViewModel);
+            PurchaseOrderViewModel purchaseOrderViewModel = new PurchaseOrderViewModel();
+            purchaseOrderViewModel.Suppliers = DAL.dbSuppliers;
+            purchaseOrderViewModel.Products = DAL.dbProducts.Where(x => (x.PType == 4 || x.PType == 7) && x.IsService == false);
+            return View(purchaseOrderViewModel);
             //return View();
 
-        }
-        //public void PrintSO(string POId)
+        }        //public void PrintSO(string POId)
         //{
         //    POId = Encryption.Decrypt(POId, "BZNS");
         //    string pathh = HttpRuntime.AppDomainAppPath;

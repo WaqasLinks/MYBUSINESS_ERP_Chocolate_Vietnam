@@ -55,10 +55,13 @@ namespace MYBUSINESS.Controllers
             //}
             //var parseId = int.Parse(storeId);
             //EnterProfit();
-             
+
             DateTime PKDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pakistan Standard Time"));
             var dtStartDate = new DateTime(PKDate.Year, PKDate.Month, 1);
             var dtEndtDate = dtStartDate.AddMonths(1).AddSeconds(-1);
+
+            var stores = db.Stores.ToList();
+            ViewBag.Stores = new SelectList(stores, "Id", "Name", storeId);
 
             IQueryable<SO> sOes = db.SOes.Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate && x.SaleReturn == false).Include(s => s.Customer);
             //sOes = sOes.Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate);
@@ -86,7 +89,7 @@ namespace MYBUSINESS.Controllers
 
                 //itm.Id = Encryption.Encrypt(itm.Id, "BZNS");
                 //itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(itm.Id, "BZNS")));
-                            }
+            }
 
             ViewBag.LstMaxSerialno = LstMaxSerialNo;
             ViewBag.Customers = DAL.dbCustomers;
@@ -97,6 +100,44 @@ namespace MYBUSINESS.Controllers
             //var getSoes = sOes.OrderByDescending(i => i.Date).ToList();
             return View(getSoes);
         }
+
+        public ActionResult FilterSales(int? storeId, string startDate, string endDate, string customerName)
+        {
+            DateTime dtStartDate, dtEndtDate;
+
+            // Parse dates or use defaults
+            if (!DateTime.TryParse(startDate, out dtStartDate))
+            {
+                dtStartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            }
+
+            if (!DateTime.TryParse(endDate, out dtEndtDate))
+            {
+                dtEndtDate = dtStartDate.AddMonths(1).AddSeconds(-1);
+            }
+
+            IQueryable<SO> sOes = db.SOes
+                .Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate && x.SaleReturn == false)
+                .Include(s => s.Customer);
+
+            // Apply store filter if selected
+            if (storeId.HasValue && storeId > 0)
+            {
+                sOes = sOes.Where(x => x.StoreId == storeId);
+            }
+
+            // Apply customer name filter if provided
+            if (!string.IsNullOrEmpty(customerName))
+            {
+                sOes = sOes.Where(x => x.Customer.Name.Contains(customerName));
+            }
+
+            GetTotalBalance(ref sOes);
+            var getSoes = sOes.OrderByDescending(i => i.Date).ToList();
+
+            return PartialView("_SelectedSOSR", getSoes);
+        }
+
         public ActionResult ClosePosPopup()
         {
             int? storeId = Session["StoreId"] as int?;
@@ -165,56 +206,114 @@ namespace MYBUSINESS.Controllers
             return View(indexReturn);
         }
 
+        //[HttpPost]
+        //public ActionResult CancelBill(string soId)
+        //{
+        //    // 1. Get SO (Sale Order)
+        //    var so = db.SOes.FirstOrDefault(x => x.Id == soId);
+
+        //    // Ensure SO exists and is not cancelled
+        //    if (so == null || (so.IsCancelled != null && so.IsCancelled == true))
+        //    {
+        //        return Content("Bill not found or already cancelled.");
+        //    }
+
+        //    // 2. Get related Sale Order Details
+        //    var sodItems = db.SODs.Where(x => x.SOId == soId).ToList();
+
+        //    // 3. Update product stock
+        //    foreach (var item in sodItems)
+        //    {
+        //        var product = db.Products.FirstOrDefault(p => p.Id == item.ProductId);
+        //        if (product != null)
+        //        {
+        //            product.Stock += item.Quantity;
+        //        }
+        //    }
+
+        //    // 4. Update DailyBalanceVnd
+        //    var billDate = so.Date ?? DateTime.Now;
+
+        //    int storeIdInt = Convert.ToInt32(so.StoreId);
+
+        //    var balanceRecord = db.DailyBalanceVnds
+        //        .FirstOrDefault(b => b.StoreId == storeIdInt
+        //            && b.OpeningDate.HasValue
+        //            && b.OpeningDate.Value.Year == billDate.Year
+        //            && b.OpeningDate.Value.Month == billDate.Month
+        //            && b.OpeningDate.Value.Day == billDate.Day);
+
+
+        //    if (balanceRecord != null)
+        //    {
+        //        decimal totalBillAmount = (decimal)sodItems.Sum(i => i.Quantity * i.SalePrice);
+        //        balanceRecord.ClosingBalance -= totalBillAmount;
+        //    }
+
+        //    // 5. Mark SO as cancelled
+        //    so.IsCancelled = true;
+
+        //    db.SaveChanges();
+
+        //    return Content("Bill Cancelled Successfully");
+        //}
         [HttpPost]
         public ActionResult CancelBill(string soId)
         {
-            // 1. Get SO (Sale Order)
-            var so = db.SOes.FirstOrDefault(x => x.Id == soId);
-
-            // Ensure SO exists and is not cancelled
-            if (so == null || (so.IsCancelled != null && so.IsCancelled == true))
+            try
             {
-                return Content("Bill not found or already cancelled.");
-            }
+                // 1. Get SO (Sale Order)
+                var so = db.SOes.FirstOrDefault(x => x.Id == soId);
 
-            // 2. Get related Sale Order Details
-            var sodItems = db.SODs.Where(x => x.SOId == soId).ToList();
-
-            // 3. Update product stock
-            foreach (var item in sodItems)
-            {
-                var product = db.Products.FirstOrDefault(p => p.Id == item.ProductId);
-                if (product != null)
+                // Ensure SO exists and is not cancelled
+                if (so == null || (so.IsCancelled != null && so.IsCancelled == true))
                 {
-                    product.Stock += item.Quantity;
+                    TempData["ErrorMessage"] = "Bill not found or already cancelled.";
+                    return RedirectToAction("Index");
                 }
+
+                // 2. Get related Sale Order Details
+                var sodItems = db.SODs.Where(x => x.SOId == soId).ToList();
+
+                // 3. Update product stock
+                foreach (var item in sodItems)
+                {
+                    var product = db.Products.FirstOrDefault(p => p.Id == item.ProductId);
+                    if (product != null)
+                    {
+                        product.Stock += item.Quantity;
+                    }
+                }
+
+                // 4. Update DailyBalanceVnd
+                var billDate = so.Date ?? DateTime.Now;
+                int storeIdInt = Convert.ToInt32(so.StoreId);
+
+                var balanceRecord = db.DailyBalanceVnds
+                    .FirstOrDefault(b => b.StoreId == storeIdInt
+                        && b.OpeningDate.HasValue
+                        && b.OpeningDate.Value.Year == billDate.Year
+                        && b.OpeningDate.Value.Month == billDate.Month
+                        && b.OpeningDate.Value.Day == billDate.Day);
+
+                if (balanceRecord != null)
+                {
+                    decimal totalBillAmount = (decimal)sodItems.Sum(i => i.Quantity * i.SalePrice);
+                    balanceRecord.ClosingBalance -= totalBillAmount;
+                }
+
+                // 5. Mark SO as cancelled
+                so.IsCancelled = true;
+                db.SaveChanges();
+
+                TempData["SuccessMessage"] = "Bill cancelled successfully.";
             }
-
-            // 4. Update DailyBalanceVnd
-            var billDate = so.Date ?? DateTime.Now;
-
-            int storeIdInt = Convert.ToInt32(so.StoreId);
-
-            var balanceRecord = db.DailyBalanceVnds
-                .FirstOrDefault(b => b.StoreId == storeIdInt
-                    && b.OpeningDate.HasValue
-                    && b.OpeningDate.Value.Year == billDate.Year
-                    && b.OpeningDate.Value.Month == billDate.Month
-                    && b.OpeningDate.Value.Day == billDate.Day);
-
-
-            if (balanceRecord != null)
+            catch (Exception ex)
             {
-                decimal totalBillAmount = (decimal)sodItems.Sum(i => i.Quantity * i.SalePrice);
-                balanceRecord.ClosingBalance -= totalBillAmount;
+                TempData["ErrorMessage"] = "Error cancelling bill: " + ex.Message;
             }
 
-            // 5. Mark SO as cancelled
-            so.IsCancelled = true;
-
-            db.SaveChanges();
-
-            return Content("Bill Cancelled Successfully");
+            return RedirectToAction("Index");
         }
         //public ActionResult CancelBill(string soId)
         //{
@@ -1277,7 +1376,7 @@ namespace MYBUSINESS.Controllers
                         //db.Entry(sod).Property(x => x.Product).IsModified = false;
                     }
 
-                    // Call the web service login function
+                    // Call the web service login function  
                     // Call the web service login function synchronously
 
                     //var loginToWebService = LoginToWebService();
@@ -1483,6 +1582,148 @@ namespace MYBUSINESS.Controllers
                 return Json(new { Success = false, Message = $"An error occurred: {ex.Message}" });
             }
         }
+
+        //Dynamic public async Task<JsonResult> LoginToWebServiceAsync(int storeId)
+        // {
+        //     try
+        //     {
+        //         // Fetch the store info from the database
+        //         var store = await db.Stores.FindAsync(storeId);
+        //         if (store == null)
+        //             return Json(new { Success = false, Message = "Store not found." });
+
+        //         // Ensure TLS
+        //         ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls13;
+
+        //         using (var client = new HttpClient())
+        //         {
+        //             string url = store.ApiBaseUrl;
+        //             var requestBody = new
+        //             {
+        //                 username = store.ApiUsername,
+        //                 password = store.ApiPassword
+        //             };
+
+        //             string jsonRequestBody = JsonConvert.SerializeObject(requestBody);
+
+        //             client.DefaultRequestHeaders.Accept.Clear();
+        //             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        //             client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
+
+        //             HttpResponseMessage response = await client.PostAsync(
+        //                 url,
+        //                 new StringContent(jsonRequestBody, Encoding.UTF8, "application/json")
+        //             );
+
+        //             string responseBody = await response.Content.ReadAsStringAsync();
+
+        //             if (response.IsSuccessStatusCode && response.Content.Headers.ContentType?.MediaType == "application/json")
+        //             {
+        //                 dynamic jsonResponse = JsonConvert.DeserializeObject(responseBody);
+        //                 string token = jsonResponse.token;
+
+        //                 if (!string.IsNullOrEmpty(token))
+        //                 {
+        //                     Session["AuthToken"] = token;
+
+        //                     // Generate invoice series
+        //                     string invoiceSeries = $"1C{DateTime.Now.Year % 100}{store.StoreShortCode}";
+
+        //                     return Json(new { Success = true, Token = token, InvoiceSeries = invoiceSeries });
+        //                 }
+
+        //                 return Json(new { Success = false, Message = "Token is empty." });
+        //             }
+
+        //             return Json(new { Success = false, Message = $"Login failed. {response.StatusCode} - {responseBody}" });
+        //         }
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         return Json(new { Success = false, Message = ex.Message });
+        //     }
+        // }
+
+        //public async Task<JsonResult> LoginToWebServiceAsync()
+        //{
+        //    try
+        //    {
+        //        // Enforce TLS 1.2 or TLS 1.3
+        //        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls13;
+
+        //        using (var client = new HttpClient())
+        //        {
+        //            // Define the login endpoint URL (replace with the actual API endpoint)
+        //            string url = "https://0401485182.minvoice.com.vn/api/Account/Login"; // Replace with the actual endpoint
+
+        //            // Create the request body with the necessary parameters
+        //            var requestBody = new
+        //            {
+        //                //username = "PHEVA",
+        //                username = "POSDN2",
+        //                password = "4£j5Zm60HNl?",
+        //                //password = "2BM@g0J%5sguJ@",
+        //                //ma_dvcs = "VP"
+        //            };
+
+        //            // Convert the request body to JSON format
+        //            string jsonRequestBody = JsonConvert.SerializeObject(requestBody);
+
+        //            // Set up the HttpClient and request headers
+        //            client.DefaultRequestHeaders.Accept.Clear();
+        //            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        //            client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3");
+
+        //            // Send a POST request with the JSON request body to get the token
+        //            HttpResponseMessage response = await client.PostAsync(url, new StringContent(jsonRequestBody, System.Text.Encoding.UTF8, "application/json"));
+
+        //            if (response.IsSuccessStatusCode)
+        //            {
+        //                // Read the response body as a string
+        //                string responseBody = await response.Content.ReadAsStringAsync();
+
+        //                // Check if the response is in JSON format
+        //                if (response.Content.Headers.ContentType?.MediaType == "application/json")
+        //                {
+        //                    // Parse the response JSON to extract the token
+        //                    dynamic jsonResponse = JsonConvert.DeserializeObject(responseBody);
+        //                    string token = jsonResponse.token;
+
+        //                    if (!string.IsNullOrEmpty(token))
+        //                    {
+        //                        // Store the token (e.g., in session or other storage)
+        //                        Session["AuthToken"] = token;
+
+        //                        // Success message or subsequent requests
+        //                        return Json(new { Success = true, Token = token });
+        //                    }
+        //                    else
+        //                    {
+        //                        // Handle case where token is null or empty
+        //                        return Json(new { Success = false, Message = "Token is null or empty" });
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    // Log or handle non-JSON response
+        //                    return Json(new { Success = false, Message = "Unexpected response format: " + responseBody });
+        //                }
+        //            }
+        //            else
+        //            {
+        //                // Handle error responses
+        //                string errorContent = await response.Content.ReadAsStringAsync();
+        //                return Json(new { Success = false, Message = $"Failed to log in. Status code: {response.StatusCode}. Response: {errorContent}" });
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Log the exception or handle it as needed
+        //        System.Diagnostics.Debug.WriteLine("Exception occurred in LoginToWebService: " + ex.Message);
+        //        return Json(new { Success = false, Message = $"An error occurred: {ex.Message}" });
+        //    }
+        //}
         //public JsonResult LoginToWebService()
         //{
         //    //try
@@ -2445,15 +2686,19 @@ namespace MYBUSINESS.Controllers
             // Setup the report viewer object and get the array of bytes
             ReportViewer viewer = new ReportViewer();
             viewer.ProcessingMode = ProcessingMode.Local;
-
+            bool hasCustomerInfo = !string.IsNullOrEmpty(_customerName) ||
+                       !string.IsNullOrEmpty(_customerEmail) ||
+                       !string.IsNullOrEmpty(_customerAddress);
             //SO sO = db.SOes.FirstOrDefault(x => x.Id == id);
             Employee emp = db.Employees.FirstOrDefault(x => x.Id == db.SOes.FirstOrDefault(y => y.Id == id).EmployeeId);
             if (emp.Login == "LahoreKarachi")
             { viewer.LocalReport.ReportPath = Server.MapPath("~/Reports/Sale_LahoreKarachi.rdlc"); }
             else
-            //{ viewer.LocalReport.ReportPath = Server.MapPath("~/Reports/Sale_Receipt.rdlc"); }
-            { viewer.LocalReport.ReportPath = Server.MapPath("~/Reports/Sale_Receipt.rdlc"); }
-
+                //{ viewer.LocalReport.ReportPath = Server.MapPath("~/Reports/Sale_Receipt.rdlc"); }
+                //{ viewer.LocalReport.ReportPath = Server.MapPath("~/Reports/Sale_Receipt.rdlc"); }
+                viewer.LocalReport.ReportPath = hasCustomerInfo
+                ? Server.MapPath("~/Reports/Sale_Receipt.rdlc")
+                : Server.MapPath("~/Reports/Sale_ReceiptWoutCustomer.rdlc");
 
             ReportDataSource reportDataSource = new ReportDataSource();
             viewer.LocalReport.EnableHyperlinks = true;
@@ -2920,7 +3165,7 @@ namespace MYBUSINESS.Controllers
             return id;
         }
         //Commentted due to logout issue
-        public async Task<ActionResult> USRLWB(string taxCode)
+        public async Task<ActionResult> USRLWB(string taxCode, int storeId)
         {
             try
             {

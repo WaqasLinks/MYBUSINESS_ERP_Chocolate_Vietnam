@@ -19,6 +19,7 @@ namespace MYBUSINESS.Models
         {
             this.OrderPProducts = new HashSet<OrderPProduct>();
             this.Orders = new HashSet<Order>();
+            this.PrintedPackagings = new HashSet<PrintedPackaging>();
             this.SOes = new HashSet<SO>();
             this.StoreOrderReceipts = new HashSet<StoreOrderReceipt>();
             this.StoreProducts = new HashSet<StoreProduct>();
@@ -39,11 +40,17 @@ namespace MYBUSINESS.Models
         public string StoreShortCode { get; set; }
         public string StoreShortName { get; set; }
         public string Email { get; set; }
+        public string ApiBaseUrl { get; set; }
+        public string ApiUsername { get; set; }
+        public string ApiPassword { get; set; }
+        public string InvoiceSeriesSuffix { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderPProduct> OrderPProducts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Order> Orders { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PrintedPackaging> PrintedPackagings { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SO> SOes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

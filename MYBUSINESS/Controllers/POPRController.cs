@@ -115,6 +115,13 @@ namespace MYBUSINESS.Controllers
                 //itm.Id = Encryption.Encrypt(itm.Id, "BZNS");
                 itm.Id = string.Join("-", ASCIIEncoding.ASCII.GetBytes(Encryption.Encrypt(itm.Id, "BZNS")));
             }
+            var receivedPOIds = db.PODRecivers
+      .Select(p => p.POReciverId)
+      .Distinct()
+      .ToList();
+
+            ViewBag.ReceivedPOIds = receivedPOIds;
+            ViewBag.POReceivingList = db.PODRecivers.ToList();
             ViewBag.LstMaxSerialno = LstMaxSerialNo;
             ViewBag.Suppliers = DAL.dbSuppliers;
             ViewBag.StartDate = dtStartDate.ToString("dd-MMM-yyyy");

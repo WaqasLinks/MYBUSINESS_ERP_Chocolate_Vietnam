@@ -11,7 +11,7 @@
 
 
 
-<center><h2>Sales</h2></center>
+<center><h2>Sales History</h2></center>
 
 @*<h1>@ViewBag.myLog</h1>*@
 
@@ -22,8 +22,8 @@
     </p>*@
 <div class="col-sm-12 noPrint">
     @*<button type="submit" id="CreateSO" class="btn btn-info add-new"><i class="fa fa-plus"></i>Save & Print</button>*@
-    <a href="#" id="printMe" class="btn btn-info "><i class=""></i> Print</a>
-    <a href="/SOSR/Create?IsReturn=false" id="createSOSR" class="btn btn-success "><i class=""></i> New Sale</a>
+    <a style="display:none;" href="#" id="printMe" class="btn btn-info "><i class=""></i> Print</a>
+    <a style="display:none;" href="/SOSR/Create?IsReturn=false" id="createSOSR" class="btn btn-success "><i class=""></i> New Sale</a>
 
 </div>
 <form name="registration_form_Product" id='registration_form_Product' class="form-inline noPrint">
@@ -31,6 +31,10 @@
         <div class="row">
             <input type="hidden" name="SaleOrder.CustomerId" id="idnCustomer" value="" />
             @*@Html.Label("Customer Name", htmlAttributes: new { @class = "control-label col-md-2" })*@
+
+            <div class="form-group">
+                @Html.DropDownList("storeFilter", ViewBag.Stores as SelectList, "All Stores", new { @class = "form-control", id = "storeFilter" })
+            </div>
 
             @*@Html.Editor("custName", new { htmlAttributes = new { @class = "form-control", @placeholder = "Search by customer" } })*@
             <input type="text" autocomplete="off" class="form-control" name="Customer.Name" id="customer" value="" placeholder="Search by customer" data-toggle="tooltip" data-placement="top" title="Search by customer">
@@ -81,6 +85,39 @@
 
 <script type="text/javascript">
 
+        $(document).ready(function () {
+            // Store filter change handler
+            $('#storeFilter').change(function () {
+                var selectedStoreId = $(this).val();
+                var startDate = $('#datepickerStart').val();
+                var endDate = $('#datepickerEnd').val();
+                var customerName = $('#customer').val();
+                
+                // AJAX call to filter data
+                $.ajax({
+                    
+                    url: '@Url.Action("FilterSales", "SOSR")',
+                    type: 'GET',
+                    data: {
+                        storeId: selectedStoreId,
+                        startDate: startDate,
+                        endDate: endDate,
+                        customerName: customerName
+                    },
+                    success: function (result) {
+                        $('#NewData').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            });
+
+            // Existing search button handler
+            $('#btnSearch').click(function () {
+                $('#storeFilter').trigger('change');
+            });
+        });
     $('#printMe').click(function () {
 
 

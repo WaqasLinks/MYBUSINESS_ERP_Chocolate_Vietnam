@@ -639,6 +639,9 @@
     <Compile Include="Models\ProductionDetail.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ProductionDetail1.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ProductionOrder.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -726,6 +729,9 @@
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\spServiceReport_Result.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\spSOCustomerReport_Result.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\spSOReport_Result.cs">
@@ -4136,6 +4142,8 @@
     <Content Include="Views\StoreOrderReceipt\Create.cshtml" />
     <Content Include="Views\StoreOrderReceipt\Edit.cshtml" />
     <Content Include="Views\StoreOrder\ReceiveOrder.cshtml" />
+    <Content Include="Views\Products\IndexStock.cshtml" />
+    <Content Include="Views\Products\_SelectedStocks.cshtml" />
     <None Include="Web.Debug.Config">
       <DependentUpon>Web.Config</DependentUpon>
     </None>
@@ -4200,6 +4208,7 @@
     <Content Include="Reports\Sale_ReceiptMoneyInput.rdlc" />
     <Content Include="Reports\Sale_ReceiptOrder.rdlc" />
     <Content Include="Reports\Sale_ReceiptOrderPP.rdlc" />
+    <EmbeddedResource Include="Reports\Sale_ReceiptWoutCustomer.rdlc" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

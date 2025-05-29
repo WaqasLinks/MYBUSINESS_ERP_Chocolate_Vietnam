@@ -1,0 +1,8 @@
+Certificate Subject: CN=*.site4now.net
+Issuer: CN=Sectigo RSA Domain Validation Secure Server CA, O=Sectigo Limited, L=Salford, S=Greater Manchester, C=GB
+Errors: RemoteCertificateNameMismatch
+
+Certificate Subject: CN=*.site4now.net
+Issuer: CN=Sectigo RSA Domain Validation Secure Server CA, O=Sectigo Limited, L=Salford, S=Greater Manchester, C=GB
+Errors: RemoteCertificateNameMismatch
+

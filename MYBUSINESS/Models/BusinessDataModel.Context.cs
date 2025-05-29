@@ -78,8 +78,6 @@ namespace MYBUSINESS.Models
         public virtual DbSet<ScanBankDeposit> ScanBankDeposits { get; set; }
         public virtual DbSet<ScanMoneyInput> ScanMoneyInputs { get; set; }
         public virtual DbSet<ScanCreditCard> ScanCreditCards { get; set; }
-        public virtual DbSet<PrintedPackagingDetail> PrintedPackagingDetails { get; set; }
-        public virtual DbSet<PrintedPackaging> PrintedPackagings { get; set; }
         public virtual DbSet<PPReceiver> PPReceivers { get; set; }
         public virtual DbSet<PPReciverDetail> PPReciverDetails { get; set; }
         public virtual DbSet<Color> Colors { get; set; }
@@ -96,6 +94,9 @@ namespace MYBUSINESS.Models
         public virtual DbSet<OrderPProduct> OrderPProducts { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<StoreOrderReceipt> StoreOrderReceipts { get; set; }
+        public virtual DbSet<PrintedPackagingDetail> PrintedPackagingDetails { get; set; }
+        public virtual DbSet<ProductionDetail1> ProductionDetails1 { get; set; }
+        public virtual DbSet<PrintedPackaging> PrintedPackagings { get; set; }
         public virtual DbSet<Store> Stores { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
@@ -289,6 +290,15 @@ namespace MYBUSINESS.Models
                 new ObjectParameter("OrderId", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetOrderProductDetails_Result>("spGetOrderProductDetails", orderIdParameter);
+        }
+    
+        public virtual ObjectResult<spSOCustomerReport_Result> spSOCustomerReport(string saleOrderID)
+        {
+            var saleOrderIDParameter = saleOrderID != null ?
+                new ObjectParameter("SaleOrderID", saleOrderID) :
+                new ObjectParameter("SaleOrderID", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spSOCustomerReport_Result>("spSOCustomerReport", saleOrderIDParameter);
         }
     }
 }

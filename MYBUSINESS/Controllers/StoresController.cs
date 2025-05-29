@@ -12,6 +12,7 @@ using System.Web.WebSockets;
 using MYBUSINESS.CustomClasses;
 using MYBUSINESS.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace MYBUSINESS.Controllers
 {
@@ -85,42 +86,132 @@ namespace MYBUSINESS.Controllers
         {
             return View(DAL.dbStore);
         }
+        //    public List<DailyCashSummaryViewModel> GetCashSummary(DateTime startDate, DateTime endDate)
+        //    {
+        //        var allStores = db.Stores.ToList();
+        //        var summaries = new List<DailyCashSummaryViewModel>();
+
+        //        foreach (var store in allStores)
+        //        {
+        //            var openingBalance = db.DailyBalanceVnds
+        //                .Where(d => d.StoreId == store.Id &&
+        //                    DbFunctions.TruncateTime(d.OpeningDate) == startDate.Date)
+        //                .Select(d => (decimal?)d.OpeningBalance)
+        //                .FirstOrDefault() ?? 0;
+
+        //            //var cashSales = db.SOes
+        //            //    .Where(s => s.StoreId == store.Id && s.Date >= startDate && s.Date <= endDate && s.IsCancelled != true)
+        //            //    .Sum(s => (decimal?)s.BillPaidByCash) ?? 0;
+        //            var cashSales = db.SOes
+        //.Where(s => s.StoreId == store.Id &&
+        //            s.Date >= startDate &&
+        //            s.Date <= endDate &&
+        //            (s.IsCancelled == null || s.IsCancelled == false))
+        //.Sum(s => (decimal?)s.BillPaidByCash) ?? 0;
+
+        //            var moneyInput = db.ShopManages
+        //                .Where(t => t.ShoreId == store.Id && t.Date >= startDate && t.Date <= endDate && t.TransactionType == 2)
+        //                .Sum(t => (decimal?)t.Balance) ?? 0;
+
+        //            var bankDeposit = db.ShopManages
+        //                .Where(t => t.ShoreId == store.Id && t.Date >= startDate && t.Date <= endDate && t.TransactionType == 1)
+        //                .Sum(t => (decimal?)t.Balance) ?? 0;
+
+        //            var actualClosing = openingBalance + cashSales + moneyInput - bankDeposit;
+
+        //            var uploadedCreditAmount = db.ScanCreditCards
+        //                .Where(r => r.StoreId == store.Id && r.Date >= startDate && r.Date <= endDate)
+        //                .Sum(r => (decimal?)r.Amount) ?? 0;
+
+        //            summaries.Add(new DailyCashSummaryViewModel
+        //            {
+        //                StoreName = store.Name,
+        //                OpeningBalance = openingBalance,
+        //                CashSales = cashSales,
+        //                MoneyInput = moneyInput,
+        //                BankDeposit = bankDeposit,
+        //                ActualClosingBalance = actualClosing,
+        //                UploadedCreditCardAmount = uploadedCreditAmount
+        //            });
+        //        }
+
+        //        return summaries;
+        //    }
+
+        //    public ActionResult DailySummary(DateTime? startDate, DateTime? endDate)
+        //    {
+        //        // Set default dates: yesterday for start, today for end
+        //        if (!startDate.HasValue)
+        //        {
+        //            startDate = DateTime.Today.AddDays(-1); // Yesterday
+        //        }
+        //        if (!endDate.HasValue)
+        //        {
+        //            endDate = DateTime.Today; // Today
+        //        }
+
+        //        var model = GetCashSummary(startDate.Value, endDate.Value);
+
+        //        // Format dates as dd/MM/yyyy
+        //        ViewBag.StartDate = startDate.Value.ToString("dd/MM/yyyy");
+        //        ViewBag.EndDate = endDate.Value.ToString("dd/MM/yyyy");
+
+        //        return View(model);
+        //    }
+
+
         public List<DailyCashSummaryViewModel> GetCashSummary(DateTime startDate, DateTime endDate)
         {
+            // Ensure endDate includes the entire day
+            var endDateInclusive = endDate.Date.AddDays(1).AddSeconds(-1);
+
             var allStores = db.Stores.ToList();
             var summaries = new List<DailyCashSummaryViewModel>();
 
             foreach (var store in allStores)
             {
+                // 1. Get Opening Balance (properly handles time component)
                 var openingBalance = db.DailyBalanceVnds
-    .Where(d => d.StoreId == store.Id &&
-                DbFunctions.TruncateTime(d.OpeningDate) == startDate.Date)
-    .Select(d => (decimal?)d.OpeningBalance)
-    .FirstOrDefault() ?? 0;
+                    .Where(d => d.StoreId == store.Id &&
+                           DbFunctions.TruncateTime(d.OpeningDate) == startDate.Date)
+                    .OrderByDescending(d => d.OpeningDate) // Get most recent if multiple
+                    .Select(d => (decimal?)d.OpeningBalance)
+                    .FirstOrDefault() ?? 0;
 
+                // 2. Get Cash Sales (with proper NULL handling and date range)
+                var cashSalesQuery = db.SOes
+                    .Where(s => s.StoreId == store.Id &&
+                           s.Date >= startDate.Date &&
+                           s.Date <= endDateInclusive &&
+                           (s.IsCancelled == null || s.IsCancelled == false));
 
+                // Debugging: Check if any records match the criteria
+                var matchingRecords = cashSalesQuery.ToList();
+                Debug.WriteLine($"Found {matchingRecords.Count} records for store {store.Id}");
 
+                var cashSales = cashSalesQuery.Sum(s => (decimal?)s.BillPaidByCash) ?? 0;
 
-                var cashSales = db.SOes
-                    .Where(s => s.StoreId == store.Id && s.Date >= startDate && s.Date <= endDate && s.IsCancelled != true)
-                    .Sum(s => (decimal?)s.BillPaidByCash) ?? 0;
-
+                // 3. Other calculations remain the same
                 var moneyInput = db.ShopManages
-                    .Where(t => t.ShoreId == store.Id && t.Date >= startDate && t.Date <= endDate && t.TransactionType == 2)
+                    .Where(t => t.ShoreId == store.Id &&
+                           t.Date >= startDate.Date &&
+                           t.Date <= endDateInclusive &&
+                           t.TransactionType == 2)
                     .Sum(t => (decimal?)t.Balance) ?? 0;
 
                 var bankDeposit = db.ShopManages
-                    .Where(t => t.ShoreId == store.Id && t.Date >= startDate && t.Date <= endDate && t.TransactionType == 1)
+                    .Where(t => t.ShoreId == store.Id &&
+                           t.Date >= startDate.Date &&
+                           t.Date <= endDateInclusive &&
+                           t.TransactionType == 1)
                     .Sum(t => (decimal?)t.Balance) ?? 0;
 
                 var actualClosing = openingBalance + cashSales + moneyInput - bankDeposit;
 
-                //var creditCardSales = db.SOes
-                //    .Where(s => s.StoreId == store.Id && s.Date >= startDate && s.Date <= endDate && s.IsCancelled != true)
-                //    .Sum(s => (decimal?)s.BillPaidByCreditCard) ?? 0;
-
                 var uploadedCreditAmount = db.ScanCreditCards
-                    .Where(r => r.StoreId == store.Id && r.Date >= startDate && r.Date <= endDate)
+                    .Where(r => r.StoreId == store.Id &&
+                           r.Date >= startDate.Date &&
+                           r.Date <= endDateInclusive)
                     .Sum(r => (decimal?)r.Amount) ?? 0;
 
                 summaries.Add(new DailyCashSummaryViewModel
@@ -131,7 +222,6 @@ namespace MYBUSINESS.Controllers
                     MoneyInput = moneyInput,
                     BankDeposit = bankDeposit,
                     ActualClosingBalance = actualClosing,
-                    //CreditCardSales = creditCardSales,
                     UploadedCreditCardAmount = uploadedCreditAmount
                 });
             }
@@ -139,24 +229,24 @@ namespace MYBUSINESS.Controllers
             return summaries;
         }
 
-
-
         public ActionResult DailySummary(DateTime? startDate, DateTime? endDate)
         {
-            if (!startDate.HasValue || !endDate.HasValue)
-            {
-                // Default to today if not specified
-                startDate = endDate = DateTime.Today;
-            }
+            // Set default dates: yesterday for start, today for end
+            startDate = startDate ?? DateTime.Today.AddDays(-1);
+            endDate = endDate ?? DateTime.Today;
 
-            var model = GetCashSummary(startDate.Value, endDate.Value);
-            ViewBag.StartDate = startDate.Value.ToShortDateString();
-            ViewBag.EndDate = endDate.Value.ToShortDateString();
+            // Convert to start of day and end of day
+            var startDateAdjusted = startDate.Value.Date;
+            var endDateAdjusted = endDate.Value.Date.AddDays(1).AddSeconds(-1);
+
+            var model = GetCashSummary(startDateAdjusted, endDateAdjusted);
+
+            // Format dates as dd/MM/yyyy
+            ViewBag.StartDate = startDateAdjusted.ToString("dd/MM/yyyy");
+            ViewBag.EndDate = endDateAdjusted.ToString("dd/MM/yyyy");
+
             return View(model);
         }
-
-
-
 
 
 
@@ -425,6 +515,7 @@ namespace MYBUSINESS.Controllers
         {
             try
             {
+                if (storeDto == null)
                 if (storeDto == null)
                 {
                     return Json(new { Success = false, Message = "Invalid data received." });

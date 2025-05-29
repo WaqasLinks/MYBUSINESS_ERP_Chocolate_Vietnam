@@ -48,6 +48,33 @@
 
                                 </div>
 
+                                <div class="form-group">
+                                    <label>Product Type</label>
+                                    <select class="form-control" id="productTypeDropdown" name="ProductType">
+                                        <option value="">-- Select Product Type --</option>
+                                        <option value="1" @((Model.Product.PType & 1) == 1 ? "selected" : "")>Variable Product</option>
+                                        <option value="2" @((Model.Product.PType & 2) == 2 ? "selected" : "")>Excess Product</option>
+                                        <option value="3" @((Model.Product.PType & 3) == 3 ? "selected" : "")>ByProduct</option>
+                                        <option value="4" @((Model.Product.PType & 4) == 4 ? "selected" : "")>Finished Product</option>
+                                        <option value="5" @((Model.Product.PType & 5) == 5 ? "selected" : "")>Ingredient</option>
+                                        <option value="6" @((Model.Product.PType & 6) == 6 ? "selected" : "")>Intermediary Ingredient</option>
+                                        <option value="7" @((Model.Product.PType & 7) == 7 ? "selected" : "")>Merchandise</option>
+                                        <option value="8" @((Model.Product.PType & 8) == 8 ? "selected" : "")>Flat Packaging</option>
+                                        <option value="9" @((Model.Product.PType & 9) == 9 ? "selected" : "")>Finish Packaging</option>
+                                    </select>
+                                </div>
+
+                                <!-- Product Dropdown - Show only if Variable Product is selected -->
+                                <div class="form-group" id="productDropdownContainer" style="display: @((Model.Product.PType & 1) == 1 ? "block" : "none");">
+                                    @Html.LabelFor(model => model.Product.VarProdParentId, "Select Product", new { @class = "control-label" })
+                                    @Html.DropDownListFor(
+                                        model => model.Product.VarProdParentId,
+                                        ViewBag.ProductList as List<SelectListItem>,
+                                        "Select a Product",
+                                        new { @class = "form-control", @id = "productDropdown" }
+                                    )
+                                </div>
+
 
 
                                 @*@Html.HiddenFor(model => model.IsService, new { Value = "false" })*@
@@ -59,22 +86,29 @@
                                         <option value="true">Service</option>
                                     </select>
                                 </div>
-                                <div class="form-group">
+                                <div id="barcode-field" class="form-group optional-field">
                                     @Html.LabelFor(model => model.Product.BarCode, htmlAttributes: new { @class = "control-label" })
 
                                     @Html.EditorFor(model => model.Product.BarCode, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.Product.BarCode, "", new { @class = "text-danger" })
 
                                 </div>
-                                <div class="form-group">
+                                <div id="einvoice-field" class="form-group optional-field">
                                     @Html.LabelFor(model => Model.Product.EInvoicePCode, htmlAttributes: new { @class = "control-label" })
 
-                                    @Html.EditorFor(model => model.Product.EInvoicePCode, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => model.Product.EInvoicePCode, "", new { @class = "text-danger" })
+                                    @Html.EditorFor(model => Model.Product.EInvoicePCode, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => Model.Product.EInvoicePCode, "", new { @class = "text-danger" })
 
                                 </div>
+                                @*<div class="form-group">
+            @Html.LabelFor(model => Model.Product.EInvoicePCode, htmlAttributes: new { @class = "control-label" })
 
-                                <div class="form-group">
+            @Html.EditorFor(model => model.Product.EInvoicePCode, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Product.EInvoicePCode, "", new { @class = "text-danger" })
+
+        </div>*@
+
+                                <div id="product-name-en" class="form-group">
                                     @*@Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label" })*@
                                     <lebel><b>Product Name English</b></lebel>
 
@@ -83,20 +117,33 @@
 
                                 </div>
 
-                                <div class="form-group">
+                                <div id="product-name-vn" class="form-group">
                                     <lebel><b>Product Name Vietnamese</b></lebel>
                                     @Html.EditorFor(model => Model.Product.PVATName, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
                                     @Html.ValidationMessageFor(model => model.Product.PVATName, "", new { @class = "text-danger" })
 
                                 </div>
 
-                                <div class="form-group">
-                                    @*@Html.LabelFor(model => model.Saleable, htmlAttributes: new { @class = "control-label" })*@
-                                    <label>Supplier </label>
-                                    <input type="text" autocomplete="off" class="form-control" name="Supplier.Name" id="supplier" value="" placeholder="Supplier" data-toggle="tooltip" data-placement="top" title="Supplier">
+                                <div id="supplier-field" class="form-group optional-field">
+                                    @Html.LabelFor(model => model.Product.Supplier, htmlAttributes: new { @class = "control-label" })
+
+                                    <input type="text"
+                                           autocomplete="off"
+                                           class="form-control"
+                                           name="Product.Supplier"
+                                           id="supplier"
+                                           value="@Model.Product.Supplier"
+                                           placeholder="Supplier"
+                                           data-toggle="tooltip"
+                                           data-placement="top"
+                                           title="Supplier"
+                                           required />
+
+                                    @Html.ValidationMessageFor(model => model.Product.Supplier, "", new { @class = "text-danger" })
                                 </div>
 
-                                <div class="form-group">
+
+                                <div id="category-field" class="form-group optional-field">
                                     <label><b>Category</b></label>
                                     <select class="form-control" name="Product.Category" id="selectCategory">
                                         <option value="" @(Model.Product.Category == null ? "selected" : "")>Select</option>
@@ -119,7 +166,7 @@
             </select>
 
         </div>*@
-                                <div class="form-group">
+                                <div id="unit-field" class="form-group optional-field">
                                     <label><b>Unit</b><span style="color: red;"> *</span></label>
                                     <select class="form-control" name="Product.Unit" id="selectUnit">
                                         <option value="" @(Model.Product.Unit == null ? "selected" : "")>Select</option>
@@ -130,7 +177,7 @@
                                     </select>
                                 </div>
 
-                                <div id="pprice" class="form-group">
+                                <div id="purchase-price-field" class="form-group optional-field">
                                     @*@Html.LabelFor(model => model.PurchasePrice, htmlAttributes: new { @class = "control-label" })*@
                                     <lebel><b>Purchase Price</b></lebel>
                                     @Html.EditorFor(model => model.Product.PurchasePrice, new { htmlAttributes = new { @class = "form-control" } })
@@ -138,7 +185,7 @@
 
                                 </div>
 
-                                <div class="form-group">
+                                <div id="sale-price-field" class="form-group optional-field">
                                     @*@Html.LabelFor(model => model.Product.SalePrice, htmlAttributes: new { @class = "control-label" })*@
                                     <leble><b>Excluded Sale Price (VAT) </b></leble>
 
@@ -148,20 +195,20 @@
                                 </div>
 
                                 @*<div class="form-group">
-                                    <leble><b>Excluded Sale Price (VAT) </b></leble>
+            <leble><b>Excluded Sale Price (VAT) </b></leble>
 
-                                    @Html.EditorFor(model => Model.Product.ExcludedSalePrice, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => model.Product.ExcludedSalePrice, "", new { @class = "text-danger" })
+            @Html.EditorFor(model => Model.Product.ExcludedSalePrice, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Product.ExcludedSalePrice, "", new { @class = "text-danger" })
 
-                                </div>*@
-                                <div class="form-group">
+        </div>*@
+                                <div id="wholesale-field" class="form-group optional-field">
                                     @Html.LabelFor(model => model.Product.WholeSalePrice, htmlAttributes: new { @class = "control-label" })
 
                                     @Html.EditorFor(model => model.Product.WholeSalePrice, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.Product.WholeSalePrice, "", new { @class = "text-danger" })
 
                                 </div>
-                                <div id="stk" class="form-group">
+                                <div id="stk" class="form-group" style="display:none">
 
                                     @Html.LabelFor(model => model.Product.Stock, htmlAttributes: new { @class = "control-label" })
                                     @{
@@ -179,7 +226,7 @@
                                     @Html.ValidationMessageFor(model => model.Product.Stock, "", new { @class = "text-danger" })
 
                                 </div>
-                                <div id="stk" class="form-group">
+                                <div id="stk" class="form-group" style="display:none">
                                     @Html.LabelFor(model => model.Product.Remarks, htmlAttributes: new { @class = "control-label" })
 
                                     @Html.EditorFor(model => model.Product.Remarks, new { htmlAttributes = new { @class = "form-control", @id = "Remarks" } })
@@ -196,69 +243,7 @@
 
 
 
-                                <div class="form-group">
-                                    <label>FinishedProduct</label>
-                                    <input type="checkbox" class="form-check-input" id="finishedproduct" name="FinishedProduct" value="4"
-                                           @*@(Model.Product.PType.HasValue && (Model.Product.PType & 4) != 0 ? "checked" : "") />*@
-                                           @(Model.Product.PType == 4 ? "checked" : "") />
-                                    <br />
 
-                                    <label>Ingredient</label>
-                                    <input type="checkbox" class="form-check-input" id="ingredients" name="Ingredient" value="5"
-                                           @(Model.Product.PType == 5 ? "checked" : "") />
-
-                                    <br />
-
-                                    <label>Intermediary Ingredient</label>
-                                    <input type="checkbox" class="form-check-input" id="intermediaryingredient" name="IntermediaryIngredient" value="6"
-                                           @*@(Model.Product.PType.HasValue && (Model.Product.PType & 6) == 6 ? "checked" : "") />*@
-                                           @(Model.Product.PType == 6 ? "checked" : "") />
-
-                                    <br />
-
-                                    <label>Merchandise</label>
-                                    <input type="checkbox" class="form-check-input" id="merchandise" name="Merchandise" value="7"
-                                           @*@(Model.Product.PType.HasValue && (Model.Product.PType & 7) == 7 ? "checked" : "") />*@
-                                           @(Model.Product.PType == 7 ? "checked" : "") />
-
-                                </div>
-
-                                <div class="form-group">
-                                    <!-- Purchasable Checkbox -->
-                                    <label>Variable Product</label>
-                                    <input type="checkbox" class="form-check-input" id="variableProduct" name="VariableProduct" value="1"
-                                           @(Model.Product.PType == 1 ? "checked" : "") />
-
-
-
-
-
-                                    <!-- Product Dropdown -->
-                                    <div class="form-group" id="productDropdownContainer" style="display: @(Model.Product.PType == 1 ? "block" : "none");">
-                                        @Html.LabelFor(model => model.Product.VarProdParentId, "Select Product", new { @class = "control-label" })
-                                        @Html.DropDownListFor(
-                                            model => model.Product.VarProdParentId,
-                                            ViewBag.ProductList as List<SelectListItem>,
-                                            "Select a Product",
-                                            new { @class = "form-control", @id = "productDropdown" }
-                                        )
-                                    </div>
-
-                                    <!-- Manufacturable Checkbox -->
-                                    <label>Excess Product</label>
-                                    &nbsp;
-                                    <input type="checkbox" class="form-check-input" id="excessProduct" name="ExcessProduct" value="2"
-                                           @(Model.Product.PType == 2 ? "checked" : "") />
-                                    &nbsp;
-                                    &nbsp;
-                                    &nbsp;
-
-                                    <!-- Saleable Checkbox -->
-                                    <label>ByProduct</label>
-                                    &nbsp;
-                                    <input type="checkbox" class="form-check-input" id="byProduct" name="ByProduct" value="3"
-                                           @(Model.Product.PType == 3 ? "checked" : "") />
-                                </div>
                             </div>
                             <div class="box-footer">
                                 <input type="submit" value="Update" id="CreateProduct" class="btn btn-primary" />
@@ -269,7 +254,7 @@
 
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div id="shape-detail" class="col-md-6 optional-field product-detail-section">
                     <!-- general form elements -->
                     <!-- general form elements -->
                     <div class="box box-primary">
@@ -278,7 +263,7 @@
                         </div>
 
 
-                        <div class="box-body">
+                        <div  class="box-body">
 
 
 
@@ -358,93 +343,63 @@
   //  document.getElementById('SOCreate').reset(); // has to be handle
   //});
     $(document).ready(function () {
-        $("#finishedproduct, #ingredients, #intermediaryingredient, #merchandise").on("change", function () {
-            if ($(this).is(":checked")) {
-                // Uncheck all other main category checkboxes
-                $("#finishedproduct, #ingredients, #intermediaryingredient, #merchandise").not(this).prop("checked", false);
+        console.log("Current product type value:", $('#productTypeDropdown').val());
 
-                // Hide dropdown container when any main category is selected
-                $('#productDropdownContainer').slideUp();
+        // Function to show/hide fields based on product type
+        function showFieldsForCurrentProductType() {
+            // Hide all optional fields first
+            $('.optional-field').hide();
+            $('#shape-detail').hide();
+            $('#productDropdownContainer').hide();
 
-                // Disable and uncheck Variable, Excess, and ByProduct checkboxes
-                $("#variableProduct, #excessProduct, #byProduct").prop("checked", false).prop("disabled", true);
-            } else {
-                // If no main category is checked, enable Variable, Excess, and ByProduct checkboxes
-                if (!$("#finishedproduct, #ingredients, #intermediaryingredient, #merchandise").is(":checked")) {
-                    $("#variableProduct, #excessProduct, #byProduct").prop("disabled", false);
-                }
+            // Get selected product type
+            const productType = $('#productTypeDropdown').val();
+
+            // Always show these required fields
+            $('#product-name-en, #product-name-vn').show();
+
+            // Show fields based on product type
+            switch (productType) {
+                case "1": // Variable Product
+                    $('#supplier-field, #category-field, #unit-field').show();
+                    $('#productDropdownContainer').show();
+                    break;
+                case "2": // Excess Product
+                    $('#supplier-field, #category-field, #unit-field').show();
+                    break;
+                case "3": // ByProduct
+                    $('#supplier-field, #category-field, #unit-field').show();
+                    break;
+                case "4": // Finished Product
+                    $('#barcode-field, #einvoice-field, #supplier-field, #category-field, #unit-field, #sale-price-field, #wholesale-field, #shape-detail').show();
+                    break;
+                case "5": // Ingredient
+                    $('#supplier-field, #category-field, #unit-field, #purchase-price-field').show();
+                    break;
+                case "6": // Intermediary Ingredient
+                    $('#supplier-field, #category-field, #unit-field, #shape-detail').show();
+                    break;
+                case "7": // Merchandise
+                    $('#supplier-field, #category-field, #unit-field, #purchase-price-field').show();
+                    break;
+                case "8": // Flat Packaging
+                case "9": // Finish Packaging
+                    $('#supplier-field, #category-field, #unit-field').show();
+                    break;
+                default:
+                    // Default case if nothing is selected
+                    break;
             }
-        });
-
-        // Ensure that when the page loads, the correct checkboxes are disabled
-        if ($("#finishedproduct, #ingredients, #intermediaryingredient, #merchandise").is(":checked")) {
-            $("#variableProduct, #excessProduct, #byProduct").prop("checked", false).prop("disabled", true);
         }
-    });
-        //$("#purchasable, #manufacturable, #saleable").on("change", function () {
-        //    if ($(this).is(":checked")) {
-        //        $('#productDropdownContainer').slideUp();
 
-        //        // Only uncheck Variable, Excess, and ByProduct if Manufacturable is NOT checked
-        //        if (!$("#manufacturable").is(":checked")) {
-        //            $("#variableProduct, #excessProduct, #byProduct").prop("checked", false);
-        //        }
-        //    }
-        //});
+        // Initialize the fields visibility immediately when page loads
+        showFieldsForCurrentProductType();
 
-        $("#variableProduct, #excessProduct, #byProduct").on("change", function () {
-            if ($(this).is(":checked")) {
-                $("#purchasable, #saleable").prop("checked", false);
-
-                // If Variable Product is checked, don't uncheck Manufacturable
-                if (this.id === "variableProduct") {
-                    $("#excessProduct, #byProduct").prop("checked", false);
-                }
-
-                // If Excess Product is checked
-                if (this.id === "excessProduct") {
-                    $('#productDropdownContainer').slideUp();
-                    $("#variableProduct, #byProduct").prop("checked", false);
-                }
-
-                // If By Product is checked
-                if (this.id === "byProduct") {
-                    $('#productDropdownContainer').slideUp();
-                    $("#variableProduct, #excessProduct").prop("checked", false);
-                }
-            }
+        // Also handle product type dropdown change
+        $("#productTypeDropdown").on("change", function () {
+            showFieldsForCurrentProductType();
         });
-
-    function toggleDropdown() {
-        if ($('#variableProduct').is(':checked')) {
-            $('#productDropdownContainer').slideDown();
-        } else {
-            $('#productDropdownContainer').slideUp();
-        }
-    }
-
-    // Attach event listener to Variable Product checkbox
-    $("#variableProduct").on("change", function () {
-        toggleDropdown();
     });
-
-    // Ensure correct state when the page loads
-    toggleDropdown();
-        //function toggleDropdown() {
-        //    if ($('#variableProductCheckbox').is(':checked')) {
-        //        $('#productDropdownContainer').slideDown();
-        //    } else {
-        //        $('#productDropdownContainer').slideUp();
-        //    }
-        //}
-
-        // Check initial state on page load
-        toggleDropdown();
-
-        // Attach event listener to checkbox
-        $('#variableProductCheckbox').change(function () {
-            toggleDropdown();
-        });
     
       @*$('#productDropdown').change(function () {
           var productId = $(this).val(); // Get selected product ID

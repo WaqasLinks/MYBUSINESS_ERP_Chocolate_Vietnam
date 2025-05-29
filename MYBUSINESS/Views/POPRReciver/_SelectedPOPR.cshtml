@@ -39,25 +39,25 @@
                                             @Html.DisplayName("Supplier")
                                         </th>
                                         <th>Product</th>
-                                        <th>@Html.DisplayNameFor(model => model.PurchaseReturn)</th>
+                                        @*<th style="display:none;">@Html.DisplayNameFor(model => model.PurchaseReturn)</th>*@
                                         <th style="display:none;">
                                             @Html.DisplayNameFor(model => model.PurchaseOrderQty)
                                         </th>
-                                        <th>
+                                        <th style="display:none;">
                                             @Html.DisplayNameFor(model => model.PurchaseOrderAmount)
                                         </th>
 
-                                        <th>
+                                        <th style="display:none;">
                                             @Html.DisplayNameFor(model => model.Discount)
                                         </th>
-                                        <th>
+                                        <th style="display:none;">
                                             Prev. Balance
                                         </th>
-                                        <th>
+                                        <th style="display:none;">
                                             @Html.DisplayNameFor(model => model.BillPaid)
                                         </th>
 
-                                        <th>
+                                        <th style="display:none;">
                                             @Html.DisplayNameFor(model => model.Balance)
                                         </th>
                                         @*<th>
@@ -66,6 +66,7 @@
                                         <th class="noPrint">
 
                                         </th>
+                                        <th></th>
                                         @*
                                             <th>
                                                 @Html.DisplayNameFor(model => model.SaleReturn)
@@ -90,8 +91,14 @@
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.Supplier.Name)
                                             </td>
-
                                             <td>
+                                                @foreach (var pod in item.PODRecivers)
+                                                {
+                                                    @pod.Product.Name
+                                                }
+                                            </td>
+
+                                            <td style="display:none;">
                                                 @(item.PurchaseReturn ? "Return" : "Sale")
                                             </td>
                                             <td style="display:none;">
@@ -108,7 +115,7 @@
                                                     }
                                                 }
                                             </td>
-                                            <td>
+                                            <td style="display:none;">
                                                 @Html.DisplayFor(modelItem => item.PurchaseOrderAmount)
                                                 @{
 
@@ -124,7 +131,7 @@
                                                 }
                                             </td>
 
-                                            <td>
+                                            <td style="display:none;">
                                                 @Html.DisplayFor(modelItem => item.Discount)
                                                 @{
                                                     if (item.PurchaseReturn == false)
@@ -138,10 +145,10 @@
 
                                                 }
                                             </td>
-                                            <td>
+                                            <td style="display:none;">
                                                 @Html.DisplayFor(modelItem => item.PrevBalance)
                                             </td>
-                                            <td>
+                                            <td style="display:none;">
                                                 @Html.DisplayFor(modelItem => item.BillPaid)
                                                 @{
                                                     if (item.PurchaseReturn == false)
@@ -157,7 +164,7 @@
 
                                             </td>
 
-                                            <td>
+                                            <td style="display:none;">
                                                 @Html.DisplayFor(modelItem => item.Balance)
                                             </td>
 
@@ -171,7 +178,7 @@
                                             @*<td>
             @Html.DisplayFor(modelItem => item.Employee.Login)
         </td>*@
-                                            <td class="noPrint">
+                                            <td class="noPrint" style="display:none;">
                                                 @*@Html.ActionLink("View", "Edit", new { id = item.Id }) |*@
 
                                                 @{
@@ -205,8 +212,8 @@
                                                     {
                                                         @Html.ActionLink("View", "Edit", new { id = item.Id, readonlyMode = true },
                                                             new { @class = "btn btn-primary text-white" })
+                                                        @Html.ActionLink("Print", "PrintSO3", new { id = item.Id }, new { @class = "btn btn-warning" })
 
-                                                        
                                                     }
                                                     else
                                                     {
@@ -216,10 +223,8 @@
                                                 </td>
 
                                                 }
-                                                |
 
-                                                @Html.ActionLink("Print", "PrintSO3", new { id = item.Id }, new { @class = "btn btn-warning" })
-                                                @*|
+                                                @*
             @Html.ActionLink("Details", "Details", new { id = item.Id }) |
             @Html.ActionLink("Delete", "Delete", new { id = item.Id })*@
                                                 </td>
@@ -234,15 +239,16 @@
                                         <td></td>
                                         <td></td>
                                         <td style="display:none;">@TotalPOQty</td>
-                                        <td>@TotalPOAmout</td>
+                                        <td style="display:none;">@TotalPOAmout</td>
 
-                                        <td>@Discount</td>
-                                        <td>@*@PrevBalance*@</td>
-                                        <td>@BillPaid</td>
+                                        <td style="display:none;">@Discount</td>
+                                        <td style="display:none;">@*@PrevBalance*@</td>
+                                        <td style="display:none;">@BillPaid</td>
 
-                                        <td>@*@ViewBag.TotalBalance*@</td>
+                                        <td style="display:none;">@*@ViewBag.TotalBalance*@</td>
 
                                         @*<td></td>*@
+                                        <td></td>
                                         <td></td>
                                     </tr>
                                 </tfoot>

@@ -62,11 +62,16 @@ new { @class = "form-control product-dropdown", @id = "productDropdown", @readon
                         </div>
 
                         <div class="form-group">
-                            @Html.Label("Unit", new { @class = "control-label" })
-                            <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
-                            @Html.HiddenFor(model => model.PostProduction.Unit, new { @id = "unitHiddenField" })
+                            @Html.LabelFor(model => model.PostProduction.Unit, new { @class = "control-label" })
+                            @Html.TextBoxFor(model => model.PostProduction.Unit, new
+                            {
+                                @class = "form-control",
+                                @readonly = "readonly",
+                                placeholder = "Unit will be displayed here"
+                            })
                             @Html.ValidationMessageFor(model => model.PostProduction.Unit, "", new { @class = "text-danger" })
                         </div>
+
 
 
 

@@ -1,7 +1,6 @@
 ﻿@model MYBUSINESS.Models.DashboardStatsViewModel
 
-
-<h2>Dashboard Summary</h2>
+<h2 style="text-align:center">Dashboard Summary</h2>
 
 <form method="get" asp-action="DashboardStats" class="row g-3 mb-4">
     <div class="col-md-4">
@@ -19,7 +18,6 @@
             @foreach (var store in (SelectList)ViewBag.Stores)
             {
                 <option value="@store.Value" @(store.Value == Model.StoreId?.ToString() ? "selected" : "")>@store.Text</option>
-
             }
         </select>
     </div>
@@ -32,24 +30,24 @@
     <div class="col-md-6">
         <div class="card bg-light shadow-sm p-3 mb-2 rounded">
             <h5>Total Sales Without VAT:</h5>
-            <h3>@Model.TotalSalesWithoutVAT.ToString("C")</h3>
+            <h3>@string.Format("{0}đ", Model.TotalSalesWithoutVAT.ToString("N2"))</h3>
         </div>
     </div>
     <div class="col-md-6">
         <div class="card bg-light shadow-sm p-3 mb-2 rounded">
             <h5>Total Sales With VAT:</h5>
-            <h3>@Model.TotalSalesWithVAT.ToString("C")</h3>
+            <h3>@string.Format("{0}đ", Model.TotalSalesWithVAT.ToString("N2"))</h3>
         </div>
     </div>
 </div>
 
-<h4>Top Selling Products</h4>
+<h4>Sales By Products</h4>
 <table class="table table-striped table-bordered">
     <thead>
         <tr>
             <th>Product</th>
             <th>Total Quantity</th>
-            <th>Total Sale Value</th>
+            <th>Total Sales Value (without VAT)</th>
         </tr>
     </thead>
     <tbody>
@@ -58,7 +56,7 @@
             <tr>
                 <td>@product.ProductName</td>
                 <td>@product.TotalQuantity</td>
-                <td>@product.TotalSaleValue.ToString("C")</td>
+                <td>@string.Format("{0}đ", product.TotalSaleValue.ToString("N2"))</td>
             </tr>
         }
     </tbody>

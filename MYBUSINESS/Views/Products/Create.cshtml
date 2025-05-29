@@ -53,147 +53,197 @@
                                         <option value="true">Service</option>
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.Product.BarCode, htmlAttributes: new { @class = "control-label" })
-
-                                    @Html.EditorFor(model => model.Product.BarCode, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => model.Product.BarCode, "", new { @class = "text-danger" })
-
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(model => Model.Product.EInvoicePCode, htmlAttributes: new { @class = "control-label" })
-
-                                    @Html.EditorFor(model => model.Product.EInvoicePCode, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => model.Product.EInvoicePCode, "", new { @class = "text-danger" })
-
-                                </div>
-                                <div class="form-group">
-                                    @*@Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label" })*@
-                                    <lebel><b>Product Name English</b></lebel>
-
-                                    @Html.EditorFor(model => model.Product.Name, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
-                                    @Html.ValidationMessageFor(model => model.Product.Name, "", new { @class = "text-danger" })
-
-                                </div>
 
                                 <div class="form-group">
-                                    <lebel><b>Product Name Vietnamese</b></lebel>
-                                    @Html.EditorFor(model => Model.Product.PVATName, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
-                                    @Html.ValidationMessageFor(model => model.Product.PVATName, "", new { @class = "text-danger" })
-                                </div>
-
-                                <!--<div class="form-group">-->
-                                @*@Html.LabelFor(model => model.Saleable, htmlAttributes: new { @class = "control-label" })*@
-                                <!--<label>Supplier </label>
-        <input type="text" autocomplete="off" class="form-control" name="Name0" id="supplier" value="" placeholder="Supplier" data-toggle="tooltip" data-placement="top" title="Supplier">
-    </div>-->
-                                <div class="form-group">
-                                    @Html.LabelFor(model => Model.Product.Supplier, htmlAttributes: new { @class = "control-label" })
-
-                                    <!-- Use an input field for Supplier -->
-                                    <input type="text" autocomplete="off" class="form-control" name="Supplier" id="supplier" value="@Model.Product.Supplier" placeholder="Supplier" data-toggle="tooltip" data-placement="top" title="Supplier" required />
-
-                                    @Html.ValidationMessageFor(model => Model.Product.Supplier, "", new { @class = "text-danger" })
-                                </div>
-
-                                <div class="form-group">
-                                    <label><b>Category</b></label>
-                                    <select class="form-control" name="Product.Category" id="selectCategory" required>
-                                        <option value="" selected>Select</option>
-                                        <option value="Box">Box</option>
-                                        <option value="Bar">Bar</option>
-                                        <option value="Bag">Bag</option>
-                                        <option value="Miscellaneous">Miscellaneous</option>
+                                    <label>Product Type</label>
+                                    <select class="form-control" id="productTypeDropdown" name="ProductType">
+                                        <option value="">-- Select Product Type --</option>
+                                        <option value="1" @(Model.Product.PType == 1 ? "selected" : "")>Variable Product</option>
+                                        <option value="2" @(Model.Product.PType == 2 ? "selected" : "")>Excess Product</option>
+                                        <option value="3" @(Model.Product.PType == 3 ? "selected" : "")>ByProduct</option>
+                                        <option value="4" @(Model.Product.PType == 4 ? "selected" : "")>Finished Product</option>
+                                        <option value="5" @(Model.Product.PType == 5 ? "selected" : "")>Ingredient</option>
+                                        <option value="6" @(Model.Product.PType == 6 ? "selected" : "")>Intermediary Ingredient</option>
+                                        <option value="7" @(Model.Product.PType == 7 ? "selected" : "")>Merchandise</option>
+                                        <option value="8" @(Model.Product.PType == 8 ? "selected" : "")>Flat Packaging</option>
+                                        <option value="9" @(Model.Product.PType == 9 ? "selected" : "")>Finish Packaging</option>
                                     </select>
-                                </div>
+                                    </div>
 
-                                <div class="form-group">
-                                    <label><b>Unit</b><span style="color: red;"> *</span></label>
-                                    <select class="form-control" name="Product.Unit" id="selectUnit" required>
-                                        <option value="" selected>Select</option>
-                                        <option value="Box">Box</option>
-                                        <option value="Kg">Kg</option>
-                                        <option value="Gram">Gram</option>
-                                        <option value="Liter">Liter</option>
-                                    </select>
-                                </div>
+                                    <!-- Product Dropdown - Initially Hidden -->
+                                    <div class="form-group" id="productDropdownContainer" style="display: none;">
+                                        @Html.LabelFor(model => model.Product.VarProdParentId, "Select Reference Product", new { @class = "control-label" })
+                                        @Html.DropDownListFor(
+                                                          model => model.Product.VarProdParentId,
+                                                          ViewBag.ProductList as List<SelectListItem>,
+                                                          "Select a Product",
+                                                          new { @class = "form-control product-dropdown", @id = "productDropdown" }
+                                                      )
+                                        @Html.ValidationMessageFor(model => model.Product.VarProdParentId, "", new { @class = "text-danger" })
+                                    </div>
+                                    @*<div id="barcode-field" class="form-group">
+                @Html.LabelFor(model => model.Product.BarCode, htmlAttributes: new { @class = "control-label" })
+
+                @Html.EditorFor(model => model.Product.BarCode, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Product.BarCode, "", new { @class = "text-danger" })
+
+            </div>*@
+                                    <div id="barcode-field" class="form-group optional-field">
+                                        @Html.LabelFor(model => model.Product.BarCode, htmlAttributes: new { @class = "control-label" })
+                                        @Html.EditorFor(model => model.Product.BarCode, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                    <div id="einvoice-field" class="form-group optional-field">
+                                        @Html.LabelFor(model => Model.Product.EInvoicePCode, htmlAttributes: new { @class = "control-label" })
+
+                                        @Html.EditorFor(model => model.Product.EInvoicePCode, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Product.EInvoicePCode, "", new { @class = "text-danger" })
+
+                                    </div>
+                                    <div id="product-name-en" class="form-group">
+                                        @*@Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label" })*@
+                                        <lebel><b>Product Name English</b></lebel>
+
+                                        @Html.EditorFor(model => model.Product.Name, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                                        @Html.ValidationMessageFor(model => model.Product.Name, "", new { @class = "text-danger" })
+
+                                    </div>
+
+                                    <div id="product-name-vn" class="form-group">
+                                        <lebel><b>Product Name Vietnamese</b></lebel>
+                                        @Html.EditorFor(model => Model.Product.PVATName, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                                        @Html.ValidationMessageFor(model => model.Product.PVATName, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    <!--<div class="form-group">-->
+                                    @*@Html.LabelFor(model => model.Saleable, htmlAttributes: new { @class = "control-label" })*@
+                                    <!--<label>Supplier </label>
+            <input type="text" autocomplete="off" class="form-control" name="Name0" id="supplier" value="" placeholder="Supplier" data-toggle="tooltip" data-placement="top" title="Supplier">
+        </div>-->
+                                    <div id="supplier-field" class="form-group optional-field">
+                                        @Html.LabelFor(model => Model.Product.Supplier, htmlAttributes: new { @class = "control-label" })
+
+                                        <!-- Use an input field for Supplier -->
+                                        @*<input type="text" autocomplete="off" class="form-control" name="Supplier" id="supplier" value="@Model.Product.Supplier" placeholder="Supplier" data-toggle="tooltip" data-placement="top" title="Supplier" required />*@
+                                        <input type="text" autocomplete="off" class="form-control"
+                                               name="Product.Supplier"
+                                               id="supplier"
+                                               value="@Model.Product.Supplier"
+                                               placeholder="Supplier"
+                                               data-toggle="tooltip"
+                                               data-placement="top"
+                                               title="Supplier"
+                                               required />
 
 
-                                @*<div class="form-group">
-            <label><b>Unit</b></label>
-            <select class="form-control" name="Product.Unit" id="selectUnit">
-                <option value="" selected>Select</option>
-                <option value="Box">Box</option>
-                <option value="Kg">Kg</option>
-                <option value="Liter">Unit</option>
-                <option value="Liter">Liter</option>
-            </select>
-        </div>*@
+                                        @Html.ValidationMessageFor(model => Model.Product.Supplier, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    <div id="category-field" class="form-group optional-field">
+                                        <label><b>Category</b></label>
+                                        <select class="form-control" name="Product.Category" id="selectCategory" required>
+                                            <option value="" selected>Select</option>
+                                            <option value="Box">Box</option>
+                                            <option value="Bar">Bar</option>
+                                            <option value="Bag">Bag</option>
+                                            <option value="Miscellaneous">Miscellaneous</option>
+                                        </select>
+                                    </div>
+
+                                    <div id="unit-field" class="form-group optional-field">
+                                        <label><b>Unit</b><span style="color: red;"> *</span></label>
+                                        <select class="form-control" name="Product.Unit" id="selectUnit" required>
+                                            <option value="" selected>Select</option>
+                                            <option value="Box">Box</option>
+                                            <option value="Kg">Kg</option>
+                                            <option value="Gram">Gram</option>
+                                            <option value="Liter">Liter</option>
+                                        </select>
+                                    </div>
 
 
-                                <div id="pprice" class="form-group">
-                                    @*@Html.LabelFor(model => model.PurchasePrice, htmlAttributes: new { @class = "control-label" })*@
-                                    <lebel><b>Purchase Price</b></lebel>
-                                    @Html.EditorFor(model => model.Product.PurchasePrice, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => model.Product.PurchasePrice, "", new { @class = "text-danger" })
+                                    @*<div class="form-group">
+                <label><b>Unit</b></label>
+                <select class="form-control" name="Product.Unit" id="selectUnit">
+                    <option value="" selected>Select</option>
+                    <option value="Box">Box</option>
+                    <option value="Kg">Kg</option>
+                    <option value="Liter">Unit</option>
+                    <option value="Liter">Liter</option>
+                </select>
+            </div>*@
 
-                                </div>
 
-                                <div class="form-group">
-                                    <leble><b>Excluded Sale Price (VAT) </b></leble>
+                                    <div id="purchase-price-field" class="form-group optional-field">
+                                        @*@Html.LabelFor(model => model.PurchasePrice, htmlAttributes: new { @class = "control-label" })*@
+                                        <lebel><b>Purchase Price</b></lebel>
+                                        @Html.EditorFor(model => model.Product.PurchasePrice, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Product.PurchasePrice, "", new { @class = "text-danger" })
 
-                                    @Html.EditorFor(model => model.Product.SalePrice, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => model.Product.SalePrice, "", new { @class = "text-danger" })
+                                    </div>
 
-                                </div>
+                                    <div id="sale-price-field" class="form-group optional-field">
+                                        <leble><b>Excluded Sale Price (VAT) </b></leble>
 
-                                @*<div class="form-group">
-            <leble><b>Excluded Sale Price (VAT) </b></leble>
+                                        @Html.EditorFor(model => model.Product.SalePrice, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Product.SalePrice, "", new { @class = "text-danger" })
 
-            @Html.EditorFor(model => Model.Product.ExcludedSalePrice, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Product.ExcludedSalePrice, "", new { @class = "text-danger" })
+                                    </div>
 
-        </div>*@
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.Product.WholeSalePrice, htmlAttributes: new { @class = "control-label" })
+                                    @*<div class="form-group">
+                <leble><b>Excluded Sale Price (VAT) </b></leble>
 
-                                    @Html.EditorFor(model => model.Product.WholeSalePrice, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => model.Product.WholeSalePrice, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => Model.Product.ExcludedSalePrice, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Product.ExcludedSalePrice, "", new { @class = "text-danger" })
 
-                                </div>
-                                <div id="stk" class="form-group">
+            </div>*@
+                                    <div id="wholesale-field" class="form-group optional-field">
+                                        @Html.LabelFor(model => model.Product.WholeSalePrice, htmlAttributes: new { @class = "control-label" })
 
-                                    @Html.LabelFor(model => model.Product.Stock, htmlAttributes: new { @class = "control-label" })
-                                    @{
-                                        MYBUSINESS.Models.Employee currentUser = (MYBUSINESS.Models.Employee)HttpContext.Current.Session["CurrentUser"];
-                                        if (currentUser.EmployeeTypeId == 0)
-                                        {
-                                            @Html.EditorFor(model => model.Product.Stock, new { htmlAttributes = new { @class = "form-control", @id = "stock" } })
+                                        @Html.EditorFor(model => model.Product.WholeSalePrice, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Product.WholeSalePrice, "", new { @class = "text-danger" })
+
+                                    </div>
+                                    <div id="stk" class="form-group" style="display:none">
+
+                                        @Html.LabelFor(model => model.Product.Stock, htmlAttributes: new { @class = "control-label" })
+                                        @{
+                                            MYBUSINESS.Models.Employee currentUser = (MYBUSINESS.Models.Employee)HttpContext.Current.Session["CurrentUser"];
+                                            if (currentUser.EmployeeTypeId == 0)
+                                            {
+                                                @Html.EditorFor(model => model.Product.Stock, new { htmlAttributes = new { @class = "form-control", @id = "stock" } })
+                                            }
+                                            else
+                                            {
+                                                @Html.EditorFor(model => model.Product.Stock, new { htmlAttributes = new { @class = "form-control", @id = "stock", @disabled = "disabled" } })
+                                            }
                                         }
-                                        else
-                                        {
-                                            @Html.EditorFor(model => model.Product.Stock, new { htmlAttributes = new { @class = "form-control", @id = "stock", @disabled = "disabled" } })
-                                        }
-                                    }
 
-                                    @Html.ValidationMessageFor(model => model.Product.Stock, "", new { @class = "text-danger" })
+                                        @Html.ValidationMessageFor(model => model.Product.Stock, "", new { @class = "text-danger" })
 
-                                </div>
-                                <div id="stk" class="form-group">
-                                    @Html.LabelFor(model => model.Product.Remarks, htmlAttributes: new { @class = "control-label" })
+                                    </div>
+                                    <div id="stk" class="form-group" style="display:none">
+                                        @Html.LabelFor(model => model.Product.Remarks, htmlAttributes: new { @class = "control-label" })
 
-                                    @Html.EditorFor(model => model.Product.Remarks, new { htmlAttributes = new { @class = "form-control", @id = "Remarks" } })
-                                    @Html.ValidationMessageFor(model => model.Product.Remarks, "", new { @class = "text-danger" })
+                                        @Html.EditorFor(model => model.Product.Remarks, new { htmlAttributes = new { @class = "form-control", @id = "Remarks" } })
+                                        @Html.ValidationMessageFor(model => model.Product.Remarks, "", new { @class = "text-danger" })
 
-                                </div>
-                                <div style="display:none;" id="ppack" class="form-group">
+                                    </div>
+                                    <div style="display:none;" id="ppack" class="form-group">
 
-                                    @Html.LabelFor(model => model.Product.PerPack, htmlAttributes: new { @class = "control-label" }) (at least 1)
+                                        @Html.LabelFor(model => model.Product.PerPack, htmlAttributes: new { @class = "control-label" }) (at least 1)
 
-                                    @Html.EditorFor(model => model.Product.PerPack, new { htmlAttributes = new { @class = "form-control", @id = "perPack", @Value = 1 } })
-                                    @Html.ValidationMessageFor(model => model.Product.PerPack, "", new { @class = "text-danger" })
+                                        @Html.EditorFor(model => model.Product.PerPack, new { htmlAttributes = new { @class = "form-control", @id = "perPack", @Value = 1 } })
+                                        @Html.ValidationMessageFor(model => model.Product.PerPack, "", new { @class = "text-danger" })
 
-                                </div>
+                                    </div>
+
+
+
+
+
+
+
+
 
 
 
@@ -208,86 +258,84 @@
 
 
     </div>-->
+                                <!--<div class="form-group">
+        <label>Finished Product</label>
+        <input type="checkbox" class="form-check-input" id="finishedproduct" name="FinishedProduct" value="4"
+               @(Model.Product.PType & 4)= =4 ? "checked" : "" />
 
-                            <div class="form-group">
-                                <label>Finished Product</label>
-                                <input type="checkbox" class="form-check-input" id="finishedproduct" name="FinishedProduct" value="4"
-                                       @(Model.Product.PType & 4)= =4 ? "checked" : "" />
+        <br />
 
-                                <br />
+        <label>Ingredient</label>
+        <input type="checkbox" class="form-check-input" id="ingredients" name="Ingredient" value="5"
+               @(Model.Product.PType & 5)= =5 ? "checked" : "" />
 
-                                <label>Ingredient</label>
-                                <input type="checkbox" class="form-check-input" id="ingredients" name="Ingredient" value="5"
-                                       @(Model.Product.PType & 5)= =5 ? "checked" : "" />
+        <br />
 
-                                <br />
+        <label>Intermediary Ingredient</label>
+        <input type="checkbox" class="form-check-input" id="intermediaryingredient" name="IntermediaryIngredient" value="6"
+               @(Model.Product.PType & 6)= =6 ? "checked" : "" />
 
-                                <label>Intermediary Ingredient</label>
-                                <input type="checkbox" class="form-check-input" id="intermediaryingredient" name="IntermediaryIngredient" value="6"
-                                       @(Model.Product.PType & 6)= =6 ? "checked" : "" />
+        <br />
 
-                                <br />
+        <label>Merchandise</label>
+        <input type="checkbox" class="form-check-input" id="merchandise" name="Merchandise" value="7"
+               @(Model.Product.PType & 7)= =7 ? "checked" : "" />
+        <br />
+        <label>Flat Packaging</label>
+        <input type="checkbox" class="form-check-input" id="flatpackaging" name="FlatPackaging" value="8"
+               @(Model.Product.PType & 8)= =8 ? "checked" : "" />
 
-                                <label>Merchandise</label>
-                                <input type="checkbox" class="form-check-input" id="merchandise" name="Merchandise" value="7"
-                                       @(Model.Product.PType & 7)= =7 ? "checked" : "" />
-                                <br />
-                                <label>Flat Packaging</label>
-                                <input type="checkbox" class="form-check-input" id="flatpackaging" name="FlatPackaging" value="8"
-                                       @(Model.Product.PType & 8)= =8 ? "checked" : "" />
-
-                                <br />
-                                <label>Finish Packaging</label>
-                                <input type="checkbox" class="form-check-input" id="finishpackaging" name="FinishPackaging" value="9"
-                                       @(Model.Product.PType & 9)= =9 ? "checked" : "" />
-                            </div>
-
-
-                                <div class="form-group">
-                                    <label>Variable Product</label>
-                                    <input type="checkbox" class="form-check-input" id="variableProduct" name="VariableProduct" value="1"
-                                           @(Model.Product.PType & 1)= =1 ? "checked" : "" />
-                                    <br />
-
-                                    <!-- Product Dropdown - Initially Hidden -->
-                                    <div class="form-group" id="productDropdownContainer" style="display: none;">
-                                        @Html.LabelFor(model => model.Product.VarProdParentId, "Select Product", new { @class = "control-label" })
-                                        @Html.DropDownListFor(
-                                                                         model => model.Product.VarProdParentId,
-                                                                         ViewBag.ProductList as List<SelectListItem>,
-                                                                         "Select a Product",
-                                                                         new { @class = "form-control product-dropdown", @id = "productDropdown" }
-                                                                     )
-                                        @Html.ValidationMessageFor(model => model.Product.VarProdParentId, "", new { @class = "text-danger" })
-                                    </div>
+        <br />
+        <label>Finish Packaging</label>
+        <input type="checkbox" class="form-check-input" id="finishpackaging" name="FinishPackaging" value="9"
+               @(Model.Product.PType & 9)= =9 ? "checked" : "" />
+    </div>
 
 
-                                    <label>Excess Product</label>
-                                    <input type="checkbox" class="form-check-input" id="excessProduct" name="ExcessProduct" value="2"
-                                           @(Model.Product.PType & 2)= =2 ? "checked" : "" />
-                                    <br />
+        <div class="form-group">
+            <label>Variable Product</label>
+            <input type="checkbox" class="form-check-input" id="variableProduct" name="VariableProduct" value="1"
+                   @(Model.Product.PType & 1)= =1 ? "checked" : "" />
+            <br />-->
+                                <!-- Product Dropdown - Initially Hidden -->
+                                <!--<div class="form-group" id="productDropdownContainer" style="display: none;">
+            @Html.LabelFor(model => model.Product.VarProdParentId, "Select Product", new { @class = "control-label" })
+            @Html.DropDownListFor(
+                                             model => model.Product.VarProdParentId,
+                                             ViewBag.ProductList as List<SelectListItem>,
+                                             "Select a Product",
+                                             new { @class = "form-control product-dropdown", @id = "productDropdown" }
+                                         )
+            @Html.ValidationMessageFor(model => model.Product.VarProdParentId, "", new { @class = "text-danger" })
+        </div>
 
-                                    <label>ByProduct</label>
-                                    <input type="checkbox" class="form-check-input" id="byProduct" name="ByProduct" value="4"
-                                           @(Model.Product.PType & 4)= =4 ? "checked" : "" />
+
+        <label>Excess Product</label>
+        <input type="checkbox" class="form-check-input" id="excessProduct" name="ExcessProduct" value="2"
+               @(Model.Product.PType & 2)= =2 ? "checked" : "" />
+        <br />
+
+        <label>ByProduct</label>
+        <input type="checkbox" class="form-check-input" id="byProduct" name="ByProduct" value="4"
+               @(Model.Product.PType & 4)= =4 ? "checked" : "" />
+    </div>-->
+                                @*<input type="hidden" name="ProductType" value="@Model.Product.PType" />*@
+
+
+
                                 </div>
-                                <input type="hidden" name="ProductType" value="@Model.Product.PType" />
+                                <div class="box-footer">
+                                    <input type="submit" value="Create" id="CreateProduct" class="btn btn-primary" />
+                                    @Html.ActionLink("Back to List", "Index")
+                                </div>
 
-
-
-                            </div>
-                            <div class="box-footer">
-                                <input type="submit" value="Create" id="CreateProduct" class="btn btn-primary" />
-                                @Html.ActionLink("Back to List", "Index")
-                            </div>
-
-                        </form>
+</form>
 
 
 
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div id="shape-detail" class="col-md-6 optional-field">
                     <!-- general form elements -->
                     <!-- general form elements -->
                     <div class="box box-primary">
@@ -369,69 +417,66 @@
 
     <script>
         $(document).ready(function () {
-            
-            $("#finishedproduct, #ingredients, #intermediaryingredient, #merchandise, #flatpackaging, #finishpackaging").on("change", function () {
-                if ($(this).is(":checked")) {
-                    // Uncheck other main category checkboxes
-                    $("#finishedproduct, #ingredients, #intermediaryingredient, #merchandise,#flatpackaging, #finishpackaging").not(this).prop("checked", false);
+            // Initialize fields on page load
+            toggleFields();
 
-                    // Hide dropdown container if any main category is selected
-                    $('#productDropdownContainer').slideUp();
-
-                    // Disable and uncheck Variable, Excess, and ByProduct checkboxes
-                    $("#variableProduct, #excessProduct, #byProduct").prop("checked", false).prop("disabled", true);
-                } else {
-                    // Enable Variable, Excess, and ByProduct checkboxes only if no main category is selected
-                    if (!$("#finishedproduct, #ingredients, #intermediaryingredient, #merchandise,#flatpackaging, #finishpackaging").is(":checked")) {
-                        $("#variableProduct, #excessProduct, #byProduct").prop("disabled", false);
-                    }
-                }
+            // Handle product type dropdown change
+            $("#productTypeDropdown").on("change", function () {
+                toggleFields();
             });
 
-            $("#variableProduct, #excessProduct, #byProduct").on("change", function () {
-                if ($(this).is(":checked")) {
-                    $("#purchasable, #saleable").prop("checked", false);
+            function toggleFields() {
+                // Hide all optional fields first
+                $('.optional-field').hide();
+                $('#shape-detail').hide();
 
-                    // If Variable Product is checked, don't uncheck Manufacturable
-                    if (this.id === "variableProduct") {
-                        $("#excessProduct, #byProduct").prop("checked", false);
-                    }
+                // Always hide the product dropdown container first
+                $('#productDropdownContainer').hide();
 
-                    // If Excess Product is checked
-                    if (this.id === "excessProduct") {
-                        $('#productDropdownContainer').slideUp();
-                        $("#variableProduct, #byProduct").prop("checked", false);
-                    }
+                // Get selected product type
+                const productType = $('#productTypeDropdown').val();
 
-                    // If By Product is checked
-                    if (this.id === "byProduct") {
-                        $('#productDropdownContainer').slideUp();
-                        $("#variableProduct, #excessProduct").prop("checked", false);
-                    }
-                }
-            });
+                // Always show these required fields
+                $('#product-name-en, #product-name-vn').show();
 
-
-
-
-
-
-            function toggleDropdown() {
-                if ($('#variableProduct').is(':checked')) {
-                    $('#productDropdownContainer').slideDown();
-                } else {
-                    $('#productDropdownContainer').slideUp();
+                // Show fields based on product type
+                switch (productType) {
+                    case "1": // Variable Product
+                        $('#supplier-field, #category-field, #unit-field').show();
+                        $('#productDropdownContainer').slideDown(); // Only show for Variable Product
+                        break;
+                    case "2": // Excess Product
+                        $('#supplier-field, #category-field, #unit-field').show();
+                        break;
+                    case "3": // ByProduct
+                        $('#supplier-field, #category-field, #unit-field').show();
+                        break;
+                    case "4": // Finished Product
+                        $('#barcode-field, #einvoice-field, #supplier-field, #category-field, #unit-field, #sale-price-field, #wholesale-field, #shape-detail').show();
+                        break;
+                    case "5": // Ingredient
+                        $('#supplier-field, #category-field, #unit-field, #purchase-price-field').show();
+                        break;
+                    case "6": // Intermediary Ingredient
+                        $('#supplier-field, #category-field, #unit-field, #shape-detail').show();
+                        break;
+                    case "7": // Merchandise
+                        $('#supplier-field, #category-field, #unit-field, #purchase-price-field').show();
+                        break;
+                    case "8": // Flat Packaging
+                    case "9": // Finish Packaging
+                        $('#supplier-field, #category-field, #unit-field').show();
+                        break;
+                    default:
+                        // Default case if nothing is selected
+                        break;
                 }
             }
 
-            // Check initial state on page load
-            toggleDropdown();
-
-            // Attach event listener to checkbox
-            $('#variableProduct').change(function () {
-                toggleDropdown();
-            });
+            // Initialize field visibility based on current product type
+            toggleFields();
         });
+
     //txtSerialNum = 0;
     TriggerBodyEvents();
 @foreach (var d in ViewBag.Suppliers)

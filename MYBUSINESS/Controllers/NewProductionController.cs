@@ -426,7 +426,7 @@ namespace MYBUSINESS.Controllers
         .ToList();
 
             // Pre-select the current product in the dropdown
-            ViewBag.ProductList = new SelectList(products, "Value", "Text", newProduction.ProductId);
+            ViewBag.ProductList = new SelectList(products, "Value", "Text",newProduction.ProductId);
 
             ViewBag.ReadonlyMode = readonlyMode;
             // Prepare ViewModel (including SubItems if needed)

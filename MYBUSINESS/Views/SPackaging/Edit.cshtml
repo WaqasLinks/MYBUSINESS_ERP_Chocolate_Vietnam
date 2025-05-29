@@ -365,6 +365,7 @@
                         </div>
                         <div class="col-sm-9">
                             <button type="submit" id="CreatePO" class="btn btn-info add-new">Save</button>
+                            <button type="button" class="btn btn-success" id="btnValidate">Validate</button>
                             @*<button type="button" class="btn btn-success" id="btnValidate">Validate</button>*@
 
 
@@ -479,8 +480,8 @@
 
         // Loop through each row to get ProductIds and POIds
         $("#selectedProducts tbody tr").each(function () {
-            let productId = $(this).find('input[name^="PurchaseOrderDetail"][name$=".ProductId"]').val();
-            let poId = $(this).find('input[name^="PurchaseOrderDetail"][name$=".POId"]').val();
+            let productId = $(this).find('input[name^="SPackagingDetail"][name$=".ProductId"]').val();
+            let poId = $(this).find('input[name^="SPackagingDetail"][name$=".POId"]').val();
             productUpdates.push({
                 productId: parseInt(productId),
                 poId: poId
@@ -491,7 +492,7 @@
 
         // Send AJAX request
         $.ajax({
-            url: '@Url.Action("Validation", "POPR")',
+            url: '@Url.Action("Validation", "SPackaging")',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({ LstProductionVM: productUpdates }),

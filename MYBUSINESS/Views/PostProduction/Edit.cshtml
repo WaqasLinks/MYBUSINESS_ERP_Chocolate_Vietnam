@@ -77,7 +77,8 @@
 
                         <div class="form-group">
                             @Html.Label("Unit", new { @class = "control-label" })
-                            <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
+                            <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here"
+                                   value="@Model.PostProduction.Unit" />
                             @Html.HiddenFor(model => model.PostProduction.Unit, new { @id = "unitHiddenField" })
                             @Html.ValidationMessageFor(model => model.PostProduction.Unit, "", new { @class = "text-danger" })
                         </div>
@@ -88,13 +89,19 @@
             @Html.ValidationMessageFor(model => model.PostProduction.ProductionDate, "", new { @class = "text-danger" })
         </div>*@
                         <div class="form-group">
-                            @Html.LabelFor(model => model.PostProduction.ProductionDate, new { @class = "control-label" })
-                            @Html.TextBoxFor(model => model.PostProduction.ProductionDate, new
-                            {
-                                @class = "form-control",
-                                type = "date",
-                                @readonly = isReadonly ? "readonly" : null
-                            })
+                            @Html.LabelFor(model => Model.PostProduction.ProductionDate, htmlAttributes: new { @class = "control-label" })
+                            @{
+                                var attributes = new Dictionary<string, object>
+                                {
+    { "class", "form-control" },
+    { "type", "date" }
+};
+                                if (isReadonly)
+                                {
+                                    attributes.Add("readonly", "readonly");
+                                }
+                            }
+                            @Html.TextBoxFor(model => model.PostProduction.ProductionDate, "{0:yyyy-MM-dd}", attributes)
                             @Html.ValidationMessageFor(model => model.PostProduction.ProductionDate, "", new { @class = "text-danger" })
                         </div>
 
@@ -686,7 +693,7 @@ $('#productDropdown').change(function () {
         const variableConsumptionRate = parseFloat($(this).data('consumption-rate')) || 1; // Get consumption rate per unit
 
         // Alert to check input values
-        alert(`Production Qty Changed: ${productionQty}, Weight: ${weight}, Variable Product ID: ${variableProductId}, Consumption Rate: ${variableConsumptionRate}`);
+        /*alert(`Production Qty Changed: ${productionQty}, Weight: ${weight}, Variable Product ID: ${variableProductId}, Consumption Rate: ${variableConsumptionRate}`);*/
 
         // Calculate the weight and update the corresponding field
         const calculatedWeight = productionQty * weight;
@@ -701,7 +708,7 @@ $('#productDropdown').change(function () {
 
             if (rowProductId == variableProductId) {
                 let newVariableProductQty = productionQty * variableConsumptionRate;
-                alert(`Updating Variable Product ID ${variableProductId}: New Quantity = ${newVariableProductQty}`);
+                /*alert(`Updating Variable Product ID ${variableProductId}: New Quantity = ${newVariableProductQty}`);*/
                 $(this).find('.calculated-subitem').text(newVariableProductQty.toFixed(2)); // Update quantity
             }
         });
@@ -726,7 +733,7 @@ $('#productDropdown').change(function () {
         $('#totalWeightDisplay').text(totalWeight.toFixed(2));
 
         // Alert to check updated total weight
-        alert(`Total Weight Updated: ${gtotalWeight}`);
+        /*alert(`Total Weight Updated: ${gtotalWeight}`);*/
 
         // Update the sub-items with the total weight multiplied by quantity
         updateSubItemCalculations();
@@ -741,7 +748,7 @@ $('#productDropdown').change(function () {
         });
 
         // Alert to check updated sub-item values
-        alert(`Sub-Item Calculations Updated`);
+        /*alert(`Sub-Item Calculations Updated`);*/
     }
 
 
@@ -847,11 +854,11 @@ $('#productDropdown').change(function () {
                     // If no data, clear tables and show alert
                     $('#selectedProducts tbody').empty();
                     $('#productTypeTable tbody').empty();
-                    alert('No sub-item details found.');
+                    /*alert('No sub-item details found.');*/
                 }
             },
             error: function () {
-                alert('Failed to fetch sub-item details.');
+               /* alert('Failed to fetch sub-item details.');*/
             }
         });
     } else {
@@ -920,7 +927,7 @@ $('#productDropdown').change(function () {
  });*@
      $('#validateBtn').click(function (event) {
     event.preventDefault();
-    alert("Button Clicked!"); // Debugging alert
+    /*alert("Button Clicked!");*/ // Debugging alert
 
     let productUpdates = [];
 
@@ -952,7 +959,7 @@ $('#productDropdown').change(function () {
 
       if (productUpdates.length > 0) {
 
-        alert("Sending AJAX Request..."); // Debugging alert
+        /*alert("Sending AJAX Request...");*/ // Debugging alert
         $.ajax({
             url: '@Url.Action("EIncreasedStock", "NewProduction")',
             type: 'POST',
@@ -962,18 +969,18 @@ $('#productDropdown').change(function () {
                 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
             },
             success: function (response) {
-                alert(response.message);
+                /*alert(response.message);*/
                 if (response.success) {
                     $("#postProductionForm").submit();
                 }
             },
             error: function (xhr, status, error) {
-                alert("An error occurred while updating the stock.");
+                /*alert("An error occurred while updating the stock.");*/
                 console.error("Error:", error);
             }
         });
     } else {
-        alert("No products to validate.");
+        /*alert("No products to validate.");*/
     }
 });
 

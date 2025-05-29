@@ -83,7 +83,7 @@ namespace MYBUSINESS.Controllers
             ViewBag.StoreList = new SelectList(stores, "Value", "Text");
             ScanCreditCardViewModel scancreditCardViewModel = new ScanCreditCardViewModel
             {
-                ScanCreditCard = DAL.dbScanCreditCard.FirstOrDefault(),
+                ScanCreditCard = new ScanCreditCard(),
                 // Initialize ProductDetail if needed
                 Products = DAL.dbProducts // Assuming this contains product data
             };
@@ -96,27 +96,32 @@ namespace MYBUSINESS.Controllers
         }
 
 
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [ValidateInput(false)] // This disables request validation for this action
+        [ValidateInput(false)]
         public ActionResult Create([Bind(Include = "Id,StoreId,Note,Date")] ScanCreditCard scancreditCard)
-
         {
             if (ModelState.IsValid)
             {
-
-                var shop = db.ScanCreditCards.FirstOrDefault(p => p.Id == scancreditCard.StoreId);
-
-
-                db.ScanCreditCards.Add(scancreditCard); // 🚫 This is trying to insert into a view
+                db.ScanCreditCards.Add(scancreditCard);
                 db.SaveChanges();
-
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Suppliers = DAL.dbSuppliers;
-            return View(scancreditCard);
+            // If we get here, there was a validation error - rebuild the view model
+            var stores = db.Stores
+                .Select(s => new { Value = s.Id.ToString(), Text = s.Name })
+                .ToList();
+
+            var viewModel = new ScanCreditCardViewModel
+            {
+                ScanCreditCard = scancreditCard,
+                Products = DAL.dbProducts
+            };
+
+            ViewBag.StoreList = new SelectList(stores, "Value", "Text");
+            return View(viewModel);
         }
 
 

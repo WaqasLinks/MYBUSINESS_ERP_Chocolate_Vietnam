@@ -77,7 +77,8 @@
 
                         <div class="form-group">
                             @Html.Label("Unit", new { @class = "control-label" })
-                            <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
+                            <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here"
+                                   value="@Model.NewProduction.Unit" />
                             @Html.HiddenFor(model => model.NewProduction.Unit, new { @id = "unitHiddenField" })
                             @Html.ValidationMessageFor(model => model.NewProduction.Unit, "", new { @class = "text-danger" })
                         </div>
@@ -86,21 +87,19 @@
                             @Html.LabelFor(model => model.NewProduction.ProductionDate, htmlAttributes: new { @class = "control-label" })
                             @{
                                 var attributes = new Dictionary<string, object>
-                                                    {
-        { "class", "form-control" },
-        { "type", "date" }
-    };
-
+                        {
+            { "class", "form-control" },
+            { "type", "date" }
+        };
                                 if (isReadonly)
                                 {
                                     attributes.Add("readonly", "readonly");
                                 }
                             }
-
-                            @Html.TextBoxFor(model => model.NewProduction.ProductionDate, attributes)
-
+                            @Html.TextBoxFor(model => model.NewProduction.ProductionDate, "{0:yyyy-MM-dd}", attributes)
                             @Html.ValidationMessageFor(model => model.NewProduction.ProductionDate, "", new { @class = "text-danger" })
                         </div>
+
 
 
                         <div class="box box-primary">
@@ -138,42 +137,42 @@
                                                 int sNo = 0; // Start index
                                                 foreach (var item in Model.QuantityToProduce)
                                                 {
-                                                                                <tr>
-                                                                                    <td id="Pr@(sNo)">@(sNo + 1)</td>
-                                                                                    <td style="display:none;">
-                                                                                        <input type="hidden" name="ProductTypeDetail.Index" value="@sNo" />
-                                                                                    </td>
-                                                                                    <td style="display:none;">
-                                                                                        <input type="text" value="@item.ProductId" readonly class="form-control classBGcolor"
-                                                                                               name="QuantityToProduce[@sNo].ProductId" id="idn@(sNo)" @(isReadonly ? "readonly='readonly'" : "")>
-                                                                                    </td>
+                                                    <tr>
+                                                        <td id="Pr@(sNo)">@(sNo + 1)</td>
+                                                        <td style="display:none;">
+                                                            <input type="hidden" name="ProductTypeDetail.Index" value="@sNo" />
+                                                        </td>
+                                                        <td style="display:none;">
+                                                            <input type="text" value="@item.ProductId" readonly class="form-control classBGcolor"
+                                                                   name="QuantityToProduce[@sNo].ProductId" id="idn@(sNo)" @(isReadonly ? "readonly='readonly'" : "")>
+                                                        </td>
 
-                                                                                    <td>
-                                                                                        <input type="text" autocomplete="off" value="@item.Shape" class="form-control"
-                                                                                               name="QuantityToProduce[@sNo].Shape" id="shape@(sNo)" placeholder="Type shape"
-                                                                                               data-toggle="tooltip" data-placement="top" title="Type shape" @(isReadonly ? "readonly='readonly'" : "")>
-                                                                                    </td>
+                                                        <td>
+                                                            <input type="text" autocomplete="off" value="@item.Shape" class="form-control"
+                                                                   name="QuantityToProduce[@sNo].Shape" id="shape@(sNo)" placeholder="Type shape"
+                                                                   data-toggle="tooltip" data-placement="top" title="Type shape" @(isReadonly ? "readonly='readonly'" : "")>
+                                                        </td>
 
-                                                                                    <td>
-                                                                                        <input type="text" autocomplete="off" value="@item.ProductionQty"
-                                                                                               class="form-control production-qty"
-                                                                                               name="QuantityToProduce[@sNo].ProductionQty"
-                                                                                               id="productionqty@(sNo)"
-                                                                                               data-weight="@item.Weight"> <!-- ✅ Corrected: Using actual weight -->
-                                                                                    </td>
+                                                        <td>
+                                                            <input type="text" autocomplete="off" value="@item.ProductionQty"
+                                                                   class="form-control production-qty"
+                                                                   name="QuantityToProduce[@sNo].ProductionQty"
+                                                                   id="productionqty@(sNo)" readonly
+                                                                   data-weight="@item.Weight"> <!-- ✅ Corrected: Using actual weight -->
+                                                        </td>
 
-                                                                                    <td>
-                                                                                        <input type="text" autocomplete="off" value="@item.CalculatedWeight"
-                                                                                               class="form-control calculated-weight"
-                                                                                               name="QuantityToProduce[@sNo].CalculatedWeight"
-                                                                                               id="calculatedWeight@(sNo)"
-                                                                                               placeholder="Calculated weight" readonly
-                                                                                               data-toggle="tooltip" data-placement="top" title="Calculated weight">
-                                                                                    </td>
+                                                        <td>
+                                                            <input type="text" autocomplete="off" value="@item.CalculatedWeight"
+                                                                   class="form-control calculated-weight"
+                                                                   name="QuantityToProduce[@sNo].CalculatedWeight"
+                                                                   id="calculatedWeight@(sNo)"
+                                                                   placeholder="Calculated weight" readonly
+                                                                   data-toggle="tooltip" data-placement="top" title="Calculated weight">
+                                                        </td>
 
 
 
-                                                                                </tr>
+                                                    </tr>
                                                     sNo++; // Increment index
                                                 }
                                             }

@@ -99,7 +99,7 @@ namespace MYBUSINESS.Controllers
                 //var parseId = int.Parse(storeId);
                 db.Currencies.Add(currency);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("StockIndex");
             }
             return View(currency);
         }
@@ -148,7 +148,7 @@ namespace MYBUSINESS.Controllers
                 //var parseId = int.Parse(storeId);
                 db.Entry(currency).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("StockIndex");
             }
             return View(currency);
         }

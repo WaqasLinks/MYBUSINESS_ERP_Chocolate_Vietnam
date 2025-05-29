@@ -33,7 +33,7 @@
         <div class="table-wrapper">
             <div class="table-title">
                 <div class="row">
-                    <div id="saleOrder" class="col-sm-offset-5"><h2>Reciveing <b>Order</b></h2></div>
+                    <div id="saleOrder" class="col-sm-offset-5"><h2>Goods Reciveing <b>Order</b></h2></div>
                     <div id="saleReturn" class="col-sm-offset-5"><h2>Reciveing <b>Return</b></h2></div>
                     @*<div class="col-sm-4">
                     <button type="button" id="addNewRow" class="btn btn-info add-new"><i class="fa fa-plus"></i> Add New</button>
@@ -75,7 +75,7 @@
                         </th>
                         <th>
                             @*@Html.DisplayNameFor(model => model.PurchaseOrderDetail.Quantity)*@
-                            Quantity
+                            Quantity Ordered
                         </th>
                         <th>
                             Unit
@@ -118,7 +118,7 @@
                                 @* below line -- if we dont put "()" then string after space cut's off *@
                                 <td><input type="text" autocomplete="off" value="@(item.Product.Name)" readonly class="form-control" name="name@(sNo)" id="name@(sNo)"></td>
                                 <td style="display:none;"><input type="text" autocomplete="off" value=@item.PurchasePrice class="form-control classBGcolor" name="PurchaseOrderDetail[@sNo].PurchasePrice" id="purchasePrice@(sNo)"></td>
-                                <td><input type="text" autocomplete="off" value=@item.Quantity readonly class="form-control" name="PurchaseReciverOrderDetail[@sNo].Quantity" id="quantity@(sNo)"></td>
+                                <td><input type="text" autocomplete="off" value=@item.Quantity readonly class="form-control ordered-quantity" name="PurchaseReciverOrderDetail[@sNo].Quantity" id="quantity@(sNo)"></td>
                                 <td><input type="text" autocomplete="off" value=@item.Unit readonly class="form-control" name="PurchaseReciverOrderDetail[@sNo].Unit" id="unit@(sNo)"></td>
                                 <td style="display:none;">
                                     @Html.DropDownList("PurchaseOrderDetail[" + sNo + "].IsPack", new SelectList(ViewBag.UnitTypeOptionList, "Value", "Text", item.IsPack),
@@ -202,7 +202,7 @@
                 </th>*@
 
                         <th>
-                            Qty Received
+                            Qty Received (Same Unit)
                         </th>
                         <th>
                             Receiving Date
@@ -243,6 +243,7 @@
                         <td>
                             <input type="text" autocomplete="off" class="form-control" name="PurchaseReciverOrderDetail[0].QtyReceived" id="quantityreceived0" >
                         </td>
+
                         <td style="display:none;">
                             <input type="text" autocomplete="off" readonly class="form-control" name="PurchaseOrderDetail[0].Unit" id="unit0">
                         </td>

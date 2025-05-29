@@ -256,8 +256,28 @@
 
                                 <td style="display:none;"><input type="text" autocomplete="off" value="@(item.Product.Name)" readonly class="form-control" name="name@(sNo)" id="name@(sNo)"></td>
                                 <td style="display:none;"><input type="text" autocomplete="off" value=@item.PurchasePrice class="form-control classBGcolor" name="PurchaseOrderDetail[@sNo].PurchasePrice" id="purchasePrice@(sNo)"></td>
-                                <td><input type="text" autocomplete="off" value=@item.QtyReceived class="form-control" name="PurchaseReciverOrderDetail[@sNo].QtyReceived" id="quantityreceived@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>
-                                <td style="display:none;"><input type="text" autocomplete="off" value=@item.Quantity class="form-control" name="PurchaseReciverOrderDetail[@sNo].Quantity" id="quantity@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>
+                                @{ var isQtyReadonly = item.QtyReceived > 0; }
+                                <td>
+                                    <input type="text"
+                                           autocomplete="off"
+                                           value="@item.QtyReceived"
+                                           class="form-control received-qty"
+                                           name="PurchaseReciverOrderDetail[@sNo].QtyReceived"
+                                           id="quantityreceived@(sNo)"
+                                           @(isQtyReadonly ? "readonly='readonly'" : "") />
+                                </td>
+
+                                <td style="display:none;">
+                                    <input type="text"
+                                           autocomplete="off"
+                                           value="@item.Quantity"
+                                           readonly
+                                           class="form-control ordered-quantity"
+                                           name="PurchaseReciverOrderDetail[@sNo].Quantity"
+                                           id="quantity@sNo"
+                                           @(isReadonly ? "readonly='readonly'" : "") />
+                                </td>
+
                                 <td style="display:none;"><input type="text" autocomplete="off" value=@item.Unit class="form-control" name="PurchaseReciverOrderDetail[@sNo].unit" id="unit@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>
                                 <td style="display:none;"><input type="text" autocomplete="off" value=@item.Unit readonly class="form-control" name="PurchaseOrderDetail[@sNo].Unit" id="unit@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>
                                 <td style="display:none;">
@@ -514,6 +534,70 @@
 
 
 <script type="text/javascript">
+    function initializeQuantities() {
+        let orderedQuantity = 0;
+        let previouslyReceived = 0;
+
+        // Ordered quantity (assumes all are the same)
+        const orderedInputs = $('#selectedProducts .ordered-quantity');
+        if (orderedInputs.length > 0) {
+            orderedQuantity = parseInt(orderedInputs.first().val()) || 0;
+        }
+
+        // Calculate previously received total
+        $('#selectedProducts .received-qty').each(function () {
+            if ($(this).prop('readonly')) {
+                previouslyReceived += parseInt($(this).val()) || 0;
+            }
+        });
+
+        console.log(`Initialized - Ordered: ${orderedQuantity}, Previously Received: ${previouslyReceived}`);
+
+        // Store in data attributes for reuse
+        $('#selectedProducts').data('ordered', orderedQuantity);
+        $('#selectedProducts').data('previouslyReceived', previouslyReceived);
+    }
+
+    function updateEditableReceivedLimit() {
+        const ordered = $('#selectedProducts').data('ordered');
+        const previouslyReceived = $('#selectedProducts').data('previouslyReceived');
+        let currentTotal = 0;
+
+        $('#selectedProducts .received-qty:not([readonly])').each(function () {
+            currentTotal += parseInt($(this).val()) || 0;
+        });
+
+        if (previouslyReceived + currentTotal > ordered) {
+            alert(`Total Qty Received (${previouslyReceived + currentTotal}) cannot exceed Ordered Quantity (${ordered})`);
+            return false;
+        }
+
+        return true;
+    }
+
+    $(document).ready(function () {
+        initializeQuantities();
+
+        // Listen for changes in editable fields
+        $(document).on('input', '.received-qty:not([readonly])', function () {
+            updateEditableReceivedLimit();
+        });
+    });
+    function getTotalReceivedIncludingCurrentInput(input) {
+        let total = previouslyReceived;
+
+        $('#selectedProducts .received-qty:not([readonly])').each(function () {
+            if (this !== input[0]) {
+                total += parseFloat($(this).val()) || 0;
+            }
+        });
+
+        // Include current input
+        total += parseFloat($(input).val()) || 0;
+
+        return total;
+    }
+
     //$(document).ready(function () {
 
 
@@ -624,12 +708,16 @@
         },
         success: function (response) {
             alert(response.message);
-            if (response.success) {
-                $("#POEdit").submit();
-                //window.location.href = response.redirectUrl
-                ///*  $("#POEdit").submit();*/
-                //// Only submit if validation passed
+            if (response.success && response.redirectUrl) {
+                // Redirect to Index after successful validation
+                window.location.href = response.redirectUrl;
             }
+            //if (response.success) {
+            //    /*$("#POEdit").submit();*/
+            //    window.location.href = response.redirectUrl
+            //    ///*  $("#POEdit").submit();*/
+            //    //// Only submit if validation passed
+            //}
         },
         error: function (xhr, status, error) {
             console.error("Error:", error);

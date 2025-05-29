@@ -32,17 +32,18 @@
                             <thead>
                                 <tr>
                                     <th style="width:13%;">@Html.DisplayNameFor(model => model.Date)</th>
-                                    <th>Order No.</th>
+                                    <th style="display:none;">Order No.</th>
                                     <th>Bill No.</th>
                                     <th>Store Name.</th>
                                     <th style="width:15%;">@Html.DisplayName("Customer")</th>
-                                    <th>Type</th>
-                                    <th>@Html.DisplayNameFor(model => model.SaleOrderQty)</th>
-                                    <th>@Html.DisplayNameFor(model => model.SaleOrderAmount)</th>
-                                    <th>@Html.DisplayNameFor(model => model.Discount)</th>
-                                    <th>@Html.DisplayNameFor(model => model.BillPaid)</th>
+                                    <th style="display:none;">Type</th>
+                                    <th style="display:none;">@Html.DisplayNameFor(model => model.SaleOrderQty)</th>
+                                    <th>Total Amount (VAT Excl)</th>
+                                    <th>Total Amount With VAT</th>
+                                    <th style="display:none;">@Html.DisplayNameFor(model => model.Discount)</th>
+                                    <th style="display:none;">@Html.DisplayNameFor(model => model.BillPaid)</th>
                                     @*<th>@Html.DisplayNameFor(model => model.Balance)</th>*@
-                                    <th>
+                                    <th style="display:none;">
                                         @if (currentUser.EmployeeTypeId == 0)
                                         {
                                             @Html.DisplayNameFor(model => model.Profit)
@@ -54,7 +55,7 @@
                                             <text>User</text>
                                         }
                                     </th>
-                                    <th>Pym. Type</th>
+                                    <th>Payment Method</th>
                                     @*<th>Actions</th>*@
                                 </tr>
                             </thead>
@@ -63,12 +64,12 @@
                                 {
                                     <tr>
                                         <td>@Html.DisplayFor(modelItem => item.Date)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.SOSerial)</td>
+                                        <td style="display:none;">@Html.DisplayFor(modelItem => item.SOSerial)</td>
                                         <td>@Html.DisplayFor(modelItem => item.Id)</td>
                                         <td>@Html.DisplayFor(modelItem => item.Store.StoreShortName)</td>
                                         <td class="CustomerNameForSearch">@((item.Customer?.Name ?? "Unknown Customer"))</td>
-                                        <td>@(item.SaleReturn ? "Return" : "Sale")</td>
-                                        <td>
+                                        <td style="display:none;">@(item.SaleReturn ? "Return" : "Sale")</td>
+                                        <td style="display:none;">
                                             @Html.DisplayFor(modelItem => item.SaleOrderQty)
                                             @{
                                                 if (item.SaleReturn == false)
@@ -94,7 +95,8 @@
                                                 }
                                             }
                                         </td>
-                                        <td>
+                                        <td>@Html.DisplayFor(modelItem => item.SaleOrderAmountWithVaT)</td>
+                                        <td style="display:none;">
                                             @Html.DisplayFor(modelItem => item.Discount)
                                             @{
                                                 if (item.SaleReturn == false)
@@ -107,7 +109,7 @@
                                                 }
                                             }
                                         </td>
-                                        <td>
+                                        <td style="display:none;">
                                             @Html.DisplayFor(modelItem => item.BillPaid)
                                             @{
                                                 if (item.SaleReturn == false)
@@ -121,19 +123,19 @@
                                             }
                                         </td>
                                         @*<td>
-                                            @Html.DisplayFor(modelItem => item.Balance)
-                                            @{
-                                                if (item.SaleReturn == false)
-                                                {
-                                                    Balance += (decimal)item.Balance;
-                                                }
-                                                else
-                                                {
-                                                    Balance -= (decimal)item.Balance;
-                                                }
-                                            }
-                                        </td>*@
-                                        <td>
+            @Html.DisplayFor(modelItem => item.Balance)
+            @{
+                if (item.SaleReturn == false)
+                {
+                    Balance += (decimal)item.Balance;
+                }
+                else
+                {
+                    Balance -= (decimal)item.Balance;
+                }
+            }
+        </td>*@
+                                        <td style="display:none;">
                                             @if (currentUser.EmployeeTypeId == 0)
                                             {
                                                 @Html.DisplayFor(modelItem => item.Profit)
@@ -156,38 +158,51 @@
                                             }
                                         </td>
                                         <td>@Html.DisplayFor(modelItem => item.PaymentMethod)</td>
-                                        <td>
-                                            @if (!item.IsCancelled.GetValueOrDefault())
-                                            {
-                                                <form action="@Url.Action("CancelBill", "SOSR")" method="post">
-                                                    <input type="hidden" name="soId" value="@item.Id" />
-                                                    <button class="btn btn-danger btn-sm" type="submit">Cancel</button>
-                                                </form>
+                                        @*<td>
+            @if (!item.IsCancelled.GetValueOrDefault())
+            {
+                <form action="@Url.Action("CancelBill", "SOSR")" method="post">
+                    <input type="hidden" name="soId" value="@item.Id" />
+                    <button class="btn btn-danger btn-sm" type="submit">Cancel</button>
+                </form>
 
-                                            }
-                                            else
-                                            {
-                                                <span class="text-muted">Cancelled</span>
-                                            }
-                                        </td>
+            }
+            else
+            {
+                <span class="text-muted">Cancelled</span>
+            }
+        </td>*@
+                                    <td>
+                                        @if (!item.IsCancelled.GetValueOrDefault())
+                                        {
+                                            <form action="@Url.Action("CancelBill", "SOSR")" method="post" onsubmit="return confirm('Are you sure you want to cancel this bill?');">
+                                                <input type="hidden" name="soId" value="@item.Id" />
+                                                <button class="btn btn-danger btn-sm" type="submit">Cancel</button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Cancelled</span>
+                                        }
+                                    </td>
 
 
 
 
                                         @*<td class="noPrint">
-                                            @{
-                                                if (currentUser.EmployeeTypeId == 0)
-                                                {
-                                                    @Html.ActionLink("Update", "Edit", new { id = item.Id, update = true }, new { @class = "btn btn-info" })
-                                                }
-                                                else
-                                                {
-                                                    @Html.ActionLink(whtieSpace + "View", "Edit", new { id = item.Id, update = false }, new { @class = "btn btn-info" })
-                                                }
-                                            }
-                                            |
-                                            @Html.ActionLink("Print", "PrintSO3", new { id = item.Id }, new { @class = "btn btn-warning" })
-                                        </td>*@
+            @{
+                if (currentUser.EmployeeTypeId == 0)
+                {
+                    @Html.ActionLink("Update", "Edit", new { id = item.Id, update = true }, new { @class = "btn btn-info" })
+                }
+                else
+                {
+                    @Html.ActionLink(whtieSpace + "View", "Edit", new { id = item.Id, update = false }, new { @class = "btn btn-info" })
+                }
+            }
+            |
+            @Html.ActionLink("Print", "PrintSO3", new { id = item.Id }, new { @class = "btn btn-warning" })
+        </td>*@
                                     </tr>
                                 }
                             </tbody>
@@ -200,19 +215,20 @@
                                     <td></td>
                                     <td></td>
 
-                                    <td>@TotalSOQty</td>
-                                    <td>@TotalSOAmout</td>
-                                    <td>@Discount</td>
-                                    <td>@BillPaid</td>
-                                    <td>@Balance</td>
-                                    <td>
+                                    <td style="display:none;">@TotalSOQty</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td style="display:none;">@Discount</td>
+                                    <td style="display:none;">@BillPaid</td>
+                                    <td style="display:none;">@Balance</td>
+                                    <td style="display:none;">
                                         @if (currentUser.EmployeeTypeId == 0)
                                         {
                                             @TotalProfit.ToString("0")
                                         }
                                     </td>
-                                    <td></td>
-                                    <td></td>
+                                    <td style="display:none;"></td>
+                                    <td style="display:none;"></td>
                                     <td class="noPrint"></td>
                                 </tr>
                             </tfoot>
@@ -246,7 +262,27 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-
+        function confirmCancel(form) {
+            if (confirm('Are you sure you want to cancel this bill?')) {
+                // Submit form via AJAX
+                $.ajax({
+                    url: form.action,
+                    type: 'POST',
+                    data: $(form).serialize(),
+                    success: function (response) {
+                        // Show success message
+                        alert(response);
+                        // Reload the page to update the status
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Error cancelling bill: ' + error);
+                    }
+                });
+            }
+            // Prevent normal form submission
+            return false;
+        }
 
 
         $('#SOSRIndex').DataTable({

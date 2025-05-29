@@ -191,37 +191,107 @@ namespace MYBUSINESS.Controllers
 
         public static void SendOrderNotificationEmail(Order order, string receiverEmail)
         {
+            const string smtpServer = "mail5017.site4now.net";
+            const int smtpPort = 587;
+            const string smtpUsername = "postmaster@phevasoft.com";
+            const string smtpPassword = "l5wA0w3_[w7"; // Replace with actual password
+            const string fromEmail = "postmaster@phevasoft.com";
+            const string fromName = "Phevasoft Orders";
+
             try
             {
-                MailMessage mail = new MailMessage();
-                SmtpClient smtpServer = new SmtpClient("/*mail.smtp2go.com*/smtp.gmail.com")
+                // 1. Configure security settings
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                // 2. Bypass certificate validation (temporary for testing)
+                ServicePointManager.ServerCertificateValidationCallback = (s, cert, chain, errors) => true;
+
+                // 3. Create email with essential headers
+                var mail = new MailMessage
                 {
-                    Port = /*2525*/587, // Changed from 587 to SMTP2GO's alternative port
-                    Credentials = new NetworkCredential(LeavON_Email, LeavON_Password),
-                    EnableSsl = true,
-                    DeliveryMethod = SmtpDeliveryMethod.Network,
-                    UseDefaultCredentials = false // Explicitly set to false
+                    From = new MailAddress(fromEmail, fromName),
+                    Subject = $"New Order Created - Order ID: {order.Id}",
+                    Body = $"Dear Manager,\n\nA new store order has been created.\n\n" +
+                           $"Order ID: {order.Id}\n" +
+                           $"Store ID: {order.StoreId}\n" +
+                           $"Order Date: {order.OrderDate}\n\n" +
+                           $"Please check the system for more details.\n\n" +
+                           $"This is a system-generated email, please do not reply.",
+                    IsBodyHtml = false
                 };
-
-                mail.From = new MailAddress(LeavON_Email);
                 mail.To.Add(receiverEmail);
-                mail.Subject = $"New Order Created - Order ID: {order.Id}";
-                mail.Body = $"Dear Manager,\n\nA new store order has been created.\n\n" +
-                            $"Order ID: {order.Id}\n" +
-                            $"Store ID: {order.StoreId}\n" +
-                            $"Order Date: {order.OrderDate}\n\n" +
-                            $"Please check the system for more details.\n\n" +
-                            $"This is a system-generated email, please do not reply.";
 
-                smtpServer.Send(mail);
+                // Critical headers to pass spam filter
+                mail.Headers.Add("X-Mailer", "ASP.NET MVC");
+                mail.Headers.Add("X-Auto-Response-Suppress", "All");
+                mail.Headers.Add("Auto-Submitted", "auto-generated");
+
+                // 4. Configure SMTP client with EXACT settings
+                using (var smtp = new SmtpClient(smtpServer, smtpPort))
+                {
+                    smtp.EnableSsl = true;
+                    smtp.UseDefaultCredentials = false;
+                    smtp.Credentials = new NetworkCredential(smtpUsername, smtpPassword);
+                    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    smtp.Timeout = 30000; // 30 seconds
+
+                    // 5. Send with detailed error handling
+                    smtp.Send(mail);
+                }
+            }
+            catch (SmtpException smtpEx)
+            {
+                // Special handling for SMTP-specific errors
+                string errorDetails = $"[{DateTime.Now}] SMTP Error (Status: {smtpEx.StatusCode}):\n" +
+                                    $"Message: {smtpEx.Message}\n" +
+                                    $"Full Response: {GetFullSmtpResponse(smtpEx)}\n";
+
+                LogError(errorDetails);
+                throw new ApplicationException("Failed to send order notification email", smtpEx);
             }
             catch (Exception ex)
             {
-                // Log error properly
-                string logPath = System.Web.Hosting.HostingEnvironment.MapPath("~/App_Data/email_errors.log");
-                System.IO.File.AppendAllText(logPath, $"[{DateTime.Now}] Error: {ex}\n\n");
+                LogError($"[{DateTime.Now}] General Error: {ex.Message}\n{ex.StackTrace}");
+                throw;
+            }
+            finally
+            {
+                ServicePointManager.ServerCertificateValidationCallback = null;
             }
         }
+
+        private static string GetFullSmtpResponse(SmtpException ex)
+        {
+            try
+            {
+                var responseField = typeof(SmtpException).GetField("_statusResponse",
+                    System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                return responseField?.GetValue(ex)?.ToString() ?? "No response available";
+            }
+            catch
+            {
+                return "Unable to retrieve full SMTP response";
+            }
+        }
+
+        private static void LogError(string message)
+        {
+            try
+            {
+                string logPath = System.Web.Hosting.HostingEnvironment.MapPath("~/App_Data/email_errors.log");
+                System.IO.File.AppendAllText(logPath, message + "\n\n");
+
+                // Also log to Windows Event Viewer
+                System.Diagnostics.EventLog.WriteEntry(
+                    "Application",
+                    $"Email Error: {message}",
+                    System.Diagnostics.EventLogEntryType.Error);
+            }
+            catch { /* Ensure logging doesn't throw */ }
+        }
+
+
+
 
 
 
@@ -669,51 +739,30 @@ namespace MYBUSINESS.Controllers
 
 
 
-        public ActionResult TestEmail()
+        public static void TestEmail()
         {
             try
             {
-                string smtpHost = "smtp.gmail.com";
-                int smtpPort = 587; // Use 587 for TLS
-                string fromEmail = "zeeshan.naveed.atrule@gmail.com";
-                string password = "axfe nheq fqfv wimd"; // Your app password
-                string toEmail = "zeeshannaveed893@gmail.com";
-
-                using (var mail = new MailMessage())
+                var mail = new MailMessage();
+                var smtp = new SmtpClient("mail.phevasoft.com")
                 {
-                    mail.From = new MailAddress(fromEmail, "Zeeshan Naveed");
-                    mail.To.Add(toEmail);
-                    mail.Subject = "Test Email from ASP.NET MVC";
-                    mail.Body = $"This is a test email sent at {DateTime.Now}";
-                    mail.IsBodyHtml = false;
+                    Port = 587,
+                    Credentials = new NetworkCredential("postmaster@phevasoft.com", "yourpassword"),
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false
+                };
 
-                    using (var smtp = new SmtpClient(smtpHost, smtpPort))
-                    {
-                        smtp.Credentials = new NetworkCredential(fromEmail, password);
-                        smtp.EnableSsl = true; // Enable TLS/SSL
-                        smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                        smtp.UseDefaultCredentials = false;
-                        smtp.Timeout = 15000;
+                mail.From = new MailAddress("postmaster@phevasoft.com");
+                mail.To.Add("zeeshannaveed893@gmail.com");
+                mail.Subject = "TEST EMAIL";
+                mail.Body = "This is a test email sent at " + DateTime.Now;
 
-                        // Explicitly set security protocol (recommended)
-                        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-                        smtp.Send(mail);
-                    }
-                }
-
-                return Content("✅ Test email sent successfully!");
-            }
-            catch (SmtpException smtpEx)
-            {
-                string errorDetails = BuildErrorMessage(smtpEx);
-                LogError(errorDetails);
-                return Content($"❌ SMTP Error: {smtpEx.StatusCode} - {smtpEx.Message}");
+                smtp.Send(mail);
             }
             catch (Exception ex)
             {
-                LogError($"General Error: {ex}");
-                return Content($"❌ Error: {ex.Message}");
+                // Log detailed error
             }
         }
 
@@ -734,24 +783,24 @@ namespace MYBUSINESS.Controllers
             return sb.ToString();
         }
 
-        private void LogError(string message)
-        {
-            try
-            {
-                string logDir = Server.MapPath("~/App_Data/Logs");
-                if (!Directory.Exists(logDir))
-                {
-                    Directory.CreateDirectory(logDir);
-                }
+        //private void LogError(string message)
+        //{
+        //    try
+        //    {
+        //        string logDir = Server.MapPath("~/App_Data/Logs");
+        //        if (!Directory.Exists(logDir))
+        //        {
+        //            Directory.CreateDirectory(logDir);
+        //        }
 
-                string logPath = Path.Combine(logDir, "email_errors.log");
-                //File.AppendAllText(logPath, $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}\n\n");
-            }
-            catch
-            {
-                // Silent fail - we don't want logging failures to interrupt the main flow
-            }
-        }
+        //        string logPath = Path.Combine(logDir, "email_errors.log");
+        //        //File.AppendAllText(logPath, $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}\n\n");
+        //    }
+        //    catch
+        //    {
+        //        // Silent fail - we don't want logging failures to interrupt the main flow
+        //    }
+        //}
 
         [HttpPost]
         public async Task<JsonResult> GenerateInvoice(int orderId, string authToken)

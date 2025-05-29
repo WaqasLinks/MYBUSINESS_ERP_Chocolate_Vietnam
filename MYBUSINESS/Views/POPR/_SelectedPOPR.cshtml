@@ -41,7 +41,9 @@
                                             @Html.DisplayName("Supplier")
                                         </th>
                                         <th>Product</th>
-                                        <th>@Html.DisplayNameFor(model => model.PurchaseReturn)</th>
+                                        <th>Quantity Ordered</th>
+                                        <th>Unit</th>
+                                        @*<th>@Html.DisplayNameFor(model => model.PurchaseReturn)</th>*@
                                         <th style="display:none;">
                                             @Html.DisplayNameFor(model => model.PurchaseOrderQty)
                                         </th>
@@ -49,32 +51,35 @@
                                             @Html.DisplayNameFor(model => model.PurchaseOrderAmount)
                                         </th>
 
-                                        <th>
+                                        <th style="display:none;">
                                             @Html.DisplayNameFor(model => model.Discount)
                                         </th>
-                                        <th>
+                                        <th style="display:none;">
                                             Prev. Balance
                                         </th>
-                                        <th>
+                                        <th style="display:none;">
                                             @Html.DisplayNameFor(model => model.BillPaid)
                                         </th>
 
                                         <th>
-                                        Status
+                                            Status
+                                        </th>
+                                        <th>
+                                            Actions
                                         </th>
                                         @*<th>
-                                                User
-                                            </th>*@
-                                        <th class="noPrint">
+            User
+        </th>*@
+                                        <th class="noPrint" style="display:none;">
 
                                         </th>
                                         @*
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.SaleReturn)
-                                            </th>
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.PODId)
-                                            </th>*@
+        <th>
+            @Html.DisplayNameFor(model => model.SaleReturn)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PODId)
+        </th>*@
 
 
                                     </tr>
@@ -99,6 +104,18 @@
                                                 }
                                             </td>
                                             <td>
+                                                @foreach (var pod in item.PODs)
+                                                {
+                                                    @pod.Quantity
+                                                }
+                                            </td>
+                                            <td>
+                                                @foreach (var pod in item.PODs)
+                                                {
+                                                    @pod.Unit
+                                                }
+                                            </td>
+                                            <td style="display:none;">
                                                 @(item.PurchaseReturn ? "Return" : "Sale")
                                             </td>
                                             <td style="display:none;">
@@ -131,7 +148,7 @@
                                                 }
                                             </td>
 
-                                            <td>
+                                            <td style="display:none;">
                                                 @Html.DisplayFor(modelItem => item.Discount)
                                                 @{
                                                     if (item.PurchaseReturn == false)
@@ -145,10 +162,10 @@
 
                                                 }
                                             </td>
-                                            <td>
+                                            <td style="display:none;">
                                                 @Html.DisplayFor(modelItem => item.PrevBalance)
                                             </td>
-                                            <td>
+                                            <td style="display:none;">
                                                 @Html.DisplayFor(modelItem => item.BillPaid)
                                                 @{
                                                     if (item.PurchaseReturn == false)
@@ -166,9 +183,34 @@
 
                                             <td>
                                                 @{
-                                                    bool Validated = item.PODs != null && item.PODs.Any(p => p.Validate == true);
+                                                    bool isValidated = item.PODs != null && item.PODs.Any(p => p.Validate == true);
+
+                                                    var poRecList = ViewBag.POReceivingList as List<MYBUSINESS.Models.PODReciver>;
+                                                    bool isReceived = false;
+
+                                                    if (poRecList != null && item.PODs != null)
+                                                    {
+                                                        foreach (var pod in item.PODs)
+                                                        {
+                                                            var match = poRecList.FirstOrDefault(r =>
+                                                                r.PODReciverId == pod.PODId &&
+                                                                r.QtyReceived > 0 &&
+                                                                r.Validate == true);
+
+                                                            if (match != null)
+                                                            {
+                                                                isReceived = true;
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
                                                 }
-                                                @if (Validated)
+
+                                                @if (isValidated && isReceived)
+                                                {
+                                                    <span class="badge bg-primary">Received</span>
+                                                }
+                                                else if (isValidated)
                                                 {
                                                     <span class="badge bg-success">Validated</span>
                                                 }
@@ -177,6 +219,22 @@
                                                     <span class="badge bg-danger">Ongoing</span>
                                                 }
                                             </td>
+
+
+
+                                            @*<td>
+            @{
+                bool Validated = item.PODs != null && item.PODs.Any(p => p.Validate == true);
+            }
+            @if (Validated)
+            {
+                <span class="badge bg-success">Validated</span>
+            }
+            else
+            {
+                <span class="badge bg-danger">Ongoing</span>
+            }
+        </td>*@
 
 
                                             @*
@@ -189,7 +247,7 @@
                                             @*<td>
             @Html.DisplayFor(modelItem => item.Employee.Login)
         </td>*@
-                                            <td class="noPrint">
+                                            <td class="noPrint" style="display:none;">
                                                 @*@Html.ActionLink("View", "Edit", new { id = item.Id }) |*@
 
                                                 @{
@@ -217,19 +275,17 @@
             }-->
 
                                                 <td>
-                                                    @{
-                                                        bool isValidated = item.PODs != null && item.PODs.Any(p => p.Validate == true);
 
-
-                                                    }
 
                                                     @if (isValidated)
                                                     {
                                                         @Html.ActionLink("View", "Edit", new { id = item.Id, readonlyMode = true },
-                                                            new { @class = "btn btn-primary text-white" })
+                             new { @class = "btn btn-primary text-white" })
 
                                                         @Html.ActionLink("Receiving", "Create", "POPRReciver", new { id = item.Id, update = true },
-                                                            new { @class = "btn btn-warning text-dark fw-bold" })
+                                                         new { @class = "btn btn-warning text-dark fw-bold" })
+
+                                                        @Html.ActionLink("Print", "PrintSO3", new { id = item.Id }, new { @class = "btn btn-warning" })
                                                     }
                                                     else
                                                     {
@@ -246,10 +302,8 @@
 
 
                                                 }
-                                                |
 
-                                                @Html.ActionLink("Print", "PrintSO3", new { id = item.Id }, new { @class = "btn btn-warning" })
-                                                @*|
+                                                @*
             @Html.ActionLink("Details", "Details", new { id = item.Id }) |
             @Html.ActionLink("Delete", "Delete", new { id = item.Id })*@
                                                 </td>
@@ -263,18 +317,18 @@
                                         <td>@Model.Count()</td>
                                         <td></td>
                                         <td></td>
-                                        <td></td>
+                                        <td style="display:none;"></td>
                                         <td style="display:none;">@TotalPOQty</td>
-                                        <td>@TotalPOAmout</td>
+                                        <td style="display:none;">@TotalPOAmout</td>
 
-                                        <td>@Discount</td>
+                                        <td style="display:none;">@Discount</td>
                                         <td>@*@PrevBalance*@</td>
-                                        <td>@BillPaid</td>
+                                        <td style="display:none;">@BillPaid</td>
 
                                         <td>@*@ViewBag.TotalBalance*@</td>
 
                                         @*<td></td>*@
-                                        <td></td>
+                                        
                                         <td></td>
                                     </tr>
                                 </tfoot>

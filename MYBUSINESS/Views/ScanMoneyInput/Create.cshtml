@@ -17,7 +17,7 @@
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Scan Deposit</h3>
+                        <h3 class="box-title">Scan Money Input</h3>
                     </div>
 
 
@@ -65,7 +65,7 @@
                             @if (((SelectList)ViewBag.StoreList).Any())
                             {
                                 @Html.DropDownListFor(
-                                    model => model.ScanMoneyInput.StoreId,
+                model => model.ScanMoneyInput.StoreId,
                                     (SelectList)ViewBag.StoreList,
                                     "Select a Store",
                                     new { @class = "form-control", @id = "storeDropdown" }
@@ -76,7 +76,7 @@
                                 <p class="text-danger">No stores available for selection.</p>
                             }
 
-                            @Html.ValidationMessageFor(model => model.ScanBankDeposit.StoreId, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(model => Model.ScanMoneyInput.StoreId, "", new { @class = "text-danger" })
                         </div>
 
 

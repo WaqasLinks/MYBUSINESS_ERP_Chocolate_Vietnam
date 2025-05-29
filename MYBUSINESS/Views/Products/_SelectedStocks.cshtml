@@ -18,6 +18,23 @@
                                 <h3 class="box-title">Hover Data Table</h3>
                             </div>*@
                         <!-- /.box-header -->
+                        <div class="box-header">
+                            @using (Html.BeginForm("StockIndex", "Products", FormMethod.Get))
+                            {
+                                <div class="form-inline">
+                                    <div class="form-group">
+                                        <label>Select Product Type:</label>
+                                        @Html.DropDownList("pType",
+                                                 new SelectList(ViewBag.ProductTypes, "Value", "Text", ViewBag.CurrentPType),
+                                                 "-- All Product Types --",
+                                                 new { @class = "form-control", onchange = "this.form.submit()" })
+                                    </div>
+                                    <noscript>
+                                        <input type="submit" value="Go" class="btn btn-primary" />
+                                    </noscript>
+                                </div>
+                            }
+                        </div>
                         <div class="box-body">
                             <table class="table table-hover cell-border" id="ProductIndex">
                                 <thead>
@@ -26,8 +43,8 @@
                                             @Html.DisplayNameFor(model => model.Id)
                                         </th>
                                         @*<th>
-                                            @Html.DisplayNameFor(model => model.BarCode)
-                                        </th>*@
+            @Html.DisplayNameFor(model => model.BarCode)
+        </th>*@
 
                                         @*<th>Type</th>*@
 
@@ -36,41 +53,51 @@
                                         </th>
 
                                         <th>
+                                            @Html.DisplayNameFor(Model => Model.Category)
+                                        </th>
+
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Unit)
+                                        </th>
+                                        <th>
+                                           @Html.DisplayNameFor(model => model.Stock)
+                                        </th>
+                                        <th style="display:none;">
                                             @if (currentUser.EmployeeTypeId == 0)
                                             {
                                                 @Html.DisplayNameFor(model => model.PurchasePrice)
                                             }
                                         </th>
 
-                                        <th>
+                                        <th style="display:none;">
                                             @Html.DisplayNameFor(model => model.SalePrice)
                                         </th>
-                                        <th>
+                                        <th style="display:none;">
                                             Whole Sale Price
                                         </th>
                                         @*<th>
-                                            @Html.DisplayNameFor(model => model.Stock)
-                                        </th>*@
+            @Html.DisplayNameFor(model => model.Stock)
+        </th>*@
 
 
 
 
                                         @*<th>
-                                            @if (currentUser.EmployeeTypeId == 0)
-                                            {
-                                                <text>Total Purchase Price</text>
-                                            }
-                                        </th>*@
+            @if (currentUser.EmployeeTypeId == 0)
+            {
+                <text>Total Purchase Price</text>
+            }
+        </th>*@
 
                                         @*<th>
-                                            Total Sale Price
-                                        </th>*@
+            Total Sale Price
+        </th>*@
 
 
                                         @*<th>
-                                            Remarks
-                                        </th>*@
-                                        <th class="no-print"></th>
+            Remarks
+        </th>*@
+                                        <th class="no-print" style="display:none;"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -81,26 +108,34 @@
                                                 @Html.DisplayFor(modelItem => item.Id)
                                             </td>
                                             @*<td class="ProductIdForSearch">
-                                                @Html.DisplayFor(modelItem => item.BarCode)
-                                            </td>*@
+            @Html.DisplayFor(modelItem => item.BarCode)
+        </td>*@
                                             @*<td>
-                                                @{
-                                                    if (!item.IsService)
-                                                    {
-                                                        @Html.DisplayName("Product")
-                                                    }
-                                                    else
-                                                    {
-                                                        @Html.DisplayName("Service")
-                                                    }
-                                                }
-                                            </td>*@
+            @{
+                if (!item.IsService)
+                {
+                    @Html.DisplayName("Product")
+                }
+                else
+                {
+                    @Html.DisplayName("Service")
+                }
+            }
+        </td>*@
 
                                             <td class="ProductNameForSearch">
                                                 @Html.DisplayFor(modelItem => item.Name)
                                             </td>
-
-                                            <td>
+                                            <td class="ProductNameForSearch">
+                                                @Html.DisplayFor(modelItem => item.Category)
+                                            </td>
+                                            <td class="ProductNameForSearch">
+                                                @Html.DisplayFor(modelItem => item.Unit)
+                                            </td>
+                                            <td class="ProductNameForSearch">
+                                                @Html.DisplayFor(modelItem => item.Stock)
+                                            </td>
+                                            <td style="display:none;">
                                                 @if (currentUser.EmployeeTypeId == 0)
                                                 {
                                                     if (!item.IsService)
@@ -114,144 +149,143 @@
                                                 }
                                             </td>
 
-                                            <td>
+                                            <td style="display:none;">
                                                 @Html.DisplayFor(modelItem => item.SalePrice)
                                             </td>
-                                            <td>
+                                            <td style="display:none;">
                                                 @Html.DisplayFor(modelItem => item.WholeSalePrice)
                                             </td>
 
                                             <!--<td>-->
-                                                @* Display stock information *@
-                                                <!--@{
-                                                    if (!item.IsService)
-                                                    {
-                                                        // Calculate the store product stock for the current store
-                                                        var storeProductStock = 0;
-                                                        var cartons = 0;
-                                                        var pieces = 0;
+                                            @* Display stock information *@
+                                            <!--@{
+            if (!item.IsService)
+            {
+                // Calculate the store product stock for the current store
+                var storeProductStock = 0;
+                var cartons = 0;
+                var pieces = 0;
 
-                                                        foreach (var sp in item.StoreProducts)
-                                                        {
-                                                            if (sp.StoreId == 1)
-                                                            {
-                                                                storeProductStock = (int)sp.Stock;
-                                                                break; // Exit loop once the store is found
-                                                            }
-                                                        }
+                foreach (var sp in item.StoreProducts)
+                {
+                    if (sp.StoreId == 1)
+                    {
+                        storeProductStock = (int)sp.Stock;
+                        break; // Exit loop once the store is found
+                    }
+                }
 
-                                                        // Calculate carton and piece based on storeProductStock and item.PerPack
-                                                        cartons = (int)(storeProductStock / item.PerPack);
-                                                        pieces = (int)(storeProductStock % item.PerPack);
+                // Calculate carton and piece based on storeProductStock and item.PerPack
+                cartons = (int)(storeProductStock / item.PerPack);
+                pieces = (int)(storeProductStock % item.PerPack);
 
-                                                        // Display the stock information
-                                                        if (pieces == 0)
-                                                        {
-                                                            @(cartons)
-                                                        }
-                                                        else
-                                                        {
-                                                            @(cartons + "," + pieces)
-                                                        }
+                // Display the stock information
+                if (pieces == 0)
+                {
+                    @(cartons)
+                }
+                else
+                {
+                    @(cartons + "," + pieces)
+                }
 
-                                                        // Update the TotalStock
-                                                        TotalStock += cartons;
-                                                    }
-                                                    else
-                                                    {
-                                                        @Html.DisplayName("---------")
-                                                    }
-                                                }
-                                            </td>-->
+                // Update the TotalStock
+                TotalStock += cartons;
+            }
+            else
+            {
+                @Html.DisplayName("---------")
+            }
+        }
+    </td>-->
+                                            @*<td>
+            @{
+                if (item.IsService == false)
+                {
+                    carton = (int)(item.Stock / item.PerPack);
+                    piece = (int)(item.Stock % item.PerPack);
+                    if (piece == 0)
+                    {
+                        @(carton)
+                    }
+                    else
+                    {
+                        @(carton + "," + piece)
+                    }
+                    TotalStock += (int)(item.Stock / item.PerPack);
+                }
+                else
+                {
+                    @Html.DisplayName("---------")
+                }
+            }
+        </td>*@
+
 
                                             @*<td>
-                                                    @{
-                                                        if (item.IsService == false)
-                                                        {
-                                                            carton = (int)(item.Stock / item.PerPack);
-                                                            piece = (int)(item.Stock % item.PerPack);
-                                                            if (piece == 0)
-                                                            {
-                                                                @(carton)
-                                                            }
-                                                            else
-                                                            {
-                                                                @(carton + "," + piece)
-                                                            }
-                                                            TotalStock += (int)(item.Stock / item.PerPack);
-                                                        }
-                                                        else
-                                                        {
-                                                            @Html.DisplayName("---------")
-                                                        }
-                                                    }
-                                                </td>*@
+            @if (currentUser.EmployeeTypeId == 0)
+            {
+                if (item.IsService == false)
+                {
+                    @((item.PurchasePrice * item.Stock).Value.ToString("0.00"))
+                    { TotalPurchasePrice += (double)(item.PurchasePrice * item.Stock); }
+                }
+                else
+                {
+                    @Html.DisplayName("---------")
+                }
+            }
 
-
-                                            @*<td>
-                                                @if (currentUser.EmployeeTypeId == 0)
-                                                {
-                                                    if (item.IsService == false)
-                                                    {
-                                                        @((item.PurchasePrice * item.Stock).Value.ToString("0.00"))
-                                                        { TotalPurchasePrice += (double)(item.PurchasePrice * item.Stock); }
-                                                    }
-                                                    else
-                                                    {
-                                                        @Html.DisplayName("---------")
-                                                    }
-                                                }
-
-                                            </td>*@
+        </td>*@
 
                                             @*<td>
 
-                                                @{
-                                                    if (item.IsService == false)
-                                                    {
-                                                        @((item.SalePrice * item.Stock).Value.ToString("0.00"));
-                                                        { TotalSalePrice += (double)(item.SalePrice * item.Stock); }
-                                                    }
-                                                    else
-                                                    {
-                                                        @Html.DisplayName("---------")
-                                                    }
-                                                }
+            @{
+                if (item.IsService == false)
+                {
+                    @((item.SalePrice * item.Stock).Value.ToString("0.00"));
+                    { TotalSalePrice += (double)(item.SalePrice * item.Stock); }
+                }
+                else
+                {
+                    @Html.DisplayName("---------")
+                }
+            }
 
 
-                                            </td>*@
+        </td>*@
 
 
 
                                             @*<td class="">
-                                                @Html.DisplayFor(modelItem => item.Remarks)
-                                            </td>*@
-                                            <td class="no-print">
+            @Html.DisplayFor(modelItem => item.Remarks)
+        </td>*@
+                                            <td class="no-print" style="display:none;">
                                                 @Html.ActionLink("Update", "Edit", new { id = item.Id }, new { @class = "btn btn-info" })
 
                                                 @*@{
-                                                        if (item.IsService == false)
-                                                        {
-                                                            @Html.ActionLink("Update", "Edit", new { id = item.Id })
-                                                        }
-                                                        else
-                                                        {
-                                                            @Html.ActionLink("Update", "EditService", new { id = item.Id })
-                                                        }
-                                                    }*@
+                if (item.IsService == false)
+                {
+                    @Html.ActionLink("Update", "Edit", new { id = item.Id })
+                }
+                else
+                {
+                    @Html.ActionLink("Update", "EditService", new { id = item.Id })
+                }
+            }*@
 
 
 
                                                 @*<a href="@Url.Action("ProductWiseSale","SOSR", new { productId = item.Id })" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Search this product">Product Wise Sale</a>
 
-                                                    |*@
+            |*@
                                                 @*@Html.ActionLink("Details", "Details", new { id=item.Id }) |*@
                                                 @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
 
                                                 <div class="dropdown">
-                                                    <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        more ...
-                                                    </button>
+                                                    @*<button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    more ...
+                </button>*@
                                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                         <a class="dropdown-item" href="@Url.Action("SearchProduct", "SOSR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product in Sales">Search in Sales History</a>
                                                         <a class="dropdown-item" href="@Url.Action("SearchProduct", "POPR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product in Purchasess">Search in Purchases History</a>
@@ -265,10 +299,10 @@
                                 <tfoot>
                                     <tr style="font-weight:bold">
 
-                                        <td>@Model.Count()</td>
-                                        @*<td></td>*@
+                                        @*<td>@Model.Count()</td>*@
+                                        @*<td></td>
 
-                                        @*<td></td>*@
+                                            <td></td>*@
                                         <td></td>
 
                                         <td></td>
@@ -277,20 +311,22 @@
 
 
                                         <td></td>
-                                        @*<td>@TotalStock</td>*@
+                                        @*<td>@TotalStock</td>
 
 
-                                        @*<td>
-                                            @if (currentUser.EmployeeTypeId == 0)
-                                            {
-                                                @TotalPurchasePrice
-                                            }
-                                        </td>*@
+                                            <td>
+                                                @if (currentUser.EmployeeTypeId == 0)
+                                                {
+                                                    @TotalPurchasePrice
+                                                }
+                                            </td>
 
-                                        @*<td>@TotalSalePrice</td>*@
+                                            <td>@TotalSalePrice</td>
 
+                                            <td></td>*@
                                         <td></td>
-                                        <td></td>
+                                        <td style="display:none;"></td>
+                                        <td style="display:none;"></td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -332,6 +368,15 @@
             //$("#printMe").hide();
             window.print();
         });
+
+            // Initialize DataTable if you're using it
+        $('#ProductIndex').DataTable();
+        /*alert('hi');*/
+            // You can add additional store change handling here if needed
+            $('#storeId').change(function () {
+                // Show loading indicator
+                $('.box-body').html('<div class="text-center"><i class="fa fa-spinner fa-spin fa-3x"></i></div>');
+            });
 
         //$('#SOSRIndex').DataTable({
         //    fixedHeader: {

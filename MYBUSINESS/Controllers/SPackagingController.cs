@@ -1099,8 +1099,8 @@ namespace MYBUSINESS.Controllers
                     string poId = item.poId;
 
                     // Find the matching POD record by POId and ProductId
-                    var podRecord = db.PODs.FirstOrDefault(p =>
-                        p.POId.ToString() == poId && p.ProductId == prodId);
+                    var podRecord = db.SPackagingDetails.FirstOrDefault(p =>
+                        p.SPackagingId.ToString() == poId && p.ProductId == prodId);
 
                     if (podRecord == null)
                     {

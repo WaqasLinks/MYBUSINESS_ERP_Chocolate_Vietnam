@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="a584e9a2f9434e69aac2e1c9ca294c92" Name="Diagram1" ZoomLevel="47">
+      <Diagram DiagramId="a584e9a2f9434e69aac2e1c9ca294c92" Name="Diagram1" ZoomLevel="71">
         <EntityTypeShape EntityType="Models.BankAccount" Width="1.5" PointX="8.25" PointY="15.25" />
         <EntityTypeShape EntityType="Models.BOM" Width="1.5" PointX="7.5" PointY="64.375" />
         <EntityTypeShape EntityType="Models.BusinessInfo" Width="1.5" PointX="0.75" PointY="37.25" />
@@ -120,11 +120,6 @@
         <EntityTypeShape EntityType="Models.ScanBankDeposit" Width="1.5" PointX="7.375" PointY="5.75" />
         <EntityTypeShape EntityType="Models.ScanMoneyInput" Width="1.5" PointX="7.375" PointY="8.75" />
         <EntityTypeShape EntityType="Models.ScanCreditCard" Width="1.5" PointX="9.375" PointY="4.75" />
-        <EntityTypeShape EntityType="Models.PrintedPackagingDetail" Width="1.5" PointX="18.5" PointY="51" />
-        <AssociationConnector Association="Models.FK_PrintedPackagingDetail_Product" />
-        <EntityTypeShape EntityType="Models.PrintedPackaging" Width="1.5" PointX="5.25" PointY="12.125" />
-        <AssociationConnector Association="Models.FK_PrintedPackaging_Supplier" />
-        <AssociationConnector Association="Models.FK_PrintedPackagingDetail_PrintedPackaging" />
         <EntityTypeShape EntityType="Models.PPReceiver" Width="1.5" PointX="16.25" PointY="38.625" />
         <EntityTypeShape EntityType="Models.PPReciverDetail" Width="1.5" PointX="18.5" PointY="45.125" />
         <AssociationConnector Association="Models.FK_PPReceiver_Supplier" />
@@ -165,9 +160,17 @@
         <AssociationConnector Association="Models.FK_OrderItems_Orders" />
         <EntityTypeShape EntityType="Models.StoreOrderReceipt" Width="1.5" PointX="15.75" PointY="13.125" />
         <AssociationConnector Association="Models.FK_StoreOrderReceipt_Orders" />
-        <EntityTypeShape EntityType="Models.Store" Width="1.5" PointX="5.25" PointY="34.875" />
+        <EntityTypeShape EntityType="Models.PrintedPackagingDetail" Width="1.5" PointX="7.5" PointY="78.875" />
+        <EntityTypeShape EntityType="Models.ProductionDetail1" Width="1.5" PointX="9.375" PointY="10.75" />
+        <AssociationConnector Association="Models.FK_PrintedPackagingDetail_Product1" />
+        <EntityTypeShape EntityType="Models.PrintedPackaging" Width="1.5" PointX="16.5" PointY="23.625" />
+        <AssociationConnector Association="Models.FK_PrintedPackaging_BankAccount" />
+        <AssociationConnector Association="Models.FK_PrintedPackaging_Supplier" />
+        <AssociationConnector Association="Models.FK_PrintedPackagingDetail_PrintedPackaging1" />
+        <EntityTypeShape EntityType="Models.Store" Width="1.5" PointX="5.25" PointY="34.375" />
         <AssociationConnector Association="Models.FK_OrderPProducts_Store" />
         <AssociationConnector Association="Models.FK_Orders_Store" />
+        <AssociationConnector Association="Models.FK_PrintedPackaging_Store" />
         <AssociationConnector Association="Models.FK_SO_Store" />
         <AssociationConnector Association="Models.FK_StoreOrderReceipt_Store" />
         <AssociationConnector Association="Models.FK_StoreProduct_Store" />

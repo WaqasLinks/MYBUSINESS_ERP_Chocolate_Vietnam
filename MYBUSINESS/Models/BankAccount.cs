@@ -19,6 +19,7 @@ namespace MYBUSINESS.Models
         {
             this.POes = new HashSet<PO>();
             this.SOes = new HashSet<SO>();
+            this.PrintedPackagings = new HashSet<PrintedPackaging>();
         }
     
         public string Id { get; set; }
@@ -31,5 +32,7 @@ namespace MYBUSINESS.Models
         public virtual ICollection<PO> POes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SO> SOes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PrintedPackaging> PrintedPackagings { get; set; }
     }
 }

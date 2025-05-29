@@ -5,11 +5,11 @@
     // Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<center><h2>Scan Deposit</h2></center>
+<center><h2>Scan Credit Card</h2></center>
 
 <div class="col-sm-12 noPrint">
     <a href="#" id="printMe" class="btn btn-info"><i class=""></i> Print</a>
-    <a href="/BOM/Create" id="createBOM" class="btn btn-success"><i class=""></i> New ScanDeposit</a> |
+    <a href="/ScanCreditCard/Create" id="createBOM" class="btn btn-success"><i class=""></i> New ScanDeposit</a> |
     @Html.ActionLink("Upload Excel", "Upload", new object { }, new { @class = "btn btn-warning" }) |
     <a href="/SOSR/Create?IsReturn=false" id="createSOSR" class=""><i class=""></i> New Sale</a> |
     <a href="/POPR/Create?IsReturn=false" id="createPOPR" class=""><i class=""></i> New Purchase</a>

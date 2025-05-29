@@ -105,326 +105,153 @@ $(function () {
 
 
 $(document).ready(function () {
+    // Global variables to track quantities
+    let orderedQuantity = 0;
+    let previouslyReceived = 0;
+    let currentReceivedTotal = 0;
 
-    //$(this).closest('form').find("input[type=text], textarea").val("");
-    if (IsReturn == 'true') {
-        $('#saleOrder').hide();
-        $('#saleReturn').show();
-    }
-    else {
-        $('#saleReturn').hide();
-        $('#saleOrder').show();
-    }
+    // Initialize quantities on page load
+    function initializeQuantities() {
+        // Get ordered quantity from the first table
+        orderedQuantity = parseFloat($('.ordered-quantity').first().val()) || 0;
 
+        // Reset counters
+        previouslyReceived = 0;
+        currentReceivedTotal = 0;
 
-    //alert('iam ready');
-    document.getElementById('supplier').focus();
+        // Calculate quantities from all rows
+        $('#selectedProducts tbody tr').each(function (index) {
+            const receivedInput = $(this).find('.received-qty');
+            if (receivedInput.length) {
+                const qty = parseFloat(receivedInput.val()) || 0;
 
-    //$('#name').tooltip('show')
-
-    //$('[data-toggle="tooltip"]').tooltip();
-    var actions = $("table td:last-child").html();
-    // Append table with add row form on add new button click
-
-    $('#addNewRow').keydown(function (event) {
-        //alert('keydown');
-        if (event.keyCode == 13) {
-            $('#addNewRow').trigger('click');
-        }
-    });
-    $(document).ready(function () {
-        // Function to make all fields readonly on page load
-        function makeFieldsReadonly() {
-            $('#selectedProducts tr').each(function () {
-                $(this).find('input, select').each(function () {
-                    $(this).prop('readonly', true); // Make all inputs readonly
-                });
-            });
-        }
-        //var malaysiaTimeStr = $('#timeValues').data('malaysia-time');
-        //var futureTimeStr = $('#timeValues').data('future-time');
-
-        //// Check if the times are being loaded properly
-        //alert("Malaysia Time:", malaysiaTimeStr);
-        //alert("Future Time:", futureTimeStr);
-
-        //// Convert them to JavaScript Date objects
-        //var malaysiaTime = new Date(malaysiaTimeStr);
-        //var futureTime = new Date(futureTimeStr);
-        // Function to make the last row editable and previous rows readonly
-        function makeLastRowEditable() {
-            var totalRows = $('#selectedProducts tr').length;  // Get the total number of rows
-            if (totalRows > 0) {
-                // Make the last row editable and all previous rows readonly
-                var lastRow = $('#selectedProducts tr').last();
-                lastRow.find('input, select').each(function () {
-                    $(this).prop('readonly', false); // Make last row editable
-                });
-
-                // Make all previous rows readonly
-                $('#selectedProducts tr').not(lastRow).each(function () {
-                    $(this).find('input, select').each(function () {
-                        $(this).prop('readonly', true); // Make previous rows readonly
-                    });
-                });
+                // For edit view, first row is typically the previously received quantity
+                if (index === 0) {
+                    previouslyReceived = qty;
+                } else {
+                    currentReceivedTotal += qty;
+                }
             }
-        }
-
-        // On page load, make all fields readonly except the last one (if any)
-        makeFieldsReadonly();
-        makeLastRowEditable();  // Ensure the last row is editable on page load
-
-        // When the "Add New Row" button is clicked
-        $("#addNewRow").click(function () {
-            var index = $("#selectedProducts tr").length;
-            var txtSerialNum = index; // Use the number of rows as a serial number
-
-            var malaysiaTime = new Date('@(ViewBag.MalaysiaTime?.ToString("yyyy-MM-ddTHH:mm") ?? "")');
-            var futureTime = new Date('@(ViewBag.FutureTime?.ToString("yyyy-MM-ddTHH:mm") ?? "")');
-
-            var row = '<tr>' +
-                '<td id="SNo' + txtSerialNum + '">' + $('#selectedProducts tr').length + '</td>' +
-                '<td style="display:none;"><input type="hidden" name="PurchaseReciverOrderDetail.Index" value="' + txtSerialNum + '" /></td>' +
-                '<td style="display:none;"><input type="text" readonly class="form-control classBGcolor" name="PurchaseReciverOrderDetail[' + txtSerialNum + '].ProductId" id="idn' + txtSerialNum + '"></td>' +
-                '<td><input type="text" class="form-control" autocomplete="off" name="PurchaseReciverOrderDetail[' + txtSerialNum + '].QtyReceived" id="quantityreceived' + txtSerialNum + '"></td>' +
-                '<td><input type="datetime-local" class="form-control from-date-picker" name="PurchaseReciverOrderDetail[' + txtSerialNum + '].PurchasingDate id="purchasingdate' + txtSerialNum + '" ></td>' +
-                '<td><input type="datetime-local" class="form-control from-date-picker" name="PurchaseReciverOrderDetail[' + txtSerialNum + '].ExpiryDate id="expirydate' + txtSerialNum + '"></td>' +
-
-                '<td><button type="button" id="delete' + txtSerialNum + '" class="delete btn btn-default add-new"> <a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button></td>' +
-                '</tr>';
-
-            // Append the new row to the table
-            $("#selectedProducts").append(row);
-
-            // Make the last row editable and all previous rows readonly
-            makeLastRowEditable();
-
-            // Focus the new row's first field (optional)
-            document.getElementById('idn' + txtSerialNum).focus();
-
-            // Optional: Trigger body events if necessary
-            TriggerBodyEvents();
         });
 
-        // Optional: Add delete row functionality
-        $(document).on('click', '.delete', function () {
-            $(this).closest('tr').remove();
-            makeLastRowEditable();  // Reapply readonly functionality after row deletion
-        });
-    });
+        console.log(`Initialized - Ordered: ${orderedQuantity}, Previously Received: ${previouslyReceived}, Current Editable: ${currentReceivedTotal}`);
+    }
 
-    // Edit row on edit button click
-    $(document).on("click", ".edit", function () {
-        $(this).parents("tr").find("td:not(:last-child)").each(function () {
-            $(this).html('<input type="text" class="form-control" value="' + $(this).text() + '">');
-        });
-        $(this).parents("tr").find(".add, .edit").toggle();
-        $("#addNewRow").attr("disabled", "disabled");
-    });
+    // Validate a single quantity input
+    function validateQuantityInput(input) {
+        const totalWithCurrent = getTotalReceivedIncludingCurrentInput(input);
 
+        if (totalWithCurrent > orderedQuantity) {
+            const allowedRemaining = orderedQuantity - previouslyReceived - calculateCurrentReceivedExcept(input);
+            alert(`Total received quantity (${totalWithCurrent}) exceeds ordered quantity (${orderedQuantity}). You can only receive up to ${allowedRemaining}.`);
 
-
-    //$(document).on("keyup", "#delete1", function (event) {
-    //    if (event.keyCode == 13) {
-    //        $("#delete1").trigger('click');
-    //    }
-    //});
-
-
-
-    // Delete row on delete button click
-    //$(document).on("click", "#delete1", function () {
-    //    $(this).parents("tr").remove();
-    //    $("#addNewRow").removeAttr("disabled");
-    //    update_itemTotal();
-    //});
-    $(document).on("keypress", "form", function (event) {
-        return event.keyCode != 13;
-    });
-    //$('td[id^="' + value +'"]')         "[id^='quantity']"
-
-
-    TriggerFooterEvents();
-
-    //$("[id^='quantity']").keydown(function (e) {
-    //    // Allow: backspace, delete, tab, escape, enter and .(45) and -(46)
-    //    if ($.inArray(e.keyCode, [8, 9, 27, 13, 110]) !== -1 ||
-
-    //        // Allow: Ctrl+A, Command+A
-    //        (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) ||
-    //        // Allow: home, end, left, right, down, up
-    //        (e.keyCode >= 35 && e.keyCode <= 40)) {
-    //        // let it happen, don't do anything
-
-    //        return;
-    //    }
-    //    // Ensure that it is a number and stop the keypress
-    //    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-    //        e.preventDefault();
-    //    }
-    //});
-
-    $('#CreatePO').keydown(function (event) {
-        if (event.keyCode == 13) {
-            $('#CreatePO').trigger('click');
-        }
-    });
-    $('#CreatePO').click(function () {
-
-        if ($('#idnSupplier').val() == "") {
-            alert('Supplier not found. Please select supplier from list or add new');
+            // Reset the field to allowed max or blank
+            $(input).val(allowedRemaining > 0 ? allowedRemaining : '');
+            $(input).focus();
             return false;
-
         }
 
-         //-----------------------------------------------------------------v-product stock check-v--------------------------
-        //var EnteredQty1 = 0;
-        //var EnteredProductId1 = 0;
-        //var tblProductStock1 = 0;
-        //var tblProductId = 0;
-        //var saleType1 = false;
-        //var idx1 = 0;
-        //var isFalse = true;
-        //$('#selectedProducts tbody tr').each(function () {
-        //    idx1 += 1;
-        //    EnteredQty1 = $(this).closest("tr").find("[id^='quantity']").val();
-        //    EnteredProductId1 = $(this).closest("tr").find("[id^='idn']").val().trim();
-        //    saleType1 = $(this).closest("tr").find("[id^='saleType']").val().trim();
-        //    $('#productsTable tr').each(function () {
-        //        tblProductId1 = $(this).find(".ProductId").html();
-        //        if (typeof tblProductId1 != 'undefined') {
-        //            if (EnteredProductId1 == tblProductId1.trim()) {
-        //                //alert('abc');
-        //                tblProductStock1 = $(this).find(".stock").html().trim();
-        //            }
-        //        }
-        //    });
-        //    if (Number(EnteredQty1) > Number(tblProductStock1) && saleType1 == "false") {
-        //        alert("Item # " + idx1 + " available stock is " + tblProductStock1);
-        //        //$(this).closest("tr").find("[id^='quantity']").val(tblProductStock1);
-        //        isFalse = false;
-        //        return false;
-        //    }
-        //});
-        //if (isFalse == false) {
-        //    return false;
-        //}
-        //-----------------------------------------------------------------^-product stock check-^--------------------------
-
-        //alert($('#ItemsTotal').val());
-        var wentRight = 1;
-        var InvalidproductName= ' ';
-        var idx = 0;
+        return true;
+    }
 
 
-
-        //if (isNaN($('#total').val())) {
-        //    alert('Total is not valid');
-        //    return false;
-        //}
-        //
-        //if (isNaN($('#balance').val())) {
-        //    alert('Balance is not valid');
-        //    return false;
-        //}
-
-        $('#selectedProduct > tbody  > tr').each(function () {
-            idx += 1;
-            var price = $(this).find("[id^='purchasePrice']").val();
-            InvalidproductName = $(this).find("[id^='name']").val();
-            //alert(price);
-            if (!price) {
-                //alert(price + " returning");
-                wentRight = 0;
-                return false;
-
+    // Calculate current received quantities except the specified input
+    function calculateCurrentReceivedExcept(excludeInput) {
+        let total = 0;
+        $('#selectedProducts tbody tr:not(:first) .received-qty').each(function () {
+            if (!excludeInput || this !== excludeInput[0]) {
+                total += parseFloat($(this).val()) || 0;
             }
         });
+        return total;
+    }
 
-        //if (wentRight == 0) {
-        //    //alert("item # " + idx + " " + InvalidproductName + " is not a valid product name. Please select valid product from product list");
-        //    alert("(Item # " + idx + ") " + InvalidproductName + " Please select appropriate product name from list");
-        //    return false;
-        //}
+    // Validate all quantities before save
+    function validateBeforeSave() {
+        let total = previouslyReceived;
 
-        if (checkAvaiableStock() == false) return false;
-
-        //if ($('#ItemsTotal').val() == 0) {
-        //    alert('Please add at least one product to proceed');
-        //    return;
-        //}
-
-        if ($('#discount').val().trim() == "") {
-            $('#discount').val(0);
-        }
-        if ($('#paid').val().trim() == "") {
-            $('#paid').val(0);
-        }
-
-        //if ($('#ItemsTotal').val().trim() == "") {
-        //    $('#ItemsTotal').val(0);
-        //}
-        //if ($('#ReturnItemsTotal').val().trim() == "") {
-        //    $('#ReturnItemsTotal').val(0);
-        //}
-
-        //$("#CreatePO").attr("disabled", true);
-        $('form').preventDoubleSubmission();
-
-    });
-
-    jQuery.fn.preventDoubleSubmission = function () {
-        $(this).on('submit', function (e) {
-            var $form = $(this);
-            //alert('abc');
-            if ($form.data('submitted') === true) {
-                // Previously submitted - don't submit again
-                e.preventDefault();
-            } else {
-                // Mark it so that the next submit can be ignored
-                $form.data('submitted', true);
-            }
+        $('#selectedProducts .received-qty:not([readonly])').each(function () {
+            total += parseFloat($(this).val()) || 0;
         });
 
-        // Keep chainability
-        return this;
-    };
+        if (total > orderedQuantity) {
+            const overBy = total - orderedQuantity;
+            alert(`Total received quantity exceeds ordered quantity by ${overBy}. Please adjust.`);
+            return false;
+        }
+        return true;
+    }
 
-    //$(document).on("click", "OpenNewSuppForm", function () {
-    //    $("#dialog-CreateSupplier").dialog("open");
-    //});
 
-    $('#OpenNewSuppForm').click(function () {
-        
-        $("#dialog-CreateSupplier").dialog("open");
+    // Add new row functionality
+    $("#addNewRow").click(function () {
+        if (!validateBeforeSave()) {
+            return false;
+        }
+
+        const newRowIndex = $("#selectedProducts tbody tr").length;
+        const newRow = `
+            <tr>
+                <td>${newRowIndex + 1}</td>
+                <td style="display:none;">
+                    <input type="hidden" name="PurchaseReciverOrderDetail.Index" value="${newRowIndex}" />
+                </td>
+                <td style="display:none;">
+                    <input type="text" readonly class="form-control" name="PurchaseReciverOrderDetail[${newRowIndex}].ProductId">
+                </td>
+                <td>
+                    <input type="number" step="0.001" class="form-control received-qty" 
+                           name="PurchaseReciverOrderDetail[${newRowIndex}].QtyReceived" min="0">
+                </td>
+                <td>
+                    <input type="datetime-local" class="form-control" 
+                           name="PurchaseReciverOrderDetail[${newRowIndex}].PurchasingDate">
+                </td>
+                <td>
+                    <input type="datetime-local" class="form-control" 
+                           name="PurchaseReciverOrderDetail[${newRowIndex}].ExpiryDate">
+                </td>
+                <td>
+                    <button type="button" class="delete btn btn-default">
+                        <i class="material-icons">&#xE872;</i>
+                    </button>
+                </td>
+            </tr>`;
+
+        $("#selectedProducts tbody").append(newRow);
+
+        // Set up event handlers for new row
+        $(`#selectedProducts tr:last .received-qty`).on('change', function () {
+            validateQuantityInput($(this));
+        });
     });
 
-    $('#btnCreateNewSupp').click(function () {
-
-        $("#dialog-CreateSupplier").dialog("close");
-        //$('#idnSupplier').val(SupplierId);
-        var contents = $("#NewSupplierId").val();
-        $("#idnSupplier").val(contents);
-
-        contents = $("#NewSupplierName").val();
-
-        $("#supplier").val(contents);
-
-        contents = $("#NewSupplierAddress").val();
-        $("#supplierAddress").val(contents);
-
-        $("#PreviousBalance").val(0.00);
-        update_itemTotal();
-        //alert(contents);
+    // Delete row functionality
+    $(document).on('click', '.delete', function () {
+        // Don't allow deleting the first row (previously received)
+        if ($(this).closest('tr').index() === 0) {
+            alert("Cannot delete the previously received quantity row");
+            return;
+        }
+        $(this).closest('tr').remove();
     });
 
-    //$('[id^="saleType"]').change(function () {
-    //    update_itemTotal();
-    //});
+    // Form submission handler
+    $("#POEdit").on('submit', function (e) {
+        if (!validateBeforeSave()) {
+            e.preventDefault();
+            return false;
+        }
+        return true;
+    });
 
-   
-    
+    // Initialize quantities and event handlers
+    initializeQuantities();
+    $('.received-qty').on('change', function () {
+        validateQuantityInput($(this));
+    });
 });
+
 
 
 function barcodeEntered(value) {

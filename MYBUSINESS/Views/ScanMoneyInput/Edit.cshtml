@@ -150,7 +150,7 @@
         });
 
         // Step 2b: Inject the HTML content into Summernote
-        var existingContent = @Html.Raw(Json.Encode(Model.ScanBankDeposit.Note));
+        var existingContent = @Html.Raw(Json.Encode(Model.ScanMoneyInput.Note));
         $('#compose_textarea').summernote('code', existingContent);
 
         // Step 2c: Sync Summernote content before submitting the form
