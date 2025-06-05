@@ -11,12 +11,25 @@
                     <h3 class="box-title">Packaging Products List</h3>
                 </div>
                 <div class="box-body">
+                    <div class="form-group">
+                        <label>Select Store:</label>
+                        @{
+                            var storesList = ViewBag.Stores as SelectList;
+                        }
+                        @Html.DropDownList("storeId", ViewBag.Stores as SelectList, "Select Store", new
+                        {
+                            @class = "form-control",
+                            required = "required",
+                            style = "width: 200px;"
+                        })
+                    </div>
                     <table id="productTable" class="table table-bordered table-striped">
                         <thead>
                             <tr>
                                 <th style="width:10%;">Name</th>
                                 @*<th>Stock</th>*@
                                 <th style="width:10%;">Quantity</th>
+                                <th style="width:10%;">Unit</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -27,8 +40,9 @@
                                     @*<td>@Model[i].Stock</td>*@
                                     <td>
                                         <input type="hidden" name="orderitem[@i].ProductId" value="@Model[i].Id" />
-                                        <input type="number" name="orderitem[@i].Quantity" class="form-control" min="1" style="width: 80px;"/>
+                                        <input type="number" name="orderitem[@i].Quantity" class="form-control" min="1" style="width: 80px;" />
                                     </td>
+                                    <td style="width: 80px;">@Model[i].Unit</td>
                                 </tr>
                             }
 

@@ -17,11 +17,16 @@
                             <thead>
                                 <tr>
                                     <th>@Html.DisplayNameFor(model => model.First().Id)</th>
-                                    <th>@Html.DisplayNameFor(model => model.First().PProdDate)</th>
+                                    @*<th>@Html.DisplayNameFor(model => model.First().PProdDate)</th>*@
+                                    <th>Paper Order Date</th>
                                     <th>@Html.DisplayNameFor(model => model.ProductName)</th>
-                                    <th>@Html.DisplayNameFor(model => model.Box)</th>
+                                    @*<th>@Html.DisplayNameFor(model => model.Box)</th>*@
                                     @*<th>@Html.DisplayNameFor(model => model.QuantityToProduce)</th>*@
                                     <th>Actions</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -53,8 +58,7 @@
 new { @class = "btn btn-primary text-white" }) <!-- Blue color for View -->
 
                                                 <!-- Show Post Production button only when Validate is true -->
-                                                @Html.ActionLink("Post Production", "Create", "PostProduction", new { id = item.Id },
-new { @class = "btn btn-warning text-dark fw-bold" }) <!-- Yellow color for Post Production -->
+
                                             }
                                             else
                                             {
@@ -72,7 +76,9 @@ new { @class = "btn btn-info text-white" }) <!-- Light Blue for Update -->
                                                 @Html.ActionLink("Phse4", "Index4", new { packagingProductionId = item.Id }, new { @class = "btn btn-success fw-bold" })
 
                                             </td>
-
+                                            <td>
+                                            @Html.ActionLink("Print", "PrintOrderPdf", new { orderId = item.Id }, new { @class = "btn btn-success" })
+                                                </td>
                                         }
 
                                             |
@@ -98,6 +104,8 @@ new { @class = "btn btn-info text-white" }) <!-- Light Blue for Update -->
                                 <tr style="font-weight:bold">
                                     <td colspan="4">Total</td>
                                     <td>@TotalStock</td>
+                                    <td></td>
+                                    <td></td>
                                     <td></td>
                                 </tr>
                             </tfoot>

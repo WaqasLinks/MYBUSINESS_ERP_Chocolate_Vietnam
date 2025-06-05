@@ -81,7 +81,6 @@ namespace MYBUSINESS.Models
         public virtual DbSet<PPReceiver> PPReceivers { get; set; }
         public virtual DbSet<PPReciverDetail> PPReciverDetails { get; set; }
         public virtual DbSet<Color> Colors { get; set; }
-        public virtual DbSet<PackagingProduction> PackagingProductions { get; set; }
         public virtual DbSet<PPSubItem> PPSubItems { get; set; }
         public virtual DbSet<PPColorReceipt> PPColorReceipts { get; set; }
         public virtual DbSet<CPReceipt> CPReceipts { get; set; }
@@ -98,6 +97,7 @@ namespace MYBUSINESS.Models
         public virtual DbSet<ProductionDetail1> ProductionDetails1 { get; set; }
         public virtual DbSet<PrintedPackaging> PrintedPackagings { get; set; }
         public virtual DbSet<Store> Stores { get; set; }
+        public virtual DbSet<PackagingProduction> PackagingProductions { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {
@@ -299,6 +299,15 @@ namespace MYBUSINESS.Models
                 new ObjectParameter("SaleOrderID", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spSOCustomerReport_Result>("spSOCustomerReport", saleOrderIDParameter);
+        }
+    
+        public virtual ObjectResult<sp_GetPackagingProductionDetails_Result> sp_GetPackagingProductionDetails(Nullable<int> packagingProductionId)
+        {
+            var packagingProductionIdParameter = packagingProductionId.HasValue ?
+                new ObjectParameter("PackagingProductionId", packagingProductionId) :
+                new ObjectParameter("PackagingProductionId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetPackagingProductionDetails_Result>("sp_GetPackagingProductionDetails", packagingProductionIdParameter);
         }
     }
 }

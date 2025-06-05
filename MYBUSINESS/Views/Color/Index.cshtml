@@ -5,14 +5,14 @@
     // Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<center><h2>BOMs</h2></center>
+<center><h2>Color List</h2></center>
 
 <div class="col-sm-12 noPrint">
-    <a href="#" id="printMe" class="btn btn-info"><i class=""></i> Print</a>
-    <a href="/BOM/Create" id="createBOM" class="btn btn-success"><i class=""></i> New BOM</a> |
-    @Html.ActionLink("Upload Excel", "Upload", new object { }, new { @class = "btn btn-warning" }) |
-    <a href="/SOSR/Create?IsReturn=false" id="createSOSR" class=""><i class=""></i> New Sale</a> |
-    <a href="/POPR/Create?IsReturn=false" id="createPOPR" class=""><i class=""></i> New Purchase</a>
+    <a style="display:none;" href="#" id="printMe" class="btn btn-info"><i class=""></i> Print</a>
+    <a href="/Color/Create" id="createBOM" class="btn btn-success"><i class=""></i> New Color</a>
+    @*@Html.ActionLink("Upload Excel", "Upload", new object { }, new { @class = "btn btn-warning" }) |*@
+    <a style="display:none;" href="/SOSR/Create?IsReturn=false" id="createSOSR" class=""><i class=""></i> New Sale</a> 
+    <a style="display:none;" href="/POPR/Create?IsReturn=false" id="createPOPR" class=""><i class=""></i> New Purchase</a>
 </div>
 
 @{Html.RenderPartial("_SelectedProducts", Model);}

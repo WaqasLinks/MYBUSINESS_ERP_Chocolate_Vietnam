@@ -10,6 +10,8 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.Reporting.WebForms; // For LocalReport, ReportDataSource, Warning
+using System.Data.SqlClient;
 using System.Windows.Media;
 //using MyColor = MYBUSINESS.Models.Color;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
@@ -442,6 +444,7 @@ namespace MYBUSINESS.Controllers
         //    return View(model);
         //}
 
+
         public ActionResult EditColor(int packagingProductionId)
         {
             var query = from r in db.CPReceipts
@@ -538,69 +541,129 @@ namespace MYBUSINESS.Controllers
                 });
             }
         }
-        public ActionResult FlatBoxStockSummary(int? packagingProductionId)
+        //public ActionResult FlatBoxStockSummary(int? packagingProductionId) Existing One
+        //{
+        //    // Get all receipts grouped by packaging production, product and color
+        //    var stockData = from r in db.CPReceipts
+        //                    join pc in db.PaperColors on r.PaperColorId equals pc.Id
+        //                    join p in db.Products on pc.ProductId equals p.Id
+        //                    join pp in db.PackagingProductions on r.PackagingProductionId equals pp.Id
+        //                    where (packagingProductionId == null || r.PackagingProductionId == packagingProductionId)
+        //                    group r by new
+        //                    {
+        //                        PackagingProductionId = pp.Id,
+        //                        PackagingProductionName = pp.ProductName, // Assuming there's a Name property
+        //                        ProductId = p.Id,
+        //                        ProductName = p.Name,
+        //                        ColorId = pc.Id,
+        //                        ColorName = pc.Color
+        //                    } into g
+        //                    select new
+        //                    {
+        //                        g.Key.PackagingProductionId,
+        //                        g.Key.PackagingProductionName,
+        //                        g.Key.ProductId,
+        //                        g.Key.ProductName,
+        //                        g.Key.ColorId,
+        //                        g.Key.ColorName,
+        //                        TotalReceived = g.Sum(x => x.QuantityReceived) ?? 0
+        //                    };
+
+        //    // Group by PackagingProduction and Product
+        //    var productionGroups = stockData.ToList()
+        //        .GroupBy(x => new
+        //        {
+        //            x.PackagingProductionId,
+        //            x.PackagingProductionName,
+        //            x.ProductId,
+        //            x.ProductName
+        //        });
+
+        //    var viewModel = productionGroups.Select(g => new FlatBoxStockViewModel
+        //    {
+        //        PackagingProductionId = g.Key.PackagingProductionId,
+        //        ProductId = (int)g.Key.ProductId,
+        //        ProductName = g.Key.ProductName,
+        //        // Calculate complete boxes based on minimum color quantity
+        //        TotalCompleteBoxes = g.Any() ? g.Min(x => x.TotalReceived) : 0,
+        //        ColorComponents = g.Select(c => new ColorStockInfo
+        //        {
+        //            ColorId = c.ColorId,
+        //            ColorName = c.ColorName,
+        //            Quantity = c.TotalReceived
+        //        }).ToList(),
+        //        LastUpdated = DateTime.Now
+        //    }).ToList();
+
+        //    // Add summary data to ViewBag if needed
+        //    ViewBag.PackagingProductions = db.PackagingProductions.ToList();
+        //    if (packagingProductionId.HasValue)
+        //    {
+        //        ViewBag.SelectedProduction = db.PackagingProductions.Find(packagingProductionId.Value)?.ProductName;
+        //    }
+
+        //    return View(viewModel);
+        //}
+
+        [HttpGet]
+        public ActionResult FlatBoxStockSummary(int? productId)
         {
-            // Get all receipts grouped by packaging production, product and color
             var stockData = from r in db.CPReceipts
                             join pc in db.PaperColors on r.PaperColorId equals pc.Id
                             join p in db.Products on pc.ProductId equals p.Id
-                            join pp in db.PackagingProductions on r.PackagingProductionId equals pp.Id
-                            where (packagingProductionId == null || r.PackagingProductionId == packagingProductionId)
+                            where !productId.HasValue || p.Id == productId
                             group r by new
                             {
-                                PackagingProductionId = pp.Id,
-                                PackagingProductionName = pp.ProductName, // Assuming there's a Name property
                                 ProductId = p.Id,
                                 ProductName = p.Name,
-                                ColorId = pc.Id,
                                 ColorName = pc.Color
                             } into g
                             select new
                             {
-                                g.Key.PackagingProductionId,
-                                g.Key.PackagingProductionName,
                                 g.Key.ProductId,
                                 g.Key.ProductName,
-                                g.Key.ColorId,
                                 g.Key.ColorName,
-                                TotalReceived = g.Sum(x => x.QuantityReceived) ?? 0
+                                TotalReceived = g.Sum(x => (int?)x.QuantityReceived) ?? 0
                             };
 
-            // Group by PackagingProduction and Product
-            var productionGroups = stockData.ToList()
-                .GroupBy(x => new
+            var viewModel = new List<FlatBoxStockViewModel>();
+
+            if (productId.HasValue)
+            {
+                // Get all unique color names for the selected product
+                var allColors = db.PaperColors
+                                  .Where(pc => pc.ProductId == productId)
+                                  .Select(pc => pc.Color)
+                                  .Distinct()
+                                  .ToList();
+
+                var summedQuantities = stockData.ToList();
+
+                viewModel.Add(new FlatBoxStockViewModel
                 {
-                    x.PackagingProductionId,
-                    x.PackagingProductionName,
-                    x.ProductId,
-                    x.ProductName
+                    ProductId = productId.Value,
+                    ProductName = db.Products.Find(productId.Value)?.Name ?? "",
+                    ColorComponents = allColors.Select(colorName => new ColorStockInfo
+                    {
+                        ColorId = 0, // optional or leave null, since we’re combining across IDs
+                        ColorName = colorName,
+                        Quantity = summedQuantities
+                                    .Where(c => c.ColorName == colorName)
+                                    .Sum(c => c.TotalReceived)
+                    }).ToList(),
+                    LastUpdated = DateTime.Now
                 });
+            }
 
-            var viewModel = productionGroups.Select(g => new FlatBoxStockViewModel
+            ViewBag.Products = db.Products.ToList();
+            if (productId.HasValue)
             {
-                PackagingProductionId = g.Key.PackagingProductionId,
-                ProductId = (int)g.Key.ProductId,
-                ProductName = g.Key.ProductName,
-                // Calculate complete boxes based on minimum color quantity
-                TotalCompleteBoxes = g.Any() ? g.Min(x => x.TotalReceived) : 0,
-                ColorComponents = g.Select(c => new ColorStockInfo
-                {
-                    ColorId = c.ColorId,
-                    ColorName = c.ColorName,
-                    Quantity = c.TotalReceived
-                }).ToList(),
-                LastUpdated = DateTime.Now
-            }).ToList();
-
-            // Add summary data to ViewBag if needed
-            ViewBag.PackagingProductions = db.PackagingProductions.ToList();
-            if (packagingProductionId.HasValue)
-            {
-                ViewBag.SelectedProduction = db.PackagingProductions.Find(packagingProductionId.Value)?.ProductName;
+                ViewBag.SelectedProduct = db.Products.Find(productId.Value)?.Name;
             }
 
             return View(viewModel);
         }
+
 
         [HttpPost]
         [ValidateInput(false)]
@@ -1228,6 +1291,7 @@ namespace MYBUSINESS.Controllers
                 Color = DAL.dbColors.ToList() // ✅ load real color data here
             };
             ViewBag.Colors = db.Colors.ToList(); // ✅ Add this line
+            ViewBag.Suppliers = DAL.dbSuppliers;
             return View(viewModel);
         }
 
@@ -1265,27 +1329,65 @@ namespace MYBUSINESS.Controllers
         //       return View(model);
         //   }
 
+        //   [HttpPost] Existing
+        //   [ValidateAntiForgeryToken]
+        //   public ActionResult Create(
+        //[Bind(Prefix = "PackagingProduction", Include = "Id,ProductName,Unit,ProductId,Quantity,Validate,PProdDate,Box,Supplier")] PackagingProduction packagingProduction,
+        ////[Bind(Prefix = "SubItem", Include = "Id,ParentProductId,ProductId,Quantity,Unit,AvailableInventory,QuantitytoPrepare,QuantityRequested")] List<SubItem> subItems,
+        ////[Bind(Prefix = "SubItemProduction", Include = "Id,ParentProductId,ProductId,Quantity,Unit,AvailableInventory,QuantitytoPrepare,QuantityRequested,SubItemQty")] List<SubItemProduction> subItemProductions,
+        //[Bind(Prefix = "PaperColor", Include = "Id,Color,Quantity,ProductId,PackagingProductionId,")] List<PaperColor> color)
+        //   {
+        //       if (ModelState.IsValid)
+        //       {
+
+
+        //           // Save the BOM and its SubItems
+        //           db.PackagingProductions.Add(packagingProduction);
+
+
+        //           //foreach (var item in subItems)
+        //           //{
+        //           //    item.ParentProductId = newProduction.ProductId;
+        //           //    db.SubItems.Add(item);
+        //           //}
+
+        //           if (color != null)
+        //           {
+        //               foreach (var item in color)
+        //               {
+        //                   item.ProductId = packagingProduction.ProductId;
+        //                   item.PackagingProductionId = packagingProduction.Id;
+        //                   //item.Id = newProduction.Id;
+        //                   db.PaperColors.Add(item);
+        //                   //item.ProductId = newProduction.Id;
+        //                   //db.QuantityToProduces.Add(item);
+
+        //               }
+        //           }
+
+        //           db.SaveChanges();
+        //           return RedirectToAction("Index");
+
+        //       }
+
+
+
+        //       ViewBag.Suppliers = DAL.dbSuppliers;
+
+        //       var productList = db.Products.Select(p => new { p.Id, p.Name }).ToList();
+        //       ViewBag.ProductList = new SelectList(productList, "Id", "Name");
+
+        //       return View(packagingproductionViewModel);
+        //   }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(
-     [Bind(Prefix = "PackagingProduction", Include = "Id,ProductName,Unit,ProductId,Quantity,Validate,PProdDate,Box")] PackagingProduction packagingProduction,
-     //[Bind(Prefix = "SubItem", Include = "Id,ParentProductId,ProductId,Quantity,Unit,AvailableInventory,QuantitytoPrepare,QuantityRequested")] List<SubItem> subItems,
-     //[Bind(Prefix = "SubItemProduction", Include = "Id,ParentProductId,ProductId,Quantity,Unit,AvailableInventory,QuantitytoPrepare,QuantityRequested,SubItemQty")] List<SubItemProduction> subItemProductions,
-     [Bind(Prefix = "PaperColor", Include = "Id,Color,Quantity,ProductId,PackagingProductionId,")] List<PaperColor> color)
+       [Bind(Prefix = "PackagingProduction", Include = "Id,ProductName,Unit,ProductId,Quantity,Validate,PProdDate,Box,Supplier")] PackagingProduction packagingProduction,
+       [Bind(Prefix = "PaperColor", Include = "Id,Color,Quantity,ProductId,PackagingProductionId")] List<PaperColor> color)
         {
             if (ModelState.IsValid)
             {
-
-
-                // Save the BOM and its SubItems
                 db.PackagingProductions.Add(packagingProduction);
-
-                
-                //foreach (var item in subItems)
-                //{
-                //    item.ParentProductId = newProduction.ProductId;
-                //    db.SubItems.Add(item);
-                //}
 
                 if (color != null)
                 {
@@ -1293,27 +1395,41 @@ namespace MYBUSINESS.Controllers
                     {
                         item.ProductId = packagingProduction.ProductId;
                         item.PackagingProductionId = packagingProduction.Id;
-                        //item.Id = newProduction.Id;
                         db.PaperColors.Add(item);
-                        //item.ProductId = newProduction.Id;
-                        //db.QuantityToProduces.Add(item);
-
                     }
                 }
 
                 db.SaveChanges();
                 return RedirectToAction("Index");
-
             }
 
+            // Rebuild the full view model for returning the view
+            var viewModel = new PackagingProductionViewModel
+            {
+                PackagingProduction = packagingProduction,
+                Products = DAL.dbProducts,
+                SubItems = db.Products
+                    .Select(p => new { p.Id, p.Stock })
+                    .AsEnumerable()
+                    .Select(p => new SubItem
+                    {
+                        ProductId = p.Id,
+                        AvailableInventory = p.Stock,
+                        QuantitytoPrepare = 0
+                    }).ToList(),
+                QuantityToProduce = new List<QuantityToProduce> { new QuantityToProduce() },
+                ProductDetail = new List<ProductDetail> { new ProductDetail() },
+                PaperColor = color ?? new List<PaperColor>(),
+                Color = DAL.dbColors.ToList()
+            };
 
-
+            ViewBag.Colors = db.Colors.ToList();
             ViewBag.Suppliers = DAL.dbSuppliers;
 
             var productList = db.Products.Select(p => new { p.Id, p.Name }).ToList();
             ViewBag.ProductList = new SelectList(productList, "Id", "Name");
 
-            return View(packagingproductionViewModel);
+            return View(viewModel);
         }
 
 
@@ -1409,7 +1525,8 @@ namespace MYBUSINESS.Controllers
         .ToList();
 
             ViewBag.ProductList = new SelectList(productType8And9, "Id", "Name");
-
+            ViewBag.Colors = db.Colors.ToList(); // ✅ Add this line
+            ViewBag.Suppliers = DAL.dbSuppliers; 
             ViewBag.ReadonlyMode = readonlyMode;
             // Prepare ViewModel (including SubItems if needed)
             var viewModel = new PackagingProductionViewModel
@@ -2104,6 +2221,83 @@ namespace MYBUSINESS.Controllers
         //    return Json(new { message = "Stock updated successfully.", success = true });
         //}
 
+        [HttpPost]
+        [ValidateInput(false)]
+        public JsonResult ValidateProduction(int id)
+        {
+            try
+            {
+                var production = db.PackagingProductions.Find(id);
+                if (production == null)
+                {
+                    return Json(new { success = false, message = "Production record not found." });
+                }
+
+                // Check if already validated - handle nullable Validate field
+                if (production.Validate.GetValueOrDefault())
+                {
+                    return Json(new { success = false, message = "This production is already validated." });
+                }
+
+                // Mark as validated
+                production.Validate = true;
+                db.SaveChanges();
+
+                return Json(new
+                {
+                    success = true,
+                    message = "Production validated successfully!",
+                    redirectUrl = Url.Action("Index", "PackagingProduction")
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error validating production: " + ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public ActionResult PrintOrderPdf(int orderId)
+        {
+            LocalReport localReport = new LocalReport();
+            localReport.ReportPath = Server.MapPath("~/Reports/Sale_ReceiptPaperOrder.rdlc");
+
+            // Get data from the new stored procedure
+            var data = db.Database.SqlQuery<PaperOrderViewModel>(
+                "EXEC [dbo].[sp_GetPackagingProductionDetails] @PackagingProductionId",
+                new SqlParameter("@PackagingProductionId", orderId)).ToList();
+
+            if (!data.Any())
+            {
+                return Content("No data found for this production order.");
+            }
+
+            // Add data source to report
+            ReportDataSource reportDataSource = new ReportDataSource(
+                "DataSet1", // This should match your RDLC dataset name
+                data);
+            localReport.DataSources.Add(reportDataSource);
+
+            // Set parameters if your report requires any
+            // localReport.SetParameters(new ReportParameter("OrderId", orderId.ToString()));
+
+            // Render report
+            string mimeType, encoding, fileNameExtension;
+            string[] streams;
+            Warning[] warnings;
+
+            byte[] renderedBytes = localReport.Render(
+                "PDF",
+                null,
+                out mimeType,
+                out encoding,
+                out fileNameExtension,
+                out streams,
+                out warnings
+            );
+
+            return File(renderedBytes, mimeType, $"Production_Order_{orderId}.pdf");
+        }
         [HttpGet]
         public ActionResult FinalExcess()
         {

@@ -44,7 +44,7 @@ c => Model.Where(m => m.ColorName == c).Sum(m => m.QuantityReceived)
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-sliderAccess.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.js"></script>
 
-<link href="@Url.Content("~/Content/custom/custom.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Content/custom/custom12.css")" rel="stylesheet" type="text/css" />
 <script src="~/Content/custom/colorproduction.js"></script>
 
 <script src="~/Content/custom/downloads/jquery.mcautocomplete.js"></script>
@@ -66,7 +66,7 @@ c => Model.Where(m => m.ColorName == c).Sum(m => m.QuantityReceived)
                 <div class="col-sm-offset-5">
                     <h3>Product: @Model.FirstOrDefault().ProductName</h3>
                     <h2>
-                        Packaging Production Colors
+                        Assembly Order
                     </h2>
                 </div>
             </div>
@@ -75,7 +75,7 @@ c => Model.Where(m => m.ColorName == c).Sum(m => m.QuantityReceived)
         <table id="production-table" class="table table-bordered">
             <thead>
                 <tr class="table-info">
-                    <td style="width:10%"><strong>Stock Quantity</strong></td>
+                    <td style="width:10%"><strong>Assembly request</strong></td>
                     @foreach (var color in colors)
                     {
                         var totalStock = Model

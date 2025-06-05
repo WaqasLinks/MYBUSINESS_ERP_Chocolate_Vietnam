@@ -420,6 +420,11 @@
     <Compile Include="CustomClasses\NoCache.cs" />
     <Compile Include="CustomClasses\Utilities.cs" />
     <Compile Include="CustomClasses\WebServiceResponse.cs" />
+    <Compile Include="DataSets\DataSet2.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataSet2.xsd</DependentUpon>
+    </Compile>
     <Compile Include="DataSets\spGetOrderPProductDetailsDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -580,6 +585,7 @@
     <Compile Include="Models\PaperColor.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\PaperOrderViewModel.cs" />
     <Compile Include="Models\Payment.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -738,6 +744,9 @@
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\spTest_Result.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_GetPackagingProductionDetails_Result.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_helpdiagramdefinition_Result.cs">
@@ -3579,6 +3588,17 @@
     <Content Include="DataSets\spGetOrderPProductDetailsDataSet.xsc">
       <DependentUpon>spGetOrderPProductDetailsDataSet.xsd</DependentUpon>
     </Content>
+    <Content Include="DataSets\DataSet2.xsc">
+      <DependentUpon>DataSet2.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\DataSet2.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DataSet2.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="DataSets\DataSet2.xss">
+      <DependentUpon>DataSet2.xsd</DependentUpon>
+    </Content>
     <None Include="DataSets\spGetOrderPProductDetailsDataSet.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
@@ -4208,7 +4228,8 @@
     <Content Include="Reports\Sale_ReceiptMoneyInput.rdlc" />
     <Content Include="Reports\Sale_ReceiptOrder.rdlc" />
     <Content Include="Reports\Sale_ReceiptOrderPP.rdlc" />
-    <EmbeddedResource Include="Reports\Sale_ReceiptWoutCustomer.rdlc" />
+    <Content Include="Reports\Sale_ReceiptWoutCustomer.rdlc" />
+    <EmbeddedResource Include="Reports\Sale_ReceiptPaperOrder.rdlc" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

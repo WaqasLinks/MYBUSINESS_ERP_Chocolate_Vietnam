@@ -52,6 +52,7 @@
                         <div class="form-group">
                             @if (!isReadonly)
                             {
+                                @Html.LabelFor(model => Model.PackagingProduction.ProductId, "Select Packaging", new { @class = "control-label" })
                                 @Html.DropDownListFor(
                                     model => model.PackagingProduction.ProductId,
                                     (SelectList)ViewBag.ProductList,
@@ -67,6 +68,24 @@
 
                         </div>
 
+                        <div id="supplier-field" class="form-group">
+                            @Html.LabelFor(model => model.PackagingProduction.Supplier, htmlAttributes: new { @class = "control-label" })
+
+                            @Html.TextBoxFor(model => model.PackagingProduction.Supplier, new
+                            {
+                                @class = "form-control",
+                                placeholder = "Supplier",
+                                @id = "packagingSupplier",
+                                autocomplete = "off",
+                                required = "required",
+                                @data_toggle = "tooltip",
+                                @data_placement = "top",
+                                title = "Supplier"
+                            })
+
+                            @Html.ValidationMessageFor(model => model.PackagingProduction.Supplier, "", new { @class = "text-danger" })
+                        </div>
+
 
 
 
@@ -76,7 +95,7 @@
                             @Html.LabelFor(model => model.PackagingProduction.PProdDate, htmlAttributes: new { @class = "control-label" })
                             @{
                                 var attributes = new Dictionary<string, object>
-                                                                                                                                    {
+                                                                                                                                                    {
         { "class", "form-control" },
         { "type", "date" }
     };
@@ -104,14 +123,14 @@
 
                     <div class="box-footer">
                         @*<input type="submit" id="CreateSO" value="Update" class="btn btn-primary"  @(isReadonly ? "readonly='readonly'" : "")/>
-                            @Html.ActionLink("Back to List", "Index")
-                            <button id="validateBtn" class="btn btn-primary" style="margin-left:280px;"  @(isReadonly ? "readonly='readonly'" : "")>Validate</button>*@
+        @Html.ActionLink("Back to List", "Index")
+        <button id="validateBtn" class="btn btn-primary" style="margin-left:280px;"  @(isReadonly ? "readonly='readonly'" : "")>Validate</button>*@
                         <input type="submit" id="CreateSO" value="Update" class="btn btn-primary" @(isReadonly ? "disabled='disabled'" : "") />
 
                         @Html.ActionLink("Back to List", "Index")
 
                         @*<button id="validateBtn" class="btn btn-primary" style="margin-left:280px;" @(isReadonly ? "disabled='disabled'" : "")>Validate</button>*@
-
+                        <button type="button" id="btnValidate" class="btn btn-primary" style="margin-left:10px;" @(isReadonly ? "disabled='disabled'" : "")>Validate</button>
                     </div>
 
 
@@ -159,7 +178,7 @@
                                             </td>
                                             <td>
 
-                                                <div style="background-color: @Model.PaperColor[@sNo].Color; color: #fff; padding: 5px;">
+                                                <div style="background-color: @Model.PaperColor[@sNo].Color;  padding: 5px;">
                                                     @Model.PaperColor[@sNo].Color (@Model.PaperColor[@sNo].Color)
                                                 </div>
                                                 <input type="hidden" name="PaperColor[@sNo].Color" value="@Model.PaperColor[sNo].Color" />
@@ -206,6 +225,46 @@
        $(document).ready(function () {
     document.getElementById('SOCreate').reset(); // has to be handle
   });
+
+    $("#btnValidate").click(function () {
+        if (confirm("Are you sure you want to validate this production record?")) {
+            validateProduction();
+        }
+    });
+    function validateProduction() {
+            const productionId = $("#PackagingProduction_Id").val();
+
+            // Show loading indicator
+            $('#btnValidate').html('<i class="fa fa-spinner fa-spin"></i> Validating...').prop('disabled', true);
+
+            $.ajax({
+                url: '@Url.Action("ValidateProduction", "PackagingProduction")',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ id: productionId }),
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function(response) {
+                    alert(response.message);
+                    if (response.success) {
+                        // Optionally refresh the page or update UI
+                        window.location.reload();
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error:", error);
+                    alert("An error occurred while validating. Please try again.");
+                },
+                complete: function() {
+                    $('#btnValidate').html('Validate').prop('disabled', false);
+                }
+            });
+        }
+
+
+
+
 
     txtSerialNum = 0;
     TriggerBodyEvents();

@@ -22,8 +22,8 @@ namespace MYBUSINESS.Models
         public Nullable<System.DateTime> DateManufactured { get; set; }
         public Nullable<System.DateTime> DateExpiry { get; set; }
     
-        public virtual PackagingProduction PackagingProduction { get; set; }
         public virtual PaperColor PaperColor { get; set; }
         public virtual Product Product { get; set; }
+        public virtual PackagingProduction PackagingProduction { get; set; }
     }
 }

@@ -71,14 +71,14 @@ namespace MYBUSINESS.Controllers
 
             // Get products without BOM
             var productsWithoutBOM = db.Products
-                .Where(p => p.PType == 4 && !db.BOMs.Any(b => b.ProductId == p.Id)) // Filter out products with existing BOMs
+                .Where(p => (p.PType == 4 || p.PType == 6) && !db.BOMs.Any(b => b.ProductId == p.Id)) // Filter out products with existing BOMs
                 .Select(p => new { Value = p.Id.ToString(), Text = p.Name }) // Prepare for SelectList
                 .ToList();
 
             // Pass the filtered product list to the view
             ViewBag.ProductList = new SelectList(productsWithoutBOM, "Value", "Text");
             var excessProducts = db.Products
-        .Where(p => p.PType == 2)
+        .Where(p => p.PType == 6 || p.PType == 5)
         .Select(p => new { Value = p.Id.ToString(), Text = p.Name })
         .ToList();
             ViewBag.ExcessProductList = new SelectList(excessProducts, "Value", "Text");
@@ -249,7 +249,8 @@ namespace MYBUSINESS.Controllers
         {
             if (ModelState.IsValid)
             {
-
+                bom.CreateDate = DateTime.Now;
+                bom.UpdateDate = DateTime.Now;
                 var product = db.Products.FirstOrDefault(p => p.Id == bom.ProductId);
                 
                 if (product != null)
@@ -313,7 +314,7 @@ namespace MYBUSINESS.Controllers
 
             // Fetch products without BOM (filtered by PType 4)
             var productsWithoutBOM = db.Products
-                .Where(p => p.PType == 4 && (!db.BOMs.Any(b => b.ProductId == p.Id) || p.Id == bom.ProductId))
+                .Where(p => (p.PType == 4 || p.PType == 6) && (!db.BOMs.Any(b => b.ProductId == p.Id) || p.Id == bom.ProductId))
                 .Select(p => new { Value = p.Id.ToString(), Text = p.Name })
                 .ToList();
 

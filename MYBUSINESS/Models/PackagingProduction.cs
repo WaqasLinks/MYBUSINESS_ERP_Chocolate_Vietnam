@@ -17,10 +17,10 @@ namespace MYBUSINESS.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public PackagingProduction()
         {
-            this.PaperColors = new HashSet<PaperColor>();
-            this.CPReceipts = new HashSet<CPReceipt>();
-            this.ProductStockDetails = new HashSet<ProductStockDetail>();
             this.BOXProductions = new HashSet<BOXProduction>();
+            this.CPReceipts = new HashSet<CPReceipt>();
+            this.PaperColors = new HashSet<PaperColor>();
+            this.ProductStockDetails = new HashSet<ProductStockDetail>();
         }
     
         public int Id { get; set; }
@@ -32,15 +32,16 @@ namespace MYBUSINESS.Models
         public Nullable<System.DateTime> PProdDate { get; set; }
         public string Box { get; set; }
         public string ColorCode { get; set; }
+        public string Supplier { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BOXProduction> BOXProductions { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CPReceipt> CPReceipts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PaperColor> PaperColors { get; set; }
         public virtual Product Product { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CPReceipt> CPReceipts { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductStockDetail> ProductStockDetails { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BOXProduction> BOXProductions { get; set; }
     }
 }

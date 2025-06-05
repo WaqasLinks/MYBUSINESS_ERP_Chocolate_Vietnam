@@ -104,7 +104,7 @@ namespace MYBUSINESS.Controllers
                     Products = g.ToList()
                 }).ToList();
 
-            ViewBag.Stores = new SelectList(stores, "Id", "Name"); // Assuming Store has Id and Name properties
+            ViewBag.Stores = new SelectList(stores, "Id", "StoreShortName"); // Assuming Store has Id and Name properties
             return View(groupedProducts);
         }
 
@@ -296,12 +296,24 @@ namespace MYBUSINESS.Controllers
 
 
 
+        //public ActionResult CreatePackagingOrder()
+        //{
+        //    var packagingProducts = db.Products.Where(p => p.PType == 8 || p.PType == 9).ToList();
+        //    var stores = db.Stores.ToList();
+        //    ViewBag.Stores = new SelectList(stores, "Id", "StoreShortName");
+        //    return View(packagingProducts);
+        //}
+
         public ActionResult CreatePackagingOrder()
         {
             var packagingProducts = db.Products.Where(p => p.PType == 8 || p.PType == 9).ToList();
+            var stores = db.Stores.ToList();
+
+            // Make sure to assign the SelectList to ViewBag.Stores
+            ViewBag.Stores = new SelectList(stores, "Id", "StoreShortName");
+
             return View(packagingProducts);
         }
-
         //[HttpPost]
         //public ActionResult SubmitOrder(List<OrderItem> orderitem)
         //{
@@ -374,36 +386,46 @@ namespace MYBUSINESS.Controllers
         }
 
         [HttpPost]
-        public ActionResult SubmitOrderPP(List<OrderItemPProduct> orderitem)
+        public ActionResult SubmitOrderPP(List<OrderItemPProduct> orderitem, int storeId)
         {
+            // Filter out items where Quantity is null or <= 0
+            var itemsToSave = orderitem?
+                .Where(item => item.Quantity > 0)
+                .ToList() ?? new List<OrderItemPProduct>();
+
+            if (!itemsToSave.Any())
+            {
+                TempData["ErrorMessage"] = "No valid products selected (quantity must be > 0).";
+                return RedirectToAction("CreateOrderPP"); // Make sure this matches your create action name
+            }
+
             var order = new OrderPProduct
             {
-                StoreId = 20,
+                StoreId = storeId, // Use the passed storeId parameter instead of hardcoded value
                 OrderDate = DateTime.Now
             };
 
             db.OrderPProducts.Add(order);
-            db.SaveChanges();
+            db.SaveChanges(); // Save order first to get ID
 
-            foreach (var item in orderitem)
+            // Only save items with Quantity > 0
+            foreach (var item in itemsToSave)
             {
-                var orderItem = new OrderItemPProduct
+                db.OrderItemPProducts.Add(new OrderItemPProduct
                 {
                     OrderId = order.Id,
                     ProductId = item.ProductId,
                     Quantity = item.Quantity
-                };
-                db.OrderItemPProducts.Add(orderItem);
+                });
             }
 
             db.SaveChanges();
 
             string receiverEmail = "zeeshannaveed893@gmail.com";
-            SendOrderNotificationEmail(order, receiverEmail); // Now matches the type
+            SendOrderNotificationEmail(order, receiverEmail);
 
             return RedirectToAction("IndexOrderPP");
         }
-
         // Updated email method
         private void SendOrderNotificationEmail(OrderPProduct order, string email)
         {
@@ -564,6 +586,49 @@ namespace MYBUSINESS.Controllers
         //}
 
 
+        //public ActionResult Edit(int orderId, bool? readonlyMode = false) Existing
+        //{
+        //    // Get the order first to know which store it belongs to
+        //    var order = db.Orders.Include(o => o.Store).FirstOrDefault(o => o.Id == orderId);
+        //    if (order == null)
+        //    {
+        //        return HttpNotFound("Order not found.");
+        //    }
+
+        //    var orderItems = db.OrderItems
+        //        .Where(oi => oi.OrderId == orderId)
+        //        .Include(oi => oi.Product)
+        //        .ToList();
+
+        //    if (!orderItems.Any())
+        //    {
+        //        return HttpNotFound("Order Items not found.");
+        //    }
+
+        //    var grouped = orderItems
+        //        .GroupBy(oi => oi.Product.Category)
+        //        .Select(g => new EditOrderCategoryViewModel
+        //        {
+        //            CategoryName = g.Key,
+        //            Items = g.Select(oi => new OrderItemViewModel
+        //            {
+        //                Id = oi.Id,
+        //                ProductId = oi.ProductId.HasValue ? (int)oi.ProductId.Value : 0,
+        //                OrderId = oi.OrderId ?? 0,
+        //                Quantity = oi.Quantity.HasValue ? (int)oi.Quantity.Value : 0,
+        //                ProductName = oi.Product.Name
+        //            }).ToList()
+        //        }).ToList();
+
+        //    // Get all stores for dropdown
+        //    var stores = db.Stores.ToList();
+        //    ViewBag.Stores = new SelectList(stores, "Id", "Name", order.StoreId);
+        //    ViewBag.ReadonlyMode = readonlyMode;
+        //    ViewBag.CurrentStoreId = order.StoreId; // Store current store ID
+
+        //    return View(grouped);
+        //}
+
         public ActionResult Edit(int orderId, bool? readonlyMode = false)
         {
             // Get the order first to know which store it belongs to
@@ -571,6 +636,12 @@ namespace MYBUSINESS.Controllers
             if (order == null)
             {
                 return HttpNotFound("Order not found.");
+            }
+
+            // If order is validated, force readonly mode
+            if (order.Validate == true)
+            {
+                readonlyMode = true;
             }
 
             var orderItems = db.OrderItems
@@ -602,7 +673,9 @@ namespace MYBUSINESS.Controllers
             var stores = db.Stores.ToList();
             ViewBag.Stores = new SelectList(stores, "Id", "Name", order.StoreId);
             ViewBag.ReadonlyMode = readonlyMode;
-            ViewBag.CurrentStoreId = order.StoreId; // Store current store ID
+            ViewBag.CurrentStoreId = order.StoreId;
+            ViewBag.OrderId = orderId;
+            ViewBag.IsValidated = order.Validate;
 
             return View(grouped);
         }

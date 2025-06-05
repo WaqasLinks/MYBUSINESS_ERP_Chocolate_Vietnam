@@ -1,7 +1,9 @@
 ﻿var productColumns = [{ name: 'Id', minWidth: '50px' }, { name: 'Product', minWidth: '300px' }, { name: 'S.Price', minWidth: '100px' }, { name: 'Stock', minWidth: '50px' }];
 //var products = []; //[['Ciplet', '10', '60'], ['Gaviscon', '85', '12'], ['Surficol', '110', '8']];
 var products = new Array();
-
+var supplierColumns = [{ name: 'Id', minWidth: '100px' }, { name: 'Name', minWidth: '320px' }, { name: 'Address', minWidth: '200px' }, { name: 'Balance', minWidth: '70px' }];
+//var products = []; //[['Ciplet', '10', '60'], ['Gaviscon', '85', '12'], ['Surficol', '110', '8']];
+var suppliers = new Array();
 var customerColumns = [{ name: 'Id', minWidth: '100px' }, { name: 'Name', minWidth: '320px' }, { name: 'Address', minWidth: '400px' }, { name: 'Balance', minWidth: '150px' }];
 //var products = []; //[['Ciplet', '10', '60'], ['Gaviscon', '85', '12'], ['Surficol', '110', '8']];
 var customers = new Array();
@@ -16,6 +18,31 @@ var _total = 0;
 var IsReturn = "false";
 
 
+
+
+function OnTypeSupplierName(param) {
+
+    $(param).mcautocomplete({
+        showHeader: true,
+        columns: supplierColumns,
+        source: suppliers,
+        select: function (event, ui) {
+            this.value = (ui.item ? ui.item[1] : '');
+            //productName = this.value;
+            //$('#idnCustomer').val(ui.item ? ui.item[0] : '');
+            //$('#customerAddress').val(ui.item ? ui.item[2] : '');
+            $('#idnSupplier').val(ui.item ? ui.item[0] : '');
+            $('#supplierAddress').val(ui.item ? ui.item[2] : '');
+            $('#PreviousBalance').val(ui.item ? ui.item[3] : '');
+            //document.getElementById(clickedTextboxId).focus();
+            update_itemTotal();
+
+            return false;
+        }
+
+    });
+
+}
 function OnTypeCustomerName(param) {
 
     $(param).mcautocomplete({

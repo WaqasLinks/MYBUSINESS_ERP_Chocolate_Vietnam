@@ -368,6 +368,7 @@
           <Property Name="PProdDate" Type="datetime" />
           <Property Name="Box" Type="nvarchar" MaxLength="500" />
           <Property Name="ColorCode" Type="nvarchar(max)" />
+          <Property Name="Supplier" Type="nvarchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="PackagingSubItems">
           <Key>
@@ -2363,6 +2364,9 @@
           <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
           <Parameter Name="owner_id" Type="int" Mode="In" />
         </Function>
+        <Function Name="sp_GetPackagingProductionDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PackagingProductionId" Type="int" Mode="In" />
+        </Function>
         <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
           <Parameter Name="owner_id" Type="int" Mode="In" />
@@ -3248,15 +3252,6 @@
             <End Role="PPReciverDetail" EntitySet="PPReciverDetails" />
           </AssociationSet>
           <EntitySet Name="Colors" EntityType="Models.Color" />
-          <EntitySet Name="PackagingProductions" EntityType="Models.PackagingProduction" />
-          <AssociationSet Name="FK_Color_PackagingProduction" Association="Models.FK_Color_PackagingProduction">
-            <End Role="PackagingProduction" EntitySet="PackagingProductions" />
-            <End Role="PaperColor" EntitySet="PaperColors" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PackagingProduction_Product" Association="Models.FK_PackagingProduction_Product">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="PackagingProduction" EntitySet="PackagingProductions" />
-          </AssociationSet>
           <EntitySet Name="PPSubItems" EntityType="Models.PPSubItem" />
           <AssociationSet Name="FK_PPSubItem_Product" Association="Models.FK_PPSubItem_Product">
             <End Role="Product" EntitySet="Products" />
@@ -3268,10 +3263,6 @@
             <End Role="PPColorReceipt" EntitySet="PPColorReceipts" />
           </AssociationSet>
           <EntitySet Name="CPReceipts" EntityType="Models.CPReceipt" />
-          <AssociationSet Name="FK_CPReceipts_PackagingProduction" Association="Models.FK_CPReceipts_PackagingProduction">
-            <End Role="PackagingProduction" EntitySet="PackagingProductions" />
-            <End Role="CPReceipt" EntitySet="CPReceipts" />
-          </AssociationSet>
           <AssociationSet Name="FK_PPColorReceipt_PaperColor" Association="Models.FK_PPColorReceipt_PaperColor">
             <End Role="PaperColor" EntitySet="PaperColors" />
             <End Role="CPReceipt" EntitySet="CPReceipts" />
@@ -3282,10 +3273,6 @@
           </AssociationSet>
           <EntitySet Name="PPBOMs" EntityType="Models.PPBOM" />
           <EntitySet Name="ProductStockDetails" EntityType="Models.ProductStockDetail" />
-          <AssociationSet Name="FK_ProductStockDetail_PackagingProduction" Association="Models.FK_ProductStockDetail_PackagingProduction">
-            <End Role="PackagingProduction" EntitySet="PackagingProductions" />
-            <End Role="ProductStockDetail" EntitySet="ProductStockDetails" />
-          </AssociationSet>
           <AssociationSet Name="FK_ProductStockDetail_PaperColor" Association="Models.FK_ProductStockDetail_PaperColor">
             <End Role="PaperColor" EntitySet="PaperColors" />
             <End Role="ProductStockDetail" EntitySet="ProductStockDetails" />
@@ -3303,10 +3290,6 @@
             <End Role="ProductStockDetail" EntitySet="ProductStockDetails" />
           </AssociationSet>
           <EntitySet Name="BOXProductions" EntityType="Models.BOXProduction" />
-          <AssociationSet Name="FK_BOXProduction_PackagingProduction" Association="Models.FK_BOXProduction_PackagingProduction">
-            <End Role="PackagingProduction" EntitySet="PackagingProductions" />
-            <End Role="BOXProduction" EntitySet="BOXProductions" />
-          </AssociationSet>
           <AssociationSet Name="FK_BOXProduction_PaperColor" Association="Models.FK_BOXProduction_PaperColor">
             <End Role="PaperColor" EntitySet="PaperColors" />
             <End Role="BOXProduction" EntitySet="BOXProductions" />
@@ -3396,7 +3379,31 @@
             <End Role="StoreProduct" EntitySet="StoreProducts" />
           </AssociationSet>
           <FunctionImport Name="spSOCustomerReport" ReturnType="Collection(Models.spSOCustomerReport_Result)">
-            <Parameter Name="SaleOrderID" Mode="In" Type="String" />
+          <Parameter Name="SaleOrderID" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="PackagingProductions" EntityType="Models.PackagingProduction" />
+          <AssociationSet Name="FK_BOXProduction_PackagingProduction" Association="Models.FK_BOXProduction_PackagingProduction">
+            <End Role="PackagingProduction" EntitySet="PackagingProductions" />
+            <End Role="BOXProduction" EntitySet="BOXProductions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CPReceipts_PackagingProduction" Association="Models.FK_CPReceipts_PackagingProduction">
+            <End Role="PackagingProduction" EntitySet="PackagingProductions" />
+            <End Role="CPReceipt" EntitySet="CPReceipts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Color_PackagingProduction" Association="Models.FK_Color_PackagingProduction">
+            <End Role="PackagingProduction" EntitySet="PackagingProductions" />
+            <End Role="PaperColor" EntitySet="PaperColors" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PackagingProduction_Product" Association="Models.FK_PackagingProduction_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="PackagingProduction" EntitySet="PackagingProductions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductStockDetail_PackagingProduction" Association="Models.FK_ProductStockDetail_PackagingProduction">
+            <End Role="PackagingProduction" EntitySet="PackagingProductions" />
+            <End Role="ProductStockDetail" EntitySet="ProductStockDetails" />
+          </AssociationSet>
+          <FunctionImport Name="sp_GetPackagingProductionDetails" ReturnType="Collection(Models.sp_GetPackagingProductionDetails_Result)">
+            <Parameter Name="PackagingProductionId" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
@@ -4840,7 +4847,6 @@
           <NavigationProperty Name="SPackagingDetails" Relationship="Models.FK_SPackagingDetail_Product" FromRole="Product" ToRole="SPackagingDetail" />
           <NavigationProperty Name="ProductDetails" Relationship="Models.FK_ProductDetail_Product" FromRole="Product" ToRole="ProductDetail" />
           <NavigationProperty Name="PPReciverDetails" Relationship="Models.FK_PPReciverDetail_Product" FromRole="Product" ToRole="PPReciverDetail" />
-          <NavigationProperty Name="PackagingProductions" Relationship="Models.FK_PackagingProduction_Product" FromRole="Product" ToRole="PackagingProduction" />
           <NavigationProperty Name="PPSubItems" Relationship="Models.FK_PPSubItem_Product" FromRole="Product" ToRole="PPSubItem" />
           <NavigationProperty Name="PPBOMs" Relationship="Models.FK_PPBOM_Product" FromRole="Product" ToRole="PPBOM" />
           <NavigationProperty Name="ProductStockDetails" Relationship="Models.FK_ProductStockDetail_Product" FromRole="Product" ToRole="ProductStockDetail" />
@@ -4849,6 +4855,7 @@
           <NavigationProperty Name="OrderItems" Relationship="Models.FK_OrderItems_Product" FromRole="Product" ToRole="OrderItem" />
           <NavigationProperty Name="OrderItemPProducts" Relationship="Models.FK_OrderItemPProducts_Product" FromRole="Product" ToRole="OrderItemPProduct" />
           <NavigationProperty Name="PrintedPackagingDetails" Relationship="Models.FK_PrintedPackagingDetail_Product1" FromRole="Product" ToRole="PrintedPackagingDetail" />
+          <NavigationProperty Name="PackagingProductions" Relationship="Models.FK_PackagingProduction_Product" FromRole="Product" ToRole="PackagingProduction" />
         </EntityType>
         <Association Name="FK_BOM_Product1">
           <End Type="Models.Product" Role="Product" Multiplicity="0..1">
@@ -5122,12 +5129,12 @@
           <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="PackagingProductionId" Type="Int32" />
           <NavigationProperty Name="Product" Relationship="Models.FK_Color_Product" FromRole="PaperColor" ToRole="Product" />
-          <NavigationProperty Name="PackagingProduction" Relationship="Models.FK_Color_PackagingProduction" FromRole="PaperColor" ToRole="PackagingProduction" />
           <Property Name="ColorCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="PPColorReceipts" Relationship="Models.FK_PPColorReceipts_PaperColor" FromRole="PaperColor" ToRole="PPColorReceipt" />
           <NavigationProperty Name="CPReceipts" Relationship="Models.FK_PPColorReceipt_PaperColor" FromRole="PaperColor" ToRole="CPReceipt" />
           <NavigationProperty Name="ProductStockDetails" Relationship="Models.FK_ProductStockDetail_PaperColor" FromRole="PaperColor" ToRole="ProductStockDetail" />
           <NavigationProperty Name="BOXProductions" Relationship="Models.FK_BOXProduction_PaperColor" FromRole="PaperColor" ToRole="BOXProduction" />
+          <NavigationProperty Name="PackagingProduction" Relationship="Models.FK_Color_PackagingProduction" FromRole="PaperColor" ToRole="PackagingProduction" />
         </EntityType>
         <Association Name="FK_Color_Product">
           <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
@@ -5507,49 +5514,6 @@
           <Property Name="ColorName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ColorCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
-        <EntityType Name="PackagingProduction">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
-          <Property Name="ProductName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Unit" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="Quantity" Type="Decimal" Precision="38" Scale="30" />
-          <Property Name="Validate" Type="Boolean" />
-          <Property Name="PProdDate" Type="DateTime" Precision="3" />
-          <Property Name="Box" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ColorCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="PaperColors" Relationship="Models.FK_Color_PackagingProduction" FromRole="PackagingProduction" ToRole="PaperColor" />
-          <NavigationProperty Name="Product" Relationship="Models.FK_PackagingProduction_Product" FromRole="PackagingProduction" ToRole="Product" />
-          <NavigationProperty Name="CPReceipts" Relationship="Models.FK_CPReceipts_PackagingProduction" FromRole="PackagingProduction" ToRole="CPReceipt" />
-          <NavigationProperty Name="ProductStockDetails" Relationship="Models.FK_ProductStockDetail_PackagingProduction" FromRole="PackagingProduction" ToRole="ProductStockDetail" />
-          <NavigationProperty Name="BOXProductions" Relationship="Models.FK_BOXProduction_PackagingProduction" FromRole="PackagingProduction" ToRole="BOXProduction" />
-        </EntityType>
-        <Association Name="FK_Color_PackagingProduction">
-          <End Type="Models.PackagingProduction" Role="PackagingProduction" Multiplicity="0..1" />
-          <End Type="Models.PaperColor" Role="PaperColor" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PackagingProduction">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="PaperColor">
-              <PropertyRef Name="PackagingProductionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PackagingProduction_Product">
-          <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
-          <End Type="Models.PackagingProduction" Role="PackagingProduction" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="PackagingProduction">
-              <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="PPSubItem">
           <Key>
             <PropertyRef Name="Id" />
@@ -5617,22 +5581,10 @@
           <Property Name="QuantityReceived" Type="Int32" />
           <Property Name="ToReceived" Type="Int32" />
           <Property Name="PackagingProductionId" Type="Int32" />
-          <NavigationProperty Name="PackagingProduction" Relationship="Models.FK_CPReceipts_PackagingProduction" FromRole="CPReceipt" ToRole="PackagingProduction" />
           <NavigationProperty Name="PaperColor" Relationship="Models.FK_PPColorReceipt_PaperColor" FromRole="CPReceipt" ToRole="PaperColor" />
           <NavigationProperty Name="PPSubItem" Relationship="Models.FK_PPColorReceipt_PPSubItem" FromRole="CPReceipt" ToRole="PPSubItem" />
+          <NavigationProperty Name="PackagingProduction" Relationship="Models.FK_CPReceipts_PackagingProduction" FromRole="CPReceipt" ToRole="PackagingProduction" />
         </EntityType>
-        <Association Name="FK_CPReceipts_PackagingProduction">
-          <End Type="Models.PackagingProduction" Role="PackagingProduction" Multiplicity="0..1" />
-          <End Type="Models.CPReceipt" Role="CPReceipt" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PackagingProduction">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="CPReceipt">
-              <PropertyRef Name="PackagingProductionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_PPColorReceipt_PaperColor">
           <End Type="Models.PaperColor" Role="PaperColor" Multiplicity="0..1" />
           <End Type="Models.CPReceipt" Role="CPReceipt" Multiplicity="*" />
@@ -5690,22 +5642,10 @@
           <Property Name="Quantity" Type="Int32" />
           <Property Name="DateManufactured" Type="DateTime" Precision="3" />
           <Property Name="DateExpiry" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="PackagingProduction" Relationship="Models.FK_ProductStockDetail_PackagingProduction" FromRole="ProductStockDetail" ToRole="PackagingProduction" />
           <NavigationProperty Name="PaperColor" Relationship="Models.FK_ProductStockDetail_PaperColor" FromRole="ProductStockDetail" ToRole="PaperColor" />
           <NavigationProperty Name="Product" Relationship="Models.FK_ProductStockDetail_Product" FromRole="ProductStockDetail" ToRole="Product" />
+          <NavigationProperty Name="PackagingProduction" Relationship="Models.FK_ProductStockDetail_PackagingProduction" FromRole="ProductStockDetail" ToRole="PackagingProduction" />
         </EntityType>
-        <Association Name="FK_ProductStockDetail_PackagingProduction">
-          <End Type="Models.PackagingProduction" Role="PackagingProduction" Multiplicity="0..1" />
-          <End Type="Models.ProductStockDetail" Role="ProductStockDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PackagingProduction">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ProductStockDetail">
-              <PropertyRef Name="PackagingProductionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ProductStockDetail_PaperColor">
           <End Type="Models.PaperColor" Role="PaperColor" Multiplicity="0..1" />
           <End Type="Models.ProductStockDetail" Role="ProductStockDetail" Multiplicity="*" />
@@ -5765,22 +5705,10 @@
           <Property Name="QuantityReceived" Type="Int32" />
           <Property Name="ToReceived" Type="Int32" />
           <Property Name="PackagingProductionId" Type="Int32" />
-          <NavigationProperty Name="PackagingProduction" Relationship="Models.FK_BOXProduction_PackagingProduction" FromRole="BOXProduction" ToRole="PackagingProduction" />
           <NavigationProperty Name="PaperColor" Relationship="Models.FK_BOXProduction_PaperColor" FromRole="BOXProduction" ToRole="PaperColor" />
           <NavigationProperty Name="PPSubItem" Relationship="Models.FK_BOXProduction_PPSubItem" FromRole="BOXProduction" ToRole="PPSubItem" />
+          <NavigationProperty Name="PackagingProduction" Relationship="Models.FK_BOXProduction_PackagingProduction" FromRole="BOXProduction" ToRole="PackagingProduction" />
         </EntityType>
-        <Association Name="FK_BOXProduction_PackagingProduction">
-          <End Type="Models.PackagingProduction" Role="PackagingProduction" Multiplicity="0..1" />
-          <End Type="Models.BOXProduction" Role="BOXProduction" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PackagingProduction">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="BOXProduction">
-              <PropertyRef Name="PackagingProductionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_BOXProduction_PaperColor">
           <End Type="Models.PaperColor" Role="PaperColor" Multiplicity="0..1" />
           <End Type="Models.BOXProduction" Role="BOXProduction" Multiplicity="*" />
@@ -6219,6 +6147,98 @@
           <Property Type="String" Name="StoreCompanyName" Nullable="true" MaxLength="200" />
           <Property Type="String" Name="StoreCompanyAddress" Nullable="true" MaxLength="200" />
           <Property Type="String" Name="StoreCompanyVatNumber" Nullable="true" MaxLength="200" />
+        </ComplexType>
+        <EntityType Name="PackagingProduction">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="ProductName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Unit" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Quantity" Type="Decimal" Precision="38" Scale="30" />
+          <Property Name="Validate" Type="Boolean" />
+          <Property Name="PProdDate" Type="DateTime" Precision="3" />
+          <Property Name="Box" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ColorCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Supplier" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="BOXProductions" Relationship="Models.FK_BOXProduction_PackagingProduction" FromRole="PackagingProduction" ToRole="BOXProduction" />
+          <NavigationProperty Name="CPReceipts" Relationship="Models.FK_CPReceipts_PackagingProduction" FromRole="PackagingProduction" ToRole="CPReceipt" />
+          <NavigationProperty Name="PaperColors" Relationship="Models.FK_Color_PackagingProduction" FromRole="PackagingProduction" ToRole="PaperColor" />
+          <NavigationProperty Name="Product" Relationship="Models.FK_PackagingProduction_Product" FromRole="PackagingProduction" ToRole="Product" />
+          <NavigationProperty Name="ProductStockDetails" Relationship="Models.FK_ProductStockDetail_PackagingProduction" FromRole="PackagingProduction" ToRole="ProductStockDetail" />
+        </EntityType>
+        <Association Name="FK_BOXProduction_PackagingProduction">
+          <End Type="Models.PackagingProduction" Role="PackagingProduction" Multiplicity="0..1" />
+          <End Type="Models.BOXProduction" Role="BOXProduction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PackagingProduction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BOXProduction">
+              <PropertyRef Name="PackagingProductionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CPReceipts_PackagingProduction">
+          <End Type="Models.PackagingProduction" Role="PackagingProduction" Multiplicity="0..1" />
+          <End Type="Models.CPReceipt" Role="CPReceipt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PackagingProduction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CPReceipt">
+              <PropertyRef Name="PackagingProductionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Color_PackagingProduction">
+          <End Type="Models.PackagingProduction" Role="PackagingProduction" Multiplicity="0..1" />
+          <End Type="Models.PaperColor" Role="PaperColor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PackagingProduction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PaperColor">
+              <PropertyRef Name="PackagingProductionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PackagingProduction_Product">
+          <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="Models.PackagingProduction" Role="PackagingProduction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PackagingProduction">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductStockDetail_PackagingProduction">
+          <End Type="Models.PackagingProduction" Role="PackagingProduction" Multiplicity="0..1" />
+          <End Type="Models.ProductStockDetail" Role="ProductStockDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PackagingProduction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductStockDetail">
+              <PropertyRef Name="PackagingProductionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="sp_GetPackagingProductionDetails_Result">
+          <Property Type="Int32" Name="OrderId" Nullable="false" />
+          <Property Type="DateTime" Name="Date" Nullable="true" Precision="23" />
+          <Property Type="String" Name="SupplierName" Nullable="true" MaxLength="300" />
+          <Property Type="String" Name="Color" Nullable="true" />
+          <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="18" Scale="0" />
+          <Property Type="String" Name="Unit" Nullable="false" MaxLength="5" />
+          <Property Type="String" Name="ProductName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Box" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="ColorCode" Nullable="true" />
+          <Property Type="Boolean" Name="Validate" Nullable="true" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -7438,21 +7458,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="PackagingProductions">
-            <EntityTypeMapping TypeName="Models.PackagingProduction">
-              <MappingFragment StoreEntitySet="PackagingProduction">
-                <ScalarProperty Name="ColorCode" ColumnName="ColorCode" />
-                <ScalarProperty Name="Box" ColumnName="Box" />
-                <ScalarProperty Name="PProdDate" ColumnName="PProdDate" />
-                <ScalarProperty Name="Validate" ColumnName="Validate" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-                <ScalarProperty Name="Unit" ColumnName="Unit" />
-                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="PPSubItems">
             <EntityTypeMapping TypeName="Models.PPSubItem">
               <MappingFragment StoreEntitySet="PPSubItem">
@@ -7760,6 +7765,38 @@
                 <ScalarProperty Name="StoreCompanyName" ColumnName="StoreCompanyName" />
                 <ScalarProperty Name="StoreCompanyAddress" ColumnName="StoreCompanyAddress" />
                 <ScalarProperty Name="StoreCompanyVatNumber" ColumnName="StoreCompanyVatNumber" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="PackagingProductions">
+            <EntityTypeMapping TypeName="Models.PackagingProduction">
+              <MappingFragment StoreEntitySet="PackagingProduction">
+                <ScalarProperty Name="Supplier" ColumnName="Supplier" />
+                <ScalarProperty Name="ColorCode" ColumnName="ColorCode" />
+                <ScalarProperty Name="Box" ColumnName="Box" />
+                <ScalarProperty Name="PProdDate" ColumnName="PProdDate" />
+                <ScalarProperty Name="Validate" ColumnName="Validate" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetPackagingProductionDetails" FunctionName="Models.Store.sp_GetPackagingProductionDetails">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Models.sp_GetPackagingProductionDetails_Result">
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="Box" ColumnName="Box" />
+                <ScalarProperty Name="ColorCode" ColumnName="ColorCode" />
+                <ScalarProperty Name="Validate" ColumnName="Validate" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

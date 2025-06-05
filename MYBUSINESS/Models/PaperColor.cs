@@ -31,7 +31,6 @@ namespace MYBUSINESS.Models
         public string ColorCode { get; set; }
     
         public virtual Product Product { get; set; }
-        public virtual PackagingProduction PackagingProduction { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PPColorReceipt> PPColorReceipts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -40,5 +39,6 @@ namespace MYBUSINESS.Models
         public virtual ICollection<ProductStockDetail> ProductStockDetails { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BOXProduction> BOXProductions { get; set; }
+        public virtual PackagingProduction PackagingProduction { get; set; }
     }
 }

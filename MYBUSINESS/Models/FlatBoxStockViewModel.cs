@@ -7,7 +7,7 @@ namespace MYBUSINESS.Models
 {
     public class FlatBoxStockViewModel
     {
-        public int ProductId { get; set; } // Changed to int
+        public decimal ProductId { get; set; } // Changed to int
         public string ProductName { get; set; }
         public int TotalCompleteBoxes { get; set; } // Changed to int
         public List<ColorStockInfo> ColorComponents { get; set; }

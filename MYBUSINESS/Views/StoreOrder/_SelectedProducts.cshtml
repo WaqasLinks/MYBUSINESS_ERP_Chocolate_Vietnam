@@ -73,17 +73,18 @@
                                                 {
                                                     @Html.ActionLink("Receive", "ReceiveOrder", new { orderId = item.Id }, new { @class = "btn btn-warning" })
                                                 }
+                                                <button class="btn btn-violet api-integration-btn" data-orderid="@item.Id">Generate Invoice</button>
                                             }
                                             else
                                             {
-                                                @Html.ActionLink("Update", "Edit", new { orderId = item.Id }, new { @class = "btn btn-info" })
+                                                @Html.ActionLink("Update/Validate", "Edit", new { orderId = item.Id }, new { @class = "btn btn-info" })
                                             }
 
                                             @Html.ActionLink("Print", "PrintOrderPdf", new { orderId = item.Id }, new { @class = "btn btn-success" })
                                             @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
-                                            <button class="btn btn-violet api-integration-btn" data-orderid="@item.Id">Generate Invoice</button>
+                                            @*<button class="btn btn-violet api-integration-btn" data-orderid="@item.Id">Generate Invoice</button>*@
                                             <div class="dropdown">
-                                                <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <button style="display:none;" class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     more ...
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -256,130 +257,130 @@
 
         //});
 
-        $('#ProductIndex').DataTable({
-            "paging": true,
-            "lengthChange": true,
-            "pageLength": 100,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
-            "responsive": true,
-            "autoWidth": false,
-            "order": [[0, "desc"]],
-            dom: 'Bfrtip',
-            buttons: [
-                {
-                    extend: 'copyHtml5',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-                    }
-                },
-                {
-                    extend: 'csvHtml5',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-                    }
-                },
-                {
-                    extend: 'excelHtml5',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-                    }
-                },
-                {
-                    extend: 'pdfHtml5',
-                    orientation: 'landscape',
-                    pageSize: 'LEGAL',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-                    }
-                },
-                {
-                    extend: 'print',
-                    exportOptions: {
-                        columns: [0, 3, 5, 6]
-                    }
-                },
-                'colvis'
-            ],
+        ////$('#ProductIndex').DataTable({
+        ////    "paging": true,
+        ////    "lengthChange": true,
+        ////    "pageLength": 100,
+        ////    "searching": true,
+        ////    "ordering": true,
+        ////    "info": true,
+        ////    rowReorder: {
+        ////        selector: 'td:nth-child(2)'
+        ////    },
+        ////    "responsive": true,
+        ////    "autoWidth": false,
+        ////    "order": [[0, "desc"]],
+        ////    dom: 'Bfrtip',
+        ////    buttons: [
+        ////        {
+        ////            extend: 'copyHtml5',
+        ////            exportOptions: {
+        ////                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+        ////            }
+        ////        },
+        ////        {
+        ////            extend: 'csvHtml5',
+        ////            exportOptions: {
+        ////                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+        ////            }
+        ////        },
+        ////        {
+        ////            extend: 'excelHtml5',
+        ////            exportOptions: {
+        ////                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+        ////            }
+        ////        },
+        ////        {
+        ////            extend: 'pdfHtml5',
+        ////            orientation: 'landscape',
+        ////            pageSize: 'LEGAL',
+        ////            exportOptions: {
+        ////                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+        ////            }
+        ////        },
+        ////        {
+        ////            extend: 'print',
+        ////            exportOptions: {
+        ////                columns: [0, 3, 5, 6]
+        ////            }
+        ////        },
+        ////        'colvis'
+        ////    ],
 
-            "footerCallback": function (row, data, start, end, display) {
-                var api = this.api(), data;
+        ////    "footerCallback": function (row, data, start, end, display) {
+        ////        var api = this.api(), data;
 
-                // Remove the formatting to get integer data for summation
-                var intVal = function (i) {
-                    return typeof i === 'string' ?
-                        i.replace(/[\$,]/g, '') * 1 :
-                        typeof i === 'number' ?
-                            i : 0;
-                };
-
-
-                // Order Qty
-                pageTotal = api
-                    .column(4, { page: 'current' })
-                    .data()
-                    .reduce(function (a, b) {
-                        return intVal(a) + intVal(b);
-                    }, 0);
-                $(api.column(4).footer()).html(pageTotal);
+        ////        // Remove the formatting to get integer data for summation
+        ////        var intVal = function (i) {
+        ////            return typeof i === 'string' ?
+        ////                i.replace(/[\$,]/g, '') * 1 :
+        ////                typeof i === 'number' ?
+        ////                    i : 0;
+        ////        };
 
 
-
-                // Order Amount
-                pageTotal = api
-                    .column(5, { page: 'current' })
-                    .data()
-                    .reduce(function (a, b) {
-                        return intVal(a) + intVal(b);
-                    }, 0);
-                $(api.column(5).footer()).html(pageTotal);
-
-                // Return Qty
-                pageTotal = api
-                    .column(6, { page: 'current' })
-                    .data()
-                    .reduce(function (a, b) {
-                        return intVal(a) + intVal(b);
-                    }, 0);
-                $(api.column(6).footer()).html(pageTotal);
-
-                // Return amnt
-                pageTotal = api
-                    .column(7, { page: 'current' })
-                    .data()
-                    .reduce(function (a, b) {
-                        return intVal(a) + intVal(b);
-                    }, 0);
-                $(api.column(7).footer()).html(pageTotal);
-
-                // Discount
-                pageTotal = api
-                    .column(8, { page: 'current' })
-                    .data()
-                    .reduce(function (a, b) {
-                        return intVal(a) + intVal(b);
-                    }, 0);
-                $(api.column(8).footer()).html(pageTotal);
-
-                // Bill paid
-                pageTotal = api
-                    .column(9, { page: 'current' })
-                    .data()
-                    .reduce(function (a, b) {
-                        return intVal(a) + intVal(b);
-                    }, 0);
-                $(api.column(9).footer()).html(pageTotal);
+        ////        // Order Qty
+        ////        pageTotal = api
+        ////            .column(4, { page: 'current' })
+        ////            .data()
+        ////            .reduce(function (a, b) {
+        ////                return intVal(a) + intVal(b);
+        ////            }, 0);
+        ////        $(api.column(4).footer()).html(pageTotal);
 
 
 
-            }
+        ////        // Order Amount
+        ////        pageTotal = api
+        ////            .column(5, { page: 'current' })
+        ////            .data()
+        ////            .reduce(function (a, b) {
+        ////                return intVal(a) + intVal(b);
+        ////            }, 0);
+        ////        $(api.column(5).footer()).html(pageTotal);
+
+        ////        // Return Qty
+        ////        pageTotal = api
+        ////            .column(6, { page: 'current' })
+        ////            .data()
+        ////            .reduce(function (a, b) {
+        ////                return intVal(a) + intVal(b);
+        ////            }, 0);
+        ////        $(api.column(6).footer()).html(pageTotal);
+
+        ////        // Return amnt
+        ////        pageTotal = api
+        ////            .column(7, { page: 'current' })
+        ////            .data()
+        ////            .reduce(function (a, b) {
+        ////                return intVal(a) + intVal(b);
+        ////            }, 0);
+        ////        $(api.column(7).footer()).html(pageTotal);
+
+        ////        // Discount
+        ////        pageTotal = api
+        ////            .column(8, { page: 'current' })
+        ////            .data()
+        ////            .reduce(function (a, b) {
+        ////                return intVal(a) + intVal(b);
+        ////            }, 0);
+        ////        $(api.column(8).footer()).html(pageTotal);
+
+        ////        // Bill paid
+        ////        pageTotal = api
+        ////            .column(9, { page: 'current' })
+        ////            .data()
+        ////            .reduce(function (a, b) {
+        ////                return intVal(a) + intVal(b);
+        ////            }, 0);
+        ////        $(api.column(9).footer()).html(pageTotal);
 
 
-        });
+
+        ////    }
+
+
+        ////});
 
     });
 
