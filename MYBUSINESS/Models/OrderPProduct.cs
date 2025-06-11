@@ -15,32 +15,20 @@ namespace MYBUSINESS.Models
 using System;
     using System.Collections.Generic;
     
-public partial class OrderPProduct
-{
-
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-    public OrderPProduct()
+    public partial class OrderPProduct
     {
-
-        this.OrderItemPProducts = new HashSet<OrderItemPProduct>();
-
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public OrderPProduct()
+        {
+            this.OrderItemPProducts = new HashSet<OrderItemPProduct>();
+        }
+    
+        public int Id { get; set; }
+        public Nullable<int> StoreId { get; set; }
+        public Nullable<System.DateTime> OrderDate { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OrderItemPProduct> OrderItemPProducts { get; set; }
+        public virtual Store Store { get; set; }
     }
-
-
-    public int Id { get; set; }
-
-    public Nullable<int> StoreId { get; set; }
-
-    public Nullable<System.DateTime> OrderDate { get; set; }
-
-
-
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-
-    public virtual ICollection<OrderItemPProduct> OrderItemPProducts { get; set; }
-
-    public virtual Store Store { get; set; }
-
-}
-
 }

@@ -32,55 +32,33 @@
                                 <div class="box-body">
                                     <table class="table table-hover cell-border" id="POPRIndex">
                                         <thead>
-                                            <tr>
-                                                <th>
-                                                    @Html.DisplayNameFor(model => model.Date)
-                                                </th>
-                                                <th>
-                                                    Order No.
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayName("Supplier")
-                                                </th>
-                                                <th>Product</th>
-                                                <th>@Html.DisplayNameFor(model => model.PurchaseReturn)</th>
-                                                <th style="display:none;">
-                                                    @Html.DisplayNameFor(model => model.PurchaseOrderQty)
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayNameFor(model => model.PurchaseOrderAmount)
-                                                </th>
+                                                                        <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Date)
+                                </th>
+                                <th>
+                                    Order No.
+                                </th>
+                                <th>
+                                    @Html.DisplayName("Supplier")
+                                </th>
+                                <th>Product</th>
+                                <th>Quantity Ordered</th>
+                                <th>Unit</th>
+                                @*<th>@Html.DisplayNameFor(model => model.PurchaseReturn)</th>*@
+                                
+                                <th>
+                                    @Html.DisplayNameFor(model => model.PurchaseOrderAmount)
+                                </th>
 
-                                                <th>
-                                                    @Html.DisplayNameFor(model => model.Discount)
-                                                </th>
-                                                <th>
-                                                    Prev. Balance
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayNameFor(model => model.BillPaid)
-                                                </th>
-
-                                                <th>
-                                                    Status
-                                                </th>
-                                                @*
-                                                <th>
-                                                    User
-                                                </th>*@
-                                                <th class="noPrint">
-
-                                                </th>
-                                                @*
-                                                <th>
-                                                    @Html.DisplayNameFor(model => model.SaleReturn)
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayNameFor(model => model.PODId)
-                                                </th>*@
-
-
-                                            </tr>
+                                <th>
+                                    Status
+                                </th>
+                                <th>
+                                    Actions
+                                </th>
+                                
+                            </tr>
                                         </thead>
                                         <tbody>
                                             @foreach (var item in Model)
@@ -98,70 +76,79 @@
                                                 <td>
                                                     @foreach (var pod in item.SPackagingDetails)
                                                     {
-                                                    @pod.Product.Name
+                                                        @pod.Product.Name
                                                     }
                                                 </td>
                                                 <td>
-                                                    @(item.PurchaseReturn ? "Return" : "Sale")
+                                                    @foreach (var pod in item.SPackagingDetails)
+                                                    {
+                                                        @pod.Quantity
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @foreach (var pod in item.SPackagingDetails)
+                                                    {
+                                                        @pod.Unit
+                                                    }
                                                 </td>
                                                 <td style="display:none;">
                                                     @Html.DisplayFor(modelItem => item.PurchaseOrderQty)
                                                     @{
 
-                                                    if (item.PurchaseReturn == false)
-                                                    {
-                                                    TotalPOQty += (int)item.PurchaseOrderQty;
-                                                    }
-                                                    else
-                                                    {
-                                                    TotalPOQty -= (int)item.PurchaseOrderQty;
-                                                    }
+                                                        if (item.PurchaseReturn == false)
+                                                        {
+                                                            TotalPOQty += (int)item.PurchaseOrderQty;
+                                                        }
+                                                        else
+                                                        {
+                                                            TotalPOQty -= (int)item.PurchaseOrderQty;
+                                                        }
                                                     }
                                                 </td>
                                                 <td>
                                                     @Html.DisplayFor(modelItem => item.PurchaseOrderAmount)
                                                     @{
 
-                                                    if (item.PurchaseReturn == false)
-                                                    {
-                                                    TotalPOAmout += (decimal)item.PurchaseOrderAmount;
-                                                    }
-                                                    else
-                                                    {
-                                                    TotalPOAmout -= (decimal)item.PurchaseOrderAmount;
-                                                    }
+                                                        if (item.PurchaseReturn == false)
+                                                        {
+                                                            TotalPOAmout += (decimal)item.PurchaseOrderAmount;
+                                                        }
+                                                        else
+                                                        {
+                                                            TotalPOAmout -= (decimal)item.PurchaseOrderAmount;
+                                                        }
 
                                                     }
                                                 </td>
 
-                                                <td>
+                                                <td style="display:none;">
                                                     @Html.DisplayFor(modelItem => item.Discount)
                                                     @{
-                                                    if (item.PurchaseReturn == false)
-                                                    {
-                                                    Discount += (decimal)(item.Discount ?? 0);
-                                                    }
-                                                    else
-                                                    {
-                                                    Discount -= (decimal)item.Discount;
-                                                    }
+                                                        if (item.PurchaseReturn == false)
+                                                        {
+                                                            Discount += (decimal)(item.Discount ?? 0);
+                                                        }
+                                                        else
+                                                        {
+                                                            Discount -= (decimal)item.Discount;
+                                                        }
 
                                                     }
                                                 </td>
-                                                <td>
+                                                <td style="display:none;">
                                                     @Html.DisplayFor(modelItem => item.PrevBalance)
                                                 </td>
-                                                <td>
+                                                <td style="display:none;">
                                                     @Html.DisplayFor(modelItem => item.BillPaid)
                                                     @{
-                                                    if (item.PurchaseReturn == false)
-                                                    {
-                                                    BillPaid += item.BillPaid;
-                                                    }
-                                                    else
-                                                    {
-                                                    BillPaid -= item.BillPaid;
-                                                    }
+                                                        if (item.PurchaseReturn == false)
+                                                        {
+                                                            BillPaid += item.BillPaid;
+                                                        }
+                                                        else
+                                                        {
+                                                            BillPaid -= item.BillPaid;
+                                                        }
 
                                                     }
 
@@ -169,119 +156,114 @@
 
                                                 <td>
                                                     @{
-                                                    bool Validated = item.SPackagingDetails != null && item.SPackagingDetails.Any(p => p.Validate == true);
+                                                        bool Validated = item.SPackagingDetails != null && item.SPackagingDetails.Any(p => p.Validate == true);
                                                     }
                                                     @if (Validated)
                                                     {
-                                                    <span class="badge bg-success">Validated</span>
+                                                        <span class="badge bg-success">Validated</span>
                                                     }
                                                     else
                                                     {
-                                                    <span class="badge bg-danger">Ongoing</span>
+                                                        <span class="badge bg-danger">Ongoing</span>
                                                     }
                                                 </td>
 
 
                                                 @*
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.SaleReturn)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.PODId)
-                                                </td>*@
+        <td>
+            @Html.DisplayFor(modelItem => item.SaleReturn)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PODId)
+        </td>*@
                                                 @*
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.Employee.Login)
-                                                </td>*@
-                                                <td class="noPrint">
+        <td>
+            @Html.DisplayFor(modelItem => item.Employee.Login)
+        </td>*@
+                                                
                                                     @*@Html.ActionLink("View", "Edit", new { id = item.Id }) |*@
 
                                                     @{
 
-                                                    @*if (LstMaxSerialNo != null && LstMaxSerialNo.ContainsValue((int)item.POSerial))
-                                                    {
-                                                    @Html.ActionLink("Update", "Edit", new { id = item.Id, update = true }, new { @class = "btn btn-info" })
+                                                        @*if (LstMaxSerialNo != null && LstMaxSerialNo.ContainsValue((int)item.POSerial))
+                {
+                @Html.ActionLink("Update", "Edit", new { id = item.Id, update = true }, new { @class = "btn btn-info" })
+                }
+                else
+                {
+
+                @Html.ActionLink(whtieSpace + "View", "Edit", new { id = item.Id, update = false }, new { @class = "btn btn-info" })
+                }*@
+
+                                                        <!--if (currentUser.EmployeeTypeId == 0)
+                                                       {
+                                                           @Html.ActionLink("Update", "Edit", new { id = item.Id, update = true }, new { @class = "btn btn-info" })
+
+                                                           @Html.ActionLink("Receving", "Create", "POPRReciver", new { id = item.Id, update = true },
+            new { @class = "btn btn-warning text-dark fw-bold" })-->
+                                                        <!-- Yellow color for Post Production -->
+                                                        <!--}
+            else
+            {
+                @Html.ActionLink(whtieSpace + "View", "Edit", new { id = item.Id, update = false }, new { @class = "btn btn-info" })
+            }-->
+
+                                                    <td>
+                                                        @{
+                                                            bool isValidated = item.SPackagingDetails != null && item.SPackagingDetails.Any(p => p.Validate == true);
+
+
+                                                        }
+
+                                                        @if (isValidated)
+                                                        {
+                                                            @Html.ActionLink("View", "Edit", new { id = item.Id, readonlyMode = true },
+                                                            new { @class = "btn btn-primary text-white" })
+                                                            <a href="#" id="printMe" class="btn btn-info "><i class=""></i> Print</a>
+                                                            @Html.ActionLink("Receiving", "Create", "SPackagingReceiving", new { id = item.Id, update = true },
+                                                            new { @class = "btn btn-warning text-dark fw-bold" })
+                                                        }
+                                                        else
+                                                        {
+                                                            @Html.ActionLink("Update", "Edit", new { id = item.Id, update = true },
+                                                            new { @class = "btn btn-info text-white" })
+                                                        }
+                                                    </td>
+
+
+
+
+
+
+
+
                                                     }
-                                                    else
-                                                    {
 
-                                                    @Html.ActionLink(whtieSpace + "View", "Edit", new { id = item.Id, update = false }, new { @class = "btn btn-info" })
-                                                    }*@
-
-                                                    <!--if (currentUser.EmployeeTypeId == 0)
-                                                                                               {
-                                                                                                   @Html.ActionLink("Update", "Edit", new { id = item.Id, update = true }, new { @class = "btn btn-info" })
-
-                                                                                                   @Html.ActionLink("Receving", "Create", "POPRReciver", new { id = item.Id, update = true },
-                                                    new { @class = "btn btn-warning text-dark fw-bold" })-->
-                                                    <!-- Yellow color for Post Production -->
-                                                    <!--}
-                                                    else
-                                                    {
-                                                        @Html.ActionLink(whtieSpace + "View", "Edit", new { id = item.Id, update = false }, new { @class = "btn btn-info" })
-                                                    }-->
-
-                                                <td>
-                                                    @{
-                                                    bool isValidated = item.SPackagingDetails != null && item.SPackagingDetails.Any(p => p.Validate == true);
-
-
-                                                    }
-
-                                                    @if (isValidated)
-                                                    {
-                                                    @Html.ActionLink("View", "Edit", new { id = item.Id, readonlyMode = true },
-                                                    new { @class = "btn btn-primary text-white" })
-
-                                                    @Html.ActionLink("Receiving", "Create", "POPRReciver", new { id = item.Id, update = true },
-                                                    new { @class = "btn btn-warning text-dark fw-bold" })
-                                                    }
-                                                    else
-                                                    {
-                                                    @Html.ActionLink("Update", "Edit", new { id = item.Id, update = true },
-                                                    new { @class = "btn btn-info text-white" })
-                                                    }
-                                                </td>
-
-
-
-
-
-
-
-
-                                                }
-                                                |
-
-                                                @Html.ActionLink("Print", "PrintSO3", new { id = item.Id }, new { @class = "btn btn-warning" })
-                                                @*|
-                                                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                                                @Html.ActionLink("Delete", "Delete", new { id = item.Id })*@
-                                                </td>
-                                            </tr>
+                                                    @*|
+            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.Id })*@
+                                                    
+                                                </tr>
                                             //Balance = TotalPOAmout - TotalPRAmout - BillPaid - Discount- PrevBalance;
                                             }
                                         </tbody>
                                         <tfoot>
                                             <tr style="font-weight:bold">
                                                 <td></td>
-                                                <td>@Model.Count()</td>
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
-                                                <td style="display:none;">@TotalPOQty</td>
-                                                <td>@TotalPOAmout</td>
+                                                <td></td>
+                                                <td style="display:none;"></td>
+                                                <td></td>
 
-                                                <td>@Discount</td>
-                                                <td>@*@PrevBalance*@</td>
-                                                <td>@BillPaid</td>
-
-                                                <td>@*@ViewBag.TotalBalance*@</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
 
                                                 @*
                                                 <td></td>*@
-                                                <td></td>
-                                                <td></td>
+                                                
                                             </tr>
                                         </tfoot>
                                     </table>

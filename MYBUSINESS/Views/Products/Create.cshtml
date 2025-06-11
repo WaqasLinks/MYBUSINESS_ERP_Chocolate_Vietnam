@@ -65,8 +65,8 @@
                                         <option value="5" @(Model.Product.PType == 5 ? "selected" : "")>Ingredient</option>
                                         <option value="6" @(Model.Product.PType == 6 ? "selected" : "")>Intermediary Ingredient</option>
                                         <option value="7" @(Model.Product.PType == 7 ? "selected" : "")>Merchandise</option>
-                                        <option value="8" @(Model.Product.PType == 8 ? "selected" : "")>Flat Packaging</option>
-                                        <option value="9" @(Model.Product.PType == 9 ? "selected" : "")>Finish Packaging</option>
+                                        <option value="8" @(Model.Product.PType == 8 ? "selected" : "")>Packaging Product</option>
+                                        <option value="9" @(Model.Product.PType == 9 ? "selected" : "")>Saleable Merchandise</option>
                                     </select>
                                     </div>
 
@@ -282,7 +282,7 @@
                @(Model.Product.PType & 7)= =7 ? "checked" : "" />
         <br />
         <label>Flat Packaging</label>
-        <input type="checkbox" class="form-check-input" id="flatpackaging" name="FlatPackaging" value="8"
+        <input type="checkbox" class="form-check-input" id="packagingproduct" name="FlatPackaging" value="8"
                @(Model.Product.PType & 8)= =8 ? "checked" : "" />
 
         <br />
@@ -464,9 +464,12 @@
                         $('#supplier-field, #category-field, #unit-field, #purchase-price-field').show();
                         break;
                     case "8": // Flat Packaging
-                    case "9": // Finish Packaging
+                     // Finish Packaging
                         $('#supplier-field, #category-field, #unit-field').show();
                         break;
+                    case "9":
+                        $('#barcode-field,#einvoice-field, #supplier-field, #category-field, #unit-field,#purchase-price-field,#sale-price-field,#wholesale-field').show();
+                        break
                     default:
                         // Default case if nothing is selected
                         break;

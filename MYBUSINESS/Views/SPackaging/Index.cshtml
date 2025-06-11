@@ -18,7 +18,7 @@
 <script src="~/Content/custom/supplierPOPR.js"></script>
 
 <script src="~/Content/custom/downloads/jquery.mcautocomplete.js"></script>
-<center><h2>Standard Purchases</h2></center>
+<center><h2>Standard Packaging Purchases</h2></center>
 
 @*<h1>@ViewBag.myLog</h1>*@
 
@@ -28,8 +28,6 @@
         @Html.ActionLink("Create New Purchase Order", "Create")
     </p>*@
 <div class="col-sm-12 noPrint">
-    @*<button type="submit" id="CreatePO" class="btn btn-info add-new"><i class="fa fa-plus"></i>Save & Print</button>*@
-    <a href="#" id="printMe" class="btn btn-info "><i class=""></i> Print</a>
     <a href="/POPR/Create?IsReturn=false" id="createPOPR" class="btn btn-success "><i class=""></i> New SPurchase</a>
 </div>
 <form name="registration_form_Product" id='registration_form_Product' class="form-inline noPrint">

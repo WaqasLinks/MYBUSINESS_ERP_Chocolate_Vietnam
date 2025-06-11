@@ -30,7 +30,7 @@
         <div class="table-wrapper">
             <div class="table-title">
                 <div class="row">
-                    <div class="col-sm-offset-5"><h2>Edit Packaging Production Colors</h2></div>
+                    <div class="col-sm-offset-5"><h2>Edit Colored Packaging Production</h2></div>
                 </div>
             </div>
 
@@ -125,7 +125,7 @@
                 <div class="row">
                     <div class="col-sm-3">
                         <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;">
-                            <i class="fa fa-plus"></i> New Row
+                            <i class="fa fa-plus"></i> New Reception
                         </button>
                     </div>
                 </div>
@@ -162,6 +162,19 @@
         const colorList = @Html.Raw(JsonConvert.SerializeObject(colors));
         const modelData = @Html.Raw(JsonConvert.SerializeObject(Model));
 
+        //$(document).on("input", ".qty-input", function () {
+        //    const color = $(this).data("color");
+        //    let totalReceived = 0;
+
+        //    $(`.qty-input[data-color="${color}"]`).each(function () {
+        //        totalReceived += parseFloat($(this).val()) || 0;
+        //    });
+
+
+        //    const toReceive = (plannerQuantities[color] || 0) - totalReceived;
+        //    $(`.toreceive[data-color="${color}"]`).text(toReceive);
+        //});
+
         $(document).on("input", ".qty-input", function () {
             const color = $(this).data("color");
             let totalReceived = 0;
@@ -170,7 +183,12 @@
                 totalReceived += parseFloat($(this).val()) || 0;
             });
 
-            const toReceive = (plannerQuantities[color] || 0) - totalReceived;
+            const plannerQty = plannerQuantities[color] || 0;
+            let toReceive = plannerQty - totalReceived;
+
+            // Ensure toReceive is not negative
+            toReceive = Math.max(0, toReceive);
+
             $(`.toreceive[data-color="${color}"]`).text(toReceive);
         });
 

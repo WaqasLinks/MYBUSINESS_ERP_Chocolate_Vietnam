@@ -36,7 +36,7 @@
         <div class="table-wrapper">
             <div class="table-title">
                 <div class="row">
-                    <div id="saleOrder" class="col-sm-offset-5"><h2>SPackaging <b></b></h2></div>
+                    <div id="saleOrder" class="col-sm-offset-5"><h2>Update Standard Packaging Purchase Order <b></b></h2></div>
                     <div id="saleReturn" class="col-sm-offset-5"><h2>Purchase <b>Return</b></h2></div>
                     @*<div class="col-sm-4">
                             <button type="button" id="addNewRow" class="btn btn-info add-new"><i class="fa fa-plus"></i> Add New</button>
@@ -467,7 +467,7 @@
 
 
 
-    $("#btnValidate").click(function () {
+    @*$("#btnValidate").click(function () {
         alert('Validating...');
 
         // Disable form fields (except Validate button)
@@ -513,9 +513,54 @@
                 alert("An error occurred while validating. Please try again.");
             }
         });
+    });*@
+
+$("#btnValidate").click(function () {
+    alert('Validating...');
+
+    let productUpdates = [];
+
+    // Loop through each row to get ProductIds and SPackagingIds
+    $("#selectedProducts tbody tr").each(function () {
+        let productId = $(this).find('input[name^="SPackagingDetail"][name$=".ProductId"]').val();
+        let spackagingId = $(this).find('input[name^="SPackagingDetail"][name$=".SPackagingId"]').val();
+
+        if (productId && spackagingId) {
+            productUpdates.push({
+                productId: parseInt(productId),
+                poId: spackagingId  // Using SPackagingId as poId
+            });
+        }
     });
 
+    if (productUpdates.length === 0) {
+        alert("No valid products found to validate.");
+        return;
+    }
 
+    console.log("Sending Data:", JSON.stringify({ LstProductionVM: productUpdates }));
+
+    // Send AJAX request
+    $.ajax({
+        url: '@Url.Action("Validation", "SPackaging")',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ LstProductionVM: productUpdates }),
+        headers: {
+            'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+        },
+        success: function (response) {
+            alert(response.message);
+            if (response.success) {
+                window.location.href = response.redirectUrl;
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error:", error);
+            alert("An error occurred while validating. Please try again.");
+        }
+    });
+});
 
 
 

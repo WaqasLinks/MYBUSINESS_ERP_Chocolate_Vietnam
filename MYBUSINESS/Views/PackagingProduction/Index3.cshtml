@@ -66,7 +66,8 @@
                 <div class="col-sm-offset-5">
                     <h3>Product: @Model.FirstOrDefault().ProductName</h3>
                     <h2>
-                    Packaging Production Colors</h2>
+                        Colored Packaging Production
+                    </h2>
                 </div>
             </div>
 
@@ -74,7 +75,7 @@
         <table id="production-table" class="table table-bordered">
             <thead>
                 <tr class="table-info">
-                    <td style="width:10%"><strong>Planner Quantity</strong></td>
+                    <td style="width:10%"><strong>Planned Quantity</strong></td>
                     @foreach (var color in colors)
                     {
                         var totalPlanner = Model

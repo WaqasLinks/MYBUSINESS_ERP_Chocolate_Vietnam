@@ -124,67 +124,150 @@
                 <!-- sidebar menu: : style can be found in sidebar.less -->
                 <ul class="sidebar-menu" data-widget="tree">
                     <li class="header">MAIN NAVIGATION</li>
-                    <li><a href="/Stores/StoreDashboard"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-                    <li><a href="/Stores/DailySummary"><i class="fa fa-dashboard"></i> <span>Shops Dashboard</span></a></li>
+                    <li><a href="#"><i class=""></i> <span><b>PRODUCTION</b></span></a></li>
+                    @*Purchase Order*@
+                    <li><a href="#"><i class=""></i> <span><b>Purchase Order</b></span></a></li>
+                    <li><a href="/POPR/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Purchase Order</span></a></li>
+                    <li><a href="/POPR/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Purchase Order</span></a></li>
+                    <li><a href="/POPR/Index"><i class="fa fa-search"></i> <span>Purchases Order History</span></a></li>
+                    <li><a href="/POPRReciver/Index"><i class="fa fa-search"></i> <span>Goods Recieving History</span></a></li>
+                    @*Chocolate BOM*@
+                    <li><a href="#"><i class=""></i> <span><b>Chocolate BOM</b></span></a></li>
+                    <li><a href="~/BOM/Create"><i class="fa fa-sparkles"></i> <span>New Chocolate BOM</span></a></li>
+                    <li><a href="~/BOM/Index"><i class="fa fa-gift"></i> <span>Chocolate BOM List</span></a></li>
+                    @*Chocolate Production*@
+                    <li><a href="#"><i class=""></i> <span><b>Chocolate Production</b></span></a></li>
+                    <li><a href="~/NewProduction/Create"><i class="fa fa-sparkles"></i> <span>New Chocolate Production</span></a></li>
+                    <li><a href="~/NewProduction/Index"><i class="fa fa-gift"></i> <span>Chocolate Production List</span></a></li>
+                    <li><a href="~/PostProduction/Index"><i class="fa fa-gift"></i> <span>Chocolate Post Production List</span></a></li>
+                    @*Standard Packaging Order*@
+                    <li><a href="#"><i class=""></i> <span><b>Standard Packaging Order</b></span></a></li>
+                    <li><a href="/SPackaging/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New SPackaging Order</span></a></li>
+                    <li><a href="/SPackaging/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Standard Packaging Order</span></a></li>
+                    <li><a href="/SPackaging/Index"><i class="fa fa-search"></i> <span>SPackaging History</span></a></li>
+                    <li><a href="/POPRReciver/Index"><i class="fa fa-search"></i> <span>Standard Packaging Receiving</span></a></li>
+                    @*Printed Packaging BOM*@
+                    <li><a href="#"><i class=""></i> <span><b>Printed Packaging BOM</b></span></a></li>
+                    <li><a href="~/PPBOM/Create"><i class="fa fa-sparkles"></i> <span>New Printed Packaging BOM</span></a></li>
+                    <li><a href="~/PPBOM/Index"><i class="fa fa-gift"></i> <span>Printed Packaging BOM List</span></a></li>
+                    @*Colored Paper Order*@
+                    <li><a href="#"><i class=""></i> <span><b>Colored Paper Order</b></span></a></li>
+                    <li><a href="~/PackagingProduction/Create"><i class="fa fa-sparkles"></i> <span>New Paper Production</span></a></li>
+                    <li><a href="~/PackagingProduction/Index"><i class="fa fa-gift"></i> <span>Paper Production List</span></a></li>
+                    @*Colored Packaging Production*@
+                    <li><a href="#"><i class=""></i> <span><b>Colored Packaging Production</b></span></a></li>
+                    <li><a href="~/PackagingProduction/ColorIndex"><i class="fa fa-gift"></i> <span>Paper Production List</span></a></li>
+                    @*Colored Packaging Assembly*@
+                    <li><a href="#"><i class=""></i> <span><b>Colored Packaging Assembly</b></span></a></li>
+                    <li><a href="~/PackagingProduction/FlatBoxStockSummary"><i class="fa fa-gift"></i> <span>Paper Production List</span></a></li>
+                    @*Color*@
+                    <li><a href="#"><i class=""></i> <span><b>Color</b></span></a></li>
+                    <li><a href="/Color/Create"><i class="fa fa-sparkles"></i> <span>New Color</span></a></li>
+                    <li><a href="/Color/Index"><i class="fa fa-gift"></i> <span>Color List</span></a></li>
 
-                    <li></li>
-
-                    <li><a href="#"><i class=""></i> <span><b>Sales</b></span></a></li>
+                    @*SALE*@
+                    <li><a href="#"><i class=""></i> <span><b>SALE</b></span></a></li>
+                    @*SALE*@
+                    <li><a href="#"><i class=""></i> <span><b>POS</b></span></a></li>
                     <li><a href="/SOSR/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Sale</span></a></li>
                     <li><a href="/SOSR/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Sale</span></a></li>
                     <li><a href="/SOSR/Index"><i class="fa fa-search"></i> <span>Sales History</span></a></li>
                     <li><a href="/SOSR/IndexReturn"><i class="fa fa-search"></i> <span>Returns History</span></a></li>
+                    @*Order Management*@
+                    <li><a href="#"><i class=""></i> <span><b>Order Management</b></span></a></li>
+                    <li><a href="/StoreOrder/CreateOrder"><i class="fa fa-sparkles"></i> <span>Order Finished Products</span></a></li>
+                    <li><a href="/StoreOrder/CreatePackagingOrder"><i class="fa fa-sparkles"></i> <span>Order Packaging Products</span></a></li>
+                    <li><a href="/StoreOrder/Index"><i class="fa fa-search"></i> <span>Finished Product Order List</span></a></li>
+                    <li><a href="/StoreOrder/IndexOrderPP"><i class="fa fa-search"></i> <span>Packaging Product Order List</span></a></li>
+                    @*Scan Credit Card*@
+                    <li><a href="#"><i class=""></i> <span><b>Scan Credit Card</b></span></a></li>
+                    <li><a href="/ScanCreditCard/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>Scan Credit Card</span></a></li>
+                    <li><a href="/ScanCreditCard/Index"><i class="fa fa-search"></i> <span>Scan Credit Card History</span></a></li>
+                    @*Scan Bank Deposit*@
+                    <li><a href="#"><i class=""></i> <span><b>Scan Bank Deposit</b></span></a></li>
+                    <li><a href="/ShopManage/Create"><i class="fa fa-sparkles"></i> <span>New ScanBankDeposit</span></a></li>
+                    <li><a href="/ShopManage/Index"><i class="fa fa-search"></i> <span>ScanBankDeposit History</span></a></li>
+                    @*Scan MoneyInput Deposit*@
+                    <li><a href="#"><i class=""></i> <span><b>Scan MoneyInput Deposit</b></span></a></li>
+                    <li><a href="/ScanMoneyInput/Create"><i class="fa fa-sparkles"></i> <span>New ScanMoneyInput </span></a></li>
+                    <li><a href="/ScanMoneyInput/Index"><i class="fa fa-search"></i> <span>Scan MoneyInput History</span></a></li>
+                    @*Dashboard*@
+                    <li><a href="/Stores/StoreDashboard"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+                    <li><a href="/Stores/DailySummary"><i class="fa fa-dashboard"></i> <span>Shops Dashboard</span></a></li>
 
                     <li><a href="#"><i class=""></i> <span><b>Stats Dashboard</b></span></a></li>
                     <li><a href="/Dashboard/DashboardStats"><i class="fa fa-sparkles"></i> <span>Stats Dashboard</span></a></li>
 
 
+                    <li></li>
+                    <li><a href="#"><i class=""></i> <span><b>ADMIN</b></span></a></li>
+                    @*Stores*@
+                    <li><a href="#"><i class=""></i> <span><b>Stores</b></span></a></li>
+                    <li><a href="/Stores/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Store</span></a></li>
+                    <li><a href="/Stores/Index"><i class="fa fa-search"></i> <span>Stores History</span></a></li>
+                    <li><a href="/Stores/GetStoreVndBalance"><i class="fa fa-sparkles"></i> <span>Balance History</span></a></li>
+                    @*Customers*@
+                    <li><a href="#"><i class=""></i> <span><b>Customers</b></span></a></li>
+                    <li><a href="/Customers/Create"><i class="fa fa-sparkles"></i> <span>New Customer</span></a></li>
+                    <li><a href="/Customers/Index"><i class="fa fa-search"></i> <span>Customers List</span></a></li>
+                    @*Suppliers*@
+                    <li><a href="#"><i class=""></i> <span><b>Suppliers</b></span></a></li>
+                    <li><a href="/Suppliers/Create"><i class="fa fa-sparkles"></i> <span>New Supplier</span></a></li>
+                    <li><a href="/Suppliers/Index"><i class="fa fa-search"></i> <span>Suppliers List</span></a></li>
+                    @*Stocks*@
+                    <li><a href="#"><i class=""></i> <span><b>Stocks</b></span></a></li>
+                    <li><a href="/Products/Create"><i class="fa fa-sparkles"></i> <span>New Product</span></a></li>
+                    <li><a href="/Products/StockIndex"><i class="fa fa-gift"></i> <span>Product List</span></a></li>
+                    <li><a href="/Products/Create"><i class="fa fa-sparkles"></i> <span>New Packaging</span></a></li>
+                    <li><a href="/Products/StockIndex"><i class="fa fa-gift"></i> <span>Packaging List</span></a></li>
+                    <li><a href="/Products/IndexStock"><i class="fa fa-gift"></i> <span>Stock List</span></a></li>
+                    @*Currency*@
+                    <li><a href="#"><i class=""></i> <span><b>Currency</b></span></a></li>
+                    <li><a href="/Currencies/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Currency</span></a></li>
+                    <li><a href="/Currencies/Index"><i class="fa fa-money"></i> <span>Currency History</span></a></li>
+                    @*Quotations*@
+                    <li><a href="#"><i class=""></i> <span><b>Quotations</b></span></a></li>
+                    <li><a href="/PurchaseQuotation/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Quotation</span></a></li>
+                    <li><a href="/PurchaseQuotation/CreatePOByCategory?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Quotation By Category</span></a></li>
+                    <li><a href="/PurchaseQuotation/Index"><i class="fa fa-search"></i> <span>Quotations History</span></a></li>
 
-                    <li><a href="#"><i class=""></i> <span><b>Scan Bank Deposit</b></span></a></li>
-                    <li><a href="/ShopManage/Create"><i class="fa fa-sparkles"></i> <span>New ScanBankDeposit</span></a></li>
-                    <li><a href="/ShopManage/Index"><i class="fa fa-search"></i> <span>ScanBankDeposit History</span></a></li>
 
-                    <li><a href="#"><i class=""></i> <span><b>Scan MoneyInput Deposit</b></span></a></li>
-                    <li><a href="/ScanMoneyInput/Create"><i class="fa fa-sparkles"></i> <span>New ScanMoneyInput </span></a></li>
-                    <li><a href="/ScanMoneyInput/Index"><i class="fa fa-search"></i> <span>Scan MoneyInput History</span></a></li>
+                    @*Settings*@
+                    <li><a href="#"><i class=""></i> <span><b>Settings</b></span></a></li>
+                    <li><a href="/MyBusinessInfoes/Edit/1"><i class="fa fa-building"></i> <span>My Business Info</span></a></li>
+                    <li><a href="/UserAuthorization/Index"><i class="fa fa-square-check"></i> <span>User Permissions</span></a></li>
+
+
+
+
+
+
+
+
                     @*<li><a href="/SOSR/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Sale</span></a></li>
         <li><a href="/SOSR/Index"><i class="fa fa-search"></i> <span>Sales History</span></a></li>
         <li><a href="/SOSR/IndexReturn"><i class="fa fa-search"></i> <span>Returns History</span></a></li>*@
-                    <li><a href="#"><i class=""></i> <span><b>Scan Credit Card</b></span></a></li>
-                    <li><a href="/ScanCreditCard/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>Scan Credit Card</span></a></li>
-                    <li><a href="/ScanCreditCard/Index"><i class="fa fa-search"></i> <span>Scan Credit Card History</span></a></li>
 
 
-                    <li><a href="#"><i class=""></i> <span><b>Purchases</b></span></a></li>
-                    <li><a href="/POPR/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Purchase</span></a></li>
-                    <li><a href="/POPR/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Purchase</span></a></li>
-                    <li><a href="/POPR/Index"><i class="fa fa-search"></i> <span>Purchases History</span></a></li>
-                    <li><a href="/POPRReciver/Index"><i class="fa fa-search"></i> <span>Recieving History</span></a></li>
 
-                    <li><a href="#"><i class=""></i> <span><b>Printed Packaging Purchases</b></span></a></li>
-                    <li><a href="/PrintedPackaging/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New PP Purchases</span></a></li>
-                    <li><a href="/PrintedPackaging/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Purchase</span></a></li>
-                    <li><a href="/PrintedPackaging/Index"><i class="fa fa-search"></i> <span>PP Purchases History</span></a></li>
+
+                    <li style="display:none;"><a href="#"><i class=""></i> <span><b>Printed Packaging Purchases</b></span></a></li>
+                    <li style="display:none;"><a href="/PrintedPackaging/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New PP Purchases</span></a></li>
+                    <li style="display:none;"><a href="/PrintedPackaging/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Purchase</span></a></li>
+                    <li style="display:none;"><a href="/PrintedPackaging/Index"><i class="fa fa-search"></i> <span>PP Purchases History</span></a></li>
 
                     <!--<li><a href="#"><i class=""></i> <span><b>Recieving</b></span></a></li>-->
                     @*<li><a href="/POPRReciver/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Recieving</span></a></li>
         <li><a href="/POPRReciver/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Recieving</span></a></li>*@
                     <!--<li><a href="/POPRReciver/Index"><i class="fa fa-search"></i> <span>Recieving History</span></a></li>-->
 
-                    <li><a href="#"><i class=""></i> <span><b>Printed Packaging Recieving</b></span></a></li>
+                    <li style="display:none;"><a href="#"><i class=""></i> <span><b>Printed Packaging Recieving</b></span></a></li>
                     @*<li><a href="/POPRReciver/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Recieving</span></a></li>
         <li><a href="/POPRReciver/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Recieving</span></a></li>*@
-                    <li><a href="/PrintedPackagingReciver/Index"><i class="fa fa-search"></i> <span>Recieving History</span></a></li>
+                    <li style="display:none;"><a href="/PrintedPackagingReciver/Index"><i class="fa fa-search"></i> <span>Recieving History</span></a></li>
 
-                    <li><a href="#"><i class=""></i> <span><b>Standard Packaging</b></span></a></li>
-                    <li><a href="/SPackaging/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New SPackaging</span></a></li>
-                    <li><a href="/SPackaging/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Purchase</span></a></li>
-                    <li><a href="/SPackaging/Index"><i class="fa fa-search"></i> <span>SPackaging History</span></a></li>
 
-                    <li><a href="#"><i class=""></i> <span><b>Quotations</b></span></a></li>
-                    <li><a href="/PurchaseQuotation/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Quotation</span></a></li>
-                    <li><a href="/PurchaseQuotation/CreatePOByCategory?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Quotation By Category</span></a></li>
-                    <li><a href="/PurchaseQuotation/Index"><i class="fa fa-search"></i> <span>Quotations History</span></a></li>
+
 
                     <!--<li><a href="#"><i class=""></i> <span><b>Products</b></span></a></li>
     <li><a href="/Products/Create"><i class="fa fa-sparkles"></i> <span>New Product</span></a></li>
@@ -192,18 +275,9 @@
     <li><a href="/Products/IndexFactory"><i class="fa fa-gift"></i> <span>Factory Products & Stock</span></a></li>-->
                     @*<li><a href="/StockTransections/Summary"><i class="fa fa-list"></i> <span>Stock Summary</span></a></li>*@
 
-                    <li><a href="#"><i class=""></i> <span><b>Stocks</b></span></a></li>
-                    <li><a href="/Products/Create"><i class="fa fa-sparkles"></i> <span>New Product</span></a></li>
-                    <li><a href="/Products/StockIndex"><i class="fa fa-gift"></i> <span>Product List</span></a></li>
-                    <li><a href="/Products/Create"><i class="fa fa-sparkles"></i> <span>New Packaging</span></a></li>
-                    <li><a href="/Products/StockIndex"><i class="fa fa-gift"></i> <span>Packaging List</span></a></li>
-                    <li><a href="/Products/IndexStock"><i class="fa fa-gift"></i> <span>Stock List</span></a></li>
 
 
 
-                    <li><a href="#"><i class=""></i> <span><b>BOM</b></span></a></li>
-                    <li><a href="~/BOM/Create"><i class="fa fa-sparkles"></i> <span>New BOM</span></a></li>
-                    <li><a href="~/BOM/Index"><i class="fa fa-gift"></i> <span>BOM List</span></a></li>
 
 
 
@@ -211,62 +285,24 @@
         <li><a href="/Color/Create"><i class="fa fa-sparkles"></i> <span>New Color</span></a></li>
         <li><a href="/Color/Index"><i class="fa fa-gift"></i> <span>Color List</span></a></li>*@
 
-                    <li><a href="#"><i class=""></i> <span><b>Chocolate Production</b></span></a></li>
-                    <li><a href="~/NewProduction/Create"><i class="fa fa-sparkles"></i> <span>New Production</span></a></li>
-                    <li><a href="~/NewProduction/Index"><i class="fa fa-gift"></i> <span>Production List</span></a></li>
-                    <li><a href="~/PostProduction/Index"><i class="fa fa-gift"></i> <span>Post Production List</span></a></li>
-                    <li><a href="#"><i class=""></i> <span><b>Color</b></span></a></li>
-                    <li><a href="/Color/Create"><i class="fa fa-sparkles"></i> <span>New Color</span></a></li>
-                    <li><a href="/Color/Index"><i class="fa fa-gift"></i> <span>Color List</span></a></li>
 
-                    <li><a href="#"><i class=""></i> <span><b>Printed Packaging BOM</b></span></a></li>
-                    <li><a href="~/PPBOM/Create"><i class="fa fa-sparkles"></i> <span>New PPBOM</span></a></li>
-                    <li><a href="~/PPBOM/Index"><i class="fa fa-gift"></i> <span>PPBOM List</span></a></li>
 
-                    <li><a href="#"><i class=""></i> <span><b>Paper Production</b></span></a></li>
-                    <li><a href="~/PackagingProduction/Create"><i class="fa fa-sparkles"></i> <span>New Paper Production</span></a></li>
-                    <li><a href="~/PackagingProduction/Index"><i class="fa fa-gift"></i> <span>Paper Production List</span></a></li>
+
+
                     <!--<li><a href="#"><i class=""></i> <span><b>PostProduction</b></span></a></li>-->
                     @*<li><a href="~/PostProduction/Create"><i class="fa fa-sparkles"></i> <span>New PostProduction</span></a></li>*@
                     <!--<li><a href="~/PostProduction/Index"><i class="fa fa-gift"></i> <span>Post Production List</span></a></li>-->
-
-                    <li><a href="#"><i class=""></i> <span><b>Color Production</b></span></a></li>
-                    <li><a href="~/PackagingProduction/ColorIndex"><i class="fa fa-gift"></i> <span>Paper Production List</span></a></li>
-
-
-
                     @*<li><a href="#"><i class=""></i> <span><b>Final Production</b></span></a></li>
         <li><a href="~/FinalProduction/Create"><i class="fa fa-sparkles"></i> <span>Final Production</span></a></li>
         <li><a href="~/FinalProduction/Index"><i class="fa fa-gift"></i> <span>New Production List</span></a></li>*@
 
-                    <li><a href="#"><i class=""></i> <span><b>Order Management</b></span></a></li>
-                    <li><a href="/StoreOrder/CreateOrder"><i class="fa fa-sparkles"></i> <span>Order Finished Products</span></a></li>
-                    <li><a href="/StoreOrder/CreatePackagingOrder"><i class="fa fa-sparkles"></i> <span>Order Packaging Products</span></a></li>
-                    <li><a href="/StoreOrder/Index"><i class="fa fa-search"></i> <span>Finished Product Order List</span></a></li>
-                    <li><a href="/StoreOrder/IndexOrderPP"><i class="fa fa-search"></i> <span>Packaging Product Order List</span></a></li>
 
 
 
-                    <li><a href="#"><i class=""></i> <span><b>Customers</b></span></a></li>
-                    <li><a href="/Customers/Create"><i class="fa fa-sparkles"></i> <span>New Customer</span></a></li>
-                    <li><a href="/Customers/Index"><i class="fa fa-search"></i> <span>Customers List</span></a></li>
 
-                    <li><a href="#"><i class=""></i> <span><b>Suppliers</b></span></a></li>
-                    <li><a href="/Suppliers/Create"><i class="fa fa-sparkles"></i> <span>New Supplier</span></a></li>
-                    <li><a href="/Suppliers/Index"><i class="fa fa-search"></i> <span>Suppliers List</span></a></li>
 
-                    <li><a href="#"><i class=""></i> <span><b>Stores</b></span></a></li>
-                    <li><a href="/Stores/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Store</span></a></li>
-                    <li><a href="/Stores/Index"><i class="fa fa-search"></i> <span>Stores History</span></a></li>
-                    <li><a href="/Stores/GetStoreVndBalance"><i class="fa fa-sparkles"></i> <span>Balance History</span></a></li>
 
-                    <li><a href="#"><i class=""></i> <span><b>Currency</b></span></a></li>
-                    <li><a href="/Currencies/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Currency</span></a></li>
-                    <li><a href="/Currencies/Index"><i class="fa fa-money"></i> <span>Currency History</span></a></li>
 
-                    <li><a href="#"><i class=""></i> <span><b>Settings</b></span></a></li>
-                    <li><a href="/MyBusinessInfoes/Edit/1"><i class="fa fa-building"></i> <span>My Business Info</span></a></li>
-                    <li><a href="/UserAuthorization/Index"><i class="fa fa-square-check"></i> <span>User Permissions</span></a></li>
 
                 </ul>
                 @*<input type="hidden" id="StorageItem" name="StorageItem" value="" />*@

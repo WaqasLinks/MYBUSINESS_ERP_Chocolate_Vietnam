@@ -8,7 +8,7 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-sliderAccess.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.js"></script>
 
-<link href="@Url.Content("~/Content/custom/custom.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Content/custom/custom12.css")" rel="stylesheet" type="text/css" />
 <script src="~/Content/custom/colorproduction.js"></script>
 
 <script src="~/Content/custom/downloads/jquery.mcautocomplete.js"></script>
@@ -18,79 +18,83 @@
     bool isReadonly = ViewBag.ReadonlyMode ?? false;
     var production = Model.FirstOrDefault();
 }
-@using (Html.BeginForm("FinishProduction", "PackagingProduction", FormMethod.Post))
+@using (Html.BeginForm("FlatBoxStockSummary", "PackagingProduction", FormMethod.Get, new { id = "productForm" }))
 {
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
 
     <div class="container" id="container">
         <div class="table-wrapper">
             <div class="table-title">
-                <div class="row">
-                    <div class="col-sm-offset-5">
-                        <h3>Product: </h3>
-                        <h2>Finish Production</h2>
-                    </div>
+                <div class="form-group">
+                    <label>Select Product:</label>
+                    @Html.DropDownList("productId",
+                        new SelectList(ViewBag.Products, "Id", "Name", ViewBag.SelectedProduct),
+                        "-- Select Product --",
+                        new { @class = "form-control", onchange = "document.getElementById('productForm').submit()" })
                 </div>
             </div>
 
-            <table id="production-table" class="table table-bordered">
-                <thead>
-                    <tr class="table-info">
-                        <td style="width:10%"><strong>Flat Box in Stock</strong></td>
-                        @foreach (var color in production.ColorComponents)
-                        {
+            @if (production != null)
+            {
+                using (Html.BeginForm("FinishProduction", "PackagingProduction", FormMethod.Post, new { id = "assemblyForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <table id="production-table" class="table table-bordered">
+                    <thead>
+                        <tr class="table-info">
+                            <td style="width:10%"><strong>Flat Box in Stock</strong></td>
+                            @foreach (var color in production.ColorComponents)
+                            {
+                                <td>@color.Quantity</td>
+                            }
+                        </tr>
+                    </thead>
+                </table>
 
-                            <td>@color.Quantity</td>
-                        }
-                    </tr>
-                </thead>
+                <table id="selectedProducts" class="table table-bordered">
+                    <thead>
+                        <tr class="table-info">
+                            <th style="width:2%;">#</th>
+                            <th style="width:8%">Colors</th>
+                            @foreach (var color in production.ColorComponents)
+                            {
+                                <th>@color.ColorName</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="SNo0">1</td>
+                            <td><strong>Assembly Order</strong></td>
+                            @for (int i = 0; i < production.ColorComponents.Count; i++)
+                            {
+                                var color = production.ColorComponents[i];
+                                <td>
+                                    <input type="hidden" name="@($"ProductStockDetail[0].Items[{i}].PaperColorId")" value="@color.ColorId" />
+                                    <input type="number"
+                                           name="@($"ProductStockDetail[0].Items[{i}].Quantity")"
+                                           class="form-control produced-qty"
+                                           value="0"
+                                           min="0" />
+                                </td>
+                            }
+                        </tr>
+                    </tbody>
+                </table>
 
-            </table>
-
-            <table id="selectedProducts" class="table table-bordered">
-                <thead>
-                    <tr class="table-info">
-                        <th style="width:2%;">#</th>
-                        <th style="width:8%">Colors</th>
-                        @foreach (var color in production.ColorComponents)
-                        {
-                            <th>@color.ColorName</th>
-                        }
-                    </tr>
-                </thead>
-                <tbody>
-
-                    <tr>
-
-                        <td id="SNo0">1</td>
-                        <td><strong>Assembly Order</strong></td>
-                        @for (int i = 0; i < production.ColorComponents.Count; i++)
-                        {
-                            var color = production.ColorComponents[i];
-                            <td>
-                                <input type="hidden" name="@($"ProductStockDetail[0].Items[{i}].PaperColorId")" value="@color.ColorId" />
-                                <input type="hidden" name="@($"ProductStockDetail[0].Items[{i}].PPSubItemId")" value="@production.PPSubItemId" />
-                                <input type="hidden" name="@($"ProductStockDetail[0].Items[{i}].PackagingProductionId")" value="@production.PackagingProductionId" />
-                                <input type="number"
-                                       name="@($"ProductStockDetail[0].Items[{i}].Quantity")"
-                                       class="form-control produced-qty"
-                                       value="0"
-                                       min="0" />
-                            </td>
-                        }
-                    </tr>
-
-                </tbody>
-
-            </table>
-            <div class="form-group">
-                <button type="submit" class="btn btn-success mt-3" id="saveBtn">Finish Production</button>
-                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default mt-3" })
-            </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success mt-3" id="saveBtn">Create assembly</button>
+                    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default mt-3" })
+                </div>
+                }
+            }
         </div>
     </div>
-}
+
+
+            }
 @section Scripts {
 
     <script>

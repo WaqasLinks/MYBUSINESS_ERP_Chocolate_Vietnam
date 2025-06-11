@@ -7,7 +7,7 @@
 
 
 
-<center><h2>Store Orders</h2></center>
+<center><h2>Finished Products Order List</h2></center>
 
 @*<p>
         @Html.ActionLink("Create New Product", "Create")
@@ -15,11 +15,11 @@
 
 <div class="col-sm-12 noPrint">
     @*<button type="submit" id="CreateSO" class="btn btn-info add-new"><i class="fa fa-plus"></i>Save & Print</button>*@
-    <a href="#" id="printMe" class="btn btn-info "><i class=""></i> Print</a>
-    <a href="/Products/Create" id="createProduct" class="btn btn-success "><i class=""></i> New Product</a> |
-    @Html.ActionLink("Upload Excel", "Upload", new object { }, new { @class = "btn btn-warning" }) |
-    <a href="/SOSR/Create?IsReturn=false" id="createSOSR" class=""><i class=""></i> New Sale</a> |
-    <a href="/POPR/Create?IsReturn=false" id="createPOPR" class=""><i class=""></i> New Purchase</a>
+    <a style="display:none;" href="#" id="printMe" class="btn btn-info "><i class=""></i> Print</a>
+    <a href="/StoreOrder/CreateOrder" id="createProduct" class="btn btn-success "><i class=""></i> Order Finished Products</a> 
+    @*@Html.ActionLink("Upload Excel", "Upload", new object { }, new { @class = "btn btn-warning" }) |*@
+    <a style="display:none;" href="/SOSR/Create?IsReturn=false" id="createSOSR" class=""><i class=""></i> New Sale</a> 
+    <a style="display:none;" href="/POPR/Create?IsReturn=false" id="createPOPR" class=""><i class=""></i> New Purchase</a>
 </div>
 
 

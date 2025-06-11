@@ -1,6 +1,6 @@
 ﻿@model List<MYBUSINESS.Models.EditOrderCategoryViewModel>
 
-<h2 style="text-align:center; margin-top: 20px;">Edit Finish Product Order</h2>
+<h2 style="text-align:center; margin-top: 20px;">@(ViewBag.IsValidated ? "View" : "Edit") Finish Product Order</h2>
 @{
     bool isReadonly = ViewBag.ReadonlyMode ?? false;
     int currentStoreId = ViewBag.CurrentStoreId;
@@ -19,7 +19,7 @@
                     {
                         <div class="form-group">
                             <label>Store:</label>
-                            @Html.DropDownList("storeId", ViewBag.Stores as SelectList, new { @class = "form-control" })
+                            @Html.DropDownList("storeId", ViewBag.Stores as SelectList, new { @class = "form-control  readonly" })
                         </div>
                     }
                     else
@@ -72,7 +72,7 @@
                     {
                         <button type="submit" class="btn btn-success">Save Changes</button>
                     }
-                    <button type="button" class="btn btn-primary" id="btnValidate">Validate</button>
+                <button type="button" class="btn btn-primary" id="btnValidate" @(isReadonly ? "disabled" : "")>Validate</button>
                 </div>
             </div> <!-- Closing box -->
         </section> <!-- Closing content -->

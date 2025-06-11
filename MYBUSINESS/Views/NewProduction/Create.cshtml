@@ -15,7 +15,7 @@
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Create NewProduction</h3>
+                        <h3 class="box-title">Create New Production</h3>
                     </div>
 
                     <div class="box-body">
@@ -52,7 +52,7 @@
                             @Html.DropDownListFor(
 model => model.NewProduction.ProductId,
 (SelectList)ViewBag.ProductList,
-"Select a Product",
+"Select a Product to Manufacture",
 new { @class = "form-control product-dropdown", @id = "productDropdown" }
 )
                             @Html.ValidationMessageFor(model => model.NewProduction.ProductId, "", new { @class = "text-danger" })
@@ -69,7 +69,8 @@ new { @class = "form-control product-dropdown", @id = "productDropdown" }
 
 
                         <div class="form-group">
-                            @Html.LabelFor(model => Model.NewProduction.ProductionDate, htmlAttributes: new { @class = "control-label" })
+                            @*@Html.LabelFor(model => Model.NewProduction.ProductionDate, htmlAttributes: new { @class = "control-label" })*@
+                            <label>Production Date</label>
                             @Html.TextBoxFor(model => Model.NewProduction.ProductionDate, new { @class = "form-control", type = "date" })
                             @Html.ValidationMessageFor(model => Model.NewProduction.ProductionDate, "", new { @class = "text-danger" })
                         </div>
@@ -221,7 +222,7 @@ new { @class = "form-control product-dropdown", @id = "productDropdown" }
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Ingredients</h3>
+                        <h3 class="box-title">Create Main Ingredients</h3>
                     </div>
 
                     <div class="box-body">
@@ -288,7 +289,7 @@ new { @class = "form-control product-dropdown", @id = "productDropdown" }
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Product Type</h3>
+                        <h3 class="box-title">Secondary Materials</h3>
                     </div>
 
                     <div class="box-body">

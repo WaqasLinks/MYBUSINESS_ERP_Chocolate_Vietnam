@@ -9,13 +9,13 @@
                         <table class="table table-hover cell-border" id="SelectedBOMIndex">
                             <thead>
                                 <tr>
-                                    <th>@Html.DisplayNameFor(model => model.First().Id)</th>
-                                    <th>@Html.DisplayNameFor(model => model.First().Remarks)</th>
-                                    <th>@Html.DisplayNameFor(model => model.First().Saleable)</th>
-                                    <th>@Html.DisplayNameFor(model => model.First().Purchasable)</th>
-                                    <th>@Html.DisplayNameFor(model => model.First().Manufacturable)</th>
-                                    <th>@Html.DisplayNameFor(model => model.First().ShelfLife)</th>
-                                    <th>@Html.DisplayNameFor(model => model.First().TimeUnit)</th>
+                                    <th>@Html.DisplayNameFor(m => m.First().Id)</th>
+                                    <th>@Html.DisplayNameFor(m => m.First().ProductName)</th>
+                                    <th>@Html.DisplayNameFor(m => m.First().ProductionProcessCateogry)</th>
+                                    <th>@Html.DisplayNameFor(m => m.First().Unit)</th>
+                                    <th>@Html.DisplayNameFor(m => m.First().CreateDate)</th>
+                                    <th>@Html.DisplayNameFor(m => m.First().UpdateDate)</th>
+                                    <th style="display:none">@Html.DisplayNameFor(m => m.First().TimeUnit)</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -24,12 +24,12 @@
                                 {
                                     <tr>
                                         <td>@Html.DisplayFor(modelItem => item.Id)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.Remarks)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.Saleable)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.Purchasable)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.Manufacturable)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.ShelfLife)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.TimeUnit)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.ProductName)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.ProductionProcessCateogry)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Unit)</td>
+                                        <td style="display:none;">@Html.DisplayFor(modelItem => item.Manufacturable)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.CreateDate)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.UpdateDate)</td>
                                         <td>
                                             @Html.ActionLink("Update", "Edit", new { id = item.Id }, new { @class = "btn btn-info" }) |
                                             @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
