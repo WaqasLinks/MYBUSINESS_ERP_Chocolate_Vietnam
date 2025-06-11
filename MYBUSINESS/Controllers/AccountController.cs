@@ -1,14 +1,15 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
+using MYBUSINESS.Models;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
 {
@@ -17,6 +18,7 @@ namespace MYBUSINESS.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private BusinessContext db = new BusinessContext();
 
         public AccountController()
         {
@@ -50,6 +52,110 @@ namespace MYBUSINESS.Controllers
             {
                 _userManager = value;
             }
+        }
+
+        public ActionResult Index()
+        {
+            ViewBag.Employees = new SelectList(db.AspNetUsers.OrderBy(x => x.UserName), "Id", "UserName");
+            //ViewBag.LeaveTypes = new SelectList(db.LeaveTypes, "Id", "Name");
+            ViewBag.Roles = new SelectList(db.AspNetRoles.OrderBy(x => x.Name), "Id", "Name");
+            //var aspNetUserClaims = db.AspNetUserClaims.Include(a => a.AspNetUser);
+
+            List<UserRoleModel> usersAndRoles = new List<UserRoleModel>(); // Adding this model just to have it in a nice list.
+                                                                           //var users = db.AspNetUsers;
+            List<AspNetUser> AspNetUsers = db.AspNetUsers.ToList<AspNetUser>();
+            foreach (AspNetUser user in AspNetUsers)//db.AspNetUsers)
+            {
+                foreach (AspNetRole role in user.AspNetRoles)
+                {
+                    usersAndRoles.Add(new UserRoleModel
+                    {
+                        UserId = user.Id,
+                        UserName = user.UserName,
+                        RoleId = role.Id,
+                        RoleName = role.Name
+                    });
+                }
+            }
+            //var userRoles= usersAndRoles.AsQueryable<UserRoleModel>();
+            //return View(await userRoles.ToListAsync().ConfigureAwait(false));
+            return View(usersAndRoles);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Index([Bind(Include = "UserId,UserName,RoleId,RoleName")] UserRoleModel userRoleModel)
+        {
+            if (ModelState.IsValid)
+            {
+
+                userRoleModel.RoleName = db.AspNetRoles.FirstOrDefault(x => x.Id == userRoleModel.RoleId).Name;
+                switch (userRoleModel.RoleName)
+                {
+                    case "Admin":
+                        await UserManager.AddToRoleAsync(userRoleModel.UserId, "Admin");
+                        await UserManager.AddToRoleAsync(userRoleModel.UserId, "Manager");
+                        await UserManager.AddToRoleAsync(userRoleModel.UserId, "User");
+                        break;
+                    case "Manager":
+                        await UserManager.AddToRoleAsync(userRoleModel.UserId, "Manager");
+                        await UserManager.AddToRoleAsync(userRoleModel.UserId, "User");
+                        break;
+                    case "User":
+                        await UserManager.AddToRoleAsync(userRoleModel.UserId, "User");
+                        break;
+                }
+
+            }
+
+            //ViewBag.UserId = new SelectList(db.AspNetUsers, "Id", "Hometown", userRoleModel.UserId);
+            //return View(userRoleModel);
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        //public async Task<ActionResult> DeleteRight([Bind(Include = "Id,UserId,ClaimType,ClaimValue")] AspNetUserClaim aspNetUserClaim)
+        public async Task<ActionResult> DeleteRole(string UserIdRoleId)
+        {
+            string UserId = UserIdRoleId.Split(',').First();
+            string RoleId = UserIdRoleId.Split(',').Last();
+
+            string RoleName = db.AspNetRoles.FirstOrDefault(x => x.Id == RoleId).Name;
+            switch (RoleName)
+            {
+                case "Admin":
+                    await UserManager.RemoveFromRoleAsync(UserId, "Admin");
+                    await UserManager.RemoveFromRoleAsync(UserId, "Manager");
+                    await UserManager.RemoveFromRoleAsync(UserId, "User");
+                    break;
+                case "Manager":
+                    await UserManager.RemoveFromRoleAsync(UserId, "Manager");
+                    await UserManager.RemoveFromRoleAsync(UserId, "User");
+                    break;
+                case "User":
+                    await UserManager.RemoveFromRoleAsync(UserId, "User");
+                    break;
+            }
+
+            //AspNetUserClaim aspNetUserClaim = await db.AspNetUserClaims.FindAsync(UserIdRoleId);
+            //db.AspNetUserClaims.Remove(aspNetUserClaim);
+            //await db.SaveChangesAsync();
+            return RedirectToAction("Index");
+
+        }
+
+
+
+        // The Authorize Action is the end point which gets called when you access any
+        // protected Web API. If the user is not logged in then they will be redirected to 
+        // the Login page. After a successful login you can call a Web API.
+        [HttpGet]
+        public ActionResult Authorize()
+        {
+            var claims = new ClaimsPrincipal(User).Claims.ToArray();
+            var identity = new ClaimsIdentity(claims, "Bearer");
+            AuthenticationManager.SignIn(identity);
+            return new EmptyResult();
         }
 
         //
@@ -136,7 +242,8 @@ namespace MYBUSINESS.Controllers
 
         //
         // GET: /Account/Register
-        [AllowAnonymous]
+        //[AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         public ActionResult Register()
         {
             return View();
@@ -145,8 +252,9 @@ namespace MYBUSINESS.Controllers
         //
         // POST: /Account/Register
         [HttpPost]
-        [AllowAnonymous]
+        //[AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
@@ -155,20 +263,93 @@ namespace MYBUSINESS.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
+
+                    switch (model.Role)
+                    {
+                        case "Admin":
+                            await UserManager.AddToRoleAsync(user.Id, "Admin");
+                            await UserManager.AddToRoleAsync(user.Id, "Manager");
+                            await UserManager.AddToRoleAsync(user.Id, "User");
+                            break;
+                        case "Manager":
+                            await UserManager.AddToRoleAsync(user.Id, "Manager");
+                            await UserManager.AddToRoleAsync(user.Id, "User");
+                            break;
+                        case "User":
+                            await UserManager.AddToRoleAsync(user.Id, "User");
+                            break;
+                    }
+
+
+
+                    //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+                    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "AspNetUsers");
                 }
                 AddErrors(result);
             }
 
             // If we got this far, something failed, redisplay form
+            //ViewBag.Departments = db.Departments;
+            return View(model);
+        }
+        [HttpPost]
+        //[AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> UpdateUser(UpdateUserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email};
+                //var result = await UserManager.CreateAsync(user, model.Password);
+                var result = await UserManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    await UserManager.RemoveFromRoleAsync(user.Id, "Admin");
+                    await UserManager.RemoveFromRoleAsync(user.Id, "Manager");
+                    await UserManager.RemoveFromRoleAsync(user.Id, "User");
+
+
+                    switch (model.Role)
+                    {
+                        case "Admin":
+                            await UserManager.AddToRoleAsync(user.Id, "Admin");
+                            await UserManager.AddToRoleAsync(user.Id, "Manager");
+                            await UserManager.AddToRoleAsync(user.Id, "User");
+                            break;
+                        case "Manager":
+                            await UserManager.AddToRoleAsync(user.Id, "Manager");
+                            await UserManager.AddToRoleAsync(user.Id, "User");
+                            break;
+                        case "User":
+                            await UserManager.AddToRoleAsync(user.Id, "User");
+                            break;
+                    }
+
+
+
+                    //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+                    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
+                    // Send an email with this link
+                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+                    return RedirectToAction("AspNetUsers", "Leads");
+                }
+                AddErrors(result);
+            }
+
+            // If we got this far, something failed, redisplay form
+            //ViewBag.Departments = db.Departments;
             return View(model);
         }
 
@@ -392,7 +573,19 @@ namespace MYBUSINESS.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
+        }
+        public ActionResult SignOut()
+        {
+            //1
+            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            //2
+            //var AuthenticationManager = HttpContext.GetOwinContext().Authentication;
+            //AuthenticationManager.SignOut();
+            //3
+            //AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie, DefaultAuthenticationTypes.ExternalCookie);
+            //Session.Abandon();
+            return RedirectToAction("Login", "Account");
         }
 
         //
@@ -449,7 +642,8 @@ namespace MYBUSINESS.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Home");
+            //return RedirectToAction("Index", "Leads");
+            return RedirectToAction("Index", "Dashboard");
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult

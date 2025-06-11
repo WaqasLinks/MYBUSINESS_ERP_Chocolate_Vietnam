@@ -79,8 +79,29 @@ namespace MYBUSINESS.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
-    }
 
+        [Display(Name = "Role")]
+        public string Role { get; set; }
+    }
+    public class UpdateUserViewModel
+    {
+        [Required]
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+
+
+        [Display(Name = "Hometown")]
+        public string Hometown { get; set; }
+
+
+        [Display(Name = "Department")]
+        public int DepartmentId { get; set; }
+
+        [Display(Name = "Role")]
+        public string Role { get; set; }
+
+    }
     public class ResetPasswordViewModel
     {
         [Required]

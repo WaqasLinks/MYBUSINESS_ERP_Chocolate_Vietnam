@@ -14,7 +14,7 @@ namespace MYBUSINESS
             var hubConfig = new HubConfiguration();
             hubConfig.EnableDetailedErrors = true;
             app.MapSignalR();
-            //ConfigureAuth(app);
+            ConfigureAuth(app);
         }
     }
 }

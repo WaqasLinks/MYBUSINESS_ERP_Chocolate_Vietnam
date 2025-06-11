@@ -29,9 +29,5 @@ namespace MYBUSINESS.Models
         {
             return new ApplicationDbContext();
         }
-
-        public System.Data.Entity.DbSet<MYBUSINESS.Models.SO> SOes { get; set; }
-
-        public System.Data.Entity.DbSet<MYBUSINESS.Models.Customer> Customers { get; set; }
     }
 }
