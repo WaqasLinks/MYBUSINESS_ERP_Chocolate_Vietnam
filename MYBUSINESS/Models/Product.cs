@@ -48,6 +48,10 @@ namespace MYBUSINESS.Models
             this.OrderItemPProducts = new HashSet<OrderItemPProduct>();
             this.PrintedPackagingDetails = new HashSet<PrintedPackagingDetail>();
             this.PackagingProductions = new HashSet<PackagingProduction>();
+            this.PaperNewProductions = new HashSet<PaperNewProduction>();
+            this.PaperQuantityToProduces = new HashSet<PaperQuantityToProduce>();
+            this.PaperSubItemProductions = new HashSet<PaperSubItemProduction>();
+            this.SPDReceivers = new HashSet<SPDReceiver>();
         }
     
         public decimal Id { get; set; }
@@ -141,5 +145,13 @@ namespace MYBUSINESS.Models
         public virtual ICollection<PrintedPackagingDetail> PrintedPackagingDetails { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PackagingProduction> PackagingProductions { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PaperNewProduction> PaperNewProductions { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PaperQuantityToProduce> PaperQuantityToProduces { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PaperSubItemProduction> PaperSubItemProductions { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SPDReceiver> SPDReceivers { get; set; }
     }
 }

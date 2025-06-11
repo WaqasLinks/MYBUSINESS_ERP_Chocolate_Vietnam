@@ -1030,7 +1030,7 @@ namespace MYBUSINESS.Controllers
             string prefix = "HN";
             string datePart = DateTime.Now.ToString("yyyyMMdd"); // Format current date as YYYYMMDD
             //string formattedSerial = $"{prefix}-{datePart}-{serialNumber:D3}"; // Format serial with leading zeros for int
-            string formattedSerial = $"{prefix}-{datePart}-{maxId:000}"; // Format serial with leading zeros for decimal
+            string formattedSerial = $"{maxId:000}"; // Format serial with leading zeros for decimal
 
             // Set ViewBag.SuggestedNewProductId to the formatted serial number
             ViewBag.SuggestedNewProductIds = formattedSerial;

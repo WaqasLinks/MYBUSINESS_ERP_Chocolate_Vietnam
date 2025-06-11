@@ -77,7 +77,8 @@ new { @class = "form-control product-dropdown", @id = "productDropdown", @readon
 
 
                         <div class="form-group">
-                            @Html.LabelFor(model => Model.PostProduction.ProductionDate, htmlAttributes: new { @class = "control-label" })
+                            @*@Html.LabelFor(model => Model.PostProduction.ProductionDate, htmlAttributes: new { @class = "control-label" })*@
+                            <label>Production Date</label>
                             @Html.TextBoxFor(model => Model.PostProduction.ProductionDate, new { @class = "form-control", type = "date" })
                             @Html.ValidationMessageFor(model => Model.PostProduction.ProductionDate, "", new { @class = "text-danger" })
                         </div>
@@ -329,7 +330,7 @@ new { @class = "form-control product-dropdown", @id = "productDropdown", @readon
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Product Type</h3>
+                        <h3 class="box-title">Secondary Materials</h3>
                     </div>
 
 
@@ -345,7 +346,7 @@ new { @class = "form-control product-dropdown", @id = "productDropdown", @readon
                                     @*<th style="width: 12%;">Name</th>*@
                                     <th style="width: 20%;">Qty</th>
                                     <th style="width: 10%;">Unit</th>
-                                    <th style="width: 15%;">P.Type</th>
+                                    <th style="width: 15%;">Secondary Materials Type</th>
                                     @*<th style="width: 10%;">AvailableIn</th>*@
                                     @*<th style="width: 8%;">Unit</th>
         <th style="width: 8%;"></th>*@

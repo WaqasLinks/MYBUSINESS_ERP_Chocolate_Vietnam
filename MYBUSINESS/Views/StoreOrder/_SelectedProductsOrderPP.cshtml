@@ -30,13 +30,14 @@
                                         <th>
                                             @Html.DisplayNameFor(model => model.OrderDate)
                                         </th>
-
+                                        <th>Status</th>
                                         <th class="no-print"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var item in Model)
                                     {
+                                        bool isReceived = ViewBag.ReceivedOrderIds != null && ViewBag.ReceivedOrderIds.Contains(item.Id);
                                         <tr>
                                             <td class="ProductIdForSearch">
                                                 @Html.DisplayFor(modelItem => item.Id)
@@ -59,7 +60,20 @@
                                             <td class="ProductNameForSearch">
                                                 @Html.DisplayFor(modelItem => item.OrderDate)
                                             </td>
-
+                                            <td>
+                                                @if (isReceived)
+                                                {
+                                                    <span class="label label-success">Completed</span>
+                                                }
+                                                else if (item.Validate == true)
+                                                {
+                                                    <span class="label label-primary">Validated</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="label label-default">New</span>
+                                                }
+                                            </td>
                                             <td class="no-print">
                                                 @Html.ActionLink("Update", "EditOrderPP", new { orderId = item.Id }, new { @class = "btn btn-info" })
                                                 @Html.ActionLink("Print", "PrintOrderPPdf", new { orderId = item.Id }, new { @class = "btn btn-success" })
@@ -87,8 +101,8 @@
 
                                                 <div class="dropdown">
                                                     @*<button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        more ...
-                                                    </button>*@
+                    more ...
+                </button>*@
                                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                         <a class="dropdown-item" href="@Url.Action("SearchProduct", "SOSR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product in Sales">Search in Sales History</a>
                                                         <a class="dropdown-item" href="@Url.Action("SearchProduct", "POPR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product in Purchasess">Search in Purchases History</a>

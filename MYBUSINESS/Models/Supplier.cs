@@ -24,6 +24,7 @@ namespace MYBUSINESS.Models
             this.SPackagings = new HashSet<SPackaging>();
             this.PPReceivers = new HashSet<PPReceiver>();
             this.PrintedPackagings = new HashSet<PrintedPackaging>();
+            this.SPackgingReceivers = new HashSet<SPackgingReceiver>();
         }
     
         public decimal Id { get; set; }
@@ -53,5 +54,7 @@ namespace MYBUSINESS.Models
         public virtual ICollection<PPReceiver> PPReceivers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PrintedPackaging> PrintedPackagings { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SPackgingReceiver> SPackgingReceivers { get; set; }
     }
 }

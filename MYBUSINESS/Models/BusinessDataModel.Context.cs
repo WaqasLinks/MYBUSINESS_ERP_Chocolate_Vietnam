@@ -90,7 +90,6 @@ namespace MYBUSINESS.Models
         public virtual DbSet<Inventory> Inventories { get; set; }
         public virtual DbSet<OrderItem> OrderItems { get; set; }
         public virtual DbSet<OrderItemPProduct> OrderItemPProducts { get; set; }
-        public virtual DbSet<OrderPProduct> OrderPProducts { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<StoreOrderReceipt> StoreOrderReceipts { get; set; }
         public virtual DbSet<PrintedPackagingDetail> PrintedPackagingDetails { get; set; }
@@ -98,6 +97,13 @@ namespace MYBUSINESS.Models
         public virtual DbSet<PrintedPackaging> PrintedPackagings { get; set; }
         public virtual DbSet<Store> Stores { get; set; }
         public virtual DbSet<PackagingProduction> PackagingProductions { get; set; }
+        public virtual DbSet<OrderPProduct> OrderPProducts { get; set; }
+        public virtual DbSet<PaperNewProduction> PaperNewProductions { get; set; }
+        public virtual DbSet<PaperQuantityToProduce> PaperQuantityToProduces { get; set; }
+        public virtual DbSet<PaperSubItemProduction> PaperSubItemProductions { get; set; }
+        public virtual DbSet<PaperPostProduction> PaperPostProductions { get; set; }
+        public virtual DbSet<SPDReceiver> SPDReceivers { get; set; }
+        public virtual DbSet<SPackgingReceiver> SPackgingReceivers { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {
@@ -308,6 +314,15 @@ namespace MYBUSINESS.Models
                 new ObjectParameter("PackagingProductionId", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetPackagingProductionDetails_Result>("sp_GetPackagingProductionDetails", packagingProductionIdParameter);
+        }
+    
+        public virtual ObjectResult<GetProductionDetailsById_Result> GetProductionDetailsById(Nullable<int> productionId)
+        {
+            var productionIdParameter = productionId.HasValue ?
+                new ObjectParameter("ProductionId", productionId) :
+                new ObjectParameter("ProductionId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductionDetailsById_Result>("GetProductionDetailsById", productionIdParameter);
         }
     }
 }
