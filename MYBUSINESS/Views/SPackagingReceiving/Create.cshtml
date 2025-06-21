@@ -138,7 +138,7 @@
 
 
                                 <td style="display:none;">
-                                    @Html.DropDownList("PurchaseOrderDetail[" + sNo + "].SaleType", new SelectList(ViewBag.OptionLst, "Value", "Text", item.SaleType),
+                                    @Html.DropDownList("SPackagingDetail[" + sNo + "].SaleType", new SelectList(ViewBag.OptionLst, "Value", "Text", item.SaleType),
                                         new { @class = "form-control", id = "saleType" + sNo })
                                 </td>
                                 @*<td>
@@ -248,17 +248,17 @@
                             <input type="text" autocomplete="off" readonly class="form-control" name="SPackagingDetail[0].Unit" id="unit0">
                         </td>
                         <td style="display:none;">
-                            @Html.DropDownList("SPackagingDetail[0].IsPack", new SelectList(ViewBag.UnitTypeOptionList, "Value", "Text"),
+                            @Html.DropDownList("SPackgingReceiver[0].IsPack", new SelectList(ViewBag.UnitTypeOptionList, "Value", "Text"),
                                 new { @class = "form-control", id = "isPack0" })
                         </td>
                         <td style="display:none;">
-                            <input type="text" autocomplete="off" readonly class="form-control" name="SPackagingDetail[0].PerPack" id="perPack0">
+                            <input type="text" autocomplete="off" readonly class="form-control" name="SPackgingReceiver[0].PerPack" id="perPack0">
                         </td>
                         <td style="display:none;">
                             <input type="text" readonly tabindex="-1" class="form-control classBGcolor" name="itemTotal0" id="itemTotal0">
                         </td>
                         <td style="display:none;">
-                            @Html.DropDownList("SPackagingDetail[0].SaleType", new SelectList(ViewBag.OptionLst, "Value", "Text"),
+                            @Html.DropDownList("SPackgingReceiver[0].SaleType", new SelectList(ViewBag.OptionLst, "Value", "Text"),
                                 new { @class = "form-control", id = "saleType0" })
                         </td>
                         <td>

@@ -199,7 +199,7 @@ new { @class = "form-control" }
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Ingredients</h3>
+                        <h3 class="box-title">Main Ingredients</h3>
                     </div>
 
 
@@ -223,7 +223,7 @@ new { @class = "form-control" }
                                     int sNo = 0;
                                     foreach (var item in Model.SubItem)
                                     {
-                                        if (item.Product != null && (item.Product.PType == 5 || item.Product.PType == 6))
+                                        if (item.Product != null && (item.Product.PType == 5  || item.Product.PType == 6 && item.Quantity > 0))
 
                                         {
                                             <tr>
@@ -271,7 +271,7 @@ new { @class = "form-control" }
             <div class="col-md-6">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Products Types</h3>
+                        <h3 class="box-title">Secondary Materials</h3>
                     </div>
 
                     <div class="box-body">
@@ -280,7 +280,7 @@ new { @class = "form-control" }
                                 <tr>
                                     <th style="width: 5%;">#</th>
                                     <th style="width: 50%;">Name</th>
-                                    <th style="width: 12%;">Qty</th>
+                                    <th style="width: 12%; display:none;">Qty</th>
                                     <th style="width: 20%;">Unit</th>
                                 </tr>
                             </thead>
@@ -292,7 +292,7 @@ new { @class = "form-control" }
                                     {
                                         // Ensure item.Product is not null before accessing its properties
                                         //if (item.Product != null && (item.Product.FinishedProduct == true || item.Product.PType == 1))
-                                        if (item.Product != null && (item.Product.PType == 1 || item.Product.PType == 2 || item.Product.PType == 3))
+                                        if (item.Product != null && (item.Product.PType == 1 || item.Product.PType == 6 || item.Product.PType == 3) && item.Quantity == null)
                                         {
                                             <tr>
                                                 <td>@(sNo + 1)</td>
@@ -319,7 +319,7 @@ new { @class = "form-control" }
       )
     </td>-->
 
-                                                <td>
+                                                <td style="display: none;">
                                                     <input type="text" name="SubItem[@sNo].Quantity" value="@item.Quantity"
                                                            class="form-control"
                                                            @(item.Product?.PType == 1 || item.Product?.PType == 3 ? "readonly" : "") />

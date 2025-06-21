@@ -19,11 +19,11 @@ namespace MYBUSINESS.Models
         {
             this.Expenses = new HashSet<Expense>();
             this.Loans = new HashSet<Loan>();
-            this.PORecivers = new HashSet<POReciver>();
             this.POes = new HashSet<PO>();
-            this.SPackagings = new HashSet<SPackaging>();
+            this.PORecivers = new HashSet<POReciver>();
             this.PPReceivers = new HashSet<PPReceiver>();
             this.PrintedPackagings = new HashSet<PrintedPackaging>();
+            this.SPackagings = new HashSet<SPackaging>();
             this.SPackgingReceivers = new HashSet<SPackgingReceiver>();
         }
     
@@ -45,15 +45,15 @@ namespace MYBUSINESS.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Loan> Loans { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<POReciver> PORecivers { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PO> POes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SPackaging> SPackagings { get; set; }
+        public virtual ICollection<POReciver> PORecivers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PPReceiver> PPReceivers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PrintedPackaging> PrintedPackagings { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SPackaging> SPackagings { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SPackgingReceiver> SPackgingReceivers { get; set; }
     }

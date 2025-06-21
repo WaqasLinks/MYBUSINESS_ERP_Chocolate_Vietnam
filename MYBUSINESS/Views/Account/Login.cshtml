@@ -1,117 +1,139 @@
 @using MYBUSINESS.Models
 @model LoginViewModel
 @{
-  ViewBag.Title = "Sign in";
-  Layout = "~/Views/Shared/_LayoutAnonymous.cshtml";
+    ViewBag.Title = "Sign in";
+    Layout = "~/Views/Shared/_LayoutAnonymous.cshtml";
 }
 
-@{ //User.Identity.Name
+<style>
+   
 
-  //string UserPrincipalName = System.DirectoryServices.AccountManagement.UserPrincipal.Current.UserPrincipalName;
-  //bool IsUserActive = System.DirectoryServices.AccountManagement.UserPrincipal.Current.Enabled.Value;
+    .login-box {
+        width: 360px;
+        margin: 7% auto;
+    }
 
-  //string Name = new System.Security.Principal.WindowsPrincipal(System.Security.Principal.WindowsIdentity.GetCurrent()).Identity.Name;
-  //string Name3 = new System.Security.Principal.WindowsPrincipal(System.Security.Principal.WindowsIdentity.GetCurrent()).Identity.AuthenticationType.ToString();
-  //string UserName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-  //huzaifa.ali@intechww.com
-  //string UserName1 = UserName.Substring(UserName.IndexOf("\\")).Replace("\\", "");
+    .login-box-body {
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
 
-  //UserName1 = UserName1 + "@intechww.com";
-  //List<string> loginsList = new List<string>();
+    .login-box-msg {
+        margin: 0 0 20px;
+        text-align: center;
+        font-size: 18px;
+        color: #555;
+    }
 
-  //string id1 = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-  ////string id2 = Page.User.Identity.Name;
-  //string id3 = Html.ViewContext.HttpContext.User.Identity.Name;
-  //string id4 = Request.LogonUserIdentity.Name;
-  //loginsList.Add(id1);
-  ////loginsList.Add(id2);
-  //loginsList.Add(id3);
-  //loginsList.Add(id4);
-  //loginsList.Add("------");
+    .form-control {
+        height: 44px;
+        font-size: 16px;
+        border-radius: 3px;
+    }
 
+    .btn-signin {
+        height: 44px;
+        padding: 10px 20px;
+        font-size: 16px;
+        background: #3c8dbc;
+        border: none;
+        border-radius: 3px;
+    }
 
+        .btn-signin:hover {
+            background: #367fa9;
+        }
 
-  //var path = Server.MapPath(@"~/myLog.txt");
-  //System.IO.File.WriteAllLines(path, loginsList);
+    .has-feedback .form-control {
+        padding-left: 40px;
+    }
 
-  //string IsAuthenticated = System.Security.Principal.WindowsIdentity.GetCurrent().IsAuthenticated.ToString();
+    .form-control-feedback {
+        left: 0;
+        color: #777;
+        width: 38px;
+        height: 38px;
+        line-height: 38px;
+    }
 
+    .text-danger {
+        font-size: 14px;
+    }
+</style>
 
-  //Html.Hidden("UserName", UserName);
-  //Html.TextBox("IsAuthenticated", IsAuthenticated, new { @class = "form-control", autocomplete = "off", style = "display: none;" });
+<div class="login-page">
+    <div class="login-box">
+        <div class="login-logo">
+            <h2 style="text-align:center;"><b>Sign in</b></h2>
+        </div>
 
+        <div class="login-box-body">
+            <p class="login-box-msg">Sign in to start your session</p>
 
-  <div class="register-box">
-    <div class="register-logo">
-      <h2><b>Sign in</b></h2>
-    </div>
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-    <div class="card">
-      <div class="card-body register-card-body">
-        <p class="login-box-msg">Sign in to start your session</p>
-        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", autocomplete = "off", role = "form", name = "accountLogin", id = "accountLogin" }))
-        {
+                <div class="form-group has-feedback">
+                    @Html.TextBoxFor(m => m.Email, new
+                    {
+                        @class = "form-control",
+                        placeholder = "Email"
+                    })
+                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                </div>
 
-          @Html.AntiForgeryToken()
+                <div class="form-group has-feedback">
+                    @Html.PasswordFor(m => m.Password, new
+                    {
+                        @class = "form-control",
+                        placeholder = "Password"
+                    })
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                </div>
 
-          @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-          <form action="../../index.html" method="post">
-            <div class="input-group mb-3">
-              @Html.TextBoxFor(m => m.Email, new { @class = "form-control   ", placeholder = "Email", autocomplete = "off"  })
-              @*@Html.TextBox("Email", (string)ViewBag.Eamil, new { @class = "form-control", autocomplete = "off", placeholder = "Email", style = "display: none;" })*@
-              @*@Html.TextBox("Email", (string)ViewBag.ADUser, new { @class = "form-control", autocomplete = "off", placeholder = "Email", style = "display: none;" })*@
-              <div class="input-group-append">
-                      <div class="input-group-text">
-                        <span class="fas fa-user"></span>
-                      </div>
+                <div class="row">
+                    <div class="col-xs-8">
+                        <div class="checkbox icheck">
+                            <label>
+                                @*<input type="checkbox"> Remember Me*@
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <button type="submit" class="btn btn-primary btn-block btn-signin">Sign In</button>
                     </div>
                 </div>
-              @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+            }
+        </div>
+    </div>
+</div>
 
-              <div class="input-group mb-3">
-                @Html.PasswordFor(m => m.Password, new { @class = "form-control fas fa-lock", placeholder = "Password", autocomplete = "off" })
-                @*@Html.Password("Password", "●●●●●●●●●●", new { @class = "form-control fas fa-lock", autocomplete = "off", placeholder = "Password", style = "display: none;" })*@
-                <div class="input-group-append">
-                    <div class="input-group-text">
-                      <span class="fas fa-lock"></span>
-                    </div>
-                  </div>
-              </div>
-              @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+<!-- jQuery 3 -->
+<script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap 3.3.7 -->
+<script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- iCheck -->
+<script src="../../plugins/iCheck/icheck.min.js"></script>
 
+<script>
+    $(function () {
+        // Focus on email field when page loads
+        $('#Email').focus();
 
-              <div class="col-4">
-                <button type="submit" class="btn btn-primary btn-block">SignIn</button>
-              </div>
-          </form>
+        // Initialize iCheck
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_square-blue',
+            radioClass: 'iradio_square-blue',
+            increaseArea: '20%'
+        });
 
-
-          @*<a href="login.cshtml" class="text-center">Create New Account</a>*@
-        }
-      </div>
-
-      <!-- /.form-box -->
-    </div><!-- /.card -->
-  </div>
-}
-
-<!-- /.register-box -->
-<!-- jQuery -->
-<script src="../../plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- AdminLTE App -->
-<script src="../../dist/js/adminlte.min.js"></script>
-
-<script type="text/javascript">
-
-  $(document).ready(function () {
-    //$('#Email').val('admin.intech@intech.com');
-    //$('#Password').val("●●●●●●●●●●");
-
-    //$('#accountLogin').attr('autocomplete', 'off');
-    //document.forms["accountLogin"].submit();
-
-    //$('#submit_100').trigger('click');
-  });
+        // Disable autocomplete
+        $('input').attr('autocomplete', 'off');
+    });
 </script>

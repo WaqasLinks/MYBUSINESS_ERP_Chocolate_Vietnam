@@ -4,17 +4,37 @@
     <section class="content">
         <div class="row">
             <div class="col-xs-12">
+                @using (Html.BeginForm())
+                {
+                    <div class="form-inline mb-3" style="margin-bottom: 15px;">
+                        <div class="form-group">
+                            <label style="margin-right: 10px;">Filter by Product Type:</label>
+                            @Html.DropDownList("pType",
+                                new SelectList(ViewBag.ProductTypes, "Value", "Text", ViewBag.CurrentPType),
+                                "-- All Product Types --",
+                                new
+                                     {
+                                    @class = "form-control",
+                                    onchange = "this.form.submit()",
+                                    style = "width: 200px; display: inline-block;"
+                                })
+                        </div>
+                        <noscript>
+                            <input type="submit" value="Filter" class="btn btn-primary" />
+                        </noscript>
+                    </div>
+                }
                 <div class="box">
                     <div class="box-body">
                         <table class="table table-hover cell-border" id="SelectedBOMIndex">
                             <thead>
                                 <tr>
                                     <th>@Html.DisplayNameFor(m => m.First().Id)</th>
-                                    <th>@Html.DisplayNameFor(m => m.First().ProductName)</th>
-                                    <th>@Html.DisplayNameFor(m => m.First().ProductionProcessCateogry)</th>
-                                    <th>@Html.DisplayNameFor(m => m.First().Unit)</th>
-                                    <th>@Html.DisplayNameFor(m => m.First().CreateDate)</th>
-                                    <th>@Html.DisplayNameFor(m => m.First().UpdateDate)</th>
+                                    <th>Product Name</th>
+                                    <th>Production Process Cateogry)</th>
+                                    <th>Unit</th>
+                                    <th>Create Date)</th>
+                                    <th>Update Date</th>
                                     <th style="display:none">@Html.DisplayNameFor(m => m.First().TimeUnit)</th>
                                     <th>Actions</th>
                                 </tr>

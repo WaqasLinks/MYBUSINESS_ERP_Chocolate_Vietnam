@@ -1,4 +1,4 @@
-﻿var productColumns = [{ name: 'Id', minWidth: '50px' }, { name: 'Product', minWidth: '300px' }, { name: 'Unit', minWidth: '100px' }, { name: 'Stock', minWidth: '50px' }];
+﻿var productColumns = [{ name: 'Id', minWidth: '50px' }, { name: 'Product', minWidth: '300px' }, { name: 'Unit', minWidth: '100px' }];
 //var products = []; //[['Ciplet', '10', '60'], ['Gaviscon', '85', '12'], ['Surficol', '110', '8']];
 var products = new Array();
 
@@ -124,7 +124,7 @@ function OnTypeName(param) {
 
                 this.value = ui.item[1] || ''; // Product Name
                 $('#perPack' + clickedIdNum).val(ui.item[4] || ''); // PerPack
-                $('#salePrice' + clickedIdNum).val(ui.item[2] || ''); // Sale Price
+                /*$('#salePrice' + clickedIdNum).val(ui.item[2] || '');*/ // Sale Price
                 $('#quantity' + clickedIdNum).val(parseFloat(1).toFixed(6));
                 $('#idn' + clickedIdNum).val(selectedProductId); // Product ID
                 $('#unit' + clickedIdNum).val(ui.item[3] || ''); // Unit

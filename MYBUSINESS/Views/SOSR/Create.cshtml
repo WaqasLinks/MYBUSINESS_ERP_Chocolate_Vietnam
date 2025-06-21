@@ -50,6 +50,22 @@
 <script src="~/Scripts/jquery.signalR-2.4.3.js"></script>
 <script src="~/signalr/hubs"></script>
 <style>
+
+    #lefttopayvnd {
+        transition: all 0.3s ease;
+        font-weight: bold;
+    }
+
+    /* For the quick amount buttons */
+    .styled-input {
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+        .styled-input:hover {
+            background-color: #f8f9fa;
+        }
+
     .table-wrapper2 {
         margin: 30px auto;
         background: #fff;
@@ -216,6 +232,7 @@
     .highlight {
         background-color: yellow;
     }
+
 </style>
 @*<h2>Create</h2>*@
 
@@ -293,89 +310,83 @@
                 </div>*@
 
 
-            <div class="row">
-                <div class="col-md-6 scrollable-div">
-                    @*@foreach (var product in Model.ProductList)
-                        {
-                            var settings = new Newtonsoft.Json.JsonSerializerSettings
-                            {
-                                ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-                            };
-                            var productJson = Newtonsoft.Json.JsonConvert.SerializeObject(product, settings);
-                            var encodedProductJson = System.Web.HttpUtility.JavaScriptStringEncode(productJson);
-
-                            string formattedPrice = FormatNumberWithDots(product.SalePrice);
-                            <div class="col-md-3 col-sm-6 mb-3 product-box" onclick="addProduct('@encodedProductJson')">
-                                <div class="small-box bg-info text-black p-3 scrollable-box">
-                                    <div class="inner">
-                                        <h4 class="product-name">@product.Name</h4>
-                                        <p class="product-name">₫ @formattedPrice</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="ion ion-bag"></i>
-                                    </div>
-                                </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h2>@ViewBag.StoreName</h2>
+            </div>
+            <div class="col-md-12">
+                <div class="form-inline" style="margin-bottom: 20px;">
+                    @using (Html.BeginForm("Create", "SOSR", FormMethod.Get))
+                    {
+                        <div class="form-inline mb-3" style="margin-bottom: 15px;">
+                            <div class="form-group">
+                                <label style="margin-right: 10px;">Filter Products by Type:</label>
+                                @Html.DropDownList("pType",
+                                         new SelectList(ViewBag.ProductTypes, "Value", "Text"),
+                                         "-- All Product Types --",
+                                         new
+                                         {
+                                             @class = "form-control",
+                                             onchange = "this.form.submit()",
+                                             style = "width: 200px; display: inline-block;"
+                                         })
                             </div>
-                        }*@
-                    @if (groupedProductLists != null)
-                    {
-                        foreach (var group in groupedProductLists)
-                        {
-
-                            foreach (var product in group.Value)
-                            {
-                                // Serialize the product object to JSON
-                                var settings = new Newtonsoft.Json.JsonSerializerSettings
-                                {
-                                    ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-                                };
-                                var productJson = Newtonsoft.Json.JsonConvert.SerializeObject(product, settings);
-                                var encodedProductJson = System.Web.HttpUtility.JavaScriptStringEncode(productJson);
-                                var categoryColor = categoryColors.ContainsKey(product.Category)
-                                    ? categoryColors[product.Category]
-                                    : "#ffffff"; // Default color if the category is not found
-                                string formattedPrice = FormatNumberWithDots(product.SalePrice);
-
-                                <div class="col-md-3 col-sm-6 mb-3 product-box" onclick="addProduct('@encodedProductJson')">
-                                    <div class="small-box" style="background-color: @categoryColor; color: black; padding: 15px;">
-                                        <div class="inner">
-                                            <h4 class="product-name">@product.Name</h4>
-                                            <p class="product-name">₫ @formattedPrice</p>
-                                        </div>
-                                        <div class="icon">
-                                            <i class="ion ion-bag"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                        }
-                    }
-                    else
-                    {
-                        <p>No products found.</p>
+                            <noscript>
+                                <input type="submit" value="Filter" class="btn btn-primary" />
+                            </noscript>
+                        </div>
                     }
 
+                </div>
+            </div>
+            <div class="col-md-6 scrollable-div">
 
-                    @*Old working code to bind Products*@
-                    @*@foreach (var product in Model.ProductList)
+                @*@foreach (var product in Model.ProductList)
+            {
+                var settings = new Newtonsoft.Json.JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                };
+                var productJson = Newtonsoft.Json.JsonConvert.SerializeObject(product, settings);
+                var encodedProductJson = System.Web.HttpUtility.JavaScriptStringEncode(productJson);
+
+                string formattedPrice = FormatNumberWithDots(product.SalePrice);
+                <div class="col-md-3 col-sm-6 mb-3 product-box" onclick="addProduct('@encodedProductJson')">
+                    <div class="small-box bg-info text-black p-3 scrollable-box">
+                        <div class="inner">
+                            <h4 class="product-name">@product.Name</h4>
+                            <p class="product-name">₫ @formattedPrice</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-bag"></i>
+                        </div>
+                    </div>
+                </div>
+            }*@
+                @if (groupedProductLists != null)
+                {
+                    foreach (var group in groupedProductLists)
+                    {
+
+                        foreach (var product in group.Value)
                         {
+                            // Serialize the product object to JSON
                             var settings = new Newtonsoft.Json.JsonSerializerSettings
                             {
                                 ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
                             };
                             var productJson = Newtonsoft.Json.JsonConvert.SerializeObject(product, settings);
                             var encodedProductJson = System.Web.HttpUtility.JavaScriptStringEncode(productJson);
-                            var productLists = @Html.Raw(encodedProductJson);
-                            // Retrieve the color for the product's category directly
                             var categoryColor = categoryColors.ContainsKey(product.Category)
-                                    ? categoryColors[product.Category]
-                                    : "#ffffff"; // Default color if the category is not found
-
+                                ? categoryColors[product.Category]
+                                : "#ffffff"; // Default color if the category is not found
                             string formattedPrice = FormatNumberWithDots(product.SalePrice);
+
+
                             <div class="col-md-3 col-sm-6 mb-3 product-box" onclick="addProduct('@encodedProductJson')">
                                 <div class="small-box" style="background-color: @categoryColor; color: black; padding: 15px;">
                                     <div class="inner">
-                                        <h4 class="product-name">@product.Name</h4>
+                                        <h5 class="product-name">@product.Name</h5>
                                         <p class="product-name">₫ @formattedPrice</p>
                                     </div>
                                     <div class="icon">
@@ -383,38 +394,132 @@
                                     </div>
                                 </div>
                             </div>
-                        }*@
+                        }
+                    }
+                }
+                else
+                {
+                    <p>No products found.</p>
+                }
+
+
+                @*Old working code to bind Products*@
+                @*@foreach (var product in Model.ProductList)
+            {
+                var settings = new Newtonsoft.Json.JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                };
+                var productJson = Newtonsoft.Json.JsonConvert.SerializeObject(product, settings);
+                var encodedProductJson = System.Web.HttpUtility.JavaScriptStringEncode(productJson);
+                var productLists = @Html.Raw(encodedProductJson);
+                // Retrieve the color for the product's category directly
+                var categoryColor = categoryColors.ContainsKey(product.Category)
+                        ? categoryColors[product.Category]
+                        : "#ffffff"; // Default color if the category is not found
+
+                string formattedPrice = FormatNumberWithDots(product.SalePrice);
+                <div class="col-md-3 col-sm-6 mb-3 product-box" onclick="addProduct('@encodedProductJson')">
+                    <div class="small-box" style="background-color: @categoryColor; color: black; padding: 15px;">
+                        <div class="inner">
+                            <h4 class="product-name">@product.Name</h4>
+                            <p class="product-name">₫ @formattedPrice</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-bag"></i>
+                        </div>
+                    </div>
+                </div>
+            }*@
+            </div>
+
+            <div class="col-md-6 scrollable-div">
+                <!-- Add this modal to your page -->
+                <div class="modal fade" id="salesSummaryModal" tabindex="-1" role="dialog" aria-labelledby="salesSummaryModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="salesSummaryModalLabel">Sales Summary</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h4>Today's Sales</h4>
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Payment Method</th>
+                                                    <th>Amount (₫)</th>
+                                                    <th>Count</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="todaySales">
+                                                <!-- Will be populated by JavaScript -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h4>Yesterday's Sales</h4>
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Payment Method</th>
+                                                    <th>Amount (₫)</th>
+                                                    <th>Count</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="yesterdaySales">
+                                                <!-- Will be populated by JavaScript -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="col-md-6">
-                    <!-- Hidden input field for SuggestedNewProductId -->
-                    <input type="hidden" id="suggestedNewProductId" value="@ViewBag.SuggestedNewProductId" />
-                    @*<div style="display:flex; margin-top: -31px;">*@
-                    <div style="display: flex; margin-top: 0px;">
-                        <label style="width: 127px;">Bill Number:</label>
-                        @*<label name="SaleOrder.Id">@ViewBag.SuggestedNewProductIds</label>*@
-                        <input type="text" name="SaleOrder.Id" class="form-control label-like-input" value="@ViewBag.SuggestedNewProductIds" />
-                    </div>
-                    <br /> <br />
-                    <table id="selectedProducts" class="table table-bordered" style="margin-top: -34px !important;">
-                        <thead>
-                            <tr>
-                                <th style="width:5%;">#</th>
-                                <th style="width:25%;">Name</th>
-                                <th style="display:none;">Price</th>
-                                <th>Quantity</th>
-                                <th style="display:none;">Bill Number</th>
-                                <th style="width: auto;">Total</th>
-                                <th style="display:none;">Type</th>
-                                <th style="width: 62px;">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Add your rows here -->
-                        </tbody>
-                    </table>
+                <!-- Add this button where you want to trigger the popup -->
+                <button type="button" class="btn btn-info" id="showSalesSummary">
+                    <i class="fas fa-chart-bar"></i> View Sales Summary
+                </button>
+                <button type="button" id="btnReprintLast" class="btn btn-primary">
+                    Reprint Last Bill
+                </button>
+                <!-- Hidden input field for SuggestedNewProductId -->
+                <input type="hidden" id="suggestedNewProductId" value="@ViewBag.SuggestedNewProductId" />
+                @*<div style="display:flex; margin-top: -31px;">*@
+                <div style="display: flex; margin-top: 0px;">
+                    <label style="width: 127px;">Bill Number:</label>
+                    @*<label name="SaleOrder.Id">@ViewBag.SuggestedNewProductIds</label>*@
+                    <input type="text" name="SaleOrder.Id" class="form-control label-like-input" value="@ViewBag.SuggestedNewProductIds" />
                 </div>
+                <br /> <br />
+                <table id="selectedProducts" class="table table-bordered" style="margin-top: -34px !important;">
+                    <thead>
+                        <tr>
+                            <th style="width:5%;">#</th>
+                            <th style="width:25%;">Name</th>
+                            <th style="display:none;">Price</th>
+                            <th>Quantity</th>
+                            <th style="display:none;">Bill Number</th>
+                            <th style="width: auto;">Total <span style="font-size: 12px; font-weight: normal;">(₫)</span></th>
+                            <th style="display:none;">Type</th>
+                            <th style="width: 62px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Add your rows here -->
+                    </tbody>
+                </table>
             </div>
+        </div>
 
 
 
@@ -472,7 +577,7 @@
                         <textarea name="SaleOrder.Remarks" rows="1" cols="100" class="form-control" placeholder="These remarks will print on bill" data-toggle="tooltip" data-placement="top" title="These remarks will print on bill" style="display:none;"></textarea>
                         <textarea name="SaleOrder.Remarks2" rows="1" cols="100" class="form-control" placeholder="These remarks will not print on bill" data-toggle="tooltip" data-placement="top" title="These remarks will not print on bill" style="display:none;"></textarea>
                     </div>
-                    <div class="col-md-6" style="margin-top:20px;">
+                    <div class="col-md-6" style="margin-top:-110px;">
 
                         <table>
                             <thead></thead>
@@ -618,12 +723,23 @@
                                                 </div>
                                                 <br />
                                                 <form>
-                                                    <div class="form-group">
+                                                    <!--<div class="form-group">
                                                         <label for="inputField">Card VND(₫)</label>
-                                                        <input type="text" autocomplete="off" class="form-control" name="SaleOrder.BillPaid" id="cardvnd" value="">
+                                                        <input type="text" autocomplete="off" class="form-control" name="SaleOrder.BillPaid" id="cardvnd" value="">-->
                                                         @*<input type="text" autocomplete="off" class="form-control" placeholder="Card Vnd" name="SaleOrder.BillPaid" id="cardvnd" value="0">*@
+                                                    <!--</div>-->
+                                                    <div class="form-group">
+                                                        <label for="cardvnd"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png"
+     alt="VISA" style="height: 12px; width: auto;"> Card VND(₫)</label>
+                                                        <div class="input-group">
+                                                            <input type="text" autocomplete="off" class="form-control" name="SaleOrder.BillPaid" id="cardvnd" value="">
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text bg-white">
+                                                                    
+                                                                </span>
+                                                            </div>
+                                                        </div>
                                                     </div>
-
                                                     <div class="form-group">
                                                         <label for="inputField">Cash VND(₫)</label>
                                                         <input type="text" class="form-control" id="cashvnd" value="">
@@ -729,7 +845,12 @@
                                                             <button class="btn btn-secondary btn-block" type="button" onclick="deleteLast()">X</button>
                                                         </div>
                                                     </div>
+                                                    <div class="row" style="margin-left:7px; margin-top:180px;">
+                                                        <button type="button" class="btn btn-secondary cancelPaymentButton" data-dismiss="modal">Cancel</button>
+                                                        <button type="button" class="btn btn-primary" name="validatepyment" id="validatepyment" disabled>Validate</button>
+                                                    </div>
                                                 </div>
+                                                
                                             </div>
                                         </div>
                                     </div>
@@ -738,7 +859,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div style="display:none" class="modal-footer">
                     <button type="button" class="btn btn-secondary cancelPaymentButton" data-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-primary" name="validatepyment" id="validatepyment" disabled>Validate</button>
                 </div>
@@ -751,7 +872,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="taxModalTitle" style="text-align:center;">CUSTOMER TAX</h5>
+                    <h5 class="modal-title" id="taxModalTitle" style="text-align:center; font-weight:bold">CUSTOMER TAX</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -790,9 +911,9 @@
                                                             </button>
                                                         </div>
                                                         @*<div class="col-sm-2">
-                                                                <button type="button" class="btn btn-primary btn-block" id="customerByTaxCode"><i class="fa fa-search"></i></button>
-                                                                <span class="loader" style="display: none;"></span>
-                                                            </div>*@
+                <button type="button" class="btn btn-primary btn-block" id="customerByTaxCode"><i class="fa fa-search"></i></button>
+                <span class="loader" style="display: none;"></span>
+            </div>*@
                                                         <!--<label for="field4">VAT Number</label>-->
                                                         @*<input type="text" class="form-control" name="vndCustomerVat" id="vndCustomerVat" placeholder="VAT Number">*@
                                                         <!--<input type="text" class="form-control" name="Customer.Vat" id="vndCustomerVat" placeholder="VAT Number">-->
@@ -808,26 +929,35 @@
                                                         @*<input type="hidden" name="Customer.Name" id="customer1" value="@Model.Customer.Name" />*@
                                                     </div>
                                                     @*<div class="form-group">
-                                                            <label for="dropdown">Customer</label>
-                                                            <select class="form-control" id="dropdown">
-                                                                <option value="">Select customer</option>
-                                                                <option value="1">Option 1</option>
-                                                                <option value="2">Option 2</option>
-                                                                <option value="3">Option 3</option>
-                                                            </select>
-                                                        </div>*@
-                                                    <div class="form-group">
-                                                        <label for="field1">Customer Name</label>
-                                                        <input type="text" class="form-control" name="Customer.Name" id="vndCustomerName" placeholder="Cutomer name">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="field2">Customer Company</label>
-                                                        <input type="text" class="form-control" name="Customer.CompanyName" id="vndCustomerCompany" placeholder="Customer company">
-                                                        @*<input type="hidden" name="Customer.CompanyName" id="vndCustomerCompany1" value="@Model.Customer.CompanyName" />*@
-                                                    </div>
+            <label for="dropdown">Customer</label>
+            <select class="form-control" id="dropdown">
+                <option value="">Select customer</option>
+                <option value="1">Option 1</option>
+                <option value="2">Option 2</option>
+                <option value="3">Option 3</option>
+            </select>
+        </div>*@
+                                                <div class="form-group">
+                                                    <label for="field1">Customer Name</label>
+                                                    <input type="text" class="form-control required-field" name="Customer.Name" id="vndCustomerName" placeholder="Cutomer name">
+                                                    <div class="required-notice">At least one of these fields is required</div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="field2">Customer Company</label>
+                                                    <input type="text" class="form-control required-field" name="Customer.CompanyName" id="vndCustomerCompany" placeholder="Customer company">
+                                                    <div class="required-notice">At least one of these fields is required</div>
+
+                                                    @*<input type="hidden" name="Customer.CompanyName" id="vndCustomerCompany1" value="@Model.Customer.CompanyName" />*@
+                                                </div>
+                                                    <!--<div class="form-group">
+        <label for="field3">Address</label>
+        <input type="text" class="form-control" name="Customer.Address" id="vndCustomerAddress" placeholder="Address">-->
+                                                    @*<input type="hidden" name="Customer.Address" id="vndCustomerAddress1" value="@Model.Customer.Address" />*@
+                                                    <!--</div>-->
                                                     <div class="form-group">
                                                         <label for="field3">Address</label>
-                                                        <input type="text" class="form-control" name="Customer.Address" id="vndCustomerAddress" placeholder="Address">
+                                                        <textarea class="form-control" name="Customer.Address" id="vndCustomerAddress"
+                                                                  placeholder="Address" rows="3"></textarea>
                                                         @*<input type="hidden" name="Customer.Address" id="vndCustomerAddress1" value="@Model.Customer.Address" />*@
                                                     </div>
                                                     <div class="form-group">
@@ -836,6 +966,8 @@
                                                         @*<input type="hidden" name="Customer.Email" id="vndCustomerEmail1" value="@Model.Customer.Email" />*@
                                                     </div>
                                                 </form>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="btn btn-primary" name="saveSales" id="saveSales">Save</button>
                                             </div>
                                         </div>
                                     </div>
@@ -866,10 +998,10 @@
                         </div>
                     </div>
                 </div>-->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary" name="saveSales" id="saveSales">Save</button>
-                </div>
+            <div style="display:none;" class="fixed-modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" name="saveSales" id="saveSales">Save</button>
+            </div>
             </div>
         </div>
     </div>
@@ -974,6 +1106,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -991,8 +1124,218 @@
 
 }
 <script>
-    
-    
+    $(document).ready(function () {
+       
+        $('#btnReprintLast').click(function () {
+       
+        $.ajax({
+            url: '@Url.Action("GetLastBillId", "SOSR")',
+            type: 'POST',
+            success: function(response) {
+                if (response.Success) {
+                    // Open the print view in a new tab
+                    window.open('@Url.Action("PrintSO3", "SOSR")?id=' + response.Id, '_blank');
+                } else {
+                    alert(response.Message);
+                }
+            },
+            error: function() {
+                alert('Error occurred while fetching last bill');
+            }
+        });
+    });
+});
+
+$(document).ready(function() {
+    // Show modal when button is clicked
+    $('#showSalesSummary').click(function() {
+        $('#salesSummaryModal').modal('show');
+        fetchSalesData();
+    });
+
+    function fetchSalesData() {
+        alert('alert');
+        // Get today and yesterday dates in YYYY-MM-DD format
+        const today = new Date();
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+
+        const todayStr = today.toISOString().split('T')[0];
+        const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+        // Get storeId from session
+        const storeId = '@(Session["StoreId"] as int?)';
+
+        // AJAX call to get sales data
+        $.ajax({
+            url: '@Url.Action("GetSalesSummary", "SOSR")',
+            type: 'GET',
+            data: {
+                today: todayStr,
+                yesterday: yesterdayStr,
+                storeId: storeId
+            },
+            success: function(data) {
+                populateSalesTable(data.today, '#todaySales');
+                populateSalesTable(data.yesterday, '#yesterdaySales');
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching sales data:', error);
+                alert('Error loading sales data. Please try again.');
+            }
+        });
+    }
+
+    function populateSalesTable(data, tableId) {
+        const $tableBody = $(tableId);
+        $tableBody.empty();
+
+        // Format currency function
+        const formatCurrency = (amount) => {
+            return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' ₫';
+        };
+
+        // Process cash (TM) sales
+        $tableBody.append(`
+            <tr>
+                <td>Cash (TM)</td>
+                <td>${formatCurrency(data.cashAmount || 0)}</td>
+                <td>${data.cashCount || 0}</td>
+            </tr>
+        `);
+
+        // Process card sales
+        $tableBody.append(`
+            <tr>
+                <td>Card</td>
+                <td>${formatCurrency(data.cardAmount || 0)}</td>
+                <td>${data.cardCount || 0}</td>
+            </tr>
+        `);
+
+        // Process mixed (TM/CK) sales
+        $tableBody.append(`
+            <tr>
+                <td>Mixed (Cash + Card)</td>
+                <td>${formatCurrency(data.mixedAmount || 0)}</td>
+                <td>${data.mixedCount || 0}</td>
+            </tr>
+        `);
+
+        // Add total row
+        $tableBody.append(`
+            <tr class="table-active">
+                <td><strong>Total</strong></td>
+                <td><strong>${formatCurrency(data.totalAmount || 0)}</strong></td>
+                <td><strong>${data.totalCount || 0}</strong></td>
+            </tr>
+        `);
+    }
+});
+
+    function addProductRow(product) {
+        const row = `
+        <tr>
+            <td>${product.id}</td>
+            <td>${product.name}</td>
+            <td style="display:none;">${product.price}</td>
+            <td>${product.quantity}</td>
+            <td style="display:none;">${product.billNumber}</td>
+            <td>${formatCurrency(product.total)} ₫</td>
+            <td style="display:none;">${product.type}</td>
+            <td>
+                <button class="btn btn-sm btn-danger remove-product">Remove</button>
+            </td>
+        </tr>
+    `;
+        $('#selectedProducts tbody').append(row);
+    }
+
+    // Currency formatting function
+    function formatCurrency(amount) {
+        return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+    $(document).ready(function () {
+        $('#customerByTaxCode').click(function () {
+            // Make fields read-only
+            $('#vndCustomer').prop('readonly', true);
+            $('#vndCustomerName').prop('readonly', true);
+            $('#vndCustomerEmail').prop('readonly', true);
+
+            // Optional: Change background color to visually indicate read-only state
+            $('input[readonly]').css('background-color', '#f8f9fa');
+
+            // Show loading indicator
+            $(this).find('.loader').show();
+            $(this).find('.loading-text').text('Searching...').show();
+            $(this).prop('disabled', true);
+
+            // Your existing VAT search logic here...
+            // searchCustomerByVAT();
+
+            // Note: You'll need to re-enable fields if search fails
+        });
+    });
+
+    $(document).ready(function () {
+        // Disable save button initially
+        $('#saveSales').prop('disabled', true);
+
+        // Validate when any field changes
+        $('#vndCustomerName, #vndCustomerCompany').on('input', validateForm);
+
+        // Also validate when modal is shown
+        $('#taxModal').on('shown.bs.modal', validateForm);
+
+        function validateForm() {
+            const nameFilled = $('#vndCustomerName').val().trim() !== '';
+            const companyFilled = $('#vndCustomerCompany').val().trim() !== '';
+            const isValid = nameFilled || companyFilled;
+
+            // Enable/disable save button
+            $('#saveSales').prop('disabled', !isValid);
+
+            // Show/hide required notice
+            if (isValid) {
+                $('.required-notice').hide();
+                $('.required-field').removeClass('is-invalid');
+            } else {
+                $('.required-notice').show();
+                $('.required-field').addClass('is-invalid');
+            }
+        }
+
+        // Handle form submission
+        $('#saveSales').click(function (e) {
+            e.preventDefault();
+
+            if ($('#saveSales').prop('disabled')) {
+                // Show error message if validation fails
+                alert('Please fill in either Customer Name or Customer Company before saving.');
+                return;
+            }
+
+            // Proceed with your save logic here
+            // ...
+        });
+
+        // Individual without VAT button - auto-fill with default values
+        $('#individualWithoutVAT').click(function () {
+            $('#vndCustomerVat').val('');
+            $('#vndCustomerName').val('Individual Customer');
+            $('#vndCustomerCompany').val('');
+            validateForm(); // Trigger validation after auto-fill
+        });
+    });
+
+    function enableCustomerFields() {
+        $('#vndCustomer, #vndCustomerName, #vndCustomerEmail').prop('readonly', false)
+            .css('background-color', '');
+        $('#customerByTaxCode').prop('disabled', false)
+            .find('.loader').hide()
+            .end()
+            .find('.loading-text').hide();
+    }
 
     $(document).ready(function () {
         document.getElementById('SOCreate').reset(); // has to be handle
@@ -1047,6 +1390,65 @@
     //        alert("Neither TM nor TM/CK selected, names removed.");
     //    }
     //});
+    // Add this to your existing JavaScript code
+    $(document).ready(function () {
+        // Function to update the left to pay amount and color
+        function updateLeftToPay() {
+            const totalAmount = parseFloat($('#totalitsmspan').text()) || 0;
+            const cashVnd = parseFloat($('#cashvnd').val()) || 0;
+            const cardVnd = parseFloat($('#cardvnd').val()) || 0;
+            const cashUsd = parseFloat($('#cashUsd').val()) || 0;
+            const cashJpy = parseFloat($('#cashJpy').val()) || 0;
+
+            // Convert USD and JPY to VND if needed (add your conversion rates)
+            const usdToVndRate = 23000; // Example rate
+            const jpyToVndRate = 200;   // Example rate
+            const totalUsdVnd = cashUsd * usdToVndRate;
+            const totalJpyVnd = cashJpy * jpyToVndRate;
+
+            // Calculate total payment
+            const totalPayment = cashVnd + cardVnd + totalUsdVnd + totalJpyVnd;
+            const leftToPay = totalAmount - totalPayment;
+
+            // Update the left to pay field
+            $('#lefttopayvnd').val(leftToPay.toFixed(2));
+
+            // Change color based on payment status
+            if (leftToPay > 0) {
+                // Insufficient payment - orange
+                $('#lefttopayvnd').css({
+                    'background-color': '#FFF3CD',
+                    'color': '#856404',
+                    'border-color': '#FFEEBA'
+                });
+            } else if (leftToPay <= 0) {
+                // Sufficient payment - green
+                $('#lefttopayvnd').css({
+                    'background-color': '#D4EDDA',
+                    'color': '#155724',
+                    'border-color': '#C3E6CB'
+                });
+            }
+
+            // Enable/disable validate button
+            $('#validatepyment').prop('disabled', leftToPay > 0);
+        }
+
+        // Set up event listeners for all payment inputs
+        $('#cashvnd, #cardvnd, #cashUsd, #cashJpy').on('input', function () {
+            updateLeftToPay();
+        });
+
+        // Also call it when pay all by card is clicked
+        $('#payallbycard').click(function () {
+            // Your existing payallbycard code...
+            setTimeout(updateLeftToPay, 100); // Small delay to ensure values are updated
+        });
+
+        // Initial update
+        updateLeftToPay();
+    });
+
 
     $(document).ready(function () {
         // When the Cash or Card field value changes

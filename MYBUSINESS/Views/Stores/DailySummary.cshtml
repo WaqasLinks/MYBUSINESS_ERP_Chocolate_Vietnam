@@ -91,11 +91,11 @@
     <div class="form-group row">
         <div class="col-md-4">
             <label>Start Date:</label>
-            <input type="date" name="startDate" class="form-control" value="@Request["startDate"]" />
+            <input type="date" name="startDate" class="form-control" value="@ViewBag.HtmlStartDate" />
         </div>
         <div class="col-md-4">
             <label>End Date:</label>
-            <input type="date" name="endDate" class="form-control" value="@Request["endDate"]" />
+            <input type="date" name="endDate" class="form-control" value="@ViewBag.HtmlEndDate" />
         </div>
         <div class="col-md-4">
             <label>&nbsp;</label>
@@ -103,6 +103,7 @@
         </div>
     </div>
 }
+
 <div class="row">
     @foreach (var store in Model)
     {
@@ -115,7 +116,14 @@
                     <p><strong>Cash Sales:</strong> @store.CashSales</p>
                     <p><strong>Money Input:</strong> @store.MoneyInput</p>
                     <p><strong>Bank Deposit:</strong> @store.BankDeposit</p>
-                    <p><strong>Closing Balance:</strong> @store.ActualClosingBalance</p>
+                    <p><strong>Calculated Closing:</strong> @store.ActualClosingBalance</p>
+                    <p><strong>Recorded Closing:</strong> @store.RecordedClosingBalance.ToString("N0")</p>
+                    <p>
+                        <strong>Cash Difference:</strong>
+                        <span class="@(store.Difference == 0 ? "text-success" : "text-danger")">
+                            @store.Difference.ToString("N0")
+                        </span>
+                    </p>
                     <hr />
                     <h6 class="text-center">Credit Card Summary</h6>
                     <p><strong>Credit Card Sales:</strong> @store.CreditCardSales</p>

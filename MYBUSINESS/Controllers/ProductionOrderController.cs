@@ -16,6 +16,7 @@ using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
 {
+    [Authorize(Roles = "Admin,Manager,User")]
     //[NoCache]
     public class ProductionOrderController : Controller
     {

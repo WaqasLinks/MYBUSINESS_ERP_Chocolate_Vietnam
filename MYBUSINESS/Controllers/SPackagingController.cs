@@ -18,6 +18,7 @@ using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
 {
+    [Authorize(Roles = "Admin,Manager,User")]
     public class SPackagingController : Controller
     {
         // GET: SPackaging
@@ -457,7 +458,8 @@ namespace MYBUSINESS.Controllers
             sPackaging.StoreId = storeId;
             //pO.StoreId = parseId; //commented due to session issue
             //pO.StoreId = 1;
-            Employee emp = (Employee)Session["CurrentUser"];
+            //Employee emp = (Employee)Session["CurrentUser"];
+            Employee emp = Session["CurrentUser"] as Employee ?? new Employee { Id = 0 }; // or some default ID
             sPackaging.EmployeeId = emp.Id;
             db.SPackagings.Add(sPackaging);
             //db.SaveChanges();
@@ -1083,7 +1085,6 @@ namespace MYBUSINESS.Controllers
 
 
         [HttpPost]
-
         public JsonResult Validation(List<MYBUSINESS.Models.POPViewModel> LstProductionVM)
         {
             try
@@ -1117,7 +1118,7 @@ namespace MYBUSINESS.Controllers
                 // Save all changes to the database
                 db.SaveChanges();
 
-                string redirectUrl = Url.Action("Index", "POPR");
+                string redirectUrl = Url.Action("Index", "SPackaging");
                 return Json(new { success = true, message = "Validation completed and records updated.", redirectUrl = redirectUrl });
             }
             catch (Exception ex)

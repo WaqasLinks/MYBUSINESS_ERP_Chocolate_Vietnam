@@ -14,6 +14,7 @@ using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
 {
+    [Authorize(Roles = "Admin,Manager,User")]
     public class BOMController : Controller
     {
         private BusinessContext db = new BusinessContext();
@@ -21,11 +22,29 @@ namespace MYBUSINESS.Controllers
         private BOMViewModel bomViewModel = new BOMViewModel();
         // GET: Products
 
-        public ActionResult Index()
+        public ActionResult Index(int? pType = null)
         {
+            var productTypes = new List<SelectListItem>
+    {
+        new SelectListItem { Value = "1", Text = "VariableProduct" },
+        new SelectListItem { Value = "2", Text = "ExcessProduct" },
+        new SelectListItem { Value = "3", Text = "ByProduct" },
+        new SelectListItem { Value = "4", Text = "FinishedProduct" },
+        new SelectListItem { Value = "5", Text = "IngredientProduct" },
+        new SelectListItem { Value = "6", Text = "IntermedataryProduct" },
+        new SelectListItem { Value = "7", Text = "Merchendise" }
+    };
+            ViewBag.ProductTypes = productTypes;
+            ViewBag.CurrentPType = pType;
             ViewBag.Suppliers = DAL.dbSuppliers;
-            var bom = db.BOMs.OrderByDescending(p => p.Id) // Sorting by Id in descending order
-                           .ToList().ToList();
+            var query = db.BOMs.OrderByDescending(p => p.Id).AsQueryable();
+
+            if (pType != null)
+            {
+                query = query.Where(x => x.Product.PType == pType);
+            }
+
+            var bom = query.ToList();
             return View(bom);
             //return View(DAL.dbBOMs.Where(x => x.SubItems.Count() == 0).ToList());
         }
@@ -71,14 +90,14 @@ namespace MYBUSINESS.Controllers
 
             // Get products without BOM
             var productsWithoutBOM = db.Products
-                .Where(p => p.PType == 4 && !db.BOMs.Any(b => b.ProductId == p.Id)) // Filter out products with existing BOMs
+                .Where(p => (p.PType == 4 || p.PType == 6) && !db.BOMs.Any(b => b.ProductId == p.Id)) // Filter out products with existing BOMs
                 .Select(p => new { Value = p.Id.ToString(), Text = p.Name }) // Prepare for SelectList
                 .ToList();
 
             // Pass the filtered product list to the view
             ViewBag.ProductList = new SelectList(productsWithoutBOM, "Value", "Text");
             var excessProducts = db.Products
-        .Where(p => p.PType == 2)
+        .Where(p => p.PType == 6 || p.PType == 5)
         .Select(p => new { Value = p.Id.ToString(), Text = p.Name })
         .ToList();
             ViewBag.ExcessProductList = new SelectList(excessProducts, "Value", "Text");
@@ -249,7 +268,8 @@ namespace MYBUSINESS.Controllers
         {
             if (ModelState.IsValid)
             {
-
+                bom.CreateDate = DateTime.Now;
+                bom.UpdateDate = DateTime.Now;
                 var product = db.Products.FirstOrDefault(p => p.Id == bom.ProductId);
                 
                 if (product != null)
@@ -313,7 +333,7 @@ namespace MYBUSINESS.Controllers
 
             // Fetch products without BOM (filtered by PType 4)
             var productsWithoutBOM = db.Products
-                .Where(p => p.PType == 4 && (!db.BOMs.Any(b => b.ProductId == p.Id) || p.Id == bom.ProductId))
+                .Where(p => (p.PType == 4 || p.PType == 6) && (!db.BOMs.Any(b => b.ProductId == p.Id) || p.Id == bom.ProductId))
                 .Select(p => new { Value = p.Id.ToString(), Text = p.Name })
                 .ToList();
 
@@ -330,7 +350,7 @@ namespace MYBUSINESS.Controllers
 
             // Fetch all products based on PType
             var ptypeProducts = db.Products
-                .Where(p => p.PType == 1 || p.PType == 2 || p.PType == 3)
+                .Where(p => p.PType == 1 || p.PType == 6 || p.PType == 3)
                 .Select(p => new { Value = p.Id.ToString(), Text = p.Name })
                 .ToList();
 
@@ -733,11 +753,11 @@ namespace MYBUSINESS.Controllers
                 .Select(p => new { p.Id, p.Name, p.Unit })
                 .ToList(); // Convert to List
 
-            if (variableProducts.Any()) // Check if there are any products
-            {
+            //if (variableProducts.Any()) // Check if there are any products
+            //{
                 return Json(variableProducts, JsonRequestBehavior.AllowGet);
-            }
-            return Json(new { error = "No variable products found" }, JsonRequestBehavior.AllowGet);
+            //}
+            //return Json(new { error = "No variable products found" }, JsonRequestBehavior.AllowGet);
         }
 
 

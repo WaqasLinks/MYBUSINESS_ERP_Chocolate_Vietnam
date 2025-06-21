@@ -392,12 +392,15 @@
     <Compile Include="Controllers\POPRReciverController.cs" />
     <Compile Include="Controllers\PostProductionController.cs" />
     <Compile Include="Controllers\PPBOMController.cs" />
+    <Compile Include="Controllers\PPNewProductionController.cs" />
+    <Compile Include="Controllers\PPPostProductionController.cs" />
     <Compile Include="Controllers\PrintedPackagingController.cs" />
     <Compile Include="Controllers\PrintedPackagingReciverController.cs" />
     <Compile Include="Controllers\ScanCreditCardController.cs" />
     <Compile Include="Controllers\ScanMoneyInputController.cs" />
     <Compile Include="Controllers\ShopManageController.cs" />
     <Compile Include="Controllers\SPackagingController.cs" />
+    <Compile Include="Controllers\SPackagingReceivingController.cs" />
     <Compile Include="Controllers\StoreOrderController.cs" />
     <Compile Include="Controllers\StoreOrderReceiptController.cs" />
     <Compile Include="Controllers\StoresController.cs" />
@@ -538,6 +541,9 @@
     </Compile>
     <Compile Include="Models\CustomerDetailsViewModel.cs" />
     <Compile Include="Models\CustomersWiseSaleViewModel.cs" />
+    <Compile Include="Models\C__MigrationHistory.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DailyBalanceVnd.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -562,6 +568,7 @@
     </Compile>
     <Compile Include="Models\FinalProductionViewModel.cs" />
     <Compile Include="Models\FlatBoxStockViewModel.cs" />
+    <Compile Include="Models\GetProductionDetailsById_Result.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Inventory.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
@@ -620,6 +627,12 @@
     <Compile Include="Models\PaperColor.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\PaperNewProduction.cs" />
+    <Compile Include="Models\PaperNewProductionViewModel.cs" />
+    <Compile Include="Models\PaperOrderViewModel.cs" />
+    <Compile Include="Models\PaperPostProduction.cs" />
+    <Compile Include="Models\PaperQuantityToProduce.cs" />
+    <Compile Include="Models\PaperSubItemProduction.cs" />
     <Compile Include="Models\Payment.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -649,6 +662,17 @@
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\PPColorReceiptViewModel.cs" />
+    <Compile Include="Models\PPNewProduction.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PPNewProductionViewModel.cs" />
+    <Compile Include="Models\PPPostProduction.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PPPostProductionViewModel.cs" />
+    <Compile Include="Models\PPQuantityToProduce.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\PPReceiver.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -656,6 +680,9 @@
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\PPSubItem.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PPSubItemProduction.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\PrintedPackaging.cs">
@@ -682,6 +709,7 @@
     <Compile Include="Models\ProductionDetail1.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ProductionDetailsViewModel.cs" />
     <Compile Include="Models\ProductionOrder.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -749,8 +777,15 @@
     <Compile Include="Models\SPackagingDetail.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SPackagingReceiverViewModel.cs" />
     <Compile Include="Models\SPackagingViewModel.cs" />
+    <Compile Include="Models\SPackgingReceiver.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\spBankDepositReport_Result.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SPDReceiver.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\spExpenseReport_Result.cs">
@@ -783,6 +818,7 @@
     <Compile Include="Models\spTest_Result.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_GetPackagingProductionDetails_Result.cs" />
     <Compile Include="Models\sp_helpdiagramdefinition_Result.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -3279,6 +3315,7 @@
     <Content Include="Content\custom\newProduction.js" />
     <Content Include="Content\custom\Packagingproduction.js" />
     <Content Include="Content\custom\productDetail.js" />
+    <Content Include="Content\custom\searchable.css" />
     <Content Include="Content\custom\shared.js" />
     <Content Include="Content\custom\stores.js" />
     <Content Include="Content\custom\customerSOSR_SOSR_Index.js" />
@@ -4201,6 +4238,90 @@
     <Content Include="Views\UserRoles\Edit.cshtml" />
     <Content Include="Views\UserRoles\Index.cshtml" />
     <Content Include="Views\AspNetUserClaims\Index.cshtml" />
+    <Content Include="Views\Shared\_Layout 2.cshtml" />
+    <Content Include="Views\SPackagingReceiving\Create - Copy %282%29.cshtml" />
+    <Content Include="Views\SPackagingReceiving\Create - Copy %283%29.cshtml" />
+    <Content Include="Views\SPackagingReceiving\Create - Copy.cshtml" />
+    <Content Include="Views\SPackagingReceiving\Create.cshtml" />
+    <Content Include="Views\SPackagingReceiving\Delete.cshtml" />
+    <Content Include="Views\SPackagingReceiving\Details.cshtml" />
+    <Content Include="Views\SPackagingReceiving\Edit - Copy %282%29.cshtml" />
+    <Content Include="Views\SPackagingReceiving\Edit - Copy %283%29.cshtml" />
+    <Content Include="Views\SPackagingReceiving\Edit - Copy %284%29.cshtml" />
+    <Content Include="Views\SPackagingReceiving\Edit - Copy %285%29.cshtml" />
+    <Content Include="Views\SPackagingReceiving\Edit - Copy.cshtml" />
+    <Content Include="Views\SPackagingReceiving\Edit.cshtml" />
+    <Content Include="Views\SPackagingReceiving\EditPOPR.cshtml" />
+    <Content Include="Views\SPackagingReceiving\Index.cshtml" />
+    <Content Include="Views\SPackagingReceiving\PerMonthPurchase.cshtml" />
+    <Content Include="Views\SPackagingReceiving\_SelectedPOPR.cshtml" />
+    <Content Include="Views\SPackagingReceiving\_SelectedSOSR - Copy.cshtml" />
+    <Content Include="Views\Account\Index.cshtml" />
+    <Content Include="Views\PaperNewProduction\BOMEdit.cshtml" />
+    <Content Include="Views\PaperNewProduction\Create - Copy %282%29.cshtml" />
+    <Content Include="Views\PaperNewProduction\Create - Copy %283%29 - Copy.cshtml" />
+    <Content Include="Views\PaperNewProduction\Create - Copy %283%29.cshtml" />
+    <Content Include="Views\PaperNewProduction\Create - Copy.cshtml" />
+    <Content Include="Views\PaperNewProduction\Create.cshtml" />
+    <Content Include="Views\PaperNewProduction\CreateService.cshtml" />
+    <Content Include="Views\PaperNewProduction\Delete.cshtml" />
+    <Content Include="Views\PaperNewProduction\DeleteBOM.cshtml" />
+    <Content Include="Views\PaperNewProduction\Details.cshtml" />
+    <Content Include="Views\PaperNewProduction\Edit - Copy %282%29.cshtml" />
+    <Content Include="Views\PaperNewProduction\Edit - Copy.cshtml" />
+    <Content Include="Views\PaperNewProduction\Edit.cshtml" />
+    <Content Include="Views\PaperNewProduction\EditBOM.cshtml" />
+    <Content Include="Views\PaperNewProduction\EditService.cshtml" />
+    <Content Include="Views\PaperNewProduction\FinalExcess.cshtml" />
+    <Content Include="Views\PaperNewProduction\Index - Copy.cshtml" />
+    <Content Include="Views\PaperNewProduction\Index.cshtml" />
+    <Content Include="Views\PaperNewProduction\IndexComponents.cshtml" />
+    <Content Include="Views\PaperNewProduction\_IndexComponents.cshtml" />
+    <Content Include="Views\PaperNewProduction\_SelectedNewProduction.cshtml" />
+    <Content Include="Views\PaperNewProduction\_SelectedProducts1.cshtml" />
+    <Content Include="Views\PPNewProduction\BOMEdit.cshtml" />
+    <Content Include="Views\PPNewProduction\Create - Copy %282%29.cshtml" />
+    <Content Include="Views\PPNewProduction\Create - Copy %283%29 - Copy.cshtml" />
+    <Content Include="Views\PPNewProduction\Create - Copy %283%29.cshtml" />
+    <Content Include="Views\PPNewProduction\Create - Copy.cshtml" />
+    <Content Include="Views\PPNewProduction\Create.cshtml" />
+    <Content Include="Views\PPNewProduction\CreateService.cshtml" />
+    <Content Include="Views\PPNewProduction\Delete.cshtml" />
+    <Content Include="Views\PPNewProduction\DeleteBOM.cshtml" />
+    <Content Include="Views\PPNewProduction\Details.cshtml" />
+    <Content Include="Views\PPNewProduction\Edit - Copy %282%29.cshtml" />
+    <Content Include="Views\PPNewProduction\Edit - Copy.cshtml" />
+    <Content Include="Views\PPNewProduction\Edit.cshtml" />
+    <Content Include="Views\PPNewProduction\EditBOM.cshtml" />
+    <Content Include="Views\PPNewProduction\EditService.cshtml" />
+    <Content Include="Views\PPNewProduction\FinalExcess.cshtml" />
+    <Content Include="Views\PPNewProduction\Index - Copy.cshtml" />
+    <Content Include="Views\PPNewProduction\Index.cshtml" />
+    <Content Include="Views\PPNewProduction\IndexComponents.cshtml" />
+    <Content Include="Views\PPNewProduction\_IndexComponents.cshtml" />
+    <Content Include="Views\PPNewProduction\_SelectedNewProduction.cshtml" />
+    <Content Include="Views\PPNewProduction\_SelectedProducts1.cshtml" />
+    <Content Include="Views\PPPostProduction\BOMEdit.cshtml" />
+    <Content Include="Views\PPPostProduction\Create - Copy %282%29.cshtml" />
+    <Content Include="Views\PPPostProduction\Create - Copy %283%29 - Copy.cshtml" />
+    <Content Include="Views\PPPostProduction\Create - Copy %283%29.cshtml" />
+    <Content Include="Views\PPPostProduction\Create - Copy.cshtml" />
+    <Content Include="Views\PPPostProduction\Create.cshtml" />
+    <Content Include="Views\PPPostProduction\CreateService.cshtml" />
+    <Content Include="Views\PPPostProduction\Delete.cshtml" />
+    <Content Include="Views\PPPostProduction\DeleteBOM.cshtml" />
+    <Content Include="Views\PPPostProduction\Details.cshtml" />
+    <Content Include="Views\PPPostProduction\Edit - Copy.cshtml" />
+    <Content Include="Views\PPPostProduction\Edit.cshtml" />
+    <Content Include="Views\PPPostProduction\EditBOM.cshtml" />
+    <Content Include="Views\PPPostProduction\EditService.cshtml" />
+    <Content Include="Views\PPPostProduction\FinalExcess.cshtml" />
+    <Content Include="Views\PPPostProduction\Index - Copy.cshtml" />
+    <Content Include="Views\PPPostProduction\Index.cshtml" />
+    <Content Include="Views\PPPostProduction\IndexComponents.cshtml" />
+    <Content Include="Views\PPPostProduction\_IndexComponents.cshtml" />
+    <Content Include="Views\PPPostProduction\_SelectedNewProduction.cshtml" />
+    <Content Include="Views\PPPostProduction\_SelectedProducts1.cshtml" />
     <None Include="Web.Debug.Config">
       <DependentUpon>Web.Config</DependentUpon>
     </None>

@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace MYBUSINESS.Controllers
 {
+    [Authorize(Roles = "Admin,Manager,User")]
     public class UploadingController : Controller
     {
         // GET: Uploading

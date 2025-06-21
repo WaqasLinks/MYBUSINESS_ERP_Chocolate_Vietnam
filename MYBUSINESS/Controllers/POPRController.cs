@@ -18,6 +18,7 @@ using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
 {
+    [Authorize(Roles = "Admin,Manager,User")]
     public class POPRController : Controller
     {
         private BusinessContext db = new BusinessContext();
@@ -377,7 +378,7 @@ namespace MYBUSINESS.Controllers
 
             PurchaseOrderViewModel purchaseOrderViewModel = new PurchaseOrderViewModel();
             purchaseOrderViewModel.Suppliers = DAL.dbSuppliers;
-            purchaseOrderViewModel.Products = DAL.dbProducts.Include(x => x.StoreProducts).Where(x => x.PType == 4 || x.PType == 7 && x.IsService == false);
+            purchaseOrderViewModel.Products = DAL.dbProducts.Include(x => x.StoreProducts).Where(x => /*x.PType == 4 || x.PType == 7 &&*/ x.IsService == false);
             //purchaseOrderViewModel.FundingSources = db.FundingSources.ToList() ;
             ViewBag.FundingSources = new SelectList(db.Suppliers.Where(x => x.IsCreditor == true), "Id", "Name");//db.FundingSources.ToList(); ;
             ViewBag.BankAccounts = new SelectList(db.BankAccounts, "Id", "Name");
@@ -461,11 +462,13 @@ namespace MYBUSINESS.Controllers
 
                 pO.PurchaseOrderQty = 0;
                 pO.StoreId = storeId;
-                //pO.StoreId = parseId; //commented due to session issue
-                //pO.StoreId = 1;
-                Employee emp = (Employee)Session["CurrentUser"];
-                pO.EmployeeId = emp.Id;
-                db.POes.Add(pO);
+            //pO.StoreId = parseId; //commented due to session issue
+            //pO.StoreId = 1;
+            //Employee emp = (Employee)Session["CurrentUser"];
+            //pO.EmployeeId = emp.Id;
+            Employee emp = Session["CurrentUser"] as Employee ?? new Employee { Id = 0 }; // or some default ID
+            pO.EmployeeId = emp.Id;
+            db.POes.Add(pO);
                 //db.SaveChanges();
                 int sno = 0;
                 if (pOD != null)

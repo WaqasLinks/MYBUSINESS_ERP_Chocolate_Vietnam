@@ -8,7 +8,8 @@
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     @Styles.Render("~/Content/css")
-
+    @using System.Security.Claims
+    
     <link href="~/Content/custom/treeView.css" rel="stylesheet" />
 
     <link rel="stylesheet" href="~/bower_components/font-awesome/css/font-awesome.min.css">
@@ -84,16 +85,16 @@
 
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
-                        @if (Session["CurrentUser"] != null)
+                        @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Manager") || User.IsInRole("User")))
                         {
-                            MYBUSINESS.Models.Employee user = (MYBUSINESS.Models.Employee)HttpContext.Current.Session["CurrentUser"];
-                            MYBUSINESS.Models.Employee currentUser = (MYBUSINESS.Models.Employee)HttpContext.Current.Session["CurrentUser"];
+                            //MYBUSINESS.Models.Employee user = (MYBUSINESS.Models.Employee)HttpContext.Current.Session["CurrentUser"];
+                            //MYBUSINESS.Models.Employee currentUser = (MYBUSINESS.Models.Employee)HttpContext.Current.Session["CurrentUser"];
                             //if (currentUser.StoreId != null && storeId != 0)
                             //var storeId = Session["StoreId"] as string;
                             var storeId = Session["StoreId"];
                             if (storeId != null)
                             {
-                                
+
                                 <li><a href="#" id="bankDeposits" data-url="/SOSR/BankDepositPopup" data-target="#storeClosingModal">Bank Deposit</a></li>
                                 @*<li><a href="#" class="small-box-footer" id="bankDepositLink">Bank Deposit</a></li>*@
                                 <li><a href="#" id="moneyInputs" data-url="/SOSR/MoneyInputPopup" data-target="#storeClosingModal">Money Input</a></li>
@@ -101,11 +102,18 @@
 
 
                             }
-                            if (currentUser.EmployeeTypeId == 0)
+                            if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Manager") || User.IsInRole("User")))
                             {
                                 <li>@Html.ActionLink("Support", "Contact", "Home")</li>
                             }
-                            <li>@Html.ActionLink(user.Login, "Edit", "Employees", new { id = 0 }, null)</li>
+
+                            
+                            {
+                                var identity = (ClaimsIdentity)User.Identity;
+                                var userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                                <li>@Html.ActionLink(User.Identity.Name, "Edit", "Employees", new { id = userId }, null)</li>
+                            }
                             @*<li>@Html.ActionLink("Logout", "Logout", "UserManagement")</li>*@
                             <li>
                                 <a href="#" onclick="logout()">Logout</a>
@@ -206,6 +214,11 @@
                     <li><a href="/Stores/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Store</span></a></li>
                     <li><a href="/Stores/Index"><i class="fa fa-search"></i> <span>Stores History</span></a></li>
                     <li><a href="/Stores/GetStoreVndBalance"><i class="fa fa-sparkles"></i> <span>Balance History</span></a></li>
+                    
+                    <li><a href="#"><i class=""></i> <span><b>User</b></span></a></li>
+                    <li><a href="/AspNetUsers/Index"><i class="fa fa-search"></i> <span>Users List</span></a></li>
+
+
                     @*Customers*@
                     <li><a href="#"><i class=""></i> <span><b>Customers</b></span></a></li>
                     <li><a href="/Customers/Create"><i class="fa fa-sparkles"></i> <span>New Customer</span></a></li>
@@ -245,8 +258,8 @@
 
 
                     @*<li><a href="/SOSR/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Sale</span></a></li>
-        <li><a href="/SOSR/Index"><i class="fa fa-search"></i> <span>Sales History</span></a></li>
-        <li><a href="/SOSR/IndexReturn"><i class="fa fa-search"></i> <span>Returns History</span></a></li>*@
+                        <li><a href="/SOSR/Index"><i class="fa fa-search"></i> <span>Sales History</span></a></li>
+                        <li><a href="/SOSR/IndexReturn"><i class="fa fa-search"></i> <span>Returns History</span></a></li>*@
 
 
 
@@ -258,21 +271,21 @@
 
                     <!--<li><a href="#"><i class=""></i> <span><b>Recieving</b></span></a></li>-->
                     @*<li><a href="/POPRReciver/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Recieving</span></a></li>
-        <li><a href="/POPRReciver/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Recieving</span></a></li>*@
+                        <li><a href="/POPRReciver/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Recieving</span></a></li>*@
                     <!--<li><a href="/POPRReciver/Index"><i class="fa fa-search"></i> <span>Recieving History</span></a></li>-->
 
                     <li style="display:none;"><a href="#"><i class=""></i> <span><b>Printed Packaging Recieving</b></span></a></li>
                     @*<li><a href="/POPRReciver/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Recieving</span></a></li>
-        <li><a href="/POPRReciver/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Recieving</span></a></li>*@
+                        <li><a href="/POPRReciver/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Recieving</span></a></li>*@
                     <li style="display:none;"><a href="/PrintedPackagingReciver/Index"><i class="fa fa-search"></i> <span>Recieving History</span></a></li>
 
 
 
 
                     <!--<li><a href="#"><i class=""></i> <span><b>Products</b></span></a></li>
-    <li><a href="/Products/Create"><i class="fa fa-sparkles"></i> <span>New Product</span></a></li>
-    <li><a href="/Products/Index"><i class="fa fa-gift"></i> <span>Shops Products & Stock</span></a></li>
-    <li><a href="/Products/IndexFactory"><i class="fa fa-gift"></i> <span>Factory Products & Stock</span></a></li>-->
+                    <li><a href="/Products/Create"><i class="fa fa-sparkles"></i> <span>New Product</span></a></li>
+                    <li><a href="/Products/Index"><i class="fa fa-gift"></i> <span>Shops Products & Stock</span></a></li>
+                    <li><a href="/Products/IndexFactory"><i class="fa fa-gift"></i> <span>Factory Products & Stock</span></a></li>-->
                     @*<li><a href="/StockTransections/Summary"><i class="fa fa-list"></i> <span>Stock Summary</span></a></li>*@
 
 
@@ -282,8 +295,8 @@
 
 
                     @*<li><a href="#"><i class=""></i> <span><b>Color</b></span></a></li>
-        <li><a href="/Color/Create"><i class="fa fa-sparkles"></i> <span>New Color</span></a></li>
-        <li><a href="/Color/Index"><i class="fa fa-gift"></i> <span>Color List</span></a></li>*@
+                        <li><a href="/Color/Create"><i class="fa fa-sparkles"></i> <span>New Color</span></a></li>
+                        <li><a href="/Color/Index"><i class="fa fa-gift"></i> <span>Color List</span></a></li>*@
 
 
 
@@ -293,8 +306,8 @@
                     @*<li><a href="~/PostProduction/Create"><i class="fa fa-sparkles"></i> <span>New PostProduction</span></a></li>*@
                     <!--<li><a href="~/PostProduction/Index"><i class="fa fa-gift"></i> <span>Post Production List</span></a></li>-->
                     @*<li><a href="#"><i class=""></i> <span><b>Final Production</b></span></a></li>
-        <li><a href="~/FinalProduction/Create"><i class="fa fa-sparkles"></i> <span>Final Production</span></a></li>
-        <li><a href="~/FinalProduction/Index"><i class="fa fa-gift"></i> <span>New Production List</span></a></li>*@
+                        <li><a href="~/FinalProduction/Create"><i class="fa fa-sparkles"></i> <span>Final Production</span></a></li>
+                        <li><a href="~/FinalProduction/Index"><i class="fa fa-gift"></i> <span>New Production List</span></a></li>*@
 
 
 
@@ -344,89 +357,89 @@
 </body>
 </html>
 @*<script>
-    // Move calculateTotal to the global scope
-    function calculateTotal(inputId, multiplier, totalId) {
-        const inputValue = parseFloat(document.getElementById(inputId).value) || 0;
-        const totalValue = inputValue * multiplier;
-        document.getElementById(totalId).value = totalValue.toFixed(2); // Format to 2 decimal places
+        // Move calculateTotal to the global scope
+        function calculateTotal(inputId, multiplier, totalId) {
+            const inputValue = parseFloat(document.getElementById(inputId).value) || 0;
+            const totalValue = inputValue * multiplier;
+            document.getElementById(totalId).value = totalValue.toFixed(2); // Format to 2 decimal places
 
-        // Update the grand total for VND, USD, or JPY
-        updateGrandTotal();
-    }
+            // Update the grand total for VND, USD, or JPY
+            updateGrandTotal();
+        }
 
-    // Function to update the grand total for VND, USD, and JPY
-    function updateGrandTotal() {
-        // Calculate VND Grand Total
-        let vndTotal = 0;
-        document.querySelectorAll('[id^="total"]').forEach(input => {
-            if (input.id.includes("Vnd")) {
-                vndTotal += parseFloat(input.value) || 0;
-            }
-        });
-        document.getElementById("totalVnd").value = vndTotal.toFixed(2);
-
-        // Calculate USD Grand Total
-        let usdTotal = 0;
-        document.querySelectorAll('[id^="total"]').forEach(input => {
-            if (input.id.includes("Dollars")) {
-                usdTotal += parseFloat(input.value) || 0;
-            }
-        });
-        document.getElementById("totalDollars").value = usdTotal.toFixed(2);
-
-        // Calculate JPY Grand Total
-        let jpyTotal = 0;
-        document.querySelectorAll('[id^="total"]').forEach(input => {
-            if (input.id.includes("Yens")) {
-                jpyTotal += parseFloat(input.value) || 0;
-            }
-        });
-        document.getElementById("totalYens").value = jpyTotal.toFixed(2);
-    }
-
-    // Handle Bank Deposit link click
-    $(document).ready(function () {
-        $('#bankDepositLink').click(function (e) {
-            e.preventDefault(); // Prevent default link behavior
-            $('#storeOpeningPopup').modal('show'); // Show the modal
-        });
-
-        // Handle Money Input link click
-        $('#moneyInputLink').click(function (e) {
-            e.preventDefault(); // Prevent default link behavior
-            $('#storeOpeningPopup').modal('show'); // Show the modal
-        });
-        $("#openShop").click(function (e) {
-            e.preventDefault(); // Prevent default form submission
-
-            var storeData = {
-                Id: 0, // Assuming it's a new store, update if needed
-                StoreId: $("#storeId").val(), // Get StoreId from input field
-                OpeningBalance: $("#openingBalance").val(),
-                OpeningCurrencyDetail: $("#openingCurrencyDetail").val()
-            };
-
-            $.ajax({
-                url: '/Stores/OpenShop', // Replace 'YourController' with the actual controller name
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(storeData),
-                success: function (response) {
-                    if (response.Success) {
-                        alert(response.Message);
-                        // Optionally reload the page or redirect
-                        location.reload();
-                    } else {
-                        alert("Error: " + response.Message);
-                    }
-                },
-                error: function () {
-                    alert("An error occurred while processing your request.");
+        // Function to update the grand total for VND, USD, and JPY
+        function updateGrandTotal() {
+            // Calculate VND Grand Total
+            let vndTotal = 0;
+            document.querySelectorAll('[id^="total"]').forEach(input => {
+                if (input.id.includes("Vnd")) {
+                    vndTotal += parseFloat(input.value) || 0;
                 }
             });
+            document.getElementById("totalVnd").value = vndTotal.toFixed(2);
+
+            // Calculate USD Grand Total
+            let usdTotal = 0;
+            document.querySelectorAll('[id^="total"]').forEach(input => {
+                if (input.id.includes("Dollars")) {
+                    usdTotal += parseFloat(input.value) || 0;
+                }
+            });
+            document.getElementById("totalDollars").value = usdTotal.toFixed(2);
+
+            // Calculate JPY Grand Total
+            let jpyTotal = 0;
+            document.querySelectorAll('[id^="total"]').forEach(input => {
+                if (input.id.includes("Yens")) {
+                    jpyTotal += parseFloat(input.value) || 0;
+                }
+            });
+            document.getElementById("totalYens").value = jpyTotal.toFixed(2);
+        }
+
+        // Handle Bank Deposit link click
+        $(document).ready(function () {
+            $('#bankDepositLink').click(function (e) {
+                e.preventDefault(); // Prevent default link behavior
+                $('#storeOpeningPopup').modal('show'); // Show the modal
+            });
+
+            // Handle Money Input link click
+            $('#moneyInputLink').click(function (e) {
+                e.preventDefault(); // Prevent default link behavior
+                $('#storeOpeningPopup').modal('show'); // Show the modal
+            });
+            $("#openShop").click(function (e) {
+                e.preventDefault(); // Prevent default form submission
+
+                var storeData = {
+                    Id: 0, // Assuming it's a new store, update if needed
+                    StoreId: $("#storeId").val(), // Get StoreId from input field
+                    OpeningBalance: $("#openingBalance").val(),
+                    OpeningCurrencyDetail: $("#openingCurrencyDetail").val()
+                };
+
+                $.ajax({
+                    url: '/Stores/OpenShop', // Replace 'YourController' with the actual controller name
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(storeData),
+                    success: function (response) {
+                        if (response.Success) {
+                            alert(response.Message);
+                            // Optionally reload the page or redirect
+                            location.reload();
+                        } else {
+                            alert("Error: " + response.Message);
+                        }
+                    },
+                    error: function () {
+                        alert("An error occurred while processing your request.");
+                    }
+                });
+            });
         });
-    });
-</script>*@
+    </script>*@
 <!--<div class="modal fade bd-tax-modal-lg" id="storeOpeningPopup" tabindex="-1" role="dialog" aria-labelledby="storeOpeningPopupLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
         <div class="modal-content">
@@ -442,69 +455,69 @@
                         <div class="col-md-9" style="height: 537px !important; overflow-y:scroll;">
                             <div class="card">
                                 <div class="card-header">-->
-                                    @*<h4 class="card-title">Total</h4>*@
-                                <!--</div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <form>
-                                                <h4 class="card-title">VND (₫)</h4>
-                                                <div class="form-group flex-row">
-                                                    <label for="oneThsndVnd" id="lblOneThsndVnd" data-value="1">1 000 (₫)</label>
-                                                    <input type="text" autocomplete="off" class="form-control" name="oneThsndVnd" id="oneThsndVnd" value="0" oninput="calculateTotal('oneThsndVnd', 1000, 'totalOneThsndVnd')"> &nbsp;&nbsp;&nbsp;
-                                                    <input type="text" autocomplete="off" class="form-control" name="totalOneThsndVnd" id="totalOneThsndVnd" value="0">
-                                                </div>
-                                                <div class="form-group flex-row">
-                                                    <label for="twoThsndVnd" id="lblTwoThsndVnd" data-value="1">2 000 (₫)</label>
-                                                    <input type="text" class="form-control" name="twoThsndVnd" id="twoThsndVnd" value="0" oninput="calculateTotal('twoThsndVnd', 2000, 'totalTwoThsndVnd')">&nbsp;&nbsp;&nbsp;
-                                                    <input type="text" class="form-control" name="totalTwoThsndVnd" id="totalTwoThsndVnd" value="0">
-                                                </div>
-                                                <div class="form-group flex-row">
-                                                    <label for="fiveThsndVnd" id="lblFiveThsndVnd" data-value="1">5 000 (₫)</label>
-                                                    <input type="text" class="form-control" name="fiveThsndVnd" id="fiveThsndVnd" value="0" oninput="calculateTotal('fiveThsndVnd', 5000, 'totalFiveThsndVnd')">&nbsp;&nbsp;&nbsp;
-                                                    <input type="text" class="form-control" name="totalFiveThsndVnd" id="totalFiveThsndVnd" value="0">
-                                                </div>
-                                                <div class="form-group flex-row">
-                                                    <label for="tenThsndVnd" id="lblTenThsndVnd" data-value="1">10 000 (₫)</label>
-                                                    <input type="text" class="form-control" name="tenThsndVnd" id="tenThsndVnd" value="0" oninput="calculateTotal('tenThsndVnd', 10000, 'totalTenThsndVnd')">&nbsp;&nbsp;&nbsp;
-                                                    <input type="text" class="form-control" name="totalTenThsndVnd" id="totalTenThsndVnd" value="0">
-                                                </div>
-                                                <div class="form-group flex-row">
-                                                    <label for="twentyThsndVnd" id="lblTwentyThsndVnd" data-value="1">20 000 (₫)</label>
-                                                    <input type="text" class="form-control" name="twentyThsndVnd" id="twentyThsndVnd" value="0" oninput="calculateTotal('twentyThsndVnd', 20000, 'totalTwentyThsndVnd')">&nbsp;&nbsp;&nbsp;
-                                                    <input type="text" class="form-control" name="totalTwentyThsndVnd" id="totalTwentyThsndVnd" value="0">
-                                                </div>
-                                                <div class="form-group flex-row">
-                                                    <label for="fiftyThsndVnd" id="lblFiftyThsndVnd" data-value="1">50 000 (₫)</label>
-                                                    <input type="text" class="form-control" name="fiftyThsndVnd" id="fiftyThsndVnd" value="0" oninput="calculateTotal('fiftyThsndVnd', 50000, 'totalFiftyThsndVnd')">&nbsp;&nbsp;&nbsp;
-                                                    <input type="text" class="form-control" name="totalFiftyThsndVnd" id="totalFiftyThsndVnd" value="0">
-                                                </div>
-                                                <div class="form-group flex-row">
-                                                    <label for="oneLacVnd" id="lblOneLacVnd" data-value="1">100 000 (₫)</label>
-                                                    <input type="text" class="form-control" name="oneLacVnd" id="oneLacVnd" value="0" oninput="calculateTotal('oneLacVnd', 100000, 'totalOneLacVnd')">&nbsp;&nbsp;&nbsp;
-                                                    <input type="text" class="form-control" name="totalOneLacVn" id="totalOneLacVnd" value="0">
-                                                </div>
-                                                <div class="form-group flex-row">
-                                                    <label for="twoLacVnd" id="lblTwoLacVnd" data-value="1">200 000 (₫)</label>
-                                                    <input type="text" class="form-control" name="twoLacVnd" id="twoLacVnd" value="0" oninput="calculateTotal('twoLacVnd', 200000, 'totalTwoLacVnd')">&nbsp;&nbsp;&nbsp;
-                                                    <input type="text" class="form-control" name="totalTwoLacVnd" id="totalTwoLacVnd" value="0">
-                                                </div>
-                                                <div class="form-group flex-row">
-                                                    <label for="fiveLacVnd" id="lblFiveLacVnd" data-value="1">500 000 (₫)</label>
-                                                    <input type="text" class="form-control" name="fiveLacVnd" id="fiveLacVnd" value="0" oninput="calculateTotal('fiveLacVnd', 500000, 'totalFiveLacVnd')">&nbsp;&nbsp;&nbsp;
-                                                    <input type="text" class="form-control" name="totalFiveLacVnd" id="totalFiveLacVnd" value="0">
-                                                </div>
-                                                <div class="form-group flex-row">
-                                                    <label for="totalVnd" id="lblTotalVnd">Total</label>
-                                                    <input type="text" class="form-control" name="totalVnd" id="totalVnd" value="0">&nbsp;&nbsp;&nbsp; Total (₫)
-                                                    <input type="text" class="form-control" name="totalVndCount" id="totalVndCount" value="0">
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <div class="col-md-6">-->
-                                            <!-- Content for the third column (4 columns wide) -->
-                                            <!-- Calculator buttons -->
-                                            <!--<div class="calculator-container">
+@*<h4 class="card-title">Total</h4>*@
+<!--</div>
+<div class="card-body">
+    <div class="row">
+        <div class="col-md-6">
+            <form>
+                <h4 class="card-title">VND (₫)</h4>
+                <div class="form-group flex-row">
+                    <label for="oneThsndVnd" id="lblOneThsndVnd" data-value="1">1 000 (₫)</label>
+                    <input type="text" autocomplete="off" class="form-control" name="oneThsndVnd" id="oneThsndVnd" value="0" oninput="calculateTotal('oneThsndVnd', 1000, 'totalOneThsndVnd')"> &nbsp;&nbsp;&nbsp;
+                    <input type="text" autocomplete="off" class="form-control" name="totalOneThsndVnd" id="totalOneThsndVnd" value="0">
+                </div>
+                <div class="form-group flex-row">
+                    <label for="twoThsndVnd" id="lblTwoThsndVnd" data-value="1">2 000 (₫)</label>
+                    <input type="text" class="form-control" name="twoThsndVnd" id="twoThsndVnd" value="0" oninput="calculateTotal('twoThsndVnd', 2000, 'totalTwoThsndVnd')">&nbsp;&nbsp;&nbsp;
+                    <input type="text" class="form-control" name="totalTwoThsndVnd" id="totalTwoThsndVnd" value="0">
+                </div>
+                <div class="form-group flex-row">
+                    <label for="fiveThsndVnd" id="lblFiveThsndVnd" data-value="1">5 000 (₫)</label>
+                    <input type="text" class="form-control" name="fiveThsndVnd" id="fiveThsndVnd" value="0" oninput="calculateTotal('fiveThsndVnd', 5000, 'totalFiveThsndVnd')">&nbsp;&nbsp;&nbsp;
+                    <input type="text" class="form-control" name="totalFiveThsndVnd" id="totalFiveThsndVnd" value="0">
+                </div>
+                <div class="form-group flex-row">
+                    <label for="tenThsndVnd" id="lblTenThsndVnd" data-value="1">10 000 (₫)</label>
+                    <input type="text" class="form-control" name="tenThsndVnd" id="tenThsndVnd" value="0" oninput="calculateTotal('tenThsndVnd', 10000, 'totalTenThsndVnd')">&nbsp;&nbsp;&nbsp;
+                    <input type="text" class="form-control" name="totalTenThsndVnd" id="totalTenThsndVnd" value="0">
+                </div>
+                <div class="form-group flex-row">
+                    <label for="twentyThsndVnd" id="lblTwentyThsndVnd" data-value="1">20 000 (₫)</label>
+                    <input type="text" class="form-control" name="twentyThsndVnd" id="twentyThsndVnd" value="0" oninput="calculateTotal('twentyThsndVnd', 20000, 'totalTwentyThsndVnd')">&nbsp;&nbsp;&nbsp;
+                    <input type="text" class="form-control" name="totalTwentyThsndVnd" id="totalTwentyThsndVnd" value="0">
+                </div>
+                <div class="form-group flex-row">
+                    <label for="fiftyThsndVnd" id="lblFiftyThsndVnd" data-value="1">50 000 (₫)</label>
+                    <input type="text" class="form-control" name="fiftyThsndVnd" id="fiftyThsndVnd" value="0" oninput="calculateTotal('fiftyThsndVnd', 50000, 'totalFiftyThsndVnd')">&nbsp;&nbsp;&nbsp;
+                    <input type="text" class="form-control" name="totalFiftyThsndVnd" id="totalFiftyThsndVnd" value="0">
+                </div>
+                <div class="form-group flex-row">
+                    <label for="oneLacVnd" id="lblOneLacVnd" data-value="1">100 000 (₫)</label>
+                    <input type="text" class="form-control" name="oneLacVnd" id="oneLacVnd" value="0" oninput="calculateTotal('oneLacVnd', 100000, 'totalOneLacVnd')">&nbsp;&nbsp;&nbsp;
+                    <input type="text" class="form-control" name="totalOneLacVn" id="totalOneLacVnd" value="0">
+                </div>
+                <div class="form-group flex-row">
+                    <label for="twoLacVnd" id="lblTwoLacVnd" data-value="1">200 000 (₫)</label>
+                    <input type="text" class="form-control" name="twoLacVnd" id="twoLacVnd" value="0" oninput="calculateTotal('twoLacVnd', 200000, 'totalTwoLacVnd')">&nbsp;&nbsp;&nbsp;
+                    <input type="text" class="form-control" name="totalTwoLacVnd" id="totalTwoLacVnd" value="0">
+                </div>
+                <div class="form-group flex-row">
+                    <label for="fiveLacVnd" id="lblFiveLacVnd" data-value="1">500 000 (₫)</label>
+                    <input type="text" class="form-control" name="fiveLacVnd" id="fiveLacVnd" value="0" oninput="calculateTotal('fiveLacVnd', 500000, 'totalFiveLacVnd')">&nbsp;&nbsp;&nbsp;
+                    <input type="text" class="form-control" name="totalFiveLacVnd" id="totalFiveLacVnd" value="0">
+                </div>
+                <div class="form-group flex-row">
+                    <label for="totalVnd" id="lblTotalVnd">Total</label>
+                    <input type="text" class="form-control" name="totalVnd" id="totalVnd" value="0">&nbsp;&nbsp;&nbsp; Total (₫)
+                    <input type="text" class="form-control" name="totalVndCount" id="totalVndCount" value="0">
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">-->
+<!-- Content for the third column (4 columns wide) -->
+<!-- Calculator buttons -->
+<!--<div class="calculator-container">
                                                 <div class="calculator">
                                                     <div class="row">
                                                         <div class="col-md-4">

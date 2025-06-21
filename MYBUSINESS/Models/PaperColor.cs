@@ -17,10 +17,10 @@ namespace MYBUSINESS.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public PaperColor()
         {
-            this.PPColorReceipts = new HashSet<PPColorReceipt>();
-            this.CPReceipts = new HashSet<CPReceipt>();
-            this.ProductStockDetails = new HashSet<ProductStockDetail>();
             this.BOXProductions = new HashSet<BOXProduction>();
+            this.CPReceipts = new HashSet<CPReceipt>();
+            this.PPColorReceipts = new HashSet<PPColorReceipt>();
+            this.ProductStockDetails = new HashSet<ProductStockDetail>();
         }
     
         public int Id { get; set; }
@@ -30,15 +30,15 @@ namespace MYBUSINESS.Models
         public Nullable<int> PackagingProductionId { get; set; }
         public string ColorCode { get; set; }
     
-        public virtual Product Product { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BOXProduction> BOXProductions { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CPReceipt> CPReceipts { get; set; }
+        public virtual PackagingProduction PackagingProduction { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PPColorReceipt> PPColorReceipts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CPReceipt> CPReceipts { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductStockDetail> ProductStockDetails { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BOXProduction> BOXProductions { get; set; }
-        public virtual PackagingProduction PackagingProduction { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

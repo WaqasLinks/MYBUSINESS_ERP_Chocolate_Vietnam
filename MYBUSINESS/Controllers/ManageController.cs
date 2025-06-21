@@ -10,7 +10,7 @@ using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,Manager,User")]
     public class ManageController : Controller
     {
         private ApplicationSignInManager _signInManager;

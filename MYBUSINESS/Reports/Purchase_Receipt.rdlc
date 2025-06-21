@@ -7,7 +7,7 @@
         <DataProvider>System.Data.DataSet</DataProvider>
         <ConnectString>/* Local Connection */</ConnectString>
       </ConnectionProperties>
-      <rd:DataSourceID>1d4a87a3-8f04-4774-b25b-9062c572d48a</rd:DataSourceID>
+      <rd:DataSourceID>2c7c7594-b03e-43c6-8e14-c6993966acbf</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>
@@ -23,14 +23,10 @@
         </Field>
         <Field Name="POSerial">
           <DataField>POSerial</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
+          <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
         <Field Name="PurchaseOrderQty">
           <DataField>PurchaseOrderQty</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="PurchaseReturnQty">
-          <DataField>PurchaseReturnQty</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
         <Field Name="Name">
@@ -44,6 +40,10 @@
         <Field Name="PurchasePrice">
           <DataField>PurchasePrice</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="Unit">
+          <DataField>Unit</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Quantity">
           <DataField>Quantity</DataField>
@@ -93,10 +93,6 @@
           <DataField>PurchaseOrderAmount</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
-        <Field Name="PurchaseReturnAmount">
-          <DataField>PurchaseReturnAmount</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
         <Field Name="BillPaid">
           <DataField>BillPaid</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
@@ -124,7 +120,7 @@
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>spPOReport_DataSet</rd:DataSetName>
-        <rd:SchemaPath>C:\CURRENT PROJECTS\MYBUSINESS - LocalDB - No crystal report ref\MYBUSINESS\DataSets\spPOReport_DataSet.xsd</rd:SchemaPath>
+        <rd:SchemaPath>E:\Project1\MYBUSINESS_ERP_Chocolate_Vietnam\MYBUSINESS\DataSets\spPOReport_DataSet.xsd</rd:SchemaPath>
         <rd:TableName>spPOReport</rd:TableName>
         <rd:TableAdapterFillMethod>Fill</rd:TableAdapterFillMethod>
         <rd:TableAdapterGetDataMethod>GetData</rd:TableAdapterGetDataMethod>
@@ -143,7 +139,7 @@
                   <Width>0.55423in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.15045in</Width>
+                  <Width>1.48606in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>0.66172in</Width>
@@ -152,7 +148,7 @@
                   <Width>1.09868in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.1409in</Width>
+                  <Width>0.98895in</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -305,14 +301,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox5">
+                        <Textbox Name="Textbox12">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>AMOUNT</Value>
+                                  <Value />
                                   <Style>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>White</Color>
@@ -324,7 +320,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox5</rd:DefaultName>
+                          <rd:DefaultName>Textbox12</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -474,14 +470,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="ItemTotal">
+                        <Textbox Name="Textbox11">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!ItemTotal.Value</Value>
+                                  <Value />
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -490,7 +486,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>ItemTotal</rd:DefaultName>
+                          <rd:DefaultName>Textbox11</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -531,300 +527,21 @@
             <Top>0.04167in</Top>
             <Left>0.14701in</Left>
             <Height>0.5in</Height>
-            <Width>5.60598in</Width>
+            <Width>4.78964in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
               </Border>
             </Style>
           </Tablix>
-          <Textbox Name="Discount">
+          <Textbox Name="Textbox33">
             <CanGrow>true</CanGrow>
             <KeepTogether>true</KeepTogether>
             <Paragraphs>
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=FormatNumber(Fields!Discount.Value, 2)</Value>
-                    <Style />
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Left</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Discount</rd:DefaultName>
-            <Top>1.10278in</Top>
-            <Left>4.59694in</Left>
-            <Height>0.25in</Height>
-            <Width>1.1409in</Width>
-            <ZIndex>1</ZIndex>
-            <Visibility>
-              <Hidden>=IIF(First(Fields!Discount.Value, "DataSet1")&gt;"0",false,true)</Hidden>
-            </Visibility>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox32">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Discount</Value>
-                    <Style />
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Right</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>1.10278in</Top>
-            <Left>3.33118in</Left>
-            <Height>0.25in</Height>
-            <Width>1.25in</Width>
-            <ZIndex>2</ZIndex>
-            <Visibility>
-              <Hidden>=IIF(First(Fields!Discount.Value, "DataSet1")&gt;"0",false,true)</Hidden>
-            </Visibility>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="PrevBalance">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=FormatNumber(Fields!PrevBalance.Value,2)</Value>
-                    <Style />
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>PrevBalance</rd:DefaultName>
-            <Top>1.37045in</Top>
-            <Left>4.59361in</Left>
-            <Height>0.25in</Height>
-            <Width>1.1409in</Width>
-            <ZIndex>3</ZIndex>
-            <Visibility>
-              <Hidden>true</Hidden>
-            </Visibility>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox42">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Prev. Balance</Value>
-                    <Style />
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Right</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>1.37045in</Top>
-            <Left>3.32946in</Left>
-            <Height>0.25in</Height>
-            <Width>1.25in</Width>
-            <ZIndex>4</ZIndex>
-            <Visibility>
-              <Hidden>true</Hidden>
-            </Visibility>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="SaleReturnAmount">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=FormatNumber(Fields!PurchaseReturnAmount.Value,2)</Value>
-                    <Style />
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Left</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>SaleReturnAmount</rd:DefaultName>
-            <Top>0.83611in</Top>
-            <Left>4.60611in</Left>
-            <Height>0.25in</Height>
-            <Width>1.1329in</Width>
-            <ZIndex>5</ZIndex>
-            <Visibility>
-              <Hidden>=IIF(First(Fields!PurchaseReturnQty.Value, "DataSet1")&gt;"0",false,true)</Hidden>
-            </Visibility>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox31">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Total Returns</Value>
-                    <Style>
-                      <FontWeight>Bold</FontWeight>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Right</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>0.83611in</Top>
-            <Left>2.88711in</Left>
-            <Height>0.25in</Height>
-            <Width>1.25in</Width>
-            <ZIndex>6</ZIndex>
-            <Visibility>
-              <Hidden>=IIF(First(Fields!PurchaseReturnQty.Value, "DataSet1")&gt;"0",false,true)</Hidden>
-            </Visibility>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="SaleType2">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=Sum(Fields!Quantity.Value)</Value>
-                    <Style />
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Left</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>SaleType1</rd:DefaultName>
-            <Top>0.8375in</Top>
-            <Left>4.10956in</Left>
-            <Height>0.25in</Height>
-            <Width>0.48055in</Width>
-            <ZIndex>7</ZIndex>
-            <Visibility>
-              <Hidden>=IIF(First(Fields!PurchaseReturnQty.Value, "DataSet1")&gt;"0",false,true)</Hidden>
-            </Visibility>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="PurchaseOrderAmount">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=FormatNumber(Fields!PurchaseOrderAmount.Value,2)</Value>
-                    <Style />
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Left</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <Top>0.56527in</Top>
-            <Left>4.60611in</Left>
-            <Height>0.25in</Height>
-            <Width>1.1329in</Width>
-            <ZIndex>8</ZIndex>
-            <Visibility>
-              <Hidden>=IIF(First(Fields!PurchaseOrderQty.Value, "DataSet1")&gt;"0",false,true)</Hidden>
-            </Visibility>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox30">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Total Orders</Value>
+                    <Value>Stock Manager Signature     </Value>
                     <Style>
                       <FontWeight>Bold</FontWeight>
                     </Style>
@@ -836,13 +553,13 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox30</rd:DefaultName>
-            <Top>0.56527in</Top>
-            <Left>2.88711in</Left>
+            <Top>4.31875in</Top>
+            <Left>0.13188in</Left>
             <Height>0.25in</Height>
             <Width>1.25in</Width>
-            <ZIndex>9</ZIndex>
+            <ZIndex>1</ZIndex>
             <Visibility>
-              <Hidden>=IIF(First(Fields!PurchaseOrderQty.Value, "DataSet1")&gt;"0",false,true)</Hidden>
+              <Hidden>=IIF(First(Fields!PurchaseOrderQty.Value, "DataSet1") &gt; "0", False, True)</Hidden>
             </Visibility>
             <Style>
               <Border>
@@ -854,14 +571,126 @@
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
-          <Textbox Name="SaleType1">
+          <Textbox Name="Textbox34">
             <CanGrow>true</CanGrow>
             <KeepTogether>true</KeepTogether>
             <Paragraphs>
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=Sum(Fields!Quantity.Value)</Value>
+                    <Value>Production Manager 
+Signature        </Value>
+                    <Style>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Right</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox30</rd:DefaultName>
+            <Top>4.31875in</Top>
+            <Left>2.13579in</Left>
+            <Height>0.25in</Height>
+            <Width>1.54167in</Width>
+            <ZIndex>2</ZIndex>
+            <Visibility>
+              <Hidden>=IIF(First(Fields!PurchaseOrderQty.Value, "DataSet1") &gt; "0", False, True)</Hidden>
+            </Visibility>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox35">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Director Signature</Value>
+                    <Style>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Right</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox30</rd:DefaultName>
+            <Top>4.31875in</Top>
+            <Left>4.23646in</Left>
+            <Height>0.25in</Height>
+            <Width>1.36458in</Width>
+            <ZIndex>3</ZIndex>
+            <Visibility>
+              <Hidden>=IIF(First(Fields!PurchaseOrderQty.Value, "DataSet1") &gt; "0", False, True)</Hidden>
+            </Visibility>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox6">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>UNIT</Value>
+                    <Style>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>White</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox5</rd:DefaultName>
+            <Top>0.04167in</Top>
+            <Left>3.9477in</Left>
+            <Height>0.25in</Height>
+            <Width>0.98895in</Width>
+            <ZIndex>4</ZIndex>
+            <Style>
+              <Border>
+                <Color>LightGrey</Color>
+                <Style>Solid</Style>
+              </Border>
+              <BackgroundColor>Black</BackgroundColor>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="ItemTotal2">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!Unit.Value, "DataSet1")</Value>
                     <Style />
                   </TextRun>
                 </TextRuns>
@@ -870,18 +699,86 @@
                 </Style>
               </Paragraph>
             </Paragraphs>
-            <rd:DefaultName>SaleType1</rd:DefaultName>
-            <Top>0.55833in</Top>
-            <Left>4.10956in</Left>
+            <rd:DefaultName>ItemTotal</rd:DefaultName>
+            <Top>0.29514in</Top>
+            <Left>3.9657in</Left>
             <Height>0.25in</Height>
-            <Width>0.48055in</Width>
-            <ZIndex>10</ZIndex>
-            <Visibility>
-              <Hidden>=IIF(First(Fields!PurchaseOrderQty.Value, "DataSet1")&gt;"0",false,true)</Hidden>
-            </Visibility>
+            <Width>0.98895in</Width>
+            <ZIndex>5</ZIndex>
             <Style>
               <Border>
-                <Style>None</Style>
+                <Color>LightGrey</Color>
+                <Style>Solid</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox5">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>AMOUNT</Value>
+                    <Style>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>White</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox5</rd:DefaultName>
+            <Top>0.03125in</Top>
+            <Left>4.9477in</Left>
+            <Height>0.25in</Height>
+            <Width>0.98895in</Width>
+            <ZIndex>6</ZIndex>
+            <Style>
+              <Border>
+                <Color>LightGrey</Color>
+                <Style>Solid</Style>
+              </Border>
+              <BackgroundColor>Black</BackgroundColor>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="ItemTotal">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Fields!ItemTotal.Value</Value>
+                    <Style />
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>ItemTotal</rd:DefaultName>
+            <Top>0.30209in</Top>
+            <Left>4.96854in</Left>
+            <Height>0.25in</Height>
+            <Width>0.98895in</Width>
+            <ZIndex>7</ZIndex>
+            <Style>
+              <Border>
+                <Color>LightGrey</Color>
+                <Style>Solid</Style>
               </Border>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
@@ -896,7 +793,7 @@
       <Width>6.05625in</Width>
       <Page>
         <PageHeader>
-          <Height>2in</Height>
+          <Height>2.26042in</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
@@ -917,8 +814,8 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox31</rd:DefaultName>
-              <Top>1.72361in</Top>
-              <Left>3.64632in</Left>
+              <Top>1.96875in</Top>
+              <Left>3.57419in</Left>
               <Height>0.25in</Height>
               <Width>0.37351in</Width>
               <Style>
@@ -948,8 +845,8 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Date</rd:DefaultName>
-              <Top>1.71111in</Top>
-              <Left>3.97881in</Left>
+              <Top>1.98264in</Top>
+              <Left>3.97548in</Left>
               <Height>0.25in</Height>
               <Width>1.75903in</Width>
               <ZIndex>1</ZIndex>
@@ -970,7 +867,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>INV:</Value>
+                      <Value>Order Number:</Value>
                       <Style />
                     </TextRun>
                   </TextRuns>
@@ -980,10 +877,10 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox31</rd:DefaultName>
-              <Top>1.47916in</Top>
-              <Left>3.64632in</Left>
+              <Top>1.64931in</Top>
+              <Left>2.77956in</Left>
               <Height>0.25in</Height>
-              <Width>0.37351in</Width>
+              <Width>1.16814in</Width>
               <ZIndex>2</ZIndex>
               <Style>
                 <Border>
@@ -995,18 +892,6 @@
                 <PaddingBottom>2pt</PaddingBottom>
               </Style>
             </Textbox>
-            <Line Name="Line4">
-              <Top>1.31527in</Top>
-              <Left>3.97881in</Left>
-              <Height>0in</Height>
-              <Width>1.77418in</Width>
-              <ZIndex>3</ZIndex>
-              <Style>
-                <Border>
-                  <Style>Solid</Style>
-                </Border>
-              </Style>
-            </Line>
             <Textbox Name="SOSerial">
               <CanGrow>true</CanGrow>
               <KeepTogether>true</KeepTogether>
@@ -1024,11 +909,11 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>SOSerial</rd:DefaultName>
-              <Top>1.47778in</Top>
+              <Top>1.64931in</Top>
               <Left>3.94483in</Left>
               <Height>0.25in</Height>
               <Width>1.78968in</Width>
-              <ZIndex>4</ZIndex>
+              <ZIndex>3</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -1056,11 +941,11 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox31</rd:DefaultName>
-              <Top>1.4875in</Top>
-              <Left>0.14702in</Left>
+              <Top>1.71111in</Top>
+              <Left>0.13188in</Left>
               <Height>0.25in</Height>
               <Width>1in</Width>
-              <ZIndex>5</ZIndex>
+              <ZIndex>4</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -1086,11 +971,11 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Name</rd:DefaultName>
-              <Top>1.5025in</Top>
-              <Left>0.45202in</Left>
+              <Top>1.71111in</Top>
+              <Left>1.14577in</Left>
               <Height>0.25in</Height>
-              <Width>2.93377in</Width>
-              <ZIndex>6</ZIndex>
+              <Width>1.21502in</Width>
+              <ZIndex>5</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -1101,19 +986,6 @@
                 <PaddingBottom>2pt</PaddingBottom>
               </Style>
             </Textbox>
-            <Line Name="Line5">
-              <Top>1.31527in</Top>
-              <Left>0.13188in</Left>
-              <Height>0in</Height>
-              <Width>5.60596in</Width>
-              <ZIndex>7</ZIndex>
-              <Style>
-                <Border>
-                  <Color>Red</Color>
-                  <Style>Solid</Style>
-                </Border>
-              </Style>
-            </Line>
             <Textbox Name="Textbox2">
               <CanGrow>true</CanGrow>
               <KeepTogether>true</KeepTogether>
@@ -1196,11 +1068,11 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox2</rd:DefaultName>
-              <Top>0.51333in</Top>
-              <Left>0.13452in</Left>
+              <Top>0.81958in</Top>
+              <Left>0.14702in</Left>
               <Height>0.70473in</Height>
               <Width>3.25391in</Width>
-              <ZIndex>8</ZIndex>
+              <ZIndex>6</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -1217,9 +1089,9 @@
               <Sizing>FitProportional</Sizing>
               <Top>0.11056in</Top>
               <Left>0.14702in</Left>
-              <Height>0.34722in</Height>
-              <Width>0.65486in</Width>
-              <ZIndex>9</ZIndex>
+              <Height>0.63957in</Height>
+              <Width>1.42569in</Width>
+              <ZIndex>7</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -1323,19 +1195,6 @@ ______________</Value>
                 <PaddingBottom>2pt</PaddingBottom>
               </Style>
             </Textbox>
-            <Line Name="Line2">
-              <Top>0.125in</Top>
-              <Left>0.14702in</Left>
-              <Height>0in</Height>
-              <Width>5.60596in</Width>
-              <ZIndex>2</ZIndex>
-              <Style>
-                <Border>
-                  <Color>Red</Color>
-                  <Style>Solid</Style>
-                </Border>
-              </Style>
-            </Line>
           </ReportItems>
           <Style>
             <Border>

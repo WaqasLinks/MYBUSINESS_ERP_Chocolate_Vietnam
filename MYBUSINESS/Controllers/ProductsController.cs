@@ -18,6 +18,7 @@ using OfficeOpenXml;
 using System.Diagnostics;
 namespace MYBUSINESS.Controllers
 {
+    [Authorize(Roles = "Admin,Manager,User")]
     public class ProductsController : Controller
     {
         private BusinessContext db = new BusinessContext();

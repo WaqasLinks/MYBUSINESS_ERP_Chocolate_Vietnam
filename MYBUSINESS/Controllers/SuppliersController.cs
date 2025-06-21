@@ -11,6 +11,7 @@ using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
 {
+    [Authorize(Roles = "Admin,Manager,User")]
     public class SuppliersController : Controller
     {
         private BusinessContext db = new BusinessContext();
@@ -32,7 +33,7 @@ namespace MYBUSINESS.Controllers
             //var parseId = int.Parse(storeId);
 
             //var suppliers = DAL.dbSuppliers.Where(x => x.IsCreditor == false && x.Id > 0 && x.StoreId == parseId).ToList();
-            var suppliers = DAL.dbSuppliers.Where(x => x.IsCreditor == false && x.Id > 0 && x.StoreId == 1).ToList();
+            var suppliers = DAL.dbSuppliers.Where(x => x.IsCreditor == false && x.Id > 0).ToList();
             return View(suppliers);
         }
 

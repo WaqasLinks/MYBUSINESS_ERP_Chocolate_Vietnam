@@ -345,7 +345,7 @@ new { @class = "form-control product-dropdown", @id = "productDropdown", @readon
                                     <th style="width: 20%;">Name</th>
                                     @*<th style="width: 12%;">Name</th>*@
                                     <th style="width: 20%;">Qty</th>
-                                    <th style="width: 10%;">Unit</th>
+                                    <th style="width: 20%;">Unit</th>
                                     <th style="width: 15%;">Secondary Materials Type</th>
                                     @*<th style="width: 10%;">AvailableIn</th>*@
                                     @*<th style="width: 8%;">Unit</th>
@@ -359,7 +359,8 @@ new { @class = "form-control product-dropdown", @id = "productDropdown", @readon
                                     foreach (var item in Model.SubItemProduction)
                                     {
                                         //if (item.Product.FinishedProduct == true && item.Product.PType != 1)
-                                        if (item.Product != null &&  item.Product.PType == 2 || item.Product.PType == 3)
+                                        if ((item.Product != null &&  item.Product.PType == 6 || item.Product.PType == 3 ) &&
+                item.SubItemQty == null)
                                         {
                                             <tr>
                                                 <td id="SNo0">@(sNo + 1)</td>

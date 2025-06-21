@@ -53,6 +53,10 @@
                                         </th>
 
                                         <th>
+                                            @Html.DisplayNameFor(model => model.Supplier)
+                                        </th>
+
+                                        <th>
                                             @Html.DisplayNameFor(Model => Model.Category)
                                         </th>
 
@@ -61,7 +65,7 @@
                                         </th>
 
                                         <th>
-                                            @if (currentUser.EmployeeTypeId == 0)
+                                            @if (currentUser != null && currentUser.EmployeeTypeId == 0)
                                             {
                                                 @Html.DisplayNameFor(model => model.PurchasePrice)
                                             }
@@ -125,6 +129,9 @@
                                                 @Html.DisplayFor(modelItem => item.Name)
                                             </td>
                                             <td class="ProductNameForSearch">
+                                                @Html.DisplayFor(modelItem => item.Supplier)
+                                            </td>
+                                            <td class="ProductNameForSearch">
                                                 @Html.DisplayFor(modelItem => item.Category)
                                             </td>
                                             <td class="ProductNameForSearch">
@@ -132,7 +139,7 @@
                                             </td>
 
                                             <td>
-                                                @if (currentUser.EmployeeTypeId == 0)
+                                                @if (currentUser != null && currentUser.EmployeeTypeId == 0)
                                                 {
                                                     if (!item.IsService)
                                                     {
@@ -280,8 +287,8 @@
 
                                                 <div class="dropdown">
                                                     @*<button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        more ...
-                                                    </button>*@
+                    more ...
+                </button>*@
                                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                         <a class="dropdown-item" href="@Url.Action("SearchProduct", "SOSR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product in Sales">Search in Sales History</a>
                                                         <a class="dropdown-item" href="@Url.Action("SearchProduct", "POPR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product in Purchasess">Search in Purchases History</a>
@@ -323,6 +330,7 @@
                                         <td></td>
                                         <td></td>
                                         <td></td>
+                                        <td></td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -358,57 +366,31 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('#printMe').click(function () {
-            if ($.fn.DataTable.isDataTable('#ProductIndex')) {
-                $('#ProductIndex').DataTable().destroy();
-            }
-            //$("#printMe").hide();
             window.print();
         });
-      
-            // Initialize DataTable if you're using it
-        $('#ProductIndex').DataTable();
-        /*alert('hi');*/
-            // You can add additional store change handling here if needed
-            $('#storeId').change(function () {
-                // Show loading indicator
-                $('.box-body').html('<div class="text-center"><i class="fa fa-spinner fa-spin fa-3x"></i></div>');
-            });
-      
-        //$('#SOSRIndex').DataTable({
-        //    fixedHeader: {
-        //        footer: true
-        //    }
-        //});
 
-        //$('#ProductIndex').DataTable({
-        //    //fixedHeader: {
-        //    //    header: true,
-        //    //    footer: true
-        //    //},
-        //    "scrollY": "400px",
-        //    "scrollCollapse": true,
-        //    "paging": false,
-        //    "bInfo": false,
-        //    "order": [[0, "desc"]],
-        //    "searching": true
+        // Store change handler
+        $('#storeId').change(function () {
+            $('.box-body').html('<div class="text-center"><i class="fa fa-spinner fa-spin fa-3x"></i></div>');
+        });
 
-        //});
-
-        $('#ProductIndex').DataTable({
-            "paging": true,
-            "lengthChange": true,
-            "pageLength": 100,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
-            "responsive": true,
-            "autoWidth": false,
-            "order": [[0, "desc"]],
-            dom: 'Bfrtip',
-            buttons: [
+        // Initialize DataTable only once
+        if (!$.fn.DataTable.isDataTable('#ProductIndex')) {
+            $('#ProductIndex').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "pageLength": 100,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                rowReorder: {
+                    selector: 'td:nth-child(2)'
+                },
+                "responsive": true,
+                "autoWidth": false,
+                "order": [[0, "desc"]],
+                dom: 'Bfrtip',
+                buttons: [
                 {
                     extend: 'copyHtml5',
                     exportOptions: {

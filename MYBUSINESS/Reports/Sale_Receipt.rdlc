@@ -189,7 +189,7 @@
                   <Width>0.81508in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.93299in</Width>
+                  <Width>0.80799in</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -209,7 +209,7 @@
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
                                     <FontFamily />
-                                    <FontSize>5pt</FontSize>
+                                    <FontSize>6pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <TextDecoration>None</TextDecoration>
                                   </Style>
@@ -223,8 +223,28 @@
                           <rd:DefaultName>Textbox8</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Style>None</Style>
+                              <Style>Solid</Style>
                             </Border>
+                            <TopBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </BottomBorder>
+                            <LeftBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </RightBorder>
                             <BackgroundColor>White</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -245,7 +265,7 @@
                                 <TextRun>
                                   <Value>SL</Value>
                                   <Style>
-                                    <FontSize>5pt</FontSize>
+                                    <FontSize>6pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -258,8 +278,28 @@
                           <rd:DefaultName>Textbox20</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Style>None</Style>
+                              <Style>Solid</Style>
                             </Border>
+                            <TopBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </BottomBorder>
+                            <LeftBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </RightBorder>
                             <BackgroundColor>White</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -281,7 +321,7 @@
                                   <Value>Đơn giá</Value>
                                   <Style>
                                     <FontFamily />
-                                    <FontSize>5pt</FontSize>
+                                    <FontSize>6pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -294,8 +334,28 @@
                           <rd:DefaultName>Textbox26</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Style>None</Style>
+                              <Style>Solid</Style>
                             </Border>
+                            <TopBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </BottomBorder>
+                            <LeftBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </RightBorder>
                             <BackgroundColor>White</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -317,21 +377,41 @@
                                   <Value>Thành tiền</Value>
                                   <Style>
                                     <FontFamily />
-                                    <FontSize>5pt</FontSize>
+                                    <FontSize>6pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Center</TextAlign>
+                                <TextAlign>Right</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox5</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Style>None</Style>
+                              <Style>Solid</Style>
                             </Border>
+                            <TopBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </BottomBorder>
+                            <LeftBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </RightBorder>
                             <BackgroundColor>White</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -357,7 +437,8 @@
                                 <TextRun>
                                   <Value>=Fields!ProductName.Value</Value>
                                   <Style>
-                                    <FontSize>5pt</FontSize>
+                                    <FontSize>6pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -369,8 +450,28 @@
                           <rd:DefaultName>ProductName</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Style>None</Style>
+                              <Style>Solid</Style>
                             </Border>
+                            <TopBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </BottomBorder>
+                            <LeftBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </RightBorder>
                             <BackgroundColor>White</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -391,7 +492,8 @@
                                 <TextRun>
                                   <Value>=Fields!Quantity.Value</Value>
                                   <Style>
-                                    <FontSize>5pt</FontSize>
+                                    <FontSize>6pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -403,8 +505,28 @@
                           <rd:DefaultName>Quantity</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Style>None</Style>
+                              <Style>Solid</Style>
                             </Border>
+                            <TopBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </BottomBorder>
+                            <LeftBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </RightBorder>
                             <BackgroundColor>White</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -425,7 +547,8 @@
                                 <TextRun>
                                   <Value>=Fields!SalePrice.Value</Value>
                                   <Style>
-                                    <FontSize>5pt</FontSize>
+                                    <FontSize>6pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -437,8 +560,28 @@
                           <rd:DefaultName>SalePrice</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Style>None</Style>
+                              <Style>Solid</Style>
                             </Border>
+                            <TopBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </BottomBorder>
+                            <LeftBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </RightBorder>
                             <BackgroundColor>White</BackgroundColor>
                             <VerticalAlign>Top</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -460,20 +603,41 @@
                                 <TextRun>
                                   <Value>=Fields!ItemTotal.Value</Value>
                                   <Style>
-                                    <FontSize>5pt</FontSize>
+                                    <FontSize>6pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Center</TextAlign>
+                                <TextAlign>Right</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>ItemTotal</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Style>None</Style>
+                              <Style>Solid</Style>
                             </Border>
+                            <TopBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </BottomBorder>
+                            <LeftBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </RightBorder>
                             <BackgroundColor>White</BackgroundColor>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -510,11 +674,31 @@
             <Top>0.02281in</Top>
             <Left>0.08561in</Left>
             <Height>0.29088in</Height>
-            <Width>3.22652in</Width>
+            <Width>3.10152in</Width>
             <Style>
               <Border>
-                <Style>None</Style>
+                <Style>Solid</Style>
               </Border>
+              <TopBorder>
+                <Color>Black</Color>
+                <Style>Solid</Style>
+                <Width>1pt</Width>
+              </TopBorder>
+              <BottomBorder>
+                <Color>Black</Color>
+                <Style>Solid</Style>
+                <Width>1pt</Width>
+              </BottomBorder>
+              <LeftBorder>
+                <Color>Black</Color>
+                <Style>Solid</Style>
+                <Width>1pt</Width>
+              </LeftBorder>
+              <RightBorder>
+                <Color>Black</Color>
+                <Style>Solid</Style>
+                <Width>1pt</Width>
+              </RightBorder>
             </Style>
           </Tablix>
           <Textbox Name="Textbox31">
@@ -527,7 +711,7 @@
                     <Value>Thành tiền trước thuế GTGT</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                     </Style>
                   </TextRun>
@@ -565,7 +749,7 @@
                     <Value>Thuế GTGT </Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                     </Style>
                   </TextRun>
@@ -603,20 +787,21 @@
                     <Value>=FormatNumber(Fields!SaleOrderAmount.Value, 2)</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
-                  <TextAlign>Left</TextAlign>
+                  <TextAlign>Right</TextAlign>
                 </Style>
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>SaleOrderAmount</rd:DefaultName>
-            <Top>0.34225in</Top>
+            <Top>0.33313in</Top>
             <Left>2.77277in</Left>
             <Height>0.14425in</Height>
-            <Width>0.52531in</Width>
+            <Width>0.41436in</Width>
             <ZIndex>3</ZIndex>
             <Visibility>
               <Hidden>=IIF(First(Fields!SaleOrderQty.Value, "DataSet1") &gt; "0", False, True)</Hidden>
@@ -640,7 +825,7 @@
                     <Value>=Sum(Fields!Quantity.Value)</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -676,7 +861,7 @@
                     <Value>Total VAT Value</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                     </Style>
                   </TextRun>
@@ -687,8 +872,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox30</rd:DefaultName>
-            <Top>0.50594in</Top>
-            <Left>2.02956in</Left>
+            <Top>0.51567in</Top>
+            <Left>1.93389in</Left>
             <Height>0.13333in</Height>
             <Width>0.72932in</Width>
             <ZIndex>5</ZIndex>
@@ -714,7 +899,7 @@
                     <Value>Tổng tiền thanh toán</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
@@ -784,6 +969,7 @@
             </Visibility>
             <Style>
               <Border />
+              <VerticalAlign>Middle</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -800,7 +986,8 @@
                     <Value>=First(Fields!BillPaid.Value, "DataSet1")</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -811,7 +998,7 @@
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
             <Top>0.89028in</Top>
-            <Left>2.50456in</Left>
+            <Left>2.39229in</Left>
             <Height>0.125in</Height>
             <Width>0.8065in</Width>
             <ZIndex>9</ZIndex>
@@ -820,7 +1007,7 @@
             </Visibility>
             <Style>
               <Border />
-              <VerticalAlign>Middle</VerticalAlign>
+              <VerticalAlign>Top</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -834,10 +1021,10 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Constant">Tổng tiền khách trả (Tiền mặt)</Value>
+                    <Value>Tổng tiền khách trả (Tiền mặt)</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -857,6 +1044,7 @@
             </Visibility>
             <Style>
               <Border />
+              <VerticalAlign>Middle</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -873,7 +1061,8 @@
                     <Value>=FormatNumber(Fields!BillPaidByCash.Value, 2)</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -883,8 +1072,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
-            <Top>1.0557in</Top>
-            <Left>2.50563in</Left>
+            <Top>1.07084in</Top>
+            <Left>2.39229in</Left>
             <Height>0.125in</Height>
             <Width>0.8065in</Width>
             <ZIndex>11</ZIndex>
@@ -893,7 +1082,7 @@
             </Visibility>
             <Style>
               <Border />
-              <VerticalAlign>Middle</VerticalAlign>
+              <VerticalAlign>Top</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -907,10 +1096,10 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Constant">Tổng tiền khách trả</Value>
+                    <Value>Tổng tiền khách trả</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -927,6 +1116,7 @@
             <ZIndex>12</ZIndex>
             <Style>
               <Border />
+              <VerticalAlign>Middle</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -943,7 +1133,8 @@
                     <Value>=FormatNumber(Fields!SaleOrderAmount.Value, 2)</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -953,14 +1144,14 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
-            <Top>1.23799in</Top>
-            <Left>2.50456in</Left>
+            <Top>1.2491in</Top>
+            <Left>2.37914in</Left>
             <Height>0.12361in</Height>
             <Width>0.8065in</Width>
             <ZIndex>13</ZIndex>
             <Style>
               <Border />
-              <VerticalAlign>Middle</VerticalAlign>
+              <VerticalAlign>Top</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -977,7 +1168,8 @@
                     <Value>=FormatNumber(Fields!Balance.Value, 2)</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -988,7 +1180,7 @@
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
             <Top>1.41438in</Top>
-            <Left>2.50456in</Left>
+            <Left>2.38961in</Left>
             <Height>0.12811in</Height>
             <Width>0.8065in</Width>
             <ZIndex>14</ZIndex>
@@ -1011,7 +1203,7 @@
                     <Value>Tổng tiền trả lại</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1028,6 +1220,7 @@
             <ZIndex>15</ZIndex>
             <Style>
               <Border />
+              <VerticalAlign>Middle</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -1056,7 +1249,7 @@
                     <Value>Xin cảm ơn quý khách / Thank you</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1090,7 +1283,7 @@
                     <Value>THÔNG TIN HÓA ĐƠN ĐIỆN TỬ</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
@@ -1125,7 +1318,7 @@
                     <Value>Tên đơn vị bán hàng: </Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1138,10 +1331,11 @@
             <Top>1.97756in</Top>
             <Left>0.0683in</Left>
             <Height>0.13542in</Height>
-            <Width>0.82262in</Width>
+            <Width>0.57569in</Width>
             <ZIndex>19</ZIndex>
             <Style>
               <Border />
+              <VerticalAlign>Middle</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -1158,7 +1352,7 @@
                     <Value>Mã số thuế: </Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1168,15 +1362,16 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>2.13798in</Top>
+            <Top>2.12687in</Top>
             <Left>0.0683in</Left>
-            <Height>0.13264in</Height>
-            <Width>0.50064in</Width>
+            <Height>0.15348in</Height>
+            <Width>0.58819in</Width>
             <ZIndex>20</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
               </Border>
+              <VerticalAlign>Middle</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -1193,7 +1388,7 @@
                     <Value>Địa chỉ:</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1205,13 +1400,14 @@
             <rd:DefaultName>Textbox31</rd:DefaultName>
             <Top>2.30813in</Top>
             <Left>0.0683in</Left>
-            <Height>0.12709in</Height>
-            <Width>0.3368in</Width>
+            <Height>0.15071in</Height>
+            <Width>0.57569in</Width>
             <ZIndex>21</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
               </Border>
+              <VerticalAlign>Middle</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -1225,10 +1421,10 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Constant">Địa chỉ:</Value>
+                    <Value>Địa chỉ:</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1241,7 +1437,7 @@
             <Top>3.08245in</Top>
             <Left>0.0433in</Left>
             <Height>0.12709in</Height>
-            <Width>0.5868in</Width>
+            <Width>0.63775in</Width>
             <ZIndex>22</ZIndex>
             <Style>
               <Border>
@@ -1264,7 +1460,7 @@
                     <Value>=Parameters!CustomerAddress.Value</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1275,9 +1471,9 @@
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
             <Top>3.09704in</Top>
-            <Left>0.67177in</Left>
+            <Left>0.68105in</Left>
             <Height>0.12709in</Height>
-            <Width>1.17643in</Width>
+            <Width>2.50608in</Width>
             <ZIndex>23</ZIndex>
             <Style>
               <Border>
@@ -1300,7 +1496,7 @@
                     <Value>=Parameters!CustomerVatNumber.Value</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1310,10 +1506,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
-            <Top>2.92134in</Top>
-            <Left>0.89092in</Left>
+            <Top>2.90745in</Top>
+            <Left>0.70883in</Left>
             <Height>0.14792in</Height>
-            <Width>1.50979in</Width>
+            <Width>2.47681in</Width>
             <ZIndex>24</ZIndex>
             <Style>
               <Border>
@@ -1336,7 +1532,7 @@
                     <Value>Ký hiệu: </Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1372,7 +1568,7 @@
                     <Value>Số hóa đơn: </Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1408,7 +1604,7 @@
                     <Value>Mà CQT: </Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1421,7 +1617,7 @@
             <Top>3.76858in</Top>
             <Left>0.0558in</Left>
             <Height>0.13037in</Height>
-            <Width>0.69762in</Width>
+            <Width>0.62525in</Width>
             <ZIndex>27</ZIndex>
             <Style>
               <Border>
@@ -1444,7 +1640,7 @@
                     <Value>=Parameters!Macqt.Value</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1455,9 +1651,9 @@
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
             <Top>3.76857in</Top>
-            <Left>0.76731in</Left>
+            <Left>0.70883in</Left>
             <Height>0.13038in</Height>
-            <Width>1.04in</Width>
+            <Width>2.47681in</Width>
             <ZIndex>28</ZIndex>
             <Style>
               <Border>
@@ -1480,7 +1676,8 @@
                     <Value>=Parameters!InvoiceNumber.Value</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1490,10 +1687,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
-            <Top>3.58593in</Top>
+            <Top>3.5776in</Top>
             <Left>0.70402in</Left>
             <Height>0.13264in</Height>
-            <Width>1.10329in</Width>
+            <Width>2.49477in</Width>
             <ZIndex>29</ZIndex>
             <Style>
               <Border>
@@ -1516,7 +1713,7 @@
                     <Value>=Parameters!InvoiceSeries.Value</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1529,7 +1726,7 @@
             <Top>3.40051in</Top>
             <Left>0.68427in</Left>
             <Height>0.13542in</Height>
-            <Width>1.12499in</Width>
+            <Width>2.50137in</Width>
             <ZIndex>30</ZIndex>
             <Style>
               <Border>
@@ -1549,10 +1746,10 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Constant">Số bảo mật (Mã tra cứu):</Value>
+                    <Value>Số bảo mật (Mã tra cứu):</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1565,7 +1762,7 @@
             <Top>3.94895in</Top>
             <Left>0.0558in</Left>
             <Height>0.13264in</Height>
-            <Width>0.96244in</Width>
+            <Width>0.62525in</Width>
             <ZIndex>31</ZIndex>
             <Style>
               <Border>
@@ -1588,8 +1785,7 @@
                     <Value>Tra cứu tại:</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
-                      <FontWeight>Normal</FontWeight>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1599,10 +1795,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>4.1191in</Top>
+            <Top>4.10937in</Top>
             <Left>0.05581in</Left>
             <Height>0.13037in</Height>
-            <Width>0.69761in</Width>
+            <Width>0.62524in</Width>
             <ZIndex>32</ZIndex>
             <Style>
               <Border>
@@ -1625,7 +1821,7 @@
                     <Value>=Parameters!Sobaomat.Value</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1636,9 +1832,9 @@
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
             <Top>3.94895in</Top>
-            <Left>1.01824in</Left>
+            <Left>0.70402in</Left>
             <Height>0.13264in</Height>
-            <Width>1.03907in</Width>
+            <Width>2.48162in</Width>
             <ZIndex>33</ZIndex>
             <Style>
               <Border>
@@ -1661,7 +1857,7 @@
                     <Value>Email: </Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1674,7 +1870,7 @@
             <Top>3.22343in</Top>
             <Left>0.04598in</Left>
             <Height>0.13264in</Height>
-            <Width>0.44263in</Width>
+            <Width>0.63026in</Width>
             <ZIndex>34</ZIndex>
             <Style>
               <Border>
@@ -1688,9 +1884,6 @@
             </Style>
           </Textbox>
           <Textbox Name="BillPaid15">
-          <Visibility>
-    <Hidden>=IsNothing(Parameters!CustomerEmail.Value) OR String.IsNullOrEmpty(Parameters!CustomerEmail.Value)</Hidden>
-  </Visibility>
             <CanGrow>true</CanGrow>
             <KeepTogether>true</KeepTogether>
             <Paragraphs>
@@ -1700,7 +1893,8 @@
                     <Value>=Parameters!CustomerEmail.Value</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1710,11 +1904,14 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
-            <Top>3.23802in</Top>
-            <Left>0.52838in</Left>
+            <Top>3.2262in</Top>
+            <Left>0.69013in</Left>
             <Height>0.13264in</Height>
-            <Width>1.27893in</Width>
+            <Width>2.50598in</Width>
             <ZIndex>35</ZIndex>
+            <Visibility>
+              <Hidden>=IsNothing(Parameters!CustomerEmail.Value) OR String.IsNullOrEmpty(Parameters!CustomerEmail.Value)</Hidden>
+            </Visibility>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1736,8 +1933,7 @@
                     <Value>Tên đơn vị mua hàng:</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                      <FontSize>5pt</FontSize>
-                      <FontWeight>Normal</FontWeight>
+                      <FontSize>6pt</FontSize>
                       <TextDecoration>None</TextDecoration>
                       <Color>#000000</Color>
                     </Style>
@@ -1752,7 +1948,7 @@
             <Top>2.74565in</Top>
             <Left>0.04598in</Left>
             <Height>0.14792in</Height>
-            <Width>1.10804in</Width>
+            <Width>0.63507in</Width>
             <ZIndex>36</ZIndex>
             <Style>
               <Border>
@@ -1775,7 +1971,7 @@
                     <Value>=Parameters!CustomerName.Value</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1785,10 +1981,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
-            <Top>2.50049in</Top>
-            <Left>1.09706in</Left>
+            <Top>2.52829in</Top>
+            <Left>0.70402in</Left>
             <Height>0.14792in</Height>
-            <Width>1.16615in</Width>
+            <Width>2.48162in</Width>
             <ZIndex>37</ZIndex>
             <Style>
               <Border>
@@ -1811,14 +2007,15 @@
                     <Value>=Fields!TaxInPercent.Value</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
                   <TextRun>
                     <Value> %</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1855,18 +2052,19 @@
                     <Value>=FormatNumber(Fields!SaleOrderAmount.Value, 2)*8/100</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
-                  <TextAlign>Left</TextAlign>
+                  <TextAlign>Right</TextAlign>
                 </Style>
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>SaleOrderAmount</rd:DefaultName>
             <Top>0.50753in</Top>
-            <Left>2.77277in</Left>
+            <Left>2.66321in</Left>
             <Height>0.14424in</Height>
             <Width>0.52392in</Width>
             <ZIndex>39</ZIndex>
@@ -1891,19 +2089,20 @@
                   <TextRun>
                     <Value>=First(Fields!SaleOrderAmountWithVaT.Value, "DataSet1")</Value>
                     <Style>
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
-                  <TextAlign>Left</TextAlign>
+                  <TextAlign>Right</TextAlign>
                 </Style>
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>SaleOrderAmount</rd:DefaultName>
-            <Top>0.68958in</Top>
-            <Left>2.6157in</Left>
-            <Height>0.13542in</Height>
+            <Top>0.69066in</Top>
+            <Left>2.46746in</Left>
+            <Height>0.15795in</Height>
             <Width>0.71967in</Width>
             <ZIndex>40</ZIndex>
             <Visibility>
@@ -1928,8 +2127,7 @@
                     <Value>tracuuhoadon.minvoice.com.vn</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
-                      <FontWeight>Normal</FontWeight>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1945,9 +2143,9 @@
               </Actions>
             </ActionInfo>
             <Top>4.12048in</Top>
-            <Left>0.76731in</Left>
+            <Left>0.70883in</Left>
             <Height>0.14149in</Height>
-            <Width>1.165in</Width>
+            <Width>2.44903in</Width>
             <ZIndex>41</ZIndex>
             <Style>
               <Border>
@@ -1968,7 +2166,7 @@
                   <TextRun>
                     <Value>Mã số thuế: </Value>
                     <Style>
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1981,7 +2179,7 @@
             <Top>2.93453in</Top>
             <Left>0.04598in</Left>
             <Height>0.14792in</Height>
-            <Width>0.83383in</Width>
+            <Width>0.63507in</Width>
             <ZIndex>42</ZIndex>
             <Style>
               <Border>
@@ -2004,7 +2202,7 @@
                     <Value>=Parameters!CompanyName.Value</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2014,10 +2212,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
-            <Top>2.71787in</Top>
-            <Left>1.1489in</Left>
+            <Top>2.74494in</Top>
+            <Left>0.70402in</Left>
             <Height>0.14792in</Height>
-            <Width>1.16615in</Width>
+            <Width>2.48162in</Width>
             <ZIndex>43</ZIndex>
             <Style>
               <Border>
@@ -2040,8 +2238,7 @@
                     <Value>Họ và tên người mua hàng:</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                      <FontSize>5pt</FontSize>
-                      <FontWeight>Normal</FontWeight>
+                      <FontSize>6pt</FontSize>
                       <TextDecoration>None</TextDecoration>
                       <Color>#000000</Color>
                     </Style>
@@ -2056,7 +2253,7 @@
             <Top>2.52828in</Top>
             <Left>0.07098in</Left>
             <Height>0.14792in</Height>
-            <Width>1.10804in</Width>
+            <Width>0.61007in</Width>
             <ZIndex>44</ZIndex>
             <Style>
               <Border>
@@ -2079,7 +2276,7 @@
                     <Value>=First(Fields!StoreCompanyName.Value, "DataSet1")</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2090,9 +2287,9 @@
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
             <Top>1.97478in</Top>
-            <Left>0.9586in</Left>
+            <Left>0.67177in</Left>
             <Height>0.14792in</Height>
-            <Width>1.16615in</Width>
+            <Width>2.22704in</Width>
             <ZIndex>45</ZIndex>
             <Style>
               <Border>
@@ -2115,7 +2312,7 @@
                     <Value>=First(Fields!StoreCompanyVatNumber.Value, "DataSet1")</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2125,10 +2322,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
-            <Top>2.12687in</Top>
-            <Left>0.76616in</Left>
+            <Top>2.13798in</Top>
+            <Left>0.67177in</Left>
             <Height>0.14792in</Height>
-            <Width>1.16615in</Width>
+            <Width>2.51387in</Width>
             <ZIndex>46</ZIndex>
             <Style>
               <Border>
@@ -2151,7 +2348,7 @@
                     <Value>=First(Fields!StoreCompanyAddress.Value, "DataSet1")</Value>
                     <Style>
                       <FontFamily />
-                      <FontSize>5pt</FontSize>
+                      <FontSize>6pt</FontSize>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2161,10 +2358,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>BillPaid</rd:DefaultName>
-            <Top>2.32481in</Top>
-            <Left>0.68205in</Left>
+            <Top>2.30813in</Top>
+            <Left>0.67937in</Left>
             <Height>0.14792in</Height>
-            <Width>1.16615in</Width>
+            <Width>2.51674in</Width>
             <ZIndex>47</ZIndex>
             <Style>
               <Border>
@@ -2184,7 +2381,7 @@
       <Width>84.7184mm</Width>
       <Page>
         <PageHeader>
-          <Height>1.61943in</Height>
+          <Height>1.55693in</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <ReportItems>
             <Textbox Name="Textbox41">
@@ -2198,7 +2395,7 @@
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily />
-                        <FontSize>5pt</FontSize>
+                        <FontSize>6pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
                         <Color>#000000</Color>
@@ -2250,7 +2447,7 @@
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily />
-                        <FontSize>5pt</FontSize>
+                        <FontSize>6pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
                         <Color>#000000</Color>
@@ -2288,7 +2485,7 @@
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily />
-                        <FontSize>5pt</FontSize>
+                        <FontSize>6pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
                         <Color>#000000</Color>
@@ -2325,7 +2522,7 @@
                       <Value>HÓA ĐƠN THANH TOÁN</Value>
                       <Style>
                         <FontFamily />
-                        <FontSize>5pt</FontSize>
+                        <FontSize>6pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
                       </Style>
@@ -2360,7 +2557,8 @@
                       <Value>=Fields!Id.Value</Value>
                       <Style>
                         <FontFamily />
-                        <FontSize>5pt</FontSize>
+                        <FontSize>6pt</FontSize>
+                        <FontWeight>Bold</FontWeight>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -2370,9 +2568,9 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>SaleOrderAmount</rd:DefaultName>
-              <Top>1.40624in</Top>
-              <Left>0.79509in</Left>
-              <Height>0.14375in</Height>
+              <Top>1.3373in</Top>
+              <Left>0.7318in</Left>
+              <Height>0.15019in</Height>
               <Width>0.63571in</Width>
               <ZIndex>5</ZIndex>
               <Visibility>
@@ -2396,7 +2594,8 @@
                       <Value>=Format(Fields!Date.Value, "dd/MM/yyyy hh:mm tt")</Value>
                       <Style>
                         <FontFamily />
-                        <FontSize>5pt</FontSize>
+                        <FontSize>6pt</FontSize>
+                        <FontWeight>Bold</FontWeight>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -2409,7 +2608,7 @@
               <Top>1.12271in</Top>
               <Left>0.73661in</Left>
               <Height>0.15903in</Height>
-              <Width>0.74057in</Width>
+              <Width>0.93849in</Width>
               <ZIndex>6</ZIndex>
               <Visibility>
                 <Hidden>=IIF(First(Fields!SaleOrderQty.Value, "DataSet1") &gt; "0", False, True)</Hidden>
@@ -2432,7 +2631,8 @@
                       <Value>=Parameters!POSAddress.Value</Value>
                       <Style>
                         <FontFamily />
-                        <FontSize>5pt</FontSize>
+                        <FontSize>6pt</FontSize>
+                        <FontWeight>Bold</FontWeight>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -2466,7 +2666,8 @@
                       <Value>=Parameters!POSPhoneNumber.Value</Value>
                       <Style>
                         <FontFamily />
-                        <FontSize>5pt</FontSize>
+                        <FontSize>6pt</FontSize>
+                        <FontWeight>Bold</FontWeight>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -2501,7 +2702,7 @@
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily />
-                        <FontSize>5pt</FontSize>
+                        <FontSize>6pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
                         <Color>#000000</Color>
@@ -2514,8 +2715,8 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox31</rd:DefaultName>
-              <Top>1.41616in</Top>
-              <Left>0.0683in</Left>
+              <Top>1.34721in</Top>
+              <Left>0.0808in</Left>
               <Height>0.13383in</Height>
               <Width>0.59544in</Width>
               <ZIndex>9</ZIndex>
@@ -2538,7 +2739,8 @@
                       <Value>=Parameters!POSName.Value</Value>
                       <Style>
                         <FontFamily />
-                        <FontSize>5pt</FontSize>
+                        <FontSize>6pt</FontSize>
+                        <FontWeight>Bold</FontWeight>
                       </Style>
                     </TextRun>
                   </TextRuns>

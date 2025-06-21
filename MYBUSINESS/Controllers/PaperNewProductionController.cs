@@ -15,6 +15,7 @@ using System.Data.SqlClient;
 
 namespace MYBUSINESS.Controllers
 {
+    [Authorize(Roles = "Admin,Manager,User")]
     public class PaperNewProductionController : Controller
     {
         private BusinessContext db = new BusinessContext();

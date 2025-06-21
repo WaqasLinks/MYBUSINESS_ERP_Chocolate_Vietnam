@@ -43,18 +43,18 @@
                                     <th style="display:none;">@Html.DisplayNameFor(model => model.Discount)</th>
                                     <th style="display:none;">@Html.DisplayNameFor(model => model.BillPaid)</th>
                                     @*<th>@Html.DisplayNameFor(model => model.Balance)</th>*@
-                                    <th style="display:none;">
-                                        @if (currentUser.EmployeeTypeId == 0)
-                                        {
-                                            @Html.DisplayNameFor(model => model.Profit)
-                                        }
-                                    </th>
-                                    <th>
-                                        @if (currentUser.EmployeeTypeId == 0)
-                                        {
-                                            <text>User</text>
-                                        }
-                                    </th>
+                                <th style="display:none;">
+                                    @if (currentUser != null && currentUser.EmployeeTypeId == 0)
+                                    {
+                                        @Html.DisplayNameFor(model => model.Profit)
+                                    }
+                                </th>
+                                <th>
+                                    @if (currentUser != null && currentUser.EmployeeTypeId == 0)
+                                    {
+                                        <text>User</text>
+                                    }
+                                </th>
                                     <th>Payment Method</th>
                                     @*<th>Actions</th>*@
                                 </tr>
@@ -135,28 +135,28 @@
                 }
             }
         </td>*@
-                                        <td style="display:none;">
-                                            @if (currentUser.EmployeeTypeId == 0)
+                                    <td style="display:none;">
+                                        @if (currentUser != null && currentUser.EmployeeTypeId == 0)
+                                        {
+                                            @Html.DisplayFor(modelItem => item.Profit)
                                             {
-                                                @Html.DisplayFor(modelItem => item.Profit)
+                                                if (item.SaleReturn == false)
                                                 {
-                                                    if (item.SaleReturn == false)
-                                                    {
-                                                        TotalProfit += (decimal)item.Profit;
-                                                    }
-                                                    else
-                                                    {
-                                                        TotalProfit -= (decimal)item.Profit;
-                                                    }
+                                                    TotalProfit += (decimal)item.Profit;
+                                                }
+                                                else
+                                                {
+                                                    TotalProfit -= (decimal)item.Profit;
                                                 }
                                             }
-                                        </td>
-                                        <td>
-                                            @if (currentUser.EmployeeTypeId == 0)
-                                            {
-                                                @Html.DisplayFor(modelItem => item.Employee.Login)
-                                            }
-                                        </td>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (currentUser != null && currentUser.EmployeeTypeId == 0)
+                                        {
+                                            @Html.DisplayFor(modelItem => item.Employee.Login)
+                                        }
+                                    </td>
                                         <td>@Html.DisplayFor(modelItem => item.PaymentMethod)</td>
                                         @*<td>
             @if (!item.IsCancelled.GetValueOrDefault())
@@ -222,7 +222,7 @@
                                     <td style="display:none;">@BillPaid</td>
                                     <td style="display:none;">@Balance</td>
                                     <td style="display:none;">
-                                        @if (currentUser.EmployeeTypeId == 0)
+                                        @if (currentUser != null && currentUser.EmployeeTypeId == 0)
                                         {
                                             @TotalProfit.ToString("0")
                                         }

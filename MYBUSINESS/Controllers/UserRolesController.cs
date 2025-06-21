@@ -12,7 +12,7 @@ using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Manager,User")]
     public class UserRolesController : Controller
     {
         private BusinessContext db = new BusinessContext();
@@ -52,7 +52,7 @@ namespace MYBUSINESS.Controllers
         {
             if (ModelState.IsValid)
             {
-                //userRoleModel.ClaimType = db.AspNetUsers.FirstOrDefault(x => x.Id.ToString() == userRoleModel.UserId).Name;
+                //userRoleModel.ClaimType = db.AspNetUsers.FirstOrDefault(x => x.Id.ToString() == userRoleModel.UserId).UserName;
                 //db.AspNetUserClaims.Add(userRoleModel);
 
                 AspNetUser user = db.AspNetUsers.FirstOrDefault(x => x.Id.ToString() == userRoleModel.UserId);
@@ -127,6 +127,8 @@ namespace MYBUSINESS.Controllers
             ViewBag.UserId = new SelectList(db.AspNetUsers, "Id", "Hometown", userRoleModel.UserId);
             return View(userRoleModel);
         }
+      
+        
         //DeleteRight
         [HttpPost]
         [ValidateAntiForgeryToken]

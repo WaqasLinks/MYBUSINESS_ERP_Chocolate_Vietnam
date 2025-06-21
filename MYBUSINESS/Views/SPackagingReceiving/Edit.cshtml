@@ -1,4 +1,4 @@
-﻿@model MYBUSINESS.Models.PurchaseReciverOrderViewModel
+﻿@model MYBUSINESS.Models.SPackagingReceiverViewModel
 
 @{
     ViewBag.Title = "Update PO";
@@ -32,7 +32,7 @@
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <div class="container" id="container">
-        @Html.HiddenFor(model => model.PurchaseOrderReciver.Id)
+        @Html.HiddenFor(model => Model.SPackgingReceiver.Id)
 
 
 
@@ -45,8 +45,8 @@
                             <button type="button" id="addNewRow" class="btn btn-info add-new"><i class="fa fa-plus"></i> Add New</button>
                         </div>*@
                 </div>
-                <input type="hidden" name="PurchaseOrderReciver.PurchaseReturn" id="purchaseReturn" value=@ViewBag.IsReturn />
-                <input type="hidden" name="PurchaseOrderReciver.SupplierId" id="idnSupplier" value="@Model.PurchaseOrderReciver.SupplierId" />
+                <input type="hidden" name="SPackgingReceiver.PurchaseReturn" id="purchaseReturn" value=@ViewBag.IsReturn />
+                <input type="hidden" name="SPackgingReceiver.SupplierId" id="idnSupplier" value="@Model.SPackgingReceiver.SupplierId" />
                 <div class="row">
                     <div class="col-sm-6">
                         <h5><b>Supplier Name</b></h5>
@@ -111,26 +111,26 @@
                 <tbody>
 
                     @*First Table*@
-                    @if (Model.PurchaseReciverOrderDetail.Count > 0)
+                    @if (Model.SPDReceiver.Count > 0)
                     {
                         int sNo = 0;
-                        foreach (var item in Model.PurchaseReciverOrderDetail)
+                        foreach (var item in Model.SPDReceiver)
                         {
                             if (sNo > 0) { break; }
                             //if (!string.IsNullOrEmpty(item.ProductId?.ToString()) || (item.Unit == null && item.Quantity == null))
                             //{
-                            <tr>
+                            <tr >
                                 <td id="SNo0">@(sNo + 1)</td>
                                 <td style="display:none;"><input type="hidden" value="@sNo" /></td>
-                                <td style="display:none;"><input type="text" value=@item.ProductId readonly class="form-control classBGcolor" id="idn@(sNo)"></td>
-                                <td style="display:none;"><input type="text" value=@item.POReciverId readonly class="form-control classBGcolor" name="PurchaseReciverOrderDetail[@sNo].POReciverId" id="idn@(sNo)"></td>
+                                <td style="display:none;"><input type="text" value=@item.ProductId readonly class="form-control classBGcolor"  id="idn@(sNo)"></td>
+                                <td style="display:none;"><input type="text" value=@item.POReciverId readonly class="form-control classBGcolor" name="SPackgingReceiver[@sNo].POReciverId" id="idn@(sNo)"></td>
                                 @* below line -- if we dont put "()" then string after space cut's off *@
                                 <td><input type="text" autocomplete="off" value="@(item.Product.Name)" readonly class="form-control" id="name@(sNo)"></td>
                                 <td style="display:none;"><input type="text" autocomplete="off" value=@item.PurchasePrice class="form-control classBGcolor" id="purchasePrice@(sNo)"></td>
                                 <td><input type="text" autocomplete="off" value=@item.Quantity readonly class="form-control" id="quantity@(sNo)"></td>
                                 <td><input type="text" autocomplete="off" value=@item.Unit readonly class="form-control" id="unit@(sNo)"></td>
                                 <td style="display:none;">
-                                    @Html.DropDownList("PurchaseReciverOrderDetail[" + sNo + "].IsPack", new SelectList(ViewBag.UnitTypeOptionList, "Value", "Text", item.IsPack),
+                                    @Html.DropDownList("SPackgingReceiver[" + sNo + "].IsPack", new SelectList(ViewBag.UnitTypeOptionList, "Value", "Text", item.IsPack),
                                            new { @class = "form-control", id = "isPack" + sNo })
                                 </td>
 
@@ -147,7 +147,7 @@
 
 
                                 <td style="display:none;">
-                                    @Html.DropDownList("PurchaseReciverOrderDetail[" + sNo + "].SaleType", new SelectList(ViewBag.OptionLst, "Value", "Text", item.SaleType),
+                                    @Html.DropDownList("SPackgingReceiver[" + sNo + "].SaleType", new SelectList(ViewBag.OptionLst, "Value", "Text", item.SaleType),
                                            new { @class = "form-control", id = "saleType" + sNo })
                                 </td>
                                 @*<td>
@@ -238,20 +238,20 @@
                 <tbody>
 
 
-                    @if (Model.PurchaseReciverOrderDetail.Count > 0)
+                    @if (Model.SPDReceiver.Count > 0)
                     {
                         int sNo = 0;
-                        foreach (var item in Model.PurchaseReciverOrderDetail)
+                        foreach (var item in Model.SPDReceiver)
                         {
 
                             <tr>
                                 <td id="SNo0">@(sNo + 1)</td>
-                                <td style="display:none;"><input type="hidden" name="PurchaseReciverOrderDetail.Index" value="@sNo" /></td>
+                                <td style="display:none;"><input type="hidden" name="SPackgingReceiver.Index" value="@sNo" /></td>
                                 <td style="display:none;">
-                                    <input type="hidden" name="PurchaseReciverOrderDetail[@sNo].ProductId" value="@item.ProductId" />
+                                    <input type="hidden" name="SPDReceiver[@sNo].ProductId" value="@item.ProductId" />
                                 </td>
                                 <td style="display:none;">
-                                    <input type="hidden" name="PurchaseReciverOrderDetail[@sNo].POReciverId" value="@item.POReciverId" />
+                                    <input type="hidden" name="SPDReceiver[@sNo].POReciverId" value="@item.POReciverId" />
                                 </td>
 
                                 <td style="display:none;"><input type="text" autocomplete="off" value="@(item.Product.Name)" readonly class="form-control" name="name@(sNo)" id="name@(sNo)"></td>
@@ -262,7 +262,7 @@
                                            autocomplete="off"
                                            value="@item.QtyReceived"
                                            class="form-control received-qty"
-                                           name="PurchaseReciverOrderDetail[@sNo].QtyReceived"
+                                           name="SPDReceiver[@sNo].QtyReceived"
                                            id="quantityreceived@(sNo)"
                                            @(isQtyReadonly ? "readonly='readonly'" : "") />
                                 </td>
@@ -273,12 +273,12 @@
                                            value="@item.Quantity"
                                            readonly
                                            class="form-control ordered-quantity"
-                                           name="PurchaseReciverOrderDetail[@sNo].Quantity"
+                                           name="SPDReceiver[@sNo].Quantity"
                                            id="quantity@sNo"
                                            @(isReadonly ? "readonly='readonly'" : "") />
                                 </td>
 
-                                <td style="display:none;"><input type="text" autocomplete="off" value=@item.Unit class="form-control" name="PurchaseReciverOrderDetail[@sNo].unit" id="unit@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>
+                                <td style="display:none;"><input type="text" autocomplete="off" value=@item.Unit class="form-control" name="SPDReceiver[@sNo].unit" id="unit@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>
                                 <td style="display:none;"><input type="text" autocomplete="off" value=@item.Unit readonly class="form-control" name="PurchaseOrderDetail[@sNo].Unit" id="unit@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>
                                 <td style="display:none;">
                                     @Html.DropDownList("PurchaseOrderDetail[" + sNo + "].IsPack", new SelectList(ViewBag.UnitTypeOptionList, "Value", "Text", item.IsPack),
@@ -306,7 +306,7 @@
                                            autocomplete="off"
                                            class="form-control from-date-picker"
                                            value="@(ViewBag.MalaysiaTime != null ? ((DateTime)ViewBag.MalaysiaTime).ToString("yyyy-MM-ddTHH:mm") : "")"
-                                           name="PurchaseReciverOrderDetail[@(sNo)].PurchasingDate"
+                                           name="SPDReceiver[@(sNo)].PurchasingDate"
                                            id="purchasingdate@(sNo)" @(isReadonly ? "readonly='readonly'" : "")>
                                 </td>
 
@@ -314,7 +314,7 @@
                                     <input type="datetime-local"
                                            class="form-control from-date-picker"
                                            value="@(ViewBag.FutureTime != null ? ((DateTime)ViewBag.FutureTime).ToString("yyyy-MM-ddTHH:mm") : "")"
-                                           name="PurchaseReciverOrderDetail[@(sNo)].ExpiryDate"
+                                           name="SPDReceiver[@(sNo)].ExpiryDate"
                                            id="expirydate@(sNo)" @(isReadonly ? "readonly='readonly'" : "")>
                                 </td>
 
@@ -385,7 +385,7 @@
                                 <td><input type="text" readonly class="form-control classBorder0" name="gt1" id="gt1" tabindex="-1"></td>
                                 <td><input type="text" readonly class="form-control classBorder0" name="gt2" id="gt2" tabindex="-1"></td>
                                 <td><input type="text" readonly class="form-control classBorder0" name="OrderTotal" id="OrderTotal" value="Order Total(@ViewBag.orderQty pack, @ViewBag.orderQtyPiece piece)" tabindex="-1"></td>
-                                <td><input type="text" readonly class="form-control classBorder0" name="PurchaseOrder.BillAmount" id="ItemsTotal" value=@(Model.PurchaseOrderReciver.BillAmount) tabindex="-1"></td>
+                                <td><input type="text" readonly class="form-control classBorder0" name="PurchaseOrder.BillAmount" id="ItemsTotal" value=@(Model.SPackgingReceiver.BillAmount) tabindex="-1"></td>
                                 <td><input type="text" readonly class="form-control classBorder0" name="gt5" id="gt5" tabindex="-1"></td>
                                 <td></td>
                             </tr>
@@ -401,7 +401,7 @@
                                 <td><input type="text" readonly class="form-control classBorder0" name="dc1" id="dc1" tabindex="-1"></td>
                                 <td><input type="text" readonly class="form-control classBorder0" name="dc2" id="dc2" tabindex="-1"></td>
                                 <td><input type="text" readonly class="form-control classBorder0" name="dc3" id="dc3" value="Order Discount" tabindex="-1"></td>
-                                <td><input type="text" autocomplete="off" class="form-control" name="PurchaseOrderReciver.Discount" id="discount" value=@(Model.PurchaseOrderReciver.Discount)></td>
+                                <td><input type="text" autocomplete="off" class="form-control" name="PurchaseOrderReciver.Discount" id="discount" value=@(Model.SPackgingReceiver.Discount)></td>
                                 <td><input type="text" readonly class="form-control classBorder0" name="dc5" id="dc5" tabindex="-1"></td>
                                 <td></td>
                             </tr>
@@ -417,7 +417,7 @@
                                 <td><input type="text" readonly class="form-control classBorder0" name="pb1" id="pb1" tabindex="-1"></td>
                                 <td><input type="text" readonly class="form-control classBorder0" name="pb2" id="pb2" tabindex="-1"></td>
                                 <td><input type="text" readonly class="form-control classBorder0" name="pb3" id="pb3" value="Prev. Balance" tabindex="-1"></td>
-                                <td><input readonly type="text" autocomplete="off" class="form-control" name="PurchaseOrderReciver.PrevBalance" id="PreviousBalance" value=@(Model.PurchaseOrderReciver.PrevBalance) tabindex="-1"></td>
+                                <td><input readonly type="text" autocomplete="off" class="form-control" name="SPackgingReceiver.PrevBalance" id="PreviousBalance" value=@(Model.SPackgingReceiver.PrevBalance) tabindex="-1"></td>
                                 <td><input type="text" readonly class="form-control classBorder0" name="pb5" id="pb5" tabindex="-1"></td>
                                 <td></td>
                             </tr>
@@ -433,7 +433,7 @@
                                 <td><input type="text" readonly class="form-control classBorder0" name="pd1" id="pd1" tabindex="-1"></td>
                                 <td><input type="text" readonly class="form-control classBorder0" name="pd2" id="pd2" tabindex="-1"></td>
                                 <td><input type="text" readonly class="form-control classBorder0" name="pd3" id="pd3" value="Paid" tabindex="-1"></td>
-                                <td><input type="text" autocomplete="off" class="form-control" name="PurchaseOrderReciver.BillPaid" id="paid" value=@(Model.PurchaseOrderReciver.BillPaid)></td>
+                                <td><input type="text" autocomplete="off" class="form-control" name="SPackgingReceiver.BillPaid" id="paid" value=@(Model.SPackgingReceiver.BillPaid)></td>
                                 <td><input type="text" readonly class="form-control classBorder0" name="pd5" id="pd5" tabindex="-1"></td>
                                 <td></td>
                             </tr>
@@ -441,7 +441,7 @@
                                 <td><input type="text" readonly class="form-control classBorder0" name="bl1" id="bl1" tabindex="-1"></td>
                                 <td><input type="text" readonly class="form-control classBorder0" name="bl2" id="bl2" tabindex="-1"></td>
                                 <td><input type="text" readonly class="form-control classBorder0" name="bl3" id="bl3" value="Balance" tabindex="-1"></td>
-                                <td><input type="text" readonly class="form-control classBorder0" name="PurchaseOrderReciver.Balance" id="balance" value=@(Model.PurchaseOrderReciver.Balance) tabindex="-1"></td>
+                                <td><input type="text" readonly class="form-control classBorder0" name="SPackgingReceiver.Balance" id="balance" value=@(Model.SPackgingReceiver.Balance) tabindex="-1"></td>
                                 <td><input type="text" readonly class="form-control classBorder0" name="bl5" id="bl5" tabindex="-1"></td>
                                 <td></td>
                             </tr>
@@ -460,7 +460,7 @@
                             </div>
                             <!--<div class="col-sm-7">-->
                             @*@Html.DropDownList("PurchaseOrder.FundingSourceId", new SelectList(ViewBag.FundingSources, "Value", "Text", @Model.PurchaseOrder.FundingSourceId), new { @class = "form-control" })*@
-                            <!--@Html.DropDownList("PurchaseOrderReciver.BankAccountId", new SelectList(ViewBag.BankAccounts, "Value", "Text", @Model.PurchaseOrderReciver.BankAccountId), new { @class = "form-control", @style = "display:none" })
+                            <!--@Html.DropDownList("SPackgingReceiver.BankAccountId", new SelectList(ViewBag.BankAccounts, "Value", "Text", @Model.SPackgingReceiver.BankAccountId), new { @class = "form-control", @style = "display:none" })
                             </div>-->
                         </div>
 
@@ -470,7 +470,7 @@
 
                             </div>
                             <div class="col-sm-7">
-                                @Html.DropDownList("PurchaseOrderReciver.PaymentMethod", new SelectList(ViewBag.PaymentMethodOptionLst, "Value", "Text", @Model.PurchaseOrderReciver.PaymentMethod),
+                                @Html.DropDownList("SPackgingReceiver.PaymentMethod", new SelectList(ViewBag.PaymentMethodOptionLst, "Value", "Text", @Model.SPackgingReceiver.PaymentMethod),
                                               new { @class = "form-control", id = "PurchaseOrderReciver.PaymentMethod" })
 
                             </div>
@@ -483,7 +483,7 @@
 
                             </div>
                             <div class="col-sm-7">
-                                <input type="text" autocomplete="off" class="form-control" name="PurchaseOrder.PaymentDetail" id="PurchaseOrder.PaymentDetail" value="@Model.PurchaseOrder.PaymentDetail" placeholder="Cheque No./Online payment No./etc..." data-toggle="tooltip" data-placement="top" title="Enter any details you want">
+                                <input type="text" autocomplete="off" class="form-control" name="PurchaseOrder.PaymentDetail" id="PurchaseOrder.PaymentDetail" value="@Model.SPackaging.PaymentDetail" placeholder="Cheque No./Online payment No./etc..." data-toggle="tooltip" data-placement="top" title="Enter any details you want">
                             </div>
 
 
@@ -495,7 +495,7 @@
 
                             </div>
                             <div class="col-sm-7">
-                                <textarea name="PurchaseOrder.Remarks" rows="1" cols="100" class="form-control" placeholder="These remarks will print on bill">@Model.PurchaseOrder.Remarks</textarea>
+                                <textarea name="PurchaseOrder.Remarks" rows="1" cols="100" class="form-control" placeholder="These remarks will print on bill">@Model.SPackaging.Remarks</textarea>
                             </div>
 
 
@@ -508,7 +508,7 @@
 
                         </div>
                         <div style="display:none;" class="col-sm-7">
-                            <textarea name="PurchaseOrder.Remarks2" rows="1" cols="100" class="form-control" placeholder="These remarks will not print on bill">@Model.PurchaseOrderReciver.Remarks2</textarea>
+                            <textarea name="PurchaseOrder.Remarks2" rows="1" cols="100" class="form-control" placeholder="These remarks will not print on bill">@Model.SPackgingReceiver.Remarks2</textarea>
                         </div>
                         <div class="col-sm-9">
                             <button type="submit" id="CreatePO" class="btn btn-info add-new">Save</button>
@@ -602,7 +602,7 @@
 
 
         //_total = ItemsTotal - discount - ReturnsTotal + prevBal;
-        _total = @(Model.PurchaseOrder.PurchaseOrderAmount - Model.PurchaseOrder.Discount + Model.PurchaseOrder.PrevBalance)
+        _total = @(Model.SPackaging.PurchaseOrderAmount - Model.SPackaging.Discount + Model.SPackaging.PrevBalance)
         //
         //
         IsReturn = '@(ViewBag.IsReturn)';
@@ -659,7 +659,7 @@
                 OnTypeSupplierName('#supplier');
 
                 var i;
-                var podCount = "@Model.PurchaseReciverOrderDetail.Count()";
+                var podCount = "@Model.SPDReceiver.Count()";
         for (i = 0; i < podCount; i++)
         {
 
@@ -732,7 +732,7 @@
             //alert(newUrl);
             $.ajax({
                 url: "@Url.Action("PrintPO", "POPR")",
-                data: { 'POId': "@Model.PurchaseOrder.Id"},
+                data: { 'POId': "@Model.SPackaging.Id"},
                 type: "GET",
                 cache: false,
                 success: function () {

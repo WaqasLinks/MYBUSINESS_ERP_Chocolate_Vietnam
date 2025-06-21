@@ -46,9 +46,7 @@
                                     <th>
                                         @Html.DisplayNameFor(model => model.Address)
                                     </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Balance)
-                                    </th>
+                                    
 
                                     <th></th>
                                 </tr>
@@ -66,24 +64,7 @@
                                         <td>
                                             @Html.DisplayFor(modelItem => item.Address)
                                         </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Balance)
-                                            @{
-                                                if (item.Balance > 0)
-                                                {
-                                                    TotalPA += (decimal)item.Balance;
-                                                    PAcount += 1;
-                                                }
-                                                if (item.Balance < 0)
-                                                {
-                                                    TotalRA += (decimal)item.Balance;
-                                                    RAcount += 1;
-
-                                                }
-
-                                            }
-                                        </td>
-
+                                        
 
                                         <td class="no-print">
                                             @Html.ActionLink("Update", "Edit", new { id = item.Id }, new { @class = "btn btn-info" }) @*|
@@ -100,17 +81,11 @@
                                 <tr style="font-weight:bold">
                                     <td></td>
                                     <td></td>
-                                    <td>@RAcount receivables</td>
-                                    <td>@TotalRA</td>
                                     <td></td>
+                                    <td></td>
+
                                 </tr>
-                                <tr style="font-weight:bold">
-                                    <td></td>
-                                    <td></td>
-                                    <td>@PAcount payables</td>
-                                    <td>@TotalPA</td>
-                                    <td></td>
-                                </tr>
+                                
                             </tfoot>
                         </table>
                     </div>

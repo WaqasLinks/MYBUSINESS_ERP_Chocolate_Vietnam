@@ -47,9 +47,10 @@
                                         <th style="display:none;">
                                             @Html.DisplayNameFor(model => model.PurchaseOrderQty)
                                         </th>
-                                        <th>
+                                        @*<th>
                                             @Html.DisplayNameFor(model => model.PurchaseOrderAmount)
-                                        </th>
+                                        </th>*@
+                                        <th>User Name</th>
 
                                         <th style="display:none;">
                                             @Html.DisplayNameFor(model => model.Discount)
@@ -132,7 +133,8 @@
                                                     }
                                                 }
                                             </td>
-                                            <td>
+                                            <td></td>
+                                            <td style="display:none;">
                                                 @Html.DisplayFor(modelItem => item.PurchaseOrderAmount)
                                                 @{
 

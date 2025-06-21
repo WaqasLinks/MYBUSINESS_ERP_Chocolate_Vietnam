@@ -27,12 +27,11 @@ using Newtonsoft.Json.Linq;
 using System.Data.Entity.Core.Metadata.Edm;
 using Microsoft.AspNet.SignalR;
 using MYBUSINESS.HubConnection;
-
+using AuthAttribute = System.Web.Mvc.AuthorizeAttribute;
 namespace MYBUSINESS.Controllers
 {
 
-    //[OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
-    //[NoCache]
+    //[AuthAttribute(Roles = "Admin,Manager,User")]
     public class SOSRController : Controller
     {
         private BusinessContext db = new BusinessContext();
@@ -61,7 +60,7 @@ namespace MYBUSINESS.Controllers
             var dtEndtDate = dtStartDate.AddMonths(1).AddSeconds(-1);
 
             var stores = db.Stores.ToList();
-            ViewBag.Stores = new SelectList(stores, "Id", "Name", storeId);
+            ViewBag.Stores = new SelectList(stores, "Id", "StoreShortName", storeId);
 
             IQueryable<SO> sOes = db.SOes.Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate && x.SaleReturn == false).Include(s => s.Customer);
             //sOes = sOes.Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate);
@@ -1005,7 +1004,7 @@ namespace MYBUSINESS.Controllers
         // GET: SOes/Create
 
         //public ActionResult Create(string IsReturn)
-        public async Task<ActionResult> Create(string IsReturn)
+        public async Task<ActionResult> Create(string IsReturn, int? pType = null)
         {
             int? storeId = Session["StoreId"] as int?;
             //var storeId = Session["StoreId"] as string;
@@ -1013,6 +1012,19 @@ namespace MYBUSINESS.Controllers
             {
                 return RedirectToAction("StoreNotFound", "UserManagement");
             }
+
+            var productTypes = new List<SelectListItem>
+    {
+        new SelectListItem { Value = "1", Text = "VariableProduct" },
+        new SelectListItem { Value = "2", Text = "ExcessProduct" },
+        new SelectListItem { Value = "3", Text = "ByProduct" },
+        new SelectListItem { Value = "4", Text = "FinishedProduct" },
+        new SelectListItem { Value = "5", Text = "IngredientProduct" },
+        new SelectListItem { Value = "6", Text = "IntermedataryProduct" },
+        new SelectListItem { Value = "7", Text = "Merchendise" }
+    };
+            ViewBag.ProductTypes = productTypes;
+            ViewBag.SelectedPType = pType;
 
             //ViewBag.CustomerId = new SelectList(db.Customers, "Id", "Name");
             //ViewBag.Products = db.Products;
@@ -1030,18 +1042,57 @@ namespace MYBUSINESS.Controllers
             string prefix = "HN";
             string datePart = DateTime.Now.ToString("yyyyMMdd"); // Format current date as YYYYMMDD
             //string formattedSerial = $"{prefix}-{datePart}-{serialNumber:D3}"; // Format serial with leading zeros for int
-            string formattedSerial = $"{prefix}-{datePart}-{maxId:000}"; // Format serial with leading zeros for decimal
+            string formattedSerial = $"{prefix}-{datePart}-{maxId:000}"; /* $"{maxId:000}";*/ // Format serial with leading zeros for decimal
 
             // Set ViewBag.SuggestedNewProductId to the formatted serial number
             ViewBag.SuggestedNewProductIds = formattedSerial;
             ViewBag.SuggestedNewProductId = maxId;
+            var productsQuery = db.Products.AsQueryable();
+            if (pType != null)
+            {
+                productsQuery = productsQuery.Where(x => x.PType == pType);
+            }
+            else
+            {
+                // Default filter (if you want to keep your original filter)
+                productsQuery = productsQuery;
+            }
+            var productsByCategory = productsQuery
+       .Select(p => new
+       {
+           Product = p,
+           Stock = db.StoreProducts
+               .Where(sp => sp.ProductId == p.Id && sp.StoreId == storeId)
+               .Sum(sp => sp.Stock)
+       })
+       .ToList();
+            var groupedSelectedProducts = productsByCategory
+       .GroupBy(p => string.IsNullOrEmpty(p.Product.Category) ? "Uncategorized" : p.Product.Category)
+       .ToDictionary(
+           g => g.Key,
+           g => g.Select(p => new MYBUSINESS.Models.Product
+           {
+               Id = p.Product.Id,
+               Name = p.Product.Name,
+               PurchasePrice = p.Product.PurchasePrice,
+               SalePrice = p.Product.SalePrice,
+               Category = p.Product.Category,
+               Stock = p.Stock
+           }).ToList()
+       );
 
+            // Get distinct categories for dropdown
+            var categories = productsQuery
+                .Select(p => string.IsNullOrEmpty(p.Category) ? "Uncategorized" : p.Category)
+                .Distinct()
+                .OrderBy(c => c)
+                .ToList();
 
             ViewBag.BankAccounts = new SelectList(db.BankAccounts, "Id", "Name");
             ViewBag.MalaysiaTime = DateTime.UtcNow.AddHours(8);
             SaleOrderViewModel saleOrderViewModel = new SaleOrderViewModel();
             saleOrderViewModel.Customers = DAL.dbCustomers;
-            saleOrderViewModel.Products = DAL.dbProducts.Where(x => x.PType == 4 || x.PType == 7);
+            saleOrderViewModel.Products = DAL.dbProducts; 
 
 
 
@@ -1050,7 +1101,7 @@ namespace MYBUSINESS.Controllers
 
 
             //New Code to get Products by Category
-            var productsByCategory = db.Products
+            var productsByyCategory = db.Products
               .Select(p => new
               {
                   Product = p,
@@ -1061,7 +1112,7 @@ namespace MYBUSINESS.Controllers
                 .ToList();
 
             // Group products by category, handling null categories by assigning "Uncategorized"
-            var groupedSelectedProducts = productsByCategory
+            var groupedSelecteddProducts = productsByCategory
                 .GroupBy(p => string.IsNullOrEmpty(p.Product.Category) ? "Uncategorized" : p.Product.Category)
                 .ToDictionary(
                     g => g.Key,
@@ -1077,6 +1128,21 @@ namespace MYBUSINESS.Controllers
                     }).ToList()
                 );
             //bool IsReturn1 = true;
+            var categoriees = db.Products
+        .Select(p => string.IsNullOrEmpty(p.Category) ? "Uncategorized" : p.Category)
+        .Distinct()
+        .OrderBy(c => c)
+        .ToList();
+
+            ViewBag.Categories = new SelectList(categories);
+            var stores = db.Stores
+       .Select(s => new {
+           Id = s.Id,
+           ShortName = s.StoreShortName ?? s.Name // Fallback to Name if ShortName is null
+       })
+       .ToList();
+
+            ViewBag.Stores = new SelectList(stores, "Id", "ShortName", storeId);
             ViewBag.IsReturn = IsReturn;
             //string isReturn1 = "true";
             //ViewBag.isReturn = isReturn1;
@@ -1102,7 +1168,8 @@ namespace MYBUSINESS.Controllers
 
             //TempData["_Sobaomat"] = TempData["sbmat"] as string ;
 
-
+            var store = db.Stores.FirstOrDefault(s => s.Id == storeId);
+            ViewBag.StoreName = store?.Name ?? "Unknown Store"; // Fallback if store not found
             //var jsonResponseWebservicess1 = TempData["JsonResponseWebservice"] as string;
             //TempData["_JsonResponseWebservice"] = "TestTempData"; //TempData["JsonResponseWebservice"] as string;
             //string jsonResponseWebservicess2 = TempData["_JsonResponseWebservice"] as string;
@@ -1217,7 +1284,9 @@ namespace MYBUSINESS.Controllers
                 sO.SaleOrderQty = 0;
                 sO.SaleOrderAmountWithC = "";
                 sO.Profit = 0;
-                Employee emp = (Employee)Session["CurrentUser"];
+                //Employee emp = (Employee)Session["CurrentUser"];
+                //sO.EmployeeId = emp.Id;
+                Employee emp = Session["CurrentUser"] as Employee ?? new Employee { Id = 0 }; // or some default ID
                 sO.EmployeeId = emp.Id;
                 //StoreId 
                 //sO.StoreId = parseId; commented due to session issue
@@ -2557,8 +2626,101 @@ namespace MYBUSINESS.Controllers
         //        data = new List<Invoice> { invoice }
         //    };
         //}
+        [HttpPost]
+        [ValidateInput(false)]
+        public JsonResult GetLastBillId()
+        {
+            try
+            {
+                int? storeId = Session["StoreId"] as int?;
+                if (storeId == null)
+                {
+                    return Json(new { Success = false, Message = "Store not selected" });
+                }
 
+                // Get the most recent bill for the current store
+                var lastBill = db.SOes
+                    .Where(x => x.StoreId == storeId && (x.IsCancelled == false || x.IsCancelled == null))
+                    .OrderByDescending(x => x.Date)
+                    .FirstOrDefault();
 
+                if (lastBill == null)
+                {
+                    return Json(new { Success = false, Message = "No bills found" });
+                }
+
+                return Json(new { Success = true, Id = lastBill.Id });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Success = false, Message = ex.Message });
+            }
+        }
+
+        public JsonResult GetSalesSummary(DateTime today, DateTime yesterday, int? storeId)
+        {
+            // Get today's sales
+            var todaySales = GetSalesForDate(today, storeId);
+
+            // Get yesterday's sales
+            var yesterdaySales = GetSalesForDate(yesterday, storeId);
+
+            return Json(new
+            {
+                today = todaySales,
+                yesterday = yesterdaySales
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        private object GetSalesForDate(DateTime date, int? storeId)
+        {
+            // Use your existing BusinessContext
+            using (var db = new BusinessContext())
+            {
+                // Base query for the date and store
+                var query = db.SOes.Where(x => DbFunctions.TruncateTime(x.Date) == date.Date);
+
+                if (storeId.HasValue)
+                {
+                    query = query.Where(x => x.StoreId == storeId.Value);
+                }
+
+                // Cash sales (TM)
+                var cashSales = query.Where(x => x.PaymentMethod == "TM")
+                                    .Select(x => new { x.BillPaid })
+                                    .ToList();
+
+                // Card sales
+                var cardSales = query.Where(x => x.PaymentMethod == "Card")
+                                    .Select(x => new { x.BillPaid })
+                                    .ToList();
+
+                // Mixed sales (TM/CK)
+                var mixedSales = query.Where(x => x.PaymentMethod == "TM/CK")
+                                     .Select(x => new { x.BillPaid })
+                                     .ToList();
+
+                // Calculate sums properly
+                decimal cashAmount = cashSales.Sum(x => x.BillPaid) ;
+                decimal cardAmount = cardSales.Sum(x => x.BillPaid);
+                decimal mixedAmount = mixedSales.Sum(x => x.BillPaid);
+                int cashCount = cashSales.Count;
+                int cardCount = cardSales.Count;
+                int mixedCount = mixedSales.Count;
+
+                return new
+                {
+                    cashAmount = cashAmount,
+                    cashCount = cashCount,
+                    cardAmount = cardAmount,
+                    cardCount = cardCount,
+                    mixedAmount = mixedAmount,
+                    mixedCount = mixedCount,
+                    totalAmount = cashAmount + cardAmount + mixedAmount,
+                    totalCount = cashCount + cardCount + mixedCount
+                };
+            }
+        }
         public FileContentResult PrintSO2(string id)
         {
             //var storeId = Session["StoreId"] as string;

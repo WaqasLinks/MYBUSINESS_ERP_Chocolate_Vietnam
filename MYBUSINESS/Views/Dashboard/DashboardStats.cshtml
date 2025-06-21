@@ -1,6 +1,6 @@
 ﻿@model MYBUSINESS.Models.DashboardStatsViewModel
 
-<h2 style="text-align:center">Dashboard Summary</h2>
+<h2 style="text-align:center">Sales Summary</h2>
 
 <form method="get" asp-action="DashboardStats" class="row g-3 mb-4">
     <div class="col-md-4">
@@ -27,16 +27,34 @@
 </form>
 
 <div class="row mb-4">
-    <div class="col-md-6">
+    <div class="col-md-3">
+        <div class="card bg-light shadow-sm p-3 mb-2 rounded">
+            <h5>Number of Sales:</h5>
+            <h3>@Model.NumberOfSales</h3>
+        </div>
+    </div>
+    <div class="col-md-3">
         <div class="card bg-light shadow-sm p-3 mb-2 rounded">
             <h5>Total Sales Without VAT:</h5>
             <h3>@string.Format("{0}đ", Model.TotalSalesWithoutVAT.ToString("N2"))</h3>
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-3">
         <div class="card bg-light shadow-sm p-3 mb-2 rounded">
             <h5>Total Sales With VAT:</h5>
             <h3>@string.Format("{0}đ", Model.TotalSalesWithVAT.ToString("N2"))</h3>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-light shadow-sm p-3 mb-2 rounded">
+            <h5>Average Sale Without VAT:</h5>
+            <h3>@string.Format("{0}đ", Model.AverageSaleWithoutVAT.ToString("N2"))</h3>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-light shadow-sm p-3 mb-2 rounded">
+            <h5>Average Sale With VAT:</h5>
+            <h3>@string.Format("{0}đ", Model.AverageSaleWithVAT.ToString("N2"))</h3>
         </div>
     </div>
 </div>

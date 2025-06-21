@@ -19,7 +19,7 @@ namespace MYBUSINESS.Models
         public Nullable<decimal> ProductId { get; set; }
         public Nullable<decimal> Quantity { get; set; }
     
-        public virtual Product Product { get; set; }
         public virtual OrderPProduct OrderPProduct { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

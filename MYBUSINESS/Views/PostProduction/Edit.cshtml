@@ -359,7 +359,7 @@
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Product Type</h3>
+                        <h3 class="box-title">Secondary Materials</h3>
                     </div>
 
 
@@ -387,7 +387,8 @@
                                     foreach (var item in Model.SubItemProduction)
                                     {
                                         //if (item.Product.PType == true && item.Product.PType != 1)
-                                        if (item.Product.PType == 2 || item.Product.PType == 3)
+                                        if ((item.Product.PType == 6 || item.Product.PType == 3) &&
+                item.SubItemQty == null)
                                         {
                                             <tr>
                                                 <td id="SNo0">@(sNo + 1)</td>

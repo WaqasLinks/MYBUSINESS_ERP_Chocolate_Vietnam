@@ -1,4 +1,4 @@
-﻿var productColumns = [{ name: 'Id', minWidth: '100px' }, { name: 'Product', minWidth: '320px' }, { name: 'Purch. Price', minWidth: '100px' }, { name: 'Stock', minWidth: '70px' }, { name: 'PerPack', minWidth: '70px' }, { name: 'Unit', minWidth: '70px' }];
+﻿var productColumns = [{ name: 'Id', minWidth: '100px' }, { name: 'Product', minWidth: '320px' }, { name: 'Purch.Price', minWidth: '200px' }, { name: 'Stock', minWidth: '100px' }, { name: 'PerPack', minWidth: '100px' }, { name: 'Unit', minWidth: '100px' }];
 //var products = []; //[['Ciplet', '10', '60'], ['Gaviscon', '85', '12'], ['Surficol', '110', '8']];
 var products = new Array();
 

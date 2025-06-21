@@ -16,6 +16,7 @@ using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
 {
+    [Authorize(Roles = "Admin,Manager,User")]
 
     //[OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     //[NoCache]

@@ -17,6 +17,7 @@ using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
 {
+    [Authorize(Roles = "Admin,Manager,User")]
     public class SPackagingReceivingController : Controller
     {
         private BusinessContext db = new BusinessContext();
@@ -435,8 +436,10 @@ namespace MYBUSINESS.Controllers
                 pOReciver.StoreId = storeId;
                 //pO.StoreId = parseId; //commented due to session issue
                 //pOReciver.StoreId = 1;
-                Employee emp = (Employee)Session["CurrentUser"];
+                //Employee emp = (Employee)Session["CurrentUser"];
+                Employee emp = Session["CurrentUser"] as Employee ?? new Employee { Id = 0 }; // or some default ID
                 pOReciver.EmployeeId = emp.Id;
+
                 db.SPackgingReceivers.Add(pOReciver);
                 //db.SaveChanges();
                 int sno = 0;

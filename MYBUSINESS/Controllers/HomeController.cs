@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace MYBUSINESS.Controllers
 {
+    [Authorize(Roles = "Admin,Manager,User")]
     public class HomeController : Controller
     {
         private BusinessContext db = new BusinessContext();

@@ -9,17 +9,21 @@
   <div class="row">
     <div class="col-12">
       <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">
-            Users List
-            @Html.ActionLink("Add User", "Register", "Account", new object { }, new { @class = "btn btn-warning" })
-          </h3>
-        </div>
+          <div class="card-header">
+              <h3 class="card-title">
+                  Users List
+                  @Html.ActionLink("Add User", "Register", "Account", new object { }, new { @class = "btn btn-warning" })
+                  @Html.ActionLink("Add UserRoles", "Index", "Account", new object { }, new { @class = "btn btn-primary" })
+              </h3>
+              
+                  
+              
+          </div>
         <!-- /.card-header -->
         <div class="card-body">
           <table id="example" class="table table-bordered table-hover">
             <thead>
-              <tr>
+              <tr style="background-color: white;">
 
                 <th>
                   Email

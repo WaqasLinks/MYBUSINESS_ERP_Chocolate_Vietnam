@@ -39,10 +39,10 @@ namespace MYBUSINESS.Controllers
             //sOes = sOes.Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate);
             //sOes.ForEachAsync(m => m.Id = Encryption.Encrypt(m.Id, "BZNS"));
             //var sOes = db.SOes.Where(s => s.SaleReturn == false);
-            
-            
 
-            
+
+
+
             ViewBag.Customers = db.Customers;
             ViewBag.StartDate = dtStartDate.ToString("dd-MMM-yyyy");
             ViewBag.EndDate = dtEndtDate.ToString("dd-MMM-yyyy");
@@ -201,45 +201,144 @@ namespace MYBUSINESS.Controllers
 
         //    return View(model);
         //}
+        //public ActionResult DashboardStats(DateTime? startDate, DateTime? endDate, int? storeId)
+        //{
+        //    // Set default dates to today if not provided
+        //    var sDate = startDate ?? DateTime.Today;
+        //    var eDate = endDate ?? DateTime.Today;
+
+        //    // Fetch stores for the dropdown
+        //    ViewBag.Stores = new SelectList(db.Stores, "Id", "StoreShortName");
+
+        //    var model = new DashboardStatsViewModel
+        //    {
+        //        StartDate = sDate,
+        //        EndDate = eDate,
+        //        StoreId = storeId,
+        //        TotalSalesWithoutVAT = db.SOes
+        //            .Where(so => so.Date >= sDate && so.Date <= eDate &&
+        //                        (storeId == null || so.StoreId == storeId))
+        //            .Sum(so => (decimal?)so.SaleOrderAmount) ?? 0,
+        //        TotalSalesWithVAT = db.SOes
+        //            .Where(so => so.Date >= sDate && so.Date <= eDate &&
+        //                        (storeId == null || so.StoreId == storeId))
+        //            .Sum(so => (decimal?)so.SaleOrderAmountWithVaT) ?? 0,
+        //        ProductSales = (from sod in db.SODs
+        //                        join so in db.SOes on sod.SOId equals so.Id
+        //                        join p in db.Products on sod.ProductId equals p.Id
+        //                        where so.Date >= sDate && so.Date <= eDate &&
+        //                              (storeId == null || so.StoreId == storeId)
+        //                        group new { sod, p } by new { sod.ProductId, p.Name } into g
+        //                        select new ProductSaleInfoViewModel
+        //                        {
+        //                            ProductName = g.Key.Name,
+        //                            TotalQuantity = g.Sum(x => (decimal?)x.sod.Quantity) ?? 0,
+        //                            TotalSaleValue = g.Sum(x => (decimal?)(x.sod.Quantity * x.sod.SalePrice)) ?? 0
+        //                        }).ToList()
+        //    };
+
+        //    return View(model);
+        //}
+        //public ActionResult DashboardStats(DateTime? startDate, DateTime? endDate, int? storeId)
+        //{
+        //    // Set default dates with time components
+        //    var sDate = startDate ?? DateTime.Today;
+        //    var eDate = endDate ?? DateTime.Today;
+
+        //    // Ensure we cover the full day
+        //    sDate = sDate.Date; // 00:00:00
+        //    eDate = eDate.Date.AddDays(1).AddSeconds(-1); // 23:59:59
+
+        //    // Fetch stores for the dropdown
+        //    ViewBag.Stores = new SelectList(db.Stores, "Id", "StoreShortName");
+
+        //    var model = new DashboardStatsViewModel
+        //    {
+        //        StartDate = sDate,
+        //        EndDate = eDate,
+        //        StoreId = storeId,
+        //        TotalSalesWithoutVAT = db.SOes
+        //            .Where(so => so.Date >= sDate && so.Date <= eDate &&
+        //                        (storeId == null || so.StoreId == storeId) &&
+        //                        (so.IsCancelled == null || so.IsCancelled == false))
+        //            .Sum(so => (decimal?)so.SaleOrderAmount) ?? 0m,
+        //        TotalSalesWithVAT = db.SOes
+        //            .Where(so => so.Date >= sDate && so.Date <= eDate &&
+        //                        (storeId == null || so.StoreId == storeId) &&
+        //                        (so.IsCancelled == null || so.IsCancelled == false))
+        //            .Sum(so => (decimal?)so.SaleOrderAmountWithVaT) ?? 0m,
+        //        ProductSales = (from so in db.SOes
+        //                        join sod in db.SODs on so.Id equals sod.SOId
+        //                        join p in db.Products on sod.ProductId equals p.Id
+        //                        where so.Date >= sDate && so.Date <= eDate &&
+        //                              (storeId == null || so.StoreId == storeId) &&
+        //                              (so.IsCancelled == null || so.IsCancelled == false)
+        //                        group new { sod, p } by new { sod.ProductId, p.Name } into g
+        //                        select new ProductSaleInfoViewModel
+        //                        {
+        //                            ProductName = g.Key.Name,
+        //                            TotalQuantity = g.Sum(x => (decimal?)x.sod.Quantity) ?? 0m,
+        //                            TotalSaleValue = g.Sum(x => (decimal?)(x.sod.Quantity * x.sod.SalePrice)) ?? 0m
+        //                        }).ToList()
+        //    };
+
+        //    return View(model);
+        //}
+
         public ActionResult DashboardStats(DateTime? startDate, DateTime? endDate, int? storeId)
         {
-            // Set default dates to today if not provided
+            // Set default dates with time components
             var sDate = startDate ?? DateTime.Today;
             var eDate = endDate ?? DateTime.Today;
 
+            // Ensure we cover the full day
+            sDate = sDate.Date; // 00:00:00
+            eDate = eDate.Date.AddDays(1).AddSeconds(-1); // 23:59:59
+
             // Fetch stores for the dropdown
-            ViewBag.Stores = new SelectList(db.Stores, "Id", "Name");
+            ViewBag.Stores = new SelectList(db.Stores, "Id", "StoreShortName");
+
+            // Get filtered sales orders
+            var filteredSales = db.SOes
+                .Where(so => so.Date >= sDate && so.Date <= eDate &&
+                            (storeId == null || so.StoreId == storeId) &&
+                            (so.IsCancelled == null || so.IsCancelled == false))
+                .ToList();
+
+            // Calculate metrics
+            var totalSalesWithoutVAT = filteredSales.Sum(so => (decimal?)so.SaleOrderAmount) ?? 0m;
+            var totalSalesWithVAT = filteredSales.Sum(so => (decimal?)so.SaleOrderAmountWithVaT) ?? 0m;
+            var numberOfSales = filteredSales.Count;
+            var averageSaleWithoutVAT = numberOfSales > 0 ? totalSalesWithoutVAT / numberOfSales : 0m;
+            var averageSaleWithVAT = numberOfSales > 0 ? totalSalesWithVAT / numberOfSales : 0m;
 
             var model = new DashboardStatsViewModel
             {
                 StartDate = sDate,
                 EndDate = eDate,
                 StoreId = storeId,
-                TotalSalesWithoutVAT = db.SOes
-                    .Where(so => so.Date >= sDate && so.Date <= eDate &&
-                                (storeId == null || so.StoreId == storeId))
-                    .Sum(so => (decimal?)so.SaleOrderAmount) ?? 0,
-                TotalSalesWithVAT = db.SOes
-                    .Where(so => so.Date >= sDate && so.Date <= eDate &&
-                                (storeId == null || so.StoreId == storeId))
-                    .Sum(so => (decimal?)so.SaleOrderAmountWithVaT) ?? 0,
-                ProductSales = (from sod in db.SODs
-                                join so in db.SOes on sod.SOId equals so.Id
+                TotalSalesWithoutVAT = totalSalesWithoutVAT,
+                TotalSalesWithVAT = totalSalesWithVAT,
+                NumberOfSales = numberOfSales,
+                AverageSaleWithoutVAT = averageSaleWithoutVAT,
+                AverageSaleWithVAT = averageSaleWithVAT,
+                ProductSales = (from so in db.SOes
+                                join sod in db.SODs on so.Id equals sod.SOId
                                 join p in db.Products on sod.ProductId equals p.Id
                                 where so.Date >= sDate && so.Date <= eDate &&
-                                      (storeId == null || so.StoreId == storeId)
+                                      (storeId == null || so.StoreId == storeId) &&
+                                      (so.IsCancelled == null || so.IsCancelled == false)
                                 group new { sod, p } by new { sod.ProductId, p.Name } into g
                                 select new ProductSaleInfoViewModel
                                 {
                                     ProductName = g.Key.Name,
-                                    TotalQuantity = g.Sum(x => (decimal?)x.sod.Quantity) ?? 0,
-                                    TotalSaleValue = g.Sum(x => (decimal?)(x.sod.Quantity * x.sod.SalePrice)) ?? 0
+                                    TotalQuantity = g.Sum(x => (decimal?)x.sod.Quantity) ?? 0m,
+                                    TotalSaleValue = g.Sum(x => (decimal?)(x.sod.Quantity * x.sod.SalePrice)) ?? 0m
                                 }).ToList()
             };
 
             return View(model);
         }
-
 
     }
 

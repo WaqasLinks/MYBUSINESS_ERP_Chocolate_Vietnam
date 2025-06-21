@@ -5,79 +5,88 @@
   Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-  <div class="form-horizontal">
+<div class="form-horizontal">
     @using (Html.BeginForm("Index", "Account"))
     {
-      @Html.AntiForgeryToken()
+        @Html.AntiForgeryToken()
 
 
-      <h4>User Roles</h4>
-      <hr />
-      @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <h4>User Roles</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-      @Html.DropDownList("UserId", (IEnumerable<SelectListItem>)ViewBag.Employees, null, new { @class = "form-control" })
-      @Html.DropDownList("ClaimValue", (IEnumerable<SelectListItem>)ViewBag.Roles, null, new { @class = "form-control" })
+        @Html.DropDownList("UserId", (IEnumerable<SelectListItem>)ViewBag.Employees, null, new { @class = "form-control" })
+        @*@Html.DropDownList("ClaimValue", (IEnumerable<SelectListItem>)ViewBag.Roles, null, new { @class = "form-control" })*@
+        @Html.DropDownList("RoleId", (IEnumerable<SelectListItem>)ViewBag.Roles, null, new { @class = "form-control" })
+        @Html.Hidden("UserName", ViewBag.SelectedUserName as string)
 
-
-      <div class="form-group">
-        <div class="col-md-offset-2 col-md-10 AddClaim">
-          <input type="submit" value="Add" class="btn btn-primary" />
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10 AddClaim">
+                <input type="submit" value="Add" class="btn btn-primary" />
+            </div>
         </div>
-      </div>
 
     }
-    
+
     @using (Html.BeginForm("DeleteRole", "Account"))
     {
-      @Html.AntiForgeryToken()
+        @Html.AntiForgeryToken()
 
-      <table class="table">
-        <tr>
+<table class="table">
+    <tr>
 
-          <th>
+        <th>
             User
-          </th>
-          <th>
+        </th>
+        <th>
             Role
-          </th>
+        </th>
 
-          <th></th>
-        </tr>
-
-        @foreach (var item in Model)
-        {
-          <tr>
-            @*<td style="display:none;"><input type="hidden" name="AnnualOffDay.Index" value="@(counter)" /></td>*@
-            @*<td>
-              @Html.HiddenFor(modelItem => item.UserId)
-            </td>*@
-            <td>
-              @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            <td>
-              @Html.DisplayFor(modelItem => item.RoleName)
-            </td>
-
-            <td>
-              @*@Html.ActionLink("Delete", "Delete", new { id = item.Id })*@
-              @*<input type="submit" Class="DeleteRole" name="AspNetUserClaim.ClaimType" id="Delete@(item.Id)" value="Delete@(item.Id)" class="btn btn-danger" />*@
-              
-
-              <div class="form-group">
-              <div class="col-md-offset-2 col-md-10">
-                    @*<input type="submit" value="Add" class="btn btn-primary" />*@
-                <button type="submit" Class="btn btn-danger DeleteRole" name="ClaimId" id="Delete@(item.UserId)@(item.RoleId)" value="@(item.UserId),@(item.RoleId)">Delete</button>
-              </div>
-              </div>
-
-            </td>
-          </tr>
-        }
-
-      </table>
+        <th></th>
+    </tr>
+    @{
+        // Group by UserId and filter to show only highest role
+        var groupedUsers = Model.GroupBy(u => u.UserId)
+                              .Select(g => g.OrderByDescending(u =>
+                                  u.RoleName == "Admin" ? 3 :
+                                  u.RoleName == "Manager" ? 2 : 1)
+                              .FirstOrDefault());
     }
 
-  </div>
+    @foreach (var item in groupedUsers)
+    {
+        <tr>
+            @*<td style="display:none;"><input type="hidden" name="AnnualOffDay.Index" value="@(counter)" /></td>*@
+            @*<td>
+                  @Html.HiddenFor(modelItem => item.UserId)
+                </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RoleName)
+            </td>
+
+            <td>
+                @*@Html.ActionLink("Delete", "Delete", new { id = item.Id })*@
+                @*<input type="submit" Class="DeleteRole" name="AspNetUserClaim.ClaimType" id="Delete@(item.Id)" value="Delete@(item.Id)" class="btn btn-danger" />*@
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        @*<input type="submit" value="Add" class="btn btn-primary" />*@
+                        <button type="submit" Class="btn btn-danger DeleteRole" name="ClaimId" id="Delete@(item.UserId)@(item.RoleId)" value="@(item.UserId),@(item.RoleId)">Delete</button>
+                    </div>
+                </div>
+
+            </td>
+        </tr>
+    }
+
+</table>
+    }
+
+</div>
 
 <script>
   $(".DeleteRole").on('click', function () {

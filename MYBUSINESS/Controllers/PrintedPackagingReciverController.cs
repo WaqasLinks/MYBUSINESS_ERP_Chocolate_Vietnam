@@ -17,6 +17,7 @@ using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
 {
+    [Authorize(Roles = "Admin,Manager,User")]
     public class PrintedPackagingReciverController : Controller
     {
         // GET: PrintedPackagingReciver

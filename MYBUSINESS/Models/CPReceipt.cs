@@ -22,8 +22,8 @@ namespace MYBUSINESS.Models
         public Nullable<int> ToReceived { get; set; }
         public Nullable<int> PackagingProductionId { get; set; }
     
+        public virtual PackagingProduction PackagingProduction { get; set; }
         public virtual PaperColor PaperColor { get; set; }
         public virtual PPSubItem PPSubItem { get; set; }
-        public virtual PackagingProduction PackagingProduction { get; set; }
     }
 }

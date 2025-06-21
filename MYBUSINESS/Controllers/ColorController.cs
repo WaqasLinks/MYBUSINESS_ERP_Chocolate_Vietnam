@@ -10,6 +10,7 @@ using System;
 
 namespace MYBUSINESS.Controllers
 {
+    [Authorize(Roles = "Admin,Manager,User")]
     public class ColorController : Controller
     {
         private BusinessContext db = new BusinessContext();
@@ -343,11 +344,11 @@ namespace MYBUSINESS.Controllers
                 .Select(p => new { p.Id, p.Name, p.Unit })
                 .ToList(); // Convert to List
 
-            if (variableProducts.Any()) // Check if there are any products
-            {
+            //if (variableProducts.Any()) // Check if there are any products
+            //{
                 return Json(variableProducts, JsonRequestBehavior.AllowGet);
-            }
-            return Json(new { error = "No variable products found" }, JsonRequestBehavior.AllowGet);
+            //}
+            //return Json(new { error = "No variable products found" }, JsonRequestBehavior.AllowGet);
         }
 
 

@@ -316,7 +316,7 @@
                                     <th></th>-->
                                     <th style="width: 5%;">#</th>
                                     <th style="width: 35%;">Name</th>
-                                    <th style="width: 25%;">Qty</th>
+                                    <th style="width: 25%; display:none;">Qty</th>
                                     <th style="width: 20%;">Unit</th>
                                     @*<th style="width: 12%;"></th>*@
                                 </tr>
@@ -356,8 +356,8 @@
             </td>*@
 
 
-                                    <td>
-                                        <input readonly type="number" step="0.000001" autocomplete="off" class="form-control" name="SubItem[30].Quantity" id="quantity30">
+                                    <td style="display:none;">
+                                        <input  readonly type="number" step="0.000001" autocomplete="off" class="form-control" name="SubItem[30].Quantity" id="quantity30">
                                     </td>
 
                                     <td>
@@ -382,8 +382,8 @@
                                         )
                                     </td>
 
-                                    <td>
-                                        <input type="number" step="0.1" autocomplete="off" class="form-control" name="SubItem[31].Quantity" id="quantity31">
+                                    <td style="display:none;">
+                                        <input  type="number" step="0.1" autocomplete="off" class="form-control" name="SubItem[31].Quantity" id="quantity31">
                                     </td>
 
                                     <td>
@@ -405,7 +405,7 @@
                                         )
                                     </td>
 
-                                    <td>
+                                    <td style="display:none;">
                                         <input readonly type="number" step="0.1" autocomplete="off" class="form-control" name="SubItem[32].Quantity" id="quantity32">
                                     </td>
 
@@ -708,11 +708,11 @@
             piece = (int)(d.Stock % d.PerPack);
             if (piece == 0)
             {
-               @:products.push([ "@d.Id", "@d.Name", "@d.Unit",  "@carton" ]);
+               @:products.push([ "@d.Id", "@d.Name",  "@d.Unit", "@d.Unit",  "@carton" ]);
             }
             else
             {
-                @:products.push(["@d.Id", "@d.Name", "@d.Unit", "@carton,@piece"]);
+                @:products.push(["@d.Id", "@d.Name",  "@d.Unit",  "@d.Unit",  "@carton,@piece"]);
             }
             @:productsBarcodes.push(["@d.Id", "@d.BarCode"]);
 

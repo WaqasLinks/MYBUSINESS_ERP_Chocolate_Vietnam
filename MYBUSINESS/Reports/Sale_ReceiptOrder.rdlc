@@ -174,7 +174,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
+                                  <Value>Product Unit</Value>
                                   <Style>
                                     <FontFamily />
                                     <FontSize>5pt</FontSize>
@@ -400,8 +400,8 @@
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DataSet1</DataSetName>
-            <Top>0.29998in</Top>
-            <Left>1.35793in</Left>
+            <Top>0.56774in</Top>
+            <Left>1.25912in</Left>
             <Height>0.29088in</Height>
             <Width>2.28244in</Width>
             <Style>
@@ -410,279 +410,14 @@
               </Border>
             </Style>
           </Tablix>
-          <Line Name="Line4">
-            <Top>2.13381in</Top>
-            <Left>0.24487in</Left>
-            <Height>0in</Height>
-            <Width>3.26883in</Width>
-            <ZIndex>1</ZIndex>
-            <Style>
-              <Border>
-                <Style>Solid</Style>
-              </Border>
-            </Style>
-          </Line>
-          <Textbox Name="Textbox10">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Product Unit</Value>
-                    <Style>
-                      <FontStyle>Normal</FontStyle>
-                      <FontFamily />
-                      <FontSize>5pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <TextDecoration>None</TextDecoration>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Left</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox8</rd:DefaultName>
-            <Top>0.29998in</Top>
-            <Left>2.37456in</Left>
-            <Height>0.14544in</Height>
-            <Width>0.68438in</Width>
-            <ZIndex>2</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <BackgroundColor>White</BackgroundColor>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox11">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Product Catogory</Value>
-                    <Style>
-                      <FontStyle>Normal</FontStyle>
-                      <FontFamily />
-                      <FontSize>5pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <TextDecoration>None</TextDecoration>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Left</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox8</rd:DefaultName>
-            <Top>0.29998in</Top>
-            <Left>0.65966in</Left>
-            <Height>0.14544in</Height>
-            <Width>0.68438in</Width>
-            <ZIndex>3</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <BackgroundColor>White</BackgroundColor>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="ClosingCurrencyDetail3">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!ProductCategory.Value, "DataSet1")</Value>
-                    <Style>
-                      <FontSize>5pt</FontSize>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Left</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <Top>0.45931in</Top>
-            <Left>0.65966in</Left>
-            <Height>0.13155in</Height>
-            <Width>0.67049in</Width>
-            <ZIndex>4</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <BackgroundColor>White</BackgroundColor>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox62">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Stock Manger
-Signature</Value>
-                    <Style>
-                      <FontFamily />
-                      <FontSize>5pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <TextDecoration>None</TextDecoration>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Center</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>2.20325in</Top>
-            <Left>0.24487in</Left>
-            <Height>0.13542in</Height>
-            <Width>0.6861in</Width>
-            <ZIndex>5</ZIndex>
-            <Style>
-              <Border />
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox63">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Logistic Signature</Value>
-                    <Style>
-                      <FontFamily />
-                      <FontSize>5pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <TextDecoration>None</TextDecoration>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Center</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>2.20325in</Top>
-            <Left>1.01096in</Left>
-            <Height>0.13542in</Height>
-            <Width>0.61319in</Width>
-            <ZIndex>6</ZIndex>
-            <Style>
-              <Border />
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox64">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Security Signature</Value>
-                    <Style>
-                      <FontFamily />
-                      <FontSize>5pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <TextDecoration>None</TextDecoration>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Center</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>2.20325in</Top>
-            <Left>1.77828in</Left>
-            <Height>0.13542in</Height>
-            <Width>0.59235in</Width>
-            <ZIndex>7</ZIndex>
-            <Style>
-              <Border />
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox65">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Receiver Signature</Value>
-                    <Style>
-                      <FontFamily />
-                      <FontSize>5pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <TextDecoration>None</TextDecoration>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Center</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox31</rd:DefaultName>
-            <Top>2.20325in</Top>
-            <Left>2.50825in</Left>
-            <Height>0.13542in</Height>
-            <Width>0.55069in</Width>
-            <ZIndex>8</ZIndex>
-            <Style>
-              <Border />
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
         </ReportItems>
         <Height>4.34164in</Height>
         <Style />
       </Body>
-      <Width>94.0098mm</Width>
+      <Width>91.89313mm</Width>
       <Page>
         <PageHeader>
-          <Height>1.49712in</Height>
+          <Height>1.44504in</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <ReportItems>
             <Textbox Name="Textbox41">
@@ -709,8 +444,8 @@ Signature</Value>
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox31</rd:DefaultName>
-              <Top>0.33165in</Top>
-              <Left>1.91737in</Left>
+              <Top>0.23165in</Top>
+              <Left>2.04237in</Left>
               <Height>0.13383in</Height>
               <Width>0.401in</Width>
               <Style>
@@ -761,8 +496,8 @@ Signature</Value>
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox31</rd:DefaultName>
-              <Top>0.80506in</Top>
-              <Left>1.84793in</Left>
+              <Top>0.70506in</Top>
+              <Left>1.97293in</Left>
               <Height>0.17292in</Height>
               <Width>0.66301in</Width>
               <ZIndex>2</ZIndex>
@@ -795,8 +530,8 @@ Signature</Value>
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>SaleOrderAmount</rd:DefaultName>
-              <Top>0.33422in</Top>
-              <Left>2.31837in</Left>
+              <Top>0.23422in</Top>
+              <Left>2.44337in</Left>
               <Height>0.15903in</Height>
               <Width>0.74057in</Width>
               <ZIndex>3</ZIndex>
@@ -828,8 +563,8 @@ Signature</Value>
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>BillPaid</rd:DefaultName>
-              <Top>0.79117in</Top>
-              <Left>2.51094in</Left>
+              <Top>0.69117in</Top>
+              <Left>2.63594in</Left>
               <Height>0.17292in</Height>
               <Width>0.548in</Width>
               <ZIndex>4</ZIndex>
@@ -866,8 +601,8 @@ Signature</Value>
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox31</rd:DefaultName>
-              <Top>0.57659in</Top>
-              <Left>1.8896in</Left>
+              <Top>0.47659in</Top>
+              <Left>2.0146in</Left>
               <Height>0.13383in</Height>
               <Width>0.41488in</Width>
               <ZIndex>5</ZIndex>
@@ -900,120 +635,13 @@ Signature</Value>
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>SaleOrderAmount</rd:DefaultName>
-              <Top>0.57659in</Top>
-              <Left>2.31837in</Left>
+              <Top>0.47659in</Top>
+              <Left>2.44337in</Left>
               <Height>0.15903in</Height>
               <Width>0.74057in</Width>
               <ZIndex>6</ZIndex>
               <Style>
                 <Border />
-                <PaddingLeft>2pt</PaddingLeft>
-                <PaddingRight>2pt</PaddingRight>
-                <PaddingTop>2pt</PaddingTop>
-                <PaddingBottom>2pt</PaddingBottom>
-              </Style>
-            </Textbox>
-            <Textbox Name="Textbox59">
-              <CanGrow>true</CanGrow>
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>DELIVERY NOTE</Value>
-                      <Style>
-                        <FontFamily />
-                        <FontSize>5pt</FontSize>
-                        <FontWeight>Bold</FontWeight>
-                        <TextDecoration>None</TextDecoration>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style>
-                    <TextAlign>Center</TextAlign>
-                  </Style>
-                </Paragraph>
-              </Paragraphs>
-              <rd:DefaultName>Textbox31</rd:DefaultName>
-              <Top>1.06627in</Top>
-              <Left>1.13412in</Left>
-              <Height>0.13542in</Height>
-              <Width>1.18425in</Width>
-              <ZIndex>7</ZIndex>
-              <Style>
-                <Border />
-                <PaddingLeft>2pt</PaddingLeft>
-                <PaddingRight>2pt</PaddingRight>
-                <PaddingTop>2pt</PaddingTop>
-                <PaddingBottom>2pt</PaddingBottom>
-              </Style>
-            </Textbox>
-            <Textbox Name="Textbox49">
-              <CanGrow>true</CanGrow>
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>Delivered to:</Value>
-                      <Style>
-                        <FontStyle>Normal</FontStyle>
-                        <FontFamily />
-                        <FontSize>5pt</FontSize>
-                        <FontWeight>Bold</FontWeight>
-                        <TextDecoration>None</TextDecoration>
-                        <Color>#000000</Color>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style>
-                    <TextAlign>Right</TextAlign>
-                  </Style>
-                </Paragraph>
-              </Paragraphs>
-              <rd:DefaultName>Textbox31</rd:DefaultName>
-              <Top>1.25724in</Top>
-              <Left>1.20291in</Left>
-              <Height>0.18432in</Height>
-              <Width>0.66301in</Width>
-              <ZIndex>8</ZIndex>
-              <Style>
-                <Border />
-                <VerticalAlign>Middle</VerticalAlign>
-                <PaddingLeft>2pt</PaddingLeft>
-                <PaddingRight>2pt</PaddingRight>
-                <PaddingTop>2pt</PaddingTop>
-                <PaddingBottom>2pt</PaddingBottom>
-              </Style>
-            </Textbox>
-            <Textbox Name="BillPaid19">
-              <CanGrow>true</CanGrow>
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>=First(Fields!StoreName.Value, "DataSet1")</Value>
-                      <Style>
-                        <FontFamily />
-                        <FontSize>5pt</FontSize>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style>
-                    <TextAlign>Center</TextAlign>
-                  </Style>
-                </Paragraph>
-              </Paragraphs>
-              <rd:DefaultName>BillPaid</rd:DefaultName>
-              <Top>1.27113in</Top>
-              <Left>1.86592in</Left>
-              <Height>0.17292in</Height>
-              <Width>0.71401in</Width>
-              <ZIndex>9</ZIndex>
-              <Style>
-                <Border />
-                <VerticalAlign>Middle</VerticalAlign>
                 <PaddingLeft>2pt</PaddingLeft>
                 <PaddingRight>2pt</PaddingRight>
                 <PaddingTop>2pt</PaddingTop>
@@ -1050,7 +678,7 @@ Industrial Areal, Dien Ngoc Ward
               <Left>0.24487in</Left>
               <Height>0.14544in</Height>
               <Width>1.21028in</Width>
-              <ZIndex>10</ZIndex>
+              <ZIndex>7</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>

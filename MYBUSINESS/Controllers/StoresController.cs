@@ -16,6 +16,7 @@ using System.Diagnostics;
 
 namespace MYBUSINESS.Controllers
 {
+    [Authorize(Roles = "Admin,Manager,User")]
     public class StoresController : Controller
     {
         private BusinessContext db = new BusinessContext();
@@ -160,74 +161,75 @@ namespace MYBUSINESS.Controllers
         //    }
 
 
-        public List<DailyCashSummaryViewModel> GetCashSummary(DateTime startDate, DateTime endDate)
-        {
-            // Ensure endDate includes the entire day
-            var endDateInclusive = endDate.Date.AddDays(1).AddSeconds(-1);
+        //public List<DailyCashSummaryViewModel> GetCashSummary(DateTime startDate, DateTime endDate)
+        //{
+        //    // Ensure endDate includes the entire day
+        //    var endDateInclusive = endDate.Date.AddDays(1).AddSeconds(-1);
 
-            var allStores = db.Stores.ToList();
-            var summaries = new List<DailyCashSummaryViewModel>();
+        //    var allStores = db.Stores.ToList();
+        //    var summaries = new List<DailyCashSummaryViewModel>();
 
-            foreach (var store in allStores)
-            {
-                // 1. Get Opening Balance (properly handles time component)
-                var openingBalance = db.DailyBalanceVnds
-                    .Where(d => d.StoreId == store.Id &&
-                           DbFunctions.TruncateTime(d.OpeningDate) == startDate.Date)
-                    .OrderByDescending(d => d.OpeningDate) // Get most recent if multiple
-                    .Select(d => (decimal?)d.OpeningBalance)
-                    .FirstOrDefault() ?? 0;
+        //    foreach (var store in allStores)
+        //    {
+        //        // 1. Get Opening Balance (properly handles time component)
+        //        var openingBalance = db.DailyBalanceVnds
+        //            .Where(d => d.StoreId == store.Id &&
+        //                   DbFunctions.TruncateTime(d.OpeningDate) == startDate.Date)
+        //            .OrderByDescending(d => d.OpeningDate) // Get most recent if multiple
+        //            .Select(d => (decimal?)d.OpeningBalance)
+        //            .FirstOrDefault() ?? 0;
 
-                // 2. Get Cash Sales (with proper NULL handling and date range)
-                var cashSalesQuery = db.SOes
-                    .Where(s => s.StoreId == store.Id &&
-                           s.Date >= startDate.Date &&
-                           s.Date <= endDateInclusive &&
-                           (s.IsCancelled == null || s.IsCancelled == false));
+        //        // 2. Get Cash Sales (with proper NULL handling and date range)
+        //        var cashSalesQuery = db.SOes
+        //            .Where(s => s.StoreId == store.Id &&
+        //                   s.Date >= startDate.Date &&
+        //                   s.Date <= endDateInclusive &&
+        //                   (s.IsCancelled == null || s.IsCancelled == false));
 
-                // Debugging: Check if any records match the criteria
-                var matchingRecords = cashSalesQuery.ToList();
-                Debug.WriteLine($"Found {matchingRecords.Count} records for store {store.Id}");
+        //        // Debugging: Check if any records match the criteria
+        //        var matchingRecords = cashSalesQuery.ToList();
+        //        Debug.WriteLine($"Found {matchingRecords.Count} records for store {store.Id}");
 
-                var cashSales = cashSalesQuery.Sum(s => (decimal?)s.BillPaidByCash) ?? 0;
+        //        var cashSales = cashSalesQuery.Sum(s => (decimal?)s.BillPaidByCash) ?? 0;
 
-                // 3. Other calculations remain the same
-                var moneyInput = db.ShopManages
-                    .Where(t => t.ShoreId == store.Id &&
-                           t.Date >= startDate.Date &&
-                           t.Date <= endDateInclusive &&
-                           t.TransactionType == 2)
-                    .Sum(t => (decimal?)t.Balance) ?? 0;
+        //        // 3. Other calculations remain the same
+        //        var moneyInput = db.ShopManages
+        //            .Where(t => t.ShoreId == store.Id &&
+        //                   t.Date >= startDate.Date &&
+        //                   t.Date <= endDateInclusive &&
+        //                   t.TransactionType == 2)
+        //            .Sum(t => (decimal?)t.Balance) ?? 0;
 
-                var bankDeposit = db.ShopManages
-                    .Where(t => t.ShoreId == store.Id &&
-                           t.Date >= startDate.Date &&
-                           t.Date <= endDateInclusive &&
-                           t.TransactionType == 1)
-                    .Sum(t => (decimal?)t.Balance) ?? 0;
+        //        var bankDeposit = db.ShopManages
+        //            .Where(t => t.ShoreId == store.Id &&
+        //                   t.Date >= startDate.Date &&
+        //                   t.Date <= endDateInclusive &&
+        //                   t.TransactionType == 1)
+        //            .Sum(t => (decimal?)t.Balance) ?? 0;
 
-                var actualClosing = openingBalance + cashSales + moneyInput - bankDeposit;
+        //        var actualClosing = openingBalance + cashSales + moneyInput - bankDeposit;
 
-                var uploadedCreditAmount = db.ScanCreditCards
-                    .Where(r => r.StoreId == store.Id &&
-                           r.Date >= startDate.Date &&
-                           r.Date <= endDateInclusive)
-                    .Sum(r => (decimal?)r.Amount) ?? 0;
+        //        var uploadedCreditAmount = db.ScanCreditCards
+        //            .Where(r => r.StoreId == store.Id &&
+        //                   r.Date >= startDate.Date &&
+        //                   r.Date <= endDateInclusive)
+        //            .Sum(r => (decimal?)r.Amount) ?? 0;
 
-                summaries.Add(new DailyCashSummaryViewModel
-                {
-                    StoreName = store.Name,
-                    OpeningBalance = openingBalance,
-                    CashSales = cashSales,
-                    MoneyInput = moneyInput,
-                    BankDeposit = bankDeposit,
-                    ActualClosingBalance = actualClosing,
-                    UploadedCreditCardAmount = uploadedCreditAmount
-                });
-            }
+        //        summaries.Add(new DailyCashSummaryViewModel
+        //        {
+        //            StoreName = store.Name,
+        //            OpeningBalance = openingBalance,
+        //            CashSales = cashSales,
+        //            MoneyInput = moneyInput,
+        //            BankDeposit = bankDeposit,
+        //            ActualClosingBalance = actualClosing,
+        //            UploadedCreditCardAmount = uploadedCreditAmount
+        //        });
+        //    }
 
-            return summaries;
-        }
+        //    return summaries;
+        //}
+
 
         public ActionResult DailySummary(DateTime? startDate, DateTime? endDate)
         {
@@ -243,11 +245,97 @@ namespace MYBUSINESS.Controllers
 
             // Format dates as dd/MM/yyyy
             ViewBag.StartDate = startDateAdjusted.ToString("dd/MM/yyyy");
-            ViewBag.EndDate = endDateAdjusted.ToString("dd/MM/yyyy");
+            ViewBag.EndDate = endDate.Value.ToString("dd/MM/yyyy"); // Use original endDate without time adjustment
+
+            // Format dates as yyyy-MM-dd for HTML date inputs (required format)
+            ViewBag.HtmlStartDate = startDateAdjusted.ToString("yyyy-dd-MM");
+            ViewBag.HtmlEndDate = endDate.Value.ToString("yyyy-dd-MM");
+
 
             return View(model);
         }
+        public List<DailyCashSummaryViewModel> GetCashSummary(DateTime startDate, DateTime endDate)
+        {
+            // Ensure endDate includes the entire day
+            var endDateInclusive = endDate.Date.AddDays(1).AddSeconds(-1);
 
+            var allStores = db.Stores.ToList();
+            var summaries = new List<DailyCashSummaryViewModel>();
+
+            foreach (var store in allStores)
+            {
+                // 1. Get Opening Balance (from record with matching opening date)
+                var openingBalanceRecord = db.DailyBalanceVnds
+                    .Where(d => d.StoreId == store.Id &&
+                           DbFunctions.TruncateTime(d.OpeningDate) == startDate.Date)
+                    .OrderByDescending(d => d.OpeningDate)
+                    .FirstOrDefault();
+
+                var openingBalance = openingBalanceRecord?.OpeningBalance ?? 0;
+
+                // 2. Get Closing Balance (from record with matching closing date)
+                var closingBalanceRecord = db.DailyBalanceVnds
+                    .Where(d => d.StoreId == store.Id &&
+                           d.ClosingDate.HasValue &&
+                           DbFunctions.TruncateTime(d.ClosingDate.Value) == endDate.Date)
+                    .OrderByDescending(d => d.ClosingDate)
+                    .FirstOrDefault();
+
+                var closingBalance = closingBalanceRecord?.ClosingBalance ?? 0;
+
+                // 3. Get Cash Sales
+                var cashSales = db.SOes
+                    .Where(s => s.StoreId == store.Id &&
+                           s.Date >= startDate.Date &&
+                           s.Date <= endDateInclusive &&
+                           (s.IsCancelled == null || s.IsCancelled == false))
+                    .Sum(s => (decimal?)s.BillPaidByCash) ?? 0;
+
+                // 4. Get Money Input
+                var moneyInput = db.ShopManages
+                    .Where(t => t.ShoreId == store.Id &&
+                           t.Date >= startDate.Date &&
+                           t.Date <= endDateInclusive &&
+                           t.TransactionType == 2)
+                    .Sum(t => (decimal?)t.Balance) ?? 0;
+
+                // 5. Get Bank Deposit
+                var bankDeposit = db.ShopManages
+                    .Where(t => t.ShoreId == store.Id &&
+                           t.Date >= startDate.Date &&
+                           t.Date <= endDateInclusive &&
+                           t.TransactionType == 1)
+                    .Sum(t => (decimal?)t.Balance) ?? 0;
+
+                // 6. Calculate expected closing balance
+                var calculatedClosing = openingBalance + cashSales + moneyInput - bankDeposit;
+
+                // 7. Calculate difference (what's missing or extra)
+                var difference = closingBalance - calculatedClosing;
+
+                // 8. Get Credit Card Amount
+                var uploadedCreditAmount = db.ScanCreditCards
+                    .Where(r => r.StoreId == store.Id &&
+                           r.Date >= startDate.Date &&
+                           r.Date <= endDateInclusive)
+                    .Sum(r => (decimal?)r.Amount) ?? 0;
+
+                summaries.Add(new DailyCashSummaryViewModel
+                {
+                    StoreName = store.Name,
+                    OpeningBalance = openingBalance,
+                    CashSales = cashSales,
+                    MoneyInput = moneyInput,
+                    BankDeposit = bankDeposit,
+                    ActualClosingBalance = calculatedClosing,
+                    RecordedClosingBalance = closingBalance,
+                    Difference = difference,
+                    UploadedCreditCardAmount = uploadedCreditAmount
+                });
+            }
+
+            return summaries;
+        }
 
 
 
@@ -809,31 +897,99 @@ namespace MYBUSINESS.Controllers
         //    return new FileContentResult(renderBytes, mimeType);
         //}
 
+        //[HttpPost]
+        ////[ValidateAntiForgeryToken]
+        //public ActionResult CloseShop(StoreViewModel storeDto)
+        //{
+        //    if (storeDto == null) { return new HttpStatusCodeResult(HttpStatusCode.BadRequest); }
+        //    //var storeId = Session["StoreId"] as string; //commented due to session issue
+        //    //if (storeId == null)
+        //    //{
+        //    //    return RedirectToAction("StoreNotFound", "UserManagement");
+        //    //}
+        //    //var parseId = int.Parse(storeId);
+        //    var store = new DailyBalanceVnd
+        //    {
+        //        ClosingDate = DateTime.UtcNow,
+        //        ClosingBalance = storeDto.ClosingBalance,
+        //        ClosingCurrencyDetail = storeDto.ClosingCurrencyDetail,
+        //        //StoreId = parseId //commented due to session issue
+        //        //StoreId = 1
+        //        StoreId = storeDto.StoreId
+        //    };
+        //    db.DailyBalanceVnds.Add(store);
+        //    db.SaveChanges();
+        //    Session["StoreId"] = null;
+        //    return Json(new { Success = true, Message = "Shop closed successfully" });
+        //}
         [HttpPost]
-        //[ValidateAntiForgeryToken]
         public ActionResult CloseShop(StoreViewModel storeDto)
         {
-            if (storeDto == null) { return new HttpStatusCodeResult(HttpStatusCode.BadRequest); }
-            //var storeId = Session["StoreId"] as string; //commented due to session issue
-            //if (storeId == null)
-            //{
-            //    return RedirectToAction("StoreNotFound", "UserManagement");
-            //}
-            //var parseId = int.Parse(storeId);
-            var store = new DailyBalanceVnd
+            try
             {
-                ClosingDate = DateTime.UtcNow,
-                ClosingBalance = storeDto.ClosingBalance,
-                ClosingCurrencyDetail = storeDto.ClosingCurrencyDetail,
-                //StoreId = parseId //commented due to session issue
-                //StoreId = 1
-                StoreId = storeDto.StoreId
-            };
-            db.DailyBalanceVnds.Add(store);
-            db.SaveChanges();
-            Session["StoreId"] = null;
-            return Json(new { Success = true, Message = "Shop closed successfully" });
+                if (storeDto == null)
+                {
+                    return Json(new { Success = false, Message = "Invalid data received." });
+                }
+
+                // Initialize storeId with the value from DTO
+                int storeId = storeDto.StoreId;
+
+                if (storeId <= 0)
+                {
+                    // Fallback 1: Try from session
+                    var sessionStoreId = Session["StoreId"] as int?;
+                    if (sessionStoreId.HasValue && sessionStoreId > 0)
+                    {
+                        storeId = sessionStoreId.Value;
+                    }
+                    else
+                    {
+                        // Fallback 2: Try from most recent opening record
+                        var lastOpening = db.DailyBalanceVnds
+                            .Where(d => d.ClosingDate == null)
+                            .OrderByDescending(d => d.OpeningDate)
+                            .FirstOrDefault();
+
+                        if (lastOpening != null)
+                        {
+                            storeId = lastOpening.StoreId; // No conversion needed now
+                        }
+                    }
+                }
+
+                if (storeId <= 0)
+                {
+                    return Json(new { Success = false, Message = "Could not determine store to close." });
+                }
+
+                // Rest of your method remains the same...
+                var openingRecord = db.DailyBalanceVnds
+                    .Where(d => d.StoreId == storeId && d.ClosingDate == null)
+                    .OrderByDescending(d => d.OpeningDate)
+                    .FirstOrDefault();
+
+                if (openingRecord == null)
+                {
+                    return Json(new { Success = false, Message = "No open shop record found to close." });
+                }
+
+                openingRecord.ClosingDate = DateTime.UtcNow;
+                openingRecord.ClosingBalance = storeDto.ClosingBalance;
+                openingRecord.ClosingCurrencyDetail = storeDto.ClosingCurrencyDetail;
+
+                db.SaveChanges();
+                Session["StoreId"] = null;
+
+                return Json(new { Success = true, Message = "Shop closed successfully" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Success = false, Message = "An error occurred: " + ex.Message });
+            }
         }
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

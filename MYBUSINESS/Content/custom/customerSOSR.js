@@ -2515,7 +2515,7 @@ $(document).ready(function () {
             $('#changeUsd').val('0');
             $('#changejpy').val('0');
             $('#cardvnd').val(totalAmountForSelectedProduct);
-            $('#payallbycard').text(totalAmountForSelectedProduct);
+            $('#payallbycard').text('Pay all by card'/*totalAmountForSelectedProduct*/);
             cardVndBalance = totalAmountForSelectedProduct;
             $('#totalitsmspan').text(totalAmountForSelectedProduct);
             $('#validatepyment').prop('disabled', false);

@@ -12,7 +12,9 @@ namespace MYBUSINESS.Models
         public int? StoreId { get; set; } // Add StoreId property
         public decimal TotalSalesWithoutVAT { get; set; }
         public decimal TotalSalesWithVAT { get; set; }
-
+        public int NumberOfSales { get; set; }
+        public decimal AverageSaleWithoutVAT { get; set; }
+        public decimal AverageSaleWithVAT { get; set; }
         public List<ProductSaleInfoViewModel> ProductSales { get; set; }
     }
     }

@@ -33,7 +33,7 @@
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Update NewProduction</h3>
+                        <h3 class="box-title">Update New Production</h3>
                     </div>
 
 
@@ -52,7 +52,7 @@
                             @Html.ValidationMessageFor(model => Model.NewProduction.Id, "", new { @class = "text-danger" })
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => Model.NewProduction.ProductId, "Select Product", new { @class = "control-label" })
+                            @Html.LabelFor(model => Model.NewProduction.ProductId, "Select Product to Manufacture", new { @class = "control-label" })
                             @Html.DropDownListFor(
                                 model => model.NewProduction.ProductId,
                                 (SelectList)ViewBag.ProductList,
@@ -84,7 +84,7 @@
                         </div>
 
                         <div class="form-group">
-                            @Html.LabelFor(model => model.NewProduction.ProductionDate, htmlAttributes: new { @class = "control-label" })
+                            <label>Production Date</label>
                             @{
                                 var attributes = new Dictionary<string, object>
                         {
@@ -281,7 +281,7 @@
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Ingredients</h3>
+                        <h3 class="box-title">Main Ingredients</h3>
                     </div>
 
 
@@ -308,7 +308,7 @@
                                     int sNo = 0;
                                     foreach (var item in Model.SubItemProduction)
                                     {
-                                        if (item.Product != null && item.Product.PType == 5 || item.Product.PType == 6)
+                                        if ((item.Product != null && item.Product.PType == 5 || item.Product.PType == 6) && item.SubItemQty > 0)
                                         {
                                             <tr>
                                                 <td id="SNo0">@(sNo + 1)</td>
@@ -384,7 +384,7 @@
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Product Type</h3>
+                        <h3 class="box-title">Secondary Materials</h3>
                     </div>
 
 
@@ -411,9 +411,11 @@
                                     int sNo = 0;
                                     foreach (var item in Model.SubItemProduction)
                                     {
-                                        if (item.Product != null && item.Product.PType == 1 || item.Product.PType == 2 || item.Product.PType == 3)
+                                        if (item.Product != null &&
+                (item.Product.PType == 1 || item.Product.PType == 6 || item.Product.PType == 3) &&
+                item.SubItemQty == null)
                                         {
-                                            
+
                                             <tr style="@(item.Product?.PType == 3 ? "display:none;" : "")">
                                                 <td id="SNo0">@(sNo + 1)</td>
                                                 <td style="display:none;"><input type="hidden" readonly name="SubItemProduction.Index" value="@sNo" /></td>

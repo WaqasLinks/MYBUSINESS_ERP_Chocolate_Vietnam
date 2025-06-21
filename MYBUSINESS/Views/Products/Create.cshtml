@@ -59,7 +59,7 @@
                                     <select class="form-control" id="productTypeDropdown" name="ProductType">
                                         <option value="">-- Select Product Type --</option>
                                         <option value="1" @(Model.Product.PType == 1 ? "selected" : "")>Variable Product</option>
-                                        <option value="2" @(Model.Product.PType == 2 ? "selected" : "")>Excess Product</option>
+                                        @*<option value="2" @(Model.Product.PType == 2 ? "selected" : "")>Excess Product</option>*@
                                         <option value="3" @(Model.Product.PType == 3 ? "selected" : "")>ByProduct</option>
                                         <option value="4" @(Model.Product.PType == 4 ? "selected" : "")>Finished Product</option>
                                         <option value="5" @(Model.Product.PType == 5 ? "selected" : "")>Ingredient</option>
@@ -208,7 +208,7 @@
                                         @Html.LabelFor(model => model.Product.Stock, htmlAttributes: new { @class = "control-label" })
                                         @{
                                             MYBUSINESS.Models.Employee currentUser = (MYBUSINESS.Models.Employee)HttpContext.Current.Session["CurrentUser"];
-                                            if (currentUser.EmployeeTypeId == 0)
+                                            if (currentUser != null && currentUser.EmployeeTypeId == 0)
                                             {
                                                 @Html.EditorFor(model => model.Product.Stock, new { htmlAttributes = new { @class = "form-control", @id = "stock" } })
                                             }
@@ -445,9 +445,9 @@
                         $('#supplier-field, #category-field, #unit-field').show();
                         $('#productDropdownContainer').slideDown(); // Only show for Variable Product
                         break;
-                    case "2": // Excess Product
-                        $('#supplier-field, #category-field, #unit-field').show();
-                        break;
+                    //case "2": // Excess Product
+                    //    $('#supplier-field, #category-field, #unit-field').show();
+                    //    break;
                     case "3": // ByProduct
                         $('#supplier-field, #category-field, #unit-field').show();
                         break;
@@ -485,7 +485,7 @@
 @foreach (var d in ViewBag.Suppliers)
 {
     @*@:products.push(["@d.Name","@d.PurchasePrice","@d.Stock"]);*@
-    @:suppliers.push(["@d.Id","@d.Name", "@d.Address", "@d.Balance"]);
+    @:suppliers.push(["@d.Id","@d.Name", "@d.Address"]);
 }
 
 

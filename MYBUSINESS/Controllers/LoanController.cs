@@ -16,6 +16,7 @@ using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
 {
+    [Authorize(Roles = "Admin,Manager,User")]
     public class LoanController : Controller
     {
         private BusinessContext db = new BusinessContext();

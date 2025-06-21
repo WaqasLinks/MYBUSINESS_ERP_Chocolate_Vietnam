@@ -32,7 +32,6 @@ namespace MYBUSINESS.Models
         public Nullable<System.DateTime> PProdDate { get; set; }
         public string Box { get; set; }
         public string ColorCode { get; set; }
-        public string Supplier { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BOXProduction> BOXProductions { get; set; }
@@ -40,8 +39,8 @@ namespace MYBUSINESS.Models
         public virtual ICollection<CPReceipt> CPReceipts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PaperColor> PaperColors { get; set; }
-        public virtual Product Product { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductStockDetail> ProductStockDetails { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

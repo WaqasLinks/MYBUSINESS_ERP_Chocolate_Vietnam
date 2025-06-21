@@ -10,9 +10,11 @@ using System.Web;
 using System.Web.Mvc;
 using System.Windows.Media;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
-
+using Microsoft.Reporting.WebForms;
+using System.Data.SqlClient;
 namespace MYBUSINESS.Controllers
 {
+    [Authorize(Roles = "Admin,Manager,User")]
     public class NewProductionController : Controller
     {
         private BusinessContext db = new BusinessContext();
@@ -215,7 +217,10 @@ namespace MYBUSINESS.Controllers
            
             var viewModel = new NewProductionViewModel
                 {
-                    NewProduction = new NewProduction(),
+                    NewProduction = new NewProduction
+                    {
+                        ProductionDate = DateTime.Today // Set default to today
+                    },
                     Products = DAL.dbProducts,
                     SubItems = subItems,
                     QuantityToProduce = new List<QuantityToProduce> { new QuantityToProduce() },
@@ -394,7 +399,7 @@ namespace MYBUSINESS.Controllers
                     productType = "Variable";
                     break;
                 case 2:
-                    productType = "Excess";
+                    productType = "Intermediary";
                     break;
                 case 3:
                     productType = "ByProduct";
@@ -731,7 +736,7 @@ namespace MYBUSINESS.Controllers
         FinalProduct = s.Product != null && s.Product.PType == 4,
         PType = s.Product != null ?
             (s.Product.PType == 1 ? "Variable" :
-             s.Product.PType == 2 ? "Excess" :
+             s.Product.PType == 6 ? "Excess" :
              s.Product.PType == 3 ? "ByProduct" : "Unknown")
             : "Unknown",
         VariableProduct = s.Product != null ? s.Product.VarProdParentId : (int?)null,
@@ -1205,6 +1210,97 @@ namespace MYBUSINESS.Controllers
             }
             base.Dispose(disposing);
         }
+        [HttpGet]
+        
+        public ActionResult PrintProductionPdf(int productionId)
+        {
+            LocalReport localReport = new LocalReport();
+            localReport.ReportPath = Server.MapPath("~/Reports/Production_Report.rdlc");
 
+            // Get data from stored procedure
+            var model = new ProductionDetailsViewModel();
+
+            using (var command = db.Database.Connection.CreateCommand())
+            {
+                db.Database.Connection.Open();
+                command.CommandText = "EXEC GetProductionDetailsById @ProductionId";
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@ProductionId", productionId));
+
+                using (var reader = command.ExecuteReader())
+                {
+                    // Read first result set (main production info)
+                    if (reader.Read())
+                    {
+                        model.ProductionInfo = new ProductionDetailsViewModel.MainProductionInfo
+                        {
+                            Id = reader.GetInt32(0),
+                            ProductionDate = reader.GetDateTime(1),
+                            ProductId = reader.GetInt32(2),
+                            MainProductName = reader.GetString(3),
+                            Unit = reader.GetString(4),
+                            TotalQuantity = reader.GetDecimal(5)
+                        };
+                    }
+
+                    // Read second result set (quantities to produce)
+                    reader.NextResult();
+                    model.QuantitiesToProduce = new List<ProductionDetailsViewModel.QuantityToProduce>();
+                    while (reader.Read())
+                    {
+                        model.QuantitiesToProduce.Add(new ProductionDetailsViewModel.QuantityToProduce
+                        {
+                            Id = reader.GetInt32(0),
+                            Shape = reader.GetString(1),
+                            Quantity = reader.GetDecimal(2),
+                            Total = reader.GetDecimal(3),
+                            Unit = reader.GetString(4)
+                        });
+                    }
+
+                    // Read third result set (ingredients)
+                    reader.NextResult();
+                    model.Ingredients = new List<ProductionDetailsViewModel.MainIngredient>();
+                    while (reader.Read())
+                    {
+                        model.Ingredients.Add(new ProductionDetailsViewModel.MainIngredient
+                        {
+                            Id = reader.GetInt32(0),
+                            IngredientName = reader.GetString(1),
+                            Quantity = reader.GetDecimal(2),
+                            Unit = reader.GetString(3),
+                            SubItemQty = reader.GetDecimal(4)
+                        });
+                    }
+                }
+            }
+
+            if (model.ProductionInfo == null)
+            {
+                return Content("No data found.");
+            }
+
+            // Add data sources to report
+            localReport.DataSources.Add(new ReportDataSource("MainProductionInfo", new List<ProductionDetailsViewModel.MainProductionInfo> { model.ProductionInfo }));
+            localReport.DataSources.Add(new ReportDataSource("QuantitiesToProduce", model.QuantitiesToProduce));
+            localReport.DataSources.Add(new ReportDataSource("Ingredients", model.Ingredients));
+
+            // Render report
+            string mimeType, encoding, fileNameExtension;
+            string[] streams;
+            Warning[] warnings;
+
+            byte[] renderedBytes = localReport.Render(
+                "PDF",
+                null,
+                out mimeType,
+                out encoding,
+                out fileNameExtension,
+                out streams,
+                out warnings
+            );
+
+            return File(renderedBytes, mimeType, $"Production_Report_{productionId}.pdf");
+        }
     }
 }

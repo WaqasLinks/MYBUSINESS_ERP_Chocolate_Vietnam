@@ -16,7 +16,8 @@ namespace MYBUSINESS.Models
 
         public decimal CreditCardSales { get; set; }
         public decimal UploadedCreditCardAmount { get; set; }
-
+        public decimal RecordedClosingBalance { get; set; }
+        public decimal Difference { get; set; }
         public decimal CreditCardDifference => UploadedCreditCardAmount - CreditCardSales;
 
         public bool IsCreditCardMatched => CreditCardDifference == 0;

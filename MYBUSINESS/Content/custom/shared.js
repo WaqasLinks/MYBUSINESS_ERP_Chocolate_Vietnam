@@ -356,7 +356,12 @@ $(document).on('click', '#closeShop', function () {
     $.ajax({
         url: '/Stores/CloseShop',
         type: 'POST',
-        data: JSON.stringify(storeViewModel),
+        data: JSON.stringify({
+            StoreId: parseInt(localStorage.getItem('currentStoreId')), // Get from storage
+            ClosingBalance: storeViewModel.ClosingBalance,
+            ClosingCurrencyDetail: storeViewModel.ClosingCurrencyDetail
+            // include other needed properties
+        }),
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         success: function (response) {

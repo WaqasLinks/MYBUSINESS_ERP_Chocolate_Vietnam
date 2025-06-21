@@ -4,94 +4,167 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="a584e9a2f9434e69aac2e1c9ca294c92" Name="Diagram1" ZoomLevel="71">
-        <EntityTypeShape EntityType="Models.BankAccount" Width="1.5" PointX="8.25" PointY="15.25" />
-        <EntityTypeShape EntityType="Models.BOM" Width="1.5" PointX="7.5" PointY="64.375" />
-        <EntityTypeShape EntityType="Models.BusinessInfo" Width="1.5" PointX="0.75" PointY="37.25" />
-        <EntityTypeShape EntityType="Models.Currency" Width="1.5" PointX="0.75" PointY="0.75" />
-        <EntityTypeShape EntityType="Models.Customer" Width="1.5" PointX="3" PointY="33.875" />
-        <EntityTypeShape EntityType="Models.Department" Width="1.5" PointX="3" PointY="28.375" />
-        <EntityTypeShape EntityType="Models.Employee" Width="1.5" PointX="5.25" PointY="26.375" />
-        <EntityTypeShape EntityType="Models.Expense" Width="1.5" PointX="7.5" PointY="24.75" />
-        <EntityTypeShape EntityType="Models.ExpenseDetail" Width="1.5" PointX="9.75" PointY="45.125" />
-        <EntityTypeShape EntityType="Models.FinalProduction" Width="1.5" PointX="7.5" PointY="54.875" />
-        <EntityTypeShape EntityType="Models.Loan" Width="1.5" PointX="7.5" PointY="18.875" />
-        <EntityTypeShape EntityType="Models.LoanDetail" Width="1.5" PointX="9.75" PointY="40.25" />
-        <EntityTypeShape EntityType="Models.Location" Width="1.5" PointX="3" PointY="59.125" />
-        <EntityTypeShape EntityType="Models.MetaDetaDescription" Width="1.5" PointX="4.75" PointY="0.75" />
-        <EntityTypeShape EntityType="Models.Payment" Width="1.5" PointX="15.75" PointY="31.25" />
-        <EntityTypeShape EntityType="Models.ProductCategory" Width="1.5" PointX="7.5" PointY="52.375" />
-        <EntityTypeShape EntityType="Models.ProductionOrder" Width="1.5" PointX="7.5" PointY="45.625" />
-        <EntityTypeShape EntityType="Models.ProductionOrderDetail" Width="1.5" PointX="9.75" PointY="53.625" />
-        <EntityTypeShape EntityType="Models.Rent" Width="1.5" PointX="7.5" PointY="31.75" />
-        <EntityTypeShape EntityType="Models.RentDetail" Width="1.5" PointX="12.75" PointY="47.5" />
-        <EntityTypeShape EntityType="Models.Service" Width="1.5" PointX="10.5" PointY="32" />
-        <EntityTypeShape EntityType="Models.ServiceDetail" Width="1.5" PointX="15.75" PointY="50.5" />
-        <EntityTypeShape EntityType="Models.SOD" Width="1.5" PointX="15.75" PointY="45.125" />
-        <EntityTypeShape EntityType="Models.StoreProduct" Width="1.5" PointX="10.5" PointY="59.375" />
-        <EntityTypeShape EntityType="Models.Supplier" Width="1.5" PointX="3" PointY="21.75" />
-        <EntityTypeShape EntityType="Models.sysdiagram" Width="1.5" PointX="2.75" PointY="4.75" />
-        <EntityTypeShape EntityType="Models.UserAuthorization" Width="1.5" PointX="4.75" PointY="3.75" />
+      <Diagram DiagramId="a584e9a2f9434e69aac2e1c9ca294c92" Name="Diagram1" ZoomLevel="66">
+        <EntityTypeShape EntityType="Models.C__MigrationHistory" Width="1.5" PointX="0.75" PointY="6.75" />
+        <EntityTypeShape EntityType="Models.AspNetRole" Width="1.5" PointX="0.75" PointY="2.5" />
+        <EntityTypeShape EntityType="Models.AspNetUserClaim" Width="1.5" PointX="5.25" PointY="3.625" />
+        <EntityTypeShape EntityType="Models.AspNetUserLogin" Width="1.5" PointX="5.25" PointY="1" />
+        <EntityTypeShape EntityType="Models.AspNetUser" Width="1.5" PointX="3" PointY="1.375" />
+        <EntityTypeShape EntityType="Models.BankAccount" Width="1.5" PointX="7.5" PointY="27.75" />
+        <EntityTypeShape EntityType="Models.BOM" Width="1.5" PointX="3" PointY="124.5" />
+        <EntityTypeShape EntityType="Models.BOXProduction" Width="1.5" PointX="5.25" PointY="82" />
+        <EntityTypeShape EntityType="Models.BusinessInfo" Width="1.5" PointX="3" PointY="33" />
+        <EntityTypeShape EntityType="Models.Color" Width="1.5" PointX="2.75" PointY="6.75" />
+        <EntityTypeShape EntityType="Models.CPReceipt" Width="1.5" PointX="8.25" PointY="82" />
+        <EntityTypeShape EntityType="Models.Currency" Width="1.5" PointX="4.75" PointY="6.75" />
+        <EntityTypeShape EntityType="Models.Customer" Width="1.5" PointX="1.5" PointY="86.25" />
+        <EntityTypeShape EntityType="Models.Department" Width="1.5" PointX="5.25" PointY="33.125" />
+        <EntityTypeShape EntityType="Models.Employee" Width="1.5" PointX="7.5" PointY="31" />
+        <EntityTypeShape EntityType="Models.Expense" Width="1.5" PointX="6.75" PointY="101.875" />
+        <EntityTypeShape EntityType="Models.ExpenseDetail" Width="1.5" PointX="9" PointY="65.75" />
+        <EntityTypeShape EntityType="Models.FinalProduction" Width="1.5" PointX="3" PointY="65.75" />
+        <EntityTypeShape EntityType="Models.Inventory" Width="1.5" PointX="3" PointY="116.5" />
+        <EntityTypeShape EntityType="Models.Loan" Width="1.5" PointX="0.75" PointY="70" />
+        <EntityTypeShape EntityType="Models.LoanDetail" Width="1.5" PointX="3" PointY="55.75" />
+        <EntityTypeShape EntityType="Models.Location" Width="1.5" PointX="5.25" PointY="29.25" />
+        <EntityTypeShape EntityType="Models.MetaDetaDescription" Width="1.5" PointX="7.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Models.MyBusinessInfo" Width="1.5" PointX="8.75" PointY="3.75" />
+        <EntityTypeShape EntityType="Models.OrderItemPProduct" Width="1.5" PointX="9" PointY="53.5" />
+        <EntityTypeShape EntityType="Models.OrderItem" Width="1.5" PointX="3" PointY="52.5" />
+        <EntityTypeShape EntityType="Models.OrderPProduct" Width="1.5" PointX="6.75" PointY="52.625" />
+        <EntityTypeShape EntityType="Models.Order" Width="1.5" PointX="0.75" PointY="51.375" />
+        <EntityTypeShape EntityType="Models.PackagingColored" Width="1.5" PointX="8.75" PointY="8.75" />
+        <EntityTypeShape EntityType="Models.PackagingProduction" Width="1.5" PointX="3" PointY="81.625" />
+        <EntityTypeShape EntityType="Models.PackagingSubItem" Width="1.5" PointX="0.75" PointY="9.75" />
+        <EntityTypeShape EntityType="Models.PaperColor" Width="1.5" PointX="5.25" PointY="71.25" />
+        <EntityTypeShape EntityType="Models.Payment" Width="1.5" PointX="6" PointY="108.375" />
+        <EntityTypeShape EntityType="Models.PO" Width="1.5" PointX="9.75" PointY="32.5" />
+        <EntityTypeShape EntityType="Models.POD" Width="1.5" PointX="12" PointY="54.375" />
+        <EntityTypeShape EntityType="Models.PODReciver" Width="1.5" PointX="12" PointY="66.375" />
+        <EntityTypeShape EntityType="Models.POReciver" Width="1.5" PointX="9.75" PointY="39.625" />
+        <EntityTypeShape EntityType="Models.PostProduction" Width="1.5" PointX="5.25" PointY="96.875" />
+        <EntityTypeShape EntityType="Models.PPBOM" Width="1.5" PointX="3" PointY="119.5" />
+        <EntityTypeShape EntityType="Models.PPColorReceipt" Width="1.5" PointX="7.5" PointY="75.25" />
+        <EntityTypeShape EntityType="Models.PPReceiver" Width="1.5" PointX="6.75" PointY="45.75" />
+        <EntityTypeShape EntityType="Models.PPReciverDetail" Width="1.5" PointX="9" PointY="60.375" />
+        <EntityTypeShape EntityType="Models.PPSubItem" Width="1.5" PointX="5.25" PointY="88.25" />
+        <EntityTypeShape EntityType="Models.PrintedPackaging" Width="1.5" PointX="3.75" PointY="38.5" />
+        <EntityTypeShape EntityType="Models.PrintedPackagingDetail" Width="1.5" PointX="6" PointY="60.375" />
+        <EntityTypeShape EntityType="Models.ProductCategory" Width="1.5" PointX="3" PointY="133.5" />
+        <EntityTypeShape EntityType="Models.ProductDetail" Width="1.5" PointX="8.25" PointY="97" />
+        <EntityTypeShape EntityType="Models.ProductionDetail" Width="1.5" PointX="11.25" PointY="94" />
+        <EntityTypeShape EntityType="Models.ProductionDetail1" Width="1.5" PointX="10.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Models.ProductionOrder" Width="1.5" PointX="3.75" PointY="45.875" />
+        <EntityTypeShape EntityType="Models.ProductionOrderDetail" Width="1.5" PointX="6" PointY="55.875" />
+        <EntityTypeShape EntityType="Models.ProductStockDetail" Width="1.5" PointX="7.5" PointY="70.375" />
+        <EntityTypeShape EntityType="Models.ProductType" Width="1.5" PointX="5.25" PointY="93.25" />
+        <EntityTypeShape EntityType="Models.QuantityToProduce" Width="1.5" PointX="10.5" PointY="76.625" />
+        <EntityTypeShape EntityType="Models.Rent" Width="1.5" PointX="0.75" PointY="75.875" />
+        <EntityTypeShape EntityType="Models.RentDetail" Width="1.5" PointX="3" PointY="60.625" />
+        <EntityTypeShape EntityType="Models.ScanBankDeposit" Width="1.5" PointX="2.75" PointY="10.75" />
+        <EntityTypeShape EntityType="Models.ScanCreditCard" Width="1.5" PointX="10.75" PointY="4.75" />
+        <EntityTypeShape EntityType="Models.ScanMoneyInput" Width="1.5" PointX="10.75" PointY="7.75" />
+        <EntityTypeShape EntityType="Models.Service" Width="1.5" PointX="0.75" PointY="92" />
+        <EntityTypeShape EntityType="Models.ServiceDetail" Width="1.5" PointX="3" PointY="69.625" />
+        <EntityTypeShape EntityType="Models.ShopManage" Width="1.5" PointX="10.75" PointY="10.75" />
+        <EntityTypeShape EntityType="Models.SO" Width="1.5" PointX="3.75" PointY="101.625" />
+        <EntityTypeShape EntityType="Models.SOD" Width="1.5" PointX="6" PointY="65.625" />
+        <EntityTypeShape EntityType="Models.SPackaging" Width="1.5" PointX="9.75" PointY="46.75" />
+        <EntityTypeShape EntityType="Models.Store" Width="1.5" PointX="1.5" PointY="44.625" />
+        <EntityTypeShape EntityType="Models.StoreOrderReceipt" Width="1.5" PointX="12.75" PointY="48.125" />
+        <EntityTypeShape EntityType="Models.StoreProduct" Width="1.5" PointX="9" PointY="56.5" />
+        <EntityTypeShape EntityType="Models.SubItem" Width="1.5" PointX="3" PointY="136" />
+        <EntityTypeShape EntityType="Models.SubItemProduction" Width="1.5" PointX="8.25" PointY="91.625" />
+        <EntityTypeShape EntityType="Models.Supplier" Width="1.5" PointX="7.5" PointY="38.75" />
+        <EntityTypeShape EntityType="Models.sysdiagram" Width="1.5" PointX="4.75" PointY="11.75" />
+        <EntityTypeShape EntityType="Models.UserAuthorization" Width="1.5" PointX="12.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Models.PTypeDesc" Width="1.5" PointX="12.75" PointY="3.75" />
+        <AssociationConnector Association="Models.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" />
+        <AssociationConnector Association="Models.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" />
+        <AssociationConnector Association="Models.FK_PO_Account" />
+        <AssociationConnector Association="Models.FK_PrintedPackaging_BankAccount" />
+        <AssociationConnector Association="Models.FK_SO_Account" />
+        <AssociationConnector Association="Models.FK_ProductType_BOM" />
+        <AssociationConnector Association="Models.FK_SubItemProduction_BOM" />
+        <AssociationConnector Association="Models.FK_BOXProduction_PackagingProduction" />
+        <AssociationConnector Association="Models.FK_BOXProduction_PaperColor" />
+        <AssociationConnector Association="Models.FK_BOXProduction_PPSubItem" />
         <AssociationConnector Association="Models.FK_Customer_Business" />
         <AssociationConnector Association="Models.FK_Department_Business" />
         <AssociationConnector Association="Models.FK_Location_Business" />
         <AssociationConnector Association="Models.FK_Supplier_Business" />
+        <AssociationConnector Association="Models.FK_CPReceipts_PackagingProduction" />
+        <AssociationConnector Association="Models.FK_PPColorReceipt_PaperColor" />
+        <AssociationConnector Association="Models.FK_PPColorReceipt_PPSubItem" />
         <AssociationConnector Association="Models.FK_Rent_Customer" />
         <AssociationConnector Association="Models.FK_Service_Customer" />
+        <AssociationConnector Association="Models.FK_SO_Customer" />
         <AssociationConnector Association="Models.FK_Employee_Department" />
         <AssociationConnector Association="Models.FK_Expense_Employee" />
         <AssociationConnector Association="Models.FK_Loan_Employee" />
+        <AssociationConnector Association="Models.FK_PO_Employee" />
+        <AssociationConnector Association="Models.FK_POReciver_Employee" />
         <AssociationConnector Association="Models.FK_ProductionOrder_Employee" />
         <AssociationConnector Association="Models.FK_Rent_Employee" />
         <AssociationConnector Association="Models.FK_Service_Employee" />
+        <AssociationConnector Association="Models.FK_SO_Employee" />
         <AssociationConnector Association="Models.FK_Expense_Supplier" />
         <AssociationConnector Association="Models.FK_ExpenseDetail_Expense" />
         <AssociationConnector Association="Models.FK_Loan_Supplier" />
         <AssociationConnector Association="Models.FK_LoanDetail_Loan" />
+        <AssociationConnector Association="Models.FK_OrderItemPProducts_OrderPProducts" />
+        <AssociationConnector Association="Models.FK_OrderItems_Orders" />
+        <AssociationConnector Association="Models.FK_OrderPProducts_Store" />
+        <AssociationConnector Association="Models.FK_Orders_Store" />
+        <AssociationConnector Association="Models.FK_StoreOrderReceipt_Orders" />
+        <AssociationConnector Association="Models.FK_Color_PackagingProduction" />
+        <AssociationConnector Association="Models.FK_ProductStockDetail_PackagingProduction" />
+        <AssociationConnector Association="Models.FK_PPColorReceipts_PaperColor" />
+        <AssociationConnector Association="Models.FK_ProductStockDetail_PaperColor" />
+        <AssociationConnector Association="Models.FK_Payment_SO" />
+        <AssociationConnector Association="Models.FK_PO_Supplier" />
+        <AssociationConnector Association="Models.FK_POD_PO" />
+        <AssociationConnector Association="Models.FK_PODReciver_POReciver" />
+        <AssociationConnector Association="Models.FK_POReciver_Supplier" />
+        <AssociationConnector Association="Models.FK_QuantityToProduce_PostProduction" />
+        <AssociationConnector Association="Models.FK_PPSubItem_PPBOM" />
+        <AssociationConnector Association="Models.FK_PPReceiver_Supplier" />
+        <AssociationConnector Association="Models.FK_PPReciverDetail_PPReceiver" />
+        <AssociationConnector Association="Models.FK_PrintedPackaging_Store" />
+        <AssociationConnector Association="Models.FK_PrintedPackaging_Supplier" />
+        <AssociationConnector Association="Models.FK_PrintedPackagingDetail_PrintedPackaging1" />
+        <AssociationConnector Association="Models.FK_QuantityToProduce_ProductDetail" />
         <AssociationConnector Association="Models.FK_ProductionOrderDetail_ProductionOrder" />
         <AssociationConnector Association="Models.FK_RentDetail_Rent" />
         <AssociationConnector Association="Models.FK_ServiceDetail_Service" />
-        <EntityTypeShape EntityType="Models.ProductType" Width="1.5" PointX="7.5" PointY="42.5" />
-        <AssociationConnector Association="Models.FK_ProductType_BOM" />
-        <EntityTypeShape EntityType="Models.ProductionDetail" Width="1.5" PointX="12.75" PointY="66.25" />
-        <EntityTypeShape EntityType="Models.PostProduction" Width="1.5" PointX="15.75" PointY="61.25" />
-        <EntityTypeShape EntityType="Models.SubItem" Width="1.5" PointX="12.75" PointY="58.375" />
-        <AssociationConnector Association="Models.FK_SubItem_BOM" />
-        <EntityTypeShape EntityType="Models.SubItemProduction" Width="1.5" PointX="18" PointY="65.25" />
-        <AssociationConnector Association="Models.FK_SubItemProduction_BOM" />
-        <AssociationConnector Association="Models.FK_SubItemProduction_PostProduction" />
-        <EntityTypeShape EntityType="Models.QuantityToProduce" Width="1.5" PointX="18" PointY="60.875" />
-        <AssociationConnector Association="Models.FK_QuantityToProduce_PostProduction" />
-        <EntityTypeShape EntityType="Models.NewProduction" Width="1.5" PointX="7.5" PointY="58.625" />
-        <AssociationConnector Association="Models.FK_PostProduction_NewProduction" />
-        <AssociationConnector Association="Models.FK_ProductionDetail_NewProduction" />
-        <EntityTypeShape EntityType="Models.MyBusinessInfo" Width="1.5" PointX="5.375" PointY="6.75" />
-        <EntityTypeShape EntityType="Models.POReciver" Width="1.5" PointX="10.5" PointY="17.625" />
-        <AssociationConnector Association="Models.FK_POReciver_Employee" />
-        <AssociationConnector Association="Models.FK_POReciver_Supplier" />
-        <EntityTypeShape EntityType="Models.PO" Width="1.5" PointX="10.5" PointY="24.25" />
-        <AssociationConnector Association="Models.FK_PO_Account" />
-        <AssociationConnector Association="Models.FK_PO_Employee" />
-        <AssociationConnector Association="Models.FK_PO_Supplier" />
-        <EntityTypeShape EntityType="Models.DailyBalanceVnd" Width="1.5" PointX="7.375" PointY="0.75" />
-        <EntityTypeShape EntityType="Models.ShopManage" Width="1.5" PointX="0.75" PointY="7.75" />
-        <EntityTypeShape EntityType="Models.POD" Width="1.5" PointX="12.75" PointY="41.375" />
-        <AssociationConnector Association="Models.FK_POD_PO" />
-        <EntityTypeShape EntityType="Models.PODReciver" Width="1.5" PointX="12.75" PointY="35.75" />
-        <AssociationConnector Association="Models.FK_PODReciver_POReciver" />
-        <EntityTypeShape EntityType="Models.PackagingSubItem" Width="1.5" PointX="9.375" PointY="0.75" />
-        <EntityTypeShape EntityType="Models.Product" Width="1.5" PointX="5.25" PointY="47.875" />
+        <AssociationConnector Association="Models.FK_SO_Store" />
+        <AssociationConnector Association="Models.FK_SOD_SO" />
+        <AssociationConnector Association="Models.FK_SPackaging_Supplier" />
+        <AssociationConnector Association="Models.FK_StoreOrderReceipt_Store" />
+        <AssociationConnector Association="Models.FK_StoreProduct_Store" />
+        <AssociationConnector Association="Models.AspNetUserRoles" />
+        <EntityTypeShape EntityType="Models.Product" Width="1.5" PointX="0.75" PointY="86.625" />
         <AssociationConnector Association="Models.FK_BOM_Product1" />
         <AssociationConnector Association="Models.FK_ExpenseDetail_Product1" />
         <AssociationConnector Association="Models.FK_FinalProduction_Product" />
+        <AssociationConnector Association="Models.FK_Inventory_Product" />
         <AssociationConnector Association="Models.FK_LoanDetail_Product1" />
-        <AssociationConnector Association="Models.FK_NewProduction_Product" />
+        <AssociationConnector Association="Models.FK_OrderItemPProducts_Product" />
+        <AssociationConnector Association="Models.FK_OrderItems_Product" />
+        <AssociationConnector Association="Models.FK_PackagingProduction_Product" />
+        <AssociationConnector Association="Models.FK_Color_Product" />
         <AssociationConnector Association="Models.FK_POD_Product" />
         <AssociationConnector Association="Models.FK_PODReciver_Product1" />
         <AssociationConnector Association="Models.FK_PostProduction_Product1" />
+        <AssociationConnector Association="Models.FK_PPBOM_Product" />
+        <AssociationConnector Association="Models.FK_PPReciverDetail_Product" />
+        <AssociationConnector Association="Models.FK_PPSubItem_Product" />
+        <AssociationConnector Association="Models.FK_PrintedPackagingDetail_Product1" />
         <AssociationConnector Association="Models.FK_ProductCategory_Product1" />
+        <AssociationConnector Association="Models.FK_ProductDetail_Product" />
         <AssociationConnector Association="Models.FK_ProductionDetail_Product1" />
         <AssociationConnector Association="Models.FK_ProductionOrderDetail_Product1" />
+        <AssociationConnector Association="Models.FK_ProductStockDetail_Product" />
         <AssociationConnector Association="Models.FK_ProductType_Product" />
         <AssociationConnector Association="Models.FK_QuantityToProduce_Product" />
         <AssociationConnector Association="Models.FK_RentDetail_Product1" />
@@ -100,89 +173,33 @@
         <AssociationConnector Association="Models.FK_StoreProduct_Product" />
         <AssociationConnector Association="Models.FK_SubItem_Product" />
         <AssociationConnector Association="Models.FK_SubItemProduction_Product1" />
-        <EntityTypeShape EntityType="Models.PaperColor" Width="1.5" PointX="9.75" PointY="50.25" />
-        <AssociationConnector Association="Models.FK_Color_Product" />
-        <EntityTypeShape EntityType="Models.SO" Width="1.5" PointX="13.5" PointY="21.375" />
-        <AssociationConnector Association="Models.FK_SO_Account" />
-        <AssociationConnector Association="Models.FK_SO_Customer" />
-        <AssociationConnector Association="Models.FK_SO_Employee" />
-        <AssociationConnector Association="Models.FK_Payment_SO" />
-        <AssociationConnector Association="Models.FK_SOD_SO" />
-        <EntityTypeShape EntityType="Models.SPackagingDetail" Width="1.5" PointX="12.5" PointY="53" />
+        <EntityTypeShape EntityType="Models.SPackagingDetail" Width="1.5" PointX="13" PointY="71.75" />
         <AssociationConnector Association="Models.FK_SPackagingDetail_Product" />
-        <EntityTypeShape EntityType="Models.ProductDetail" Width="1.5" PointX="15.75" PointY="55.25" />
-        <AssociationConnector Association="Models.FK_ProductDetail_NewProduction" />
-        <AssociationConnector Association="Models.FK_ProductDetail_Product" />
-        <AssociationConnector Association="Models.FK_QuantityToProduce_ProductDetail" />
-        <EntityTypeShape EntityType="Models.SPackaging" Width="1.5" PointX="5.25" PointY="19.125" />
-        <AssociationConnector Association="Models.FK_SPackaging_Supplier" />
         <AssociationConnector Association="Models.FK_SPackagingDetail_SPackaging" />
-        <EntityTypeShape EntityType="Models.ScanBankDeposit" Width="1.5" PointX="7.375" PointY="5.75" />
-        <EntityTypeShape EntityType="Models.ScanMoneyInput" Width="1.5" PointX="7.375" PointY="8.75" />
-        <EntityTypeShape EntityType="Models.ScanCreditCard" Width="1.5" PointX="9.375" PointY="4.75" />
-        <EntityTypeShape EntityType="Models.PPReceiver" Width="1.5" PointX="16.25" PointY="38.625" />
-        <EntityTypeShape EntityType="Models.PPReciverDetail" Width="1.5" PointX="18.5" PointY="45.125" />
-        <AssociationConnector Association="Models.FK_PPReceiver_Supplier" />
-        <AssociationConnector Association="Models.FK_PPReciverDetail_PPReceiver" />
-        <AssociationConnector Association="Models.FK_PPReciverDetail_Product" />
-        <EntityTypeShape EntityType="Models.Color" Width="1.5" PointX="9.375" PointY="7.75" />
-        <EntityTypeShape EntityType="Models.PackagingProduction" Width="1.5" PointX="7.5" PointY="38" />
-        <AssociationConnector Association="Models.FK_Color_PackagingProduction" />
-        <AssociationConnector Association="Models.FK_PackagingProduction_Product" />
-        <EntityTypeShape EntityType="Models.PPSubItem" Width="1.5" PointX="9.75" PointY="62.625" />
-        <AssociationConnector Association="Models.FK_PPSubItem_Product" />
-        <EntityTypeShape EntityType="Models.PPColorReceipt" Width="1.5" PointX="12" PointY="62.75" />
-        <AssociationConnector Association="Models.FK_PPColorReceipts_PaperColor" />
-        <EntityTypeShape EntityType="Models.CPReceipt" Width="1.5" PointX="18" PointY="56.625" />
-        <AssociationConnector Association="Models.FK_CPReceipts_PackagingProduction" />
-        <AssociationConnector Association="Models.FK_PPColorReceipt_PaperColor" />
-        <AssociationConnector Association="Models.FK_PPColorReceipt_PPSubItem" />
-        <EntityTypeShape EntityType="Models.PPBOM" Width="1.5" PointX="7.5" PointY="70.5" />
-        <EntityTypeShape EntityType="Models.ProductStockDetail" Width="1.5" PointX="19" PointY="41.25" />
-        <AssociationConnector Association="Models.FK_ProductStockDetail_PackagingProduction" />
-        <AssociationConnector Association="Models.FK_ProductStockDetail_PaperColor" />
-        <AssociationConnector Association="Models.FK_PPBOM_Product" />
-        <AssociationConnector Association="Models.FK_PPSubItem_PPBOM" />
-        <AssociationConnector Association="Models.FK_ProductStockDetail_Product" />
-        <EntityTypeShape EntityType="Models.BOXProduction" Width="1.5" PointX="21" PointY="50.75" />
-        <AssociationConnector Association="Models.FK_BOXProduction_PackagingProduction" />
-        <AssociationConnector Association="Models.FK_BOXProduction_PaperColor" />
-        <AssociationConnector Association="Models.FK_BOXProduction_PPSubItem" />
-        <EntityTypeShape EntityType="Models.Inventory" Width="1.5" PointX="7.5" PointY="75.75" />
-        <AssociationConnector Association="Models.FK_Inventory_Product" />
-        <EntityTypeShape EntityType="Models.OrderItem" Width="1.5" PointX="15.75" PointY="35.5" />
-        <AssociationConnector Association="Models.FK_OrderItems_Product" />
-        <EntityTypeShape EntityType="Models.OrderItemPProduct" Width="1.5" PointX="18.75" PointY="35.125" />
-        <EntityTypeShape EntityType="Models.OrderPProduct" Width="1.5" PointX="13.5" PointY="16.125" />
-        <AssociationConnector Association="Models.FK_OrderItemPProducts_OrderPProducts" />
-        <AssociationConnector Association="Models.FK_OrderItemPProducts_Product" />
-        <EntityTypeShape EntityType="Models.Order" Width="1.5" PointX="13.5" PointY="13.125" />
-        <AssociationConnector Association="Models.FK_OrderItems_Orders" />
-        <EntityTypeShape EntityType="Models.StoreOrderReceipt" Width="1.5" PointX="15.75" PointY="13.125" />
-        <AssociationConnector Association="Models.FK_StoreOrderReceipt_Orders" />
-        <EntityTypeShape EntityType="Models.PrintedPackagingDetail" Width="1.5" PointX="7.5" PointY="78.875" />
-        <EntityTypeShape EntityType="Models.ProductionDetail1" Width="1.5" PointX="9.375" PointY="10.75" />
-        <AssociationConnector Association="Models.FK_PrintedPackagingDetail_Product1" />
-        <EntityTypeShape EntityType="Models.PrintedPackaging" Width="1.5" PointX="16.5" PointY="23.625" />
-        <AssociationConnector Association="Models.FK_PrintedPackaging_BankAccount" />
-        <AssociationConnector Association="Models.FK_PrintedPackaging_Supplier" />
-        <AssociationConnector Association="Models.FK_PrintedPackagingDetail_PrintedPackaging1" />
-        <EntityTypeShape EntityType="Models.Store" Width="1.5" PointX="5.25" PointY="34.375" />
-        <AssociationConnector Association="Models.FK_OrderPProducts_Store" />
-        <AssociationConnector Association="Models.FK_Orders_Store" />
-        <AssociationConnector Association="Models.FK_PrintedPackaging_Store" />
-        <AssociationConnector Association="Models.FK_SO_Store" />
-        <AssociationConnector Association="Models.FK_StoreOrderReceipt_Store" />
-        <AssociationConnector Association="Models.FK_StoreProduct_Store" />
-        <EntityTypeShape EntityType="Models.AspNetRole" Width="1.5" PointX="11.375" PointY="2.5" />
-        <EntityTypeShape EntityType="Models.AspNetUserClaim" Width="1.5" PointX="15.875" PointY="1" />
-        <EntityTypeShape EntityType="Models.AspNetUserLogin" Width="1.5" PointX="15.875" PointY="3.75" />
-        <EntityTypeShape EntityType="Models.AspNetUser" Width="1.5" PointX="13.625" PointY="1.375" />
-        <AssociationConnector Association="Models.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" />
-        <AssociationConnector Association="Models.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" />
-        <AssociationConnector Association="Models.AspNetUserRoles" />
-        <EntityTypeShape EntityType="Models.PackagingColored" Width="1.5" PointX="0.75" PointY="11.75" />
-        <EntityTypeShape EntityType="Models.PTypeDesc" Width="1.5" PointX="2.75" PointY="11.75" />
+        <EntityTypeShape EntityType="Models.SPackgingReceiver" Width="1.5" PointX="11.625" PointY="101" />
+        <EntityTypeShape EntityType="Models.SPDReceiver" Width="1.5" PointX="13.875" PointY="92.5" />
+        <AssociationConnector Association="Models.FK_SPDReceiver_Product" />
+        <AssociationConnector Association="Models.FK_SPackagingReceiver_Supplier" />
+        <AssociationConnector Association="Models.FK_SPDReceiver_SPackgingReceiver1" />
+        <EntityTypeShape EntityType="Models.PPNewProduction" Width="1.5" PointX="3" PointY="91.75" />
+        <EntityTypeShape EntityType="Models.PPQuantityToProduce" Width="1.5" PointX="11.25" PointY="89.625" />
+        <EntityTypeShape EntityType="Models.PPSubItemProduction" Width="1.5" PointX="8.25" PointY="86.25" />
+        <AssociationConnector Association="Models.FK_PPNewProduction_Product" />
+        <AssociationConnector Association="Models.FK_PPQuantityToProduce_PPNewProduction" />
+        <AssociationConnector Association="Models.FK_PPSubItemProduction_PPNewProduction" />
+        <AssociationConnector Association="Models.FK_PPQuantityToProduce_Product" />
+        <AssociationConnector Association="Models.FK_PPSubItemProduction_Product" />
+        <EntityTypeShape EntityType="Models.PPPostProduction" Width="1.5" PointX="11.25" PointY="84.5" />
+        <AssociationConnector Association="Models.FK_PPPostProduction_PPNewProduction" />
+        <AssociationConnector Association="Models.FK_PPPostProduction_Product" />
+        <AssociationConnector Association="Models.FK_PPQuantityToProduce_PPPostProduction" />
+        <AssociationConnector Association="Models.FK_PPSubItemProduction_PPPostProduction" />
+        <EntityTypeShape EntityType="Models.NewProduction" Width="1.5" PointX="3" PointY="95.75" />
+        <AssociationConnector Association="Models.FK_NewProduction_Product" />
+        <AssociationConnector Association="Models.FK_PostProduction_NewProduction" />
+        <AssociationConnector Association="Models.FK_ProductDetail_NewProduction" />
+        <AssociationConnector Association="Models.FK_ProductionDetail_NewProduction" />
+        <EntityTypeShape EntityType="Models.DailyBalanceVnd" Width="1.5" PointX="0.75" PointY="13.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

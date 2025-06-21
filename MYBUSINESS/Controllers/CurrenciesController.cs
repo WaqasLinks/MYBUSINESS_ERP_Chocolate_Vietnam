@@ -12,6 +12,7 @@ using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
 {
+    [Authorize(Roles = "Admin,Manager,User")]
     public class CurrenciesController : Controller
     {
         private BusinessContext db = new BusinessContext();
