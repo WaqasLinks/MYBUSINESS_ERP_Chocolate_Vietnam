@@ -10,7 +10,7 @@ using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
 {
-    [Authorize(Roles = "Admin,Manager,User")]
+    [Authorize(Roles = "Admin")]
     public class MyBusinessInfoesController : Controller
     {
         private BusinessContext db = new BusinessContext();

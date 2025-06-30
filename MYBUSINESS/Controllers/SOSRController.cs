@@ -31,7 +31,7 @@ using AuthAttribute = System.Web.Mvc.AuthorizeAttribute;
 namespace MYBUSINESS.Controllers
 {
 
-    //[AuthAttribute(Roles = "Admin,Manager,User")]
+    [AuthAttribute(Roles = "Admin,Accountant,Shop general manager,Shop")]
     public class SOSRController : Controller
     {
         private BusinessContext db = new BusinessContext();
@@ -39,6 +39,8 @@ namespace MYBUSINESS.Controllers
         //public dynamic _jsonResponseWebservice = null;
         //private static readonly ILog log = LogManager.GetLogger(typeof(SOSRController));
         // GET: SOes
+
+        [AuthAttribute(Roles = "Admin,Accountant,Shop general manager")]
         public ActionResult Index()
         {
             int? storeId = Session["StoreId"] as int?;
@@ -1001,10 +1003,12 @@ namespace MYBUSINESS.Controllers
             return View(sO);
         }
 
-        // GET: SOes/Create
+        
 
-        //public ActionResult Create(string IsReturn)
-        public async Task<ActionResult> Create(string IsReturn, int? pType = null)
+
+        [AuthAttribute(Roles = "Admin,Shop general manager,Shop")]
+        [HttpGet]
+        public async Task<ActionResult> Create(string IsReturn, string category = null)
         {
             int? storeId = Session["StoreId"] as int?;
             //var storeId = Session["StoreId"] as string;
@@ -1013,25 +1017,17 @@ namespace MYBUSINESS.Controllers
                 return RedirectToAction("StoreNotFound", "UserManagement");
             }
 
-            var productTypes = new List<SelectListItem>
-    {
-        new SelectListItem { Value = "1", Text = "VariableProduct" },
-        new SelectListItem { Value = "2", Text = "ExcessProduct" },
-        new SelectListItem { Value = "3", Text = "ByProduct" },
-        new SelectListItem { Value = "4", Text = "FinishedProduct" },
-        new SelectListItem { Value = "5", Text = "IngredientProduct" },
-        new SelectListItem { Value = "6", Text = "IntermedataryProduct" },
-        new SelectListItem { Value = "7", Text = "Merchendise" }
-    };
-            ViewBag.ProductTypes = productTypes;
-            ViewBag.SelectedPType = pType;
-
             //ViewBag.CustomerId = new SelectList(db.Customers, "Id", "Name");
             //ViewBag.Products = db.Products;
 
             //int maxId = db.Customers.Max(p => p.Id);
             decimal maxId = db.Customers.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
             maxId += 1;
+            var storess = db.Stores.FirstOrDefault(s => s.Id == storeId);
+            string storeShortCode = storess?.StoreShortCode ?? "UNKNOWN";
+            string datePart = DateTime.Now.ToString("dd-MM-yyyy");
+            string serialPart = $"{maxId:000}";
+
             ViewBag.SuggestedNewCustId = maxId;
             ViewBag.BankAccounts = new SelectList(db.BankAccounts, "Id", "Name");
 
@@ -1039,54 +1035,56 @@ namespace MYBUSINESS.Controllers
             maxId += 1;
             // Convert maxId to integer for formatting with leading zeros
             //int serialNumber = (int)maxId; //For int
-            string prefix = "HN";
-            string datePart = DateTime.Now.ToString("yyyyMMdd"); // Format current date as YYYYMMDD
+            //string prefix = "HN";
+            //string datePart = DateTime.Now.ToString("yyyyMMdd"); // Format current date as YYYYMMDD
             //string formattedSerial = $"{prefix}-{datePart}-{serialNumber:D3}"; // Format serial with leading zeros for int
-            string formattedSerial = $"{prefix}-{datePart}-{maxId:000}"; /* $"{maxId:000}";*/ // Format serial with leading zeros for decimal
+            string formattedSerial = $"{storeShortCode}-{datePart}-{maxId:000}"; /* $"{maxId:000}";*/ // Format serial with leading zeros for decimal
 
             // Set ViewBag.SuggestedNewProductId to the formatted serial number
             ViewBag.SuggestedNewProductIds = formattedSerial;
             ViewBag.SuggestedNewProductId = maxId;
-            var productsQuery = db.Products.AsQueryable();
-            if (pType != null)
+            var productsQuery = db.Products.Where(p => p.PType == 4 || p.PType == 7 || p.PType == 9).AsQueryable();
+
+            if (!string.IsNullOrEmpty(category))
             {
-                productsQuery = productsQuery.Where(x => x.PType == pType);
+                productsQuery = productsQuery.Where(p => p.Category == category);
+                ViewBag.SelectedCategory = category;
             }
-            else
-            {
-                // Default filter (if you want to keep your original filter)
-                productsQuery = productsQuery;
-            }
+
             var productsByCategory = productsQuery
-       .Select(p => new
-       {
-           Product = p,
-           Stock = db.StoreProducts
-               .Where(sp => sp.ProductId == p.Id && sp.StoreId == storeId)
-               .Sum(sp => sp.Stock)
-       })
-       .ToList();
+          .Select(p => new
+          {
+              Product = p,
+              Stock = db.StoreProducts
+                  .Where(sp => sp.ProductId == p.Id && sp.StoreId == storeId)
+                  .Sum(sp => sp.Stock)
+          })
+          .ToList();
             var groupedSelectedProducts = productsByCategory
-       .GroupBy(p => string.IsNullOrEmpty(p.Product.Category) ? "Uncategorized" : p.Product.Category)
-       .ToDictionary(
-           g => g.Key,
-           g => g.Select(p => new MYBUSINESS.Models.Product
-           {
-               Id = p.Product.Id,
-               Name = p.Product.Name,
-               PurchasePrice = p.Product.PurchasePrice,
-               SalePrice = p.Product.SalePrice,
-               Category = p.Product.Category,
-               Stock = p.Stock
-           }).ToList()
-       );
+        .GroupBy(p => string.IsNullOrEmpty(p.Product.Category) ? "Uncategorized" : p.Product.Category)
+        .ToDictionary(
+            g => g.Key,
+            g => g.Select(p => new MYBUSINESS.Models.Product
+            {
+                Id = p.Product.Id,
+                Name = p.Product.Name,
+                PurchasePrice = p.Product.PurchasePrice,
+                SalePrice = p.Product.SalePrice,
+                Category = p.Product.Category,
+                Stock = p.Stock
+            }).ToList()
+        );
+
 
             // Get distinct categories for dropdown
-            var categories = productsQuery
-                .Select(p => string.IsNullOrEmpty(p.Category) ? "Uncategorized" : p.Category)
-                .Distinct()
-                .OrderBy(c => c)
-                .ToList();
+            var categories = db.Products
+       .Select(p => string.IsNullOrEmpty(p.Category) ? "Uncategorized" : p.Category)
+       .Distinct()
+       .OrderBy(c => c)
+       .ToList();
+
+            ViewBag.Categories = new SelectList(categories);
+            ViewBag.SelectedProductListByCategory = groupedSelectedProducts;
 
             ViewBag.BankAccounts = new SelectList(db.BankAccounts, "Id", "Name");
             ViewBag.MalaysiaTime = DateTime.UtcNow.AddHours(8);
@@ -1102,6 +1100,7 @@ namespace MYBUSINESS.Controllers
 
             //New Code to get Products by Category
             var productsByyCategory = db.Products
+                  .Where(p => p.PType == 4 || p.PType == 7 || p.PType == 9)
               .Select(p => new
               {
                   Product = p,
@@ -1169,7 +1168,7 @@ namespace MYBUSINESS.Controllers
             //TempData["_Sobaomat"] = TempData["sbmat"] as string ;
 
             var store = db.Stores.FirstOrDefault(s => s.Id == storeId);
-            ViewBag.StoreName = store?.Name ?? "Unknown Store"; // Fallback if store not found
+            ViewBag.StoreName = store?.StoreShortName ?? "Unknown Store"; // Fallback if store not found
             //var jsonResponseWebservicess1 = TempData["JsonResponseWebservice"] as string;
             //TempData["_JsonResponseWebservice"] = "TestTempData"; //TempData["JsonResponseWebservice"] as string;
             //string jsonResponseWebservicess2 = TempData["_JsonResponseWebservice"] as string;
@@ -3331,38 +3330,9 @@ namespace MYBUSINESS.Controllers
         {
             try
             {
-                // Log entry to the method
                 System.Diagnostics.Debug.WriteLine("USRLWB action method hit.");
 
-                //var loginToWebService = LoginToWebService();  // Make this asynchronous
-                var loginToWebService = await LoginToWebServiceAsync();  // Make this asynchronous
-
-                //    if (loginToWebService == null)
-                //        return new ContentResult { Content = JsonConvert.SerializeObject(new { Success = false, Message = "Invalid login attempt to web service, please use correct credentials" }), ContentType = "application/json" };
-
-                //    dynamic jsonResponse = JsonConvert.DeserializeObject(loginToWebService.ContentType);
-                //    string authToken = jsonResponse?.token;
-
-                //    if (string.IsNullOrEmpty(authToken))
-                //        return new ContentResult { Content = JsonConvert.SerializeObject(new { Success = false, Message = "Authentication token is missing" }), ContentType = "application/json" };
-
-                //    string tax = "0401485182";
-                //    var getServiceCustomerDetails = await GetCompanyByTextCode(authToken, tax); // Await the asynchronous call
-
-                //    // Log or inspect serialized response if needed
-                //    string serializedDetails = JsonConvert.SerializeObject(getServiceCustomerDetails);
-                //    System.Diagnostics.Debug.WriteLine("Serialized Response: " + serializedDetails);
-
-                //    return new ContentResult { Content = JsonConvert.SerializeObject(new { Success = true, Response = getServiceCustomerDetails }), ContentType = "application/json" };
-                //}
-                //if (loginToWebService == null || string.IsNullOrEmpty(loginToWebService.ContentType))
-                //{
-                //    return new ContentResult
-                //    {
-                //        Content = JsonConvert.SerializeObject(new { Success = false, Message = "Invalid login attempt to web service, please use correct credentials" }),
-                //        ContentType = "application/json"
-                //    };
-                //}
+                var loginToWebService = await LoginToWebServiceAsync();
 
                 if (loginToWebService == null || loginToWebService.Data == null)
                 {
@@ -3377,79 +3347,107 @@ namespace MYBUSINESS.Controllers
                     };
                 }
 
-                // Convert Data property to JSON string
                 string dataString = JsonConvert.SerializeObject(loginToWebService.Data);
-
-                // Deserialize the JSON string to get the token
                 dynamic jsonResponse = JsonConvert.DeserializeObject(dataString);
-                string authToken = jsonResponse?.Token;  // Make sure the key name matches exactly with the response
-
-                //dynamic jsonResponse = JsonConvert.DeserializeObject(loginToWebService.ContentType);
-                //string authToken = jsonResponse?.token;
-
-                ////if (string.IsNullOrEmpty(authToken))
-                ////{
-                ////    return new ContentResult
-                ////    {
-                ////        Content = JsonConvert.SerializeObject(new { Success = false, Message = "Authentication token is missing" }),
-                ////        ContentType = "application/json"
-                ////    };
-                ////}
+                string authToken = jsonResponse?.Token;
 
                 if (string.IsNullOrEmpty(authToken))
                 {
                     return new ContentResult
                     {
-                        Content = JsonConvert.SerializeObject(new { Success = false, Message = "Authentication token is missing" }),
+                        Content = JsonConvert.SerializeObject(new
+                        {
+                            Success = false,
+                            Message = "Authentication token is missing"
+                        }),
                         ContentType = "application/json"
                     };
                 }
 
-                //string tax = "0401485182";
-                var getServiceCustomerDetails = await GetCompanyByTextCode(authToken, taxCode); // Await the asynchronous call
+                var getServiceCustomerDetails = await GetCompanyByTextCode(authToken, taxCode);
 
-                // Log or inspect serialized response if needed
-                string serializedDetails = JsonConvert.SerializeObject(getServiceCustomerDetails);
-                System.Diagnostics.Debug.WriteLine("Serialized Response: " + serializedDetails);
+                System.Diagnostics.Debug.WriteLine("Service call result: " + JsonConvert.SerializeObject(getServiceCustomerDetails));
 
+                bool serviceSuccess = (bool)(getServiceCustomerDetails?.GetType().GetProperty("Success")?.GetValue(getServiceCustomerDetails) ?? false);
+
+                if (!serviceSuccess)
+                {
+                    string errorMessage = getServiceCustomerDetails?.GetType().GetProperty("Message")?.GetValue(getServiceCustomerDetails)?.ToString() ?? "No data found.";
+                    return new ContentResult
+                    {
+                        Content = JsonConvert.SerializeObject(new
+                        {
+                            Success = false,
+                            Message = errorMessage
+                        }),
+                        ContentType = "application/json"
+                    };
+                }
+
+                var actualResponse = getServiceCustomerDetails?.GetType().GetProperty("Response")?.GetValue(getServiceCustomerDetails);
+
+                // ✅ Fix is here: rename "Response" to "Data"
                 return new ContentResult
                 {
-                    Content = JsonConvert.SerializeObject(new { Success = true, Response = getServiceCustomerDetails }),
+                    Content = JsonConvert.SerializeObject(new
+                    {
+                        Success = true,
+                        Data = actualResponse  // ✅ MATCHES JavaScript
+                    }),
                     ContentType = "application/json"
                 };
             }
             catch (Exception ex)
             {
-                // Log the exception details
                 System.Diagnostics.Debug.WriteLine("Exception: " + ex.ToString());
-                return new ContentResult { Content = JsonConvert.SerializeObject(new { Success = false, Message = "An internal error occurred.", Details = ex.Message }), ContentType = "application/json" };
+                return new ContentResult
+                {
+                    Content = JsonConvert.SerializeObject(new
+                    {
+                        Success = false,
+                        Message = "An internal error occurred.",
+                        Details = ex.Message
+                    }),
+                    ContentType = "application/json"
+                };
             }
         }
+
+
         public async Task<object> GetCompanyByTextCode(string authToken, string taxCode)
         {
             try
             {
                 string url = $"http://mst.minvoice.com.vn/api/System/SearchTaxCode?tax={taxCode}";
-
                 using (var client = new HttpClient())
                 {
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
-                    client.Timeout = TimeSpan.FromSeconds(100); // Set timeout
 
                     Console.WriteLine("Sending request to URL: " + url);
                     HttpResponseMessage response = await client.GetAsync(url);
+
                     Console.WriteLine("Response Status Code: " + response.StatusCode);
 
                     if (!response.IsSuccessStatusCode)
                         return new { Success = false, Message = $"Error: {response.ReasonPhrase}" };
 
-                    Console.WriteLine("Reading Response Content...");
                     string responseData = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine("Response Content Read Successfully");
+                    Console.WriteLine("Raw JSON Response: " + responseData);
 
-                    return new { Success = true, Response = responseData }; // Return the response data directly
+                    // Try to parse it into JObject for safe access
+                    var responseObject = JsonConvert.DeserializeObject<JObject>(responseData);
+
+                    // If it has the "ma_so_thue" or "ten_cty" field, we know it's valid
+                    if (responseObject != null && responseObject["ma_so_thue"] != null)
+                    {
+                        return new { Success = true, Response = responseObject };
+                    }
+                    else
+                    {
+                        return new { Success = false, Message = "No company data found" };
+                    }
                 }
             }
             catch (Exception ex)

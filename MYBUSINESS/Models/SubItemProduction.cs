@@ -30,5 +30,6 @@ namespace MYBUSINESS.Models
     
         public virtual BOM BOM { get; set; }
         public virtual Product Product { get; set; }
+        public virtual NewProduction NewProduction { get; set; }
     }
 }

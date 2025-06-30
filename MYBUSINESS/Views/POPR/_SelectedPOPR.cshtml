@@ -195,9 +195,9 @@
                                                         foreach (var pod in item.PODs)
                                                         {
                                                             var match = poRecList.FirstOrDefault(r =>
-                                                                r.PODReciverId == pod.PODId &&
-                                                                r.QtyReceived > 0 &&
-                                                                r.Validate == true);
+                                                                  r.ProductId == pod.ProductId &&
+                                                                    r.QtyReceived > 0 &&
+                                                                    r.Validate == true);
 
                                                             if (match != null)
                                                             {
@@ -206,20 +206,23 @@
                                                             }
                                                         }
                                                     }
+
+                                                    if (isValidated && isReceived)
+                                                    {
+                                                        @*<span class="badge bg-success">Received</span>*@
+                                                        <span class="badge badge-pill badge-success">Success</span>
+                                                    }
+                                                    else if (isValidated)
+                                                    {
+                                                        <span class="badge bg-primary">Validated</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge bg-danger">Ongoing</span>
+                                                    }
                                                 }
 
-                                                @if (isValidated && isReceived)
-                                                {
-                                                    <span class="badge bg-primary">Received</span>
-                                                }
-                                                else if (isValidated)
-                                                {
-                                                    <span class="badge bg-success">Validated</span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="badge bg-danger">Ongoing</span>
-                                                }
+
                                             </td>
 
 
@@ -291,7 +294,7 @@
                                                     }
                                                     else
                                                     {
-                                                        @Html.ActionLink("Update", "Edit", new { id = item.Id, update = true },
+                                                        @Html.ActionLink("Update/Validate", "Edit", new { id = item.Id, update = true },
                                                             new { @class = "btn btn-info text-white" })
                                                     }
                                                 </td>

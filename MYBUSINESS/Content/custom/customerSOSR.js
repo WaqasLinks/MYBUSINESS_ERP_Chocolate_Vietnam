@@ -2683,59 +2683,61 @@ $(document).ready(function () {
     }
     debugger;
     $('#customerByTaxCode').on('click', function () {
-        var customerTaxCode = $('#vndCustomerVat').val();
-        debugger;
-        // Disable the button and show the loader
+        var customerTaxCode = $('#vndCustomerVat').val().trim();
+
+        if (!customerTaxCode) {
+            alert('Please enter a VAT number');
+            return;
+        }
+
+        // UI loading state
         var $button = $(this);
-        $button.prop('disabled', true).find('i').hide(); // Hide the search icon
-        var $loader = $button.find('.loader');
-        $loader.show(); // Show the loader
-
-        var rotationInterval = rotateLoader($loader); // Start rotating the loader
-
-        // Show the loading text
+        $button.prop('disabled', true);
+        $button.find('i').hide();
+        var $loader = $button.find('.loader').show();
+        var rotationInterval = rotateLoader($loader);
         $button.find('.loading-text').show();
 
-        // Make the GET request
         $.ajax({
-            url: '/SOSR/USRLWB', // Ensure this matches your route
+            url: '/SOSR/USRLWB',
             type: 'GET',
-            data: { taxCode: customerTaxCode },
+            data: {
+                taxCode: customerTaxCode,
+                storeId: 1021 // Add this if required
+            },
             success: function (response) {
+                if (!response.Success) {
+                    alert(response.Message || "Request failed");
+                    return;
+                }
+
+                // Check if we have data
+                if (!response.Data) {
+                    alert("No company data found");
+                    return;
+                }
+
+                // Update form fields
+                $('#vndCustomerCompany').val(response.Data.ten_cty || '');
+                $('#vndCustomerAddress').val(response.Data.dia_chi || '');
+                $('#taxModal').modal('show');
+            },
+            error: function (xhr) {
                 try {
-                    var data = response;
-                    var aa = data.Response.Response;
-                    var datas = JSON.parse(aa);
-                    if (datas.error != undefined) {
-                        alert(datas.error);
-                        $('#vndCustomerCompany').val('');
-                        $('#vndCustomerAddress').val('');
-                    }
-                    else {
-                        $('#vndCustomerCompany').val(datas.ten_cty);
-                        $('#vndCustomerAddress').val(datas.dia_chi);
-                        $('#taxModal').modal('show');
-                    }
-                } catch (error) {
-                    console.error('Error accessing data:', error);
+                    var err = JSON.parse(xhr.responseText);
+                    alert(err.Message || "Server error occurred");
+                } catch (e) {
+                    alert("An unexpected error occurred");
                 }
             },
-            error: function (xhr, status, error) {
-                console.error('AJAX request failed:', status, error);
-            },
             complete: function () {
-                // Stop the loader rotation
                 clearInterval(rotationInterval);
-
-                // Re-enable the button and restore its original state
-                $button.prop('disabled', false);
-                $button.find('i').show(); // Show the search icon again
-                $loader.hide(); // Hide the loader
-                $button.find('.loading-text').hide(); // Hide the loading text
+                $button.prop('disabled', false)
+                    .find('i').show()
+                    .siblings('.loader').hide()
+                    .siblings('.loading-text').hide();
             }
         });
-
-
     });
     //$('#customerByTaxCode').on('click', function () {
     //    var customerTaxCode = $('#vndCustomerVat').val();
@@ -3015,10 +3017,21 @@ function TriggerBodyEvents() {
         update_itemTotal();
     });
     //packing0
+    //$('#individualWithoutVAT').click(function () {
+    //    $('#vndCustomerName').val('Người mua không lấy hóa đơn');
+    //});
     $('#individualWithoutVAT').click(function () {
+        // Set customer name
         $('#vndCustomerName').val('Người mua không lấy hóa đơn');
-    });
 
+        // Clear all other fields
+        $('#vndCustomerVat').val('');        // VAT Number
+        $('#vndCustomer').val('');           // Customer Code
+        $('#vndCustomerCompany').val('');    // Customer Company
+        $('#vndCustomerAddress').val('');    // Address
+        $('#vndCustomerEmail').val('');      // Email
+                  // Hidden customer ID
+    });
 }
 
 

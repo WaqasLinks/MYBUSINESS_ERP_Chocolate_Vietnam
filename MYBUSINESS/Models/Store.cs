@@ -17,12 +17,12 @@ namespace MYBUSINESS.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Store()
         {
-            this.OrderPProducts = new HashSet<OrderPProduct>();
             this.Orders = new HashSet<Order>();
             this.PrintedPackagings = new HashSet<PrintedPackaging>();
             this.SOes = new HashSet<SO>();
             this.StoreOrderReceipts = new HashSet<StoreOrderReceipt>();
             this.StoreProducts = new HashSet<StoreProduct>();
+            this.OrderPProducts = new HashSet<OrderPProduct>();
         }
     
         public int Id { get; set; }
@@ -46,8 +46,6 @@ namespace MYBUSINESS.Models
         public string InvoiceSeriesSuffix { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<OrderPProduct> OrderPProducts { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Order> Orders { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PrintedPackaging> PrintedPackagings { get; set; }
@@ -57,5 +55,7 @@ namespace MYBUSINESS.Models
         public virtual ICollection<StoreOrderReceipt> StoreOrderReceipts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<StoreProduct> StoreProducts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OrderPProduct> OrderPProducts { get; set; }
     }
 }

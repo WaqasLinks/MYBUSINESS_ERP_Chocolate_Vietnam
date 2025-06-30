@@ -11,7 +11,7 @@ using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
 {
-    [Authorize(Roles = "Admin,Manager,User")]
+    [Authorize(Roles = "Admin,Technical Manager,Accountant")]
     public class CustomersController : Controller
     {
         private BusinessContext db = new BusinessContext();
@@ -21,7 +21,7 @@ namespace MYBUSINESS.Controllers
         {
 
         }
-
+        [Authorize(Roles = "Admin,Technical Manager,Accountant")]
         public ActionResult Index(string id)
         {
             int? storeId = Session["StoreId"] as int?;
@@ -58,6 +58,7 @@ namespace MYBUSINESS.Controllers
             return View(customer);
         }
 
+        [Authorize(Roles = "Admin,Technical Manager,Accountant")]
         // GET: Customers/Create
         public ActionResult Create()
         {
@@ -85,7 +86,7 @@ namespace MYBUSINESS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Address,Balance,CompanyName,CompanyAddress,CustomerCode")] Customer customer)
+        public ActionResult Create([Bind(Include = "Id,Name,Address,Balance,CompanyName,CompanyAddress,CustomerCode,Email,Vat")] Customer customer)
         {
             if (ModelState.IsValid)
             {
@@ -152,7 +153,7 @@ namespace MYBUSINESS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Address,Balance,CompanyName,CompanyAddress,CustomerCode")] Customer customer)
+        public ActionResult Edit([Bind(Include = "Id,Name,Address,Balance,CompanyName,CompanyAddress,CustomerCode,Email,Vat")] Customer customer)
         {
             if (ModelState.IsValid)
             {

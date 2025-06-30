@@ -179,13 +179,24 @@ namespace MYBUSINESS.Controllers
                 return View(model);
             }
 
-            // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            // Normalize to lowercase for consistent login
+            var userName = model.UserName?.Trim().ToLower();
+
+            var user = await UserManager.FindByNameAsync(userName);
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Invalid login attempt.");
+                return View(model);
+            }
+
+            var result = await SignInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, shouldLockout: false);
+
             switch (result)
             {
+                //case SignInStatus.Success:
+                //    return RedirectToLocal(returnUrl);
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToAction("Index", "Dashboard");
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -251,54 +262,120 @@ namespace MYBUSINESS.Controllers
 
         //
         // POST: /Account/Register
+        //[HttpPost]
+        ////[AllowAnonymous]
+        //[ValidateAntiForgeryToken]
+        //[Authorize(Roles = "Admin")]
+        //public async Task<ActionResult> Register(RegisterViewModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+        //        var result = await UserManager.CreateAsync(user, model.Password);
+        //        if (result.Succeeded)
+        //        {
+
+        //            switch (model.Role)
+        //            {
+        //                case "Admin":
+        //                    await UserManager.AddToRoleAsync(user.Id, "Admin");
+        //                    await UserManager.AddToRoleAsync(user.Id, "Manager");
+        //                    await UserManager.AddToRoleAsync(user.Id, "User");
+        //                    break;
+        //                case "Manager":
+        //                    await UserManager.AddToRoleAsync(user.Id, "Manager");
+        //                    await UserManager.AddToRoleAsync(user.Id, "User");
+        //                    break;
+        //                case "User":
+        //                    await UserManager.AddToRoleAsync(user.Id, "User");
+        //                    break;
+        //            }
+
+
+
+        //            //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+        //            // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
+        //            // Send an email with this link
+        //            // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+        //            // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+        //            // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+        //            return RedirectToAction("Index", "AspNetUsers");
+        //        }
+        //        AddErrors(result);
+        //    }
+
+        //    // If we got this far, something failed, redisplay form
+        //    //ViewBag.Departments = db.Departments;
+        //    return View(model);
+        //}
+
         [HttpPost]
-        //[AllowAnonymous]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.UserName,Email = model.UserName };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-
                     switch (model.Role)
                     {
                         case "Admin":
                             await UserManager.AddToRoleAsync(user.Id, "Admin");
-                            await UserManager.AddToRoleAsync(user.Id, "Manager");
-                            await UserManager.AddToRoleAsync(user.Id, "User");
+                            await UserManager.AddToRoleAsync(user.Id, "Technical Manager");
+                            await UserManager.AddToRoleAsync(user.Id, "Purchasing Manager");
+                            await UserManager.AddToRoleAsync(user.Id, "Shop general manager");
+                            await UserManager.AddToRoleAsync(user.Id, "Accountant");
                             break;
-                        case "Manager":
-                            await UserManager.AddToRoleAsync(user.Id, "Manager");
-                            await UserManager.AddToRoleAsync(user.Id, "User");
+                        case "Technical Manager":
+                            await UserManager.AddToRoleAsync(user.Id, "Technical Manager");
+                            await UserManager.AddToRoleAsync(user.Id, "Chocolate Production manager");
+                            await UserManager.AddToRoleAsync(user.Id, "Stock manager");
                             break;
-                        case "User":
-                            await UserManager.AddToRoleAsync(user.Id, "User");
+                        case "Purchasing Manager":
+                            await UserManager.AddToRoleAsync(user.Id, "Purchasing Manager");
+                            await UserManager.AddToRoleAsync(user.Id, "Stock manager");
+                            break;
+                        case "Shop general manager":
+                            await UserManager.AddToRoleAsync(user.Id, "Shop general manager");
+                            await UserManager.AddToRoleAsync(user.Id, "Shop");
+                            break;
+                        case "Chocolate Production manager":
+                            await UserManager.AddToRoleAsync(user.Id, "Chocolate Production manager");
+                            await UserManager.AddToRoleAsync(user.Id, "Chocolate Production staff");
+                            break;
+                        case "Stock manager":
+                            await UserManager.AddToRoleAsync(user.Id, "Stock manager");
+                            await UserManager.AddToRoleAsync(user.Id, "Stock Staff");
+                            break;
+                        case "Accountant":
+                            await UserManager.AddToRoleAsync(user.Id, "Accountant");
+                            break;
+                        case "Chocolate Production staff":
+                            await UserManager.AddToRoleAsync(user.Id, "Chocolate Production staff");
+                            break;
+                        case "Stock Staff":
+                            await UserManager.AddToRoleAsync(user.Id, "Stock Staff");
+                            break;
+                        case "Shop":
+                            await UserManager.AddToRoleAsync(user.Id, "Shop");
                             break;
                     }
-
-
-
-                    //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-
-                    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
                     return RedirectToAction("Index", "AspNetUsers");
                 }
                 AddErrors(result);
             }
 
-            // If we got this far, something failed, redisplay form
-            //ViewBag.Departments = db.Departments;
             return View(model);
         }
+
+
+
         [HttpPost]
         //[AllowAnonymous]
         [ValidateAntiForgeryToken]

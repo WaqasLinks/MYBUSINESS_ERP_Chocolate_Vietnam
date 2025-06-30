@@ -22,6 +22,7 @@ namespace MYBUSINESS.Controllers
         private BOMViewModel bomViewModel = new BOMViewModel();
         // GET: Products
 
+        [Authorize(Roles = "Admin,Technical Manager")]
         public ActionResult Index(int? pType = null)
         {
             var productTypes = new List<SelectListItem>
@@ -79,7 +80,7 @@ namespace MYBUSINESS.Controllers
             }
 
         }
-
+        [Authorize(Roles = "Admin,Technical Manager")]
         public ActionResult Create()
         {
             // Get the next available BOM ID (if needed)

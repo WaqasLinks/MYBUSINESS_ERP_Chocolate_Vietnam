@@ -15,7 +15,7 @@ using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
 {
-    [Authorize(Roles = "Admin,Manager,User")]
+    [Authorize(Roles = "Admin,Shop general manager,Shop")]
     public class ShopManageController : Controller
     {
         private BusinessContext db = new BusinessContext();
@@ -23,6 +23,8 @@ namespace MYBUSINESS.Controllers
         private ScanBankDepostViewModel scanbankDepostViewModel = new ScanBankDepostViewModel();
         // GET: Products
 
+
+        [Authorize(Roles = "Admin,Shop general manager")]
         public ActionResult Index()
         {
             ViewBag.Suppliers = DAL.dbSuppliers;
@@ -63,6 +65,7 @@ namespace MYBUSINESS.Controllers
 
         }
 
+        [Authorize(Roles = "Admin,Shop general manager,Shop")]
         public ActionResult Create()
         {
             // Get the next available BOM ID (if needed)

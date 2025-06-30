@@ -14,12 +14,14 @@ using Microsoft.Reporting.WebForms;
 using System.Data.SqlClient;
 namespace MYBUSINESS.Controllers
 {
-    [Authorize(Roles = "Admin,Manager,User")]
+    [Authorize(Roles = "Admin,Technical Manager,Chocolate Production staff,Chocolate Production manager")]
     public class NewProductionController : Controller
     {
         private BusinessContext db = new BusinessContext();
         private DAL DAL = new DAL();
         private NewProductionViewModel newproductionViewModel = new NewProductionViewModel();
+
+        [Authorize(Roles = "Admin,Technical Manager,Chocolate Production staff,Chocolate Production manager")]
         // GET: Products
         public ActionResult Index()
         {
@@ -152,7 +154,8 @@ namespace MYBUSINESS.Controllers
         //    return View(viewModel);
         //}
 
-            [HttpGet]
+        [Authorize(Roles = "Admin,Technical Manager,Chocolate Production staff,Chocolate Production manager")]
+        [HttpGet]
             public ActionResult Create()
             {
                 decimal maxId = db.NewProductions.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
@@ -754,6 +757,7 @@ namespace MYBUSINESS.Controllers
         //                return Json(new { message = "Stock validated!", success = true });
         //}
 
+        [Authorize(Roles = "Admin,Technical Manager,Chocolate Production manager")]
         [HttpPost]
         public JsonResult ValidateStock(List<FinalProductionViewModel> LstProductionVM)
         {

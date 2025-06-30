@@ -83,11 +83,6 @@
                             @Html.ValidationMessageFor(model => model.PPPostProduction.Unit, "", new { @class = "text-danger" })
                         </div>
 
-                        @*<div class="form-group">
-            @Html.LabelFor(model => model.PostProduction.ProductionDate, htmlAttributes: new { @class = "control-label" })
-            @Html.TextBoxFor(model => model.PostProduction.ProductionDate, new { @class = "form-control", type = "date" })
-            @Html.ValidationMessageFor(model => model.PostProduction.ProductionDate, "", new { @class = "text-danger" })
-        </div>*@
                         <div class="form-group">
                             @Html.LabelFor(model => Model.PPPostProduction.ProductionDate, htmlAttributes: new { @class = "control-label" })
                             @{
@@ -118,14 +113,6 @@
                                 <table id="selectedProduct" class="table table-bordered">
                                     <thead>
                                         <tr>
-                                            <!--<th style="width:5%;">#</th>-->
-                                            @*<th>Index</th>
-                            <th>pId</th>*@
-                                            <!--<th style="width:60%;">Name</th>
-
-
-                        <th style="width:20%;">Unit</th>
-                        <th></th>-->
                                             <th style="width: 5%;">#</th>
                                             <th style="width: 50%;">Shape</th>
                                             @*<th style="width: 12%;">Qty</th>*@
@@ -182,14 +169,7 @@
                                 </table>
 
 
-                                @*<div class="table-title">
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
-                        </div>
-                    </div>
-                </div>*@
-
+                      
                             </div>
 
 
@@ -199,61 +179,6 @@
                         <div class="total-weight-container">
                             <p><strong>Total Weight: </strong><span id="totalWeightDisplay">@Model.TotalWeight.ToString("0.00")</span></p>
                         </div>
-
-
-
-
-
-
-
-
-                        @*<div class="form-group">
-            @Html.LabelFor(model => Model.NewProduction.ProductionDate, htmlAttributes: new { @class = "control-label" })
-
-            @Html.TextBoxFor(
-                model => Model.NewProduction.ProductionDate,
-                new { @class = "form-control", type = "date" }
-            )
-            @Html.ValidationMessageFor(model => Model.NewProduction.ProductionDate, "", new { @class = "text-danger" })
-        </div>*@
-
-                        @*<div class="form-group">
-            @Html.LabelFor(model => Model.NewProduction.ProductName, "Select Product", new { @class = "control-label" })
-
-            @Html.DropDownListFor(
-                model => Model.NewProduction.ProductName,  // Bind selected value to ProductName
-                (SelectList)ViewBag.ProductList,            // Populate dropdown options from ViewBag
-                "Select a Product",                         // Placeholder option
-                new { @class = "form-control" }             // CSS class for styling
-            )
-
-            @Html.ValidationMessageFor(model => model.NewProduction.ProductName, "", new { @class = "text-danger" })
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.NewProduction.Unit, htmlAttributes: new { @class = "control-label" })
-
-            @Html.DropDownListFor(
-                model => model.NewProduction.Unit,
-                new SelectList(new List<string> { "Kg", "Gram", "Square", "Bar" }, Model.NewProduction.Unit),
-                new { @class = "form-control" }
-            )
-
-            @Html.ValidationMessageFor(model => model.NewProduction.Unit, "", new { @class = "text-danger" })
-        </div>*@
-                        @*<div class="form-group">
-            @Html.LabelFor(model => Model.NewProduction.QuantityToProduce, htmlAttributes: new { @class = "control-label" })
-            @Html.EditorFor(model => Model.NewProduction.QuantityToProduce, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => Model.NewProduction.QuantityToProduce, "", new { @class = "text-danger" })
-        </div>*@
-
-
-                        @*<div class="form-group">
-            @Html.LabelFor(model => Model.NewProduction.QuantityToProduce, htmlAttributes: new { @class = "control-label" })
-            @Html.EditorFor(model => Model.NewProduction.QuantityToProduce)
-            @Html.ValidationMessageFor(model => Model.NewProduction.QuantityToProduce, "", new { @class = "text-danger" })
-        </div>*@
-
                     </div>
 
 
@@ -275,91 +200,13 @@
 
                 </div>
             </div>
-            <div style="display:none;" class="col-md-6">
-                <!-- general form elements -->
-                <!-- general form elements -->
-                <div class="box box-primary">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Ingredients</h3>
-                    </div>
 
-
-                    <div class="box-body">
-
-
-
-                        <table id="selectedProducts" class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th style="width: 5%;">#</th>
-                                    <th style="width: 12%;">Name</th>
-                                    @*<th style="width: 12%;">Name</th>*@
-                                    <th style="width: 10%;">Qty</th>
-                                    <th style="width: 10%;">Unit</th>
-                                    @*<th style="width: 10%;">AvailableIn</th>*@
-                                    @*<th style="width: 8%;">Unit</th>*@
-                                    <th style="width: 8%;"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (Model.PPSubItemProduction != null && Model.PPSubItemProduction.Count > 0)
-                                {
-                                    int sNo = 0;
-                                    foreach (var item in Model.PPSubItemProduction)
-                                    {
-                                        if (item.Product.PType == 5)
-                                        {
-                                            <tr>
-                                                <td id="SNo0">@(sNo + 1)</td>
-                                                <td style="display:none;"><input type="hidden" readonly name="PPSubItemProduction.Index" value="@sNo" /></td>
-                                                <td style="display:none;"><input type="text" readonly value=@item.ParentProductId readonly class="form-control classBGcolor" name="PPSubItemProduction[@sNo].ParentProductId" id="idn@(sNo)"></td>
-                                                <td style="display:none;"><input type="text" readonly value=@item.ProductId readonly class="form-control classBGcolor" name="PPSubItemProduction[@sNo].ProductId" id="idn@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>
-                                                <td><input type="text" readonly autocomplete="off" value="@(item.Product.Name)" class="form-control" name="PPSubItemProduction[@sNo].Product.Name" id="name@(sNo)" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name" @(isReadonly ? "readonly='readonly'" : "")></td>
-                                                @*<td><input type="text" autocomplete="off" value="@(item.QuantitytoPrepare)" class="form-control" name="SubItem[@sNo].Shape" id="shape@(sNo)" placeholder="" data-toggle="tooltip" data-placement="top" title=""></td>*@
-                                                <td><input type="text" readonly autocomplete="off" value=@item.Quantity class="form-control" name="PPSubItemProduction[@sNo].Quantity" id="quantity@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>
-                                                <td><input type="text" readonly autocomplete="off" value=@item.Unit class="form-control" name="PPSubItemProduction[@sNo].Unit" id="unit@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>
-                                                <td>
-                                                    <span class="calculated-subitem" @(isReadonly ? "readonly='readonly'" : "")>@Model.TotalWeight.ToString("0.00")</span>
-                                                    <input type="hidden" name="SubItemProduction[@sNo].CalculatedValue" class="calculated-value-hidden" value="0.00">
-                                                </td>
-
-                                                @*<td>
-
-                                                        <button type="button" id="delete@(sNo)" class="delete btn btn-default add-new"><a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button>
-                                                    </td>*@
-                                            </tr>
-                                        }
-                                        sNo += 1;
-                                    }
-
-
-                                }
-                            </tbody>
-
-                        </table>
-
-
-                        @*<div class="table-title">
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
-                                    </div>
-                                </div>
-                            </div>*@
-
-                    </div>
-
-
-
-
-                </div>
-            </div>
             <div class="col-md-6">
                 <!-- general form elements -->
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Product Type</h3>
+                        <h3 class="box-title">Secondary Materials</h3>
                     </div>
 
 
@@ -387,27 +234,27 @@
                                     foreach (var item in Model.PPSubItemProduction)
                                     {
                                         //if (item.Product.PType == true && item.Product.PType != 1)
-                                        if (item.Product.PType == 2 || item.Product.PType == 3)
+                                        if ((item.Product.PType == 5 || item.Product.PType == 3) &&
+                item.SubItemQty == null)
                                         {
                                             <tr>
                                                 <td id="SNo0">@(sNo + 1)</td>
                                                 <td style="display:none;"><input type="hidden" readonly name="PPSubItemProduction.Index" value="@sNo" /></td>
+                                                <td style="display:none;"> <input type="hidden" name="PPSubItemProduction[@sNo].Id" value="@item.Id" /></td>
                                                 <td style="display:none;"><input type="text" readonly value=@item.ParentProductId readonly class="form-control classBGcolor" name="PPSubItemProduction[@sNo].ParentProductId" id="idn@(sNo)"></td>
                                                 <td><input type="text" readonly autocomplete="off" value="@(item.Product.Name)" class="form-control" name="PPSubItemProduction[@sNo].Product.Name" id="name@(sNo)" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name" @(isReadonly ? "readonly='readonly'" : "")></td>
                                                 @*<td><input type="text" autocomplete="off" value="@(item.QuantitytoPrepare)" class="form-control" name="SubItem[@sNo].Shape" id="shape@(sNo)" placeholder="" data-toggle="tooltip" data-placement="top" title=""></td>*@
-                                                <td><input type="text" autocomplete="off" value=@item.Quantity class="form-control production-qty" name="PPSubItemProduction[@sNo].Quantity" id="quantity@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>
-                                                <td><input type="text" readonly autocomplete="off" value=@item.Unit class="form-control" name="PPSubItemProduction[@sNo].Unit" id="unit@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>
+                                                <td style="display:none;"><input type="text" readonly autocomplete="off" value="@(item.Product.Id)" class="form-control" name="PPSubItemProduction[@sNo].ProductId" id="id@(sNo)" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name" @(isReadonly ? "readonly='readonly'" : "")></td>
                                                 @*<td><input type="text" readonly autocomplete="off" value=@item.Product.PType class="form-control" name="SubItemProduction[@sNo].Product.PType" id="ptype@(sNo)"></td>*@
                                                 <td>
-                                                    <input type="text" readonly autocomplete="off"
-                                                           value="@(item.Product.PType == 1 ? "Variable" :
-item.Product.PType == 2 ? "Excess" :
-item.Product.PType == 3 ? "ByProduct" : "Unknown")"
-                                                           class="form-control"
-                                                           name="PPSubItemProduction[@sNo].Product.PType"
-                                                           id="ptype@(sNo)"
-                                                           @(isReadonly ? "readonly='readonly'" : "")>
+                                                    <input type="text" autocomplete="off"
+                                                           value="@item.Quantity"
+                                                           class="form-control production-qty1"
+                                                           name="PPSubItemProduction[@sNo].Quantity"
+                                                           id="quantity@(sNo)"
+                                                           @(isReadonly || item.Product.PType == 3 ? "readonly='readonly'" : "")>
                                                 </td>
+                                                <td><input type="text" readonly autocomplete="off" value=@item.Unit class="form-control" name="PPSubItemProduction[@sNo].Unit" id="unit@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>
                                                 @*<td>
             <select class="form-control" name="SubItem[0].BOM.Unit" id="unit0">
                 <option value="Kg" selected>Kg</option>

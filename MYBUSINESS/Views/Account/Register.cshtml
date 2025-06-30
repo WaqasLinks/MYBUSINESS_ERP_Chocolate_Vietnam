@@ -82,44 +82,63 @@
                 @Html.ValidationSummary("", new { @class = "text-danger" })
 
                 <div class="form-group has-feedback">
-                    @Html.TextBoxFor(m => m.Email, new
-                    {
-                        @class = "form-control",
-                        placeholder = "Email",
-                        type = "email"
-                    })
-                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                    @Html.TextBoxFor(m => m.UserName, new
+               {
+                   @class = "form-control",
+                   placeholder = "Username",
+
+                   //type = "email"
+               })
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                    @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
                 </div>
 
                 <div class="form-group has-feedback">
                     @Html.PasswordFor(m => m.Password, new
-                    {
-                        @class = "form-control",
-                        placeholder = "Password"
-                    })
+               {
+                   @class = "form-control",
+                   placeholder = "Password"
+               })
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                     @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
                 </div>
 
                 <div class="form-group has-feedback">
                     @Html.PasswordFor(m => m.ConfirmPassword, new
-                    {
-                        @class = "form-control",
-                        placeholder = "Confirm Password"
-                    })
+               {
+                   @class = "form-control",
+                   placeholder = "Confirm Password"
+               })
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                     @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
                 </div>
 
+                @*<div class="form-group has-feedback">
+                @Html.DropDownList("Role", new SelectListItem[]{
+                    new SelectListItem() {Text = "Admin", Value="Admin"},
+                    new SelectListItem() {Text = "Manager", Value="Manager"},
+                    new SelectListItem() {Text = "User", Value="User"}},
+                    "Select Role",
+                    new { @class = "form-control" })
+                <span class="glyphicon glyphicon-user form-control-feedback"></span>
+            </div>*@
+
                 <div class="form-group has-feedback">
                     @Html.DropDownList("Role", new SelectListItem[]{
                         new SelectListItem() {Text = "Admin", Value="Admin"},
-                        new SelectListItem() {Text = "Manager", Value="Manager"},
-                        new SelectListItem() {Text = "User", Value="User"}},
+                        new SelectListItem() {Text = "Technical Manager", Value="Technical Manager"},
+                        new SelectListItem() {Text = "Purchasing Manager", Value="Purchasing Manager"},
+                        new SelectListItem() {Text = "Shop general manager", Value="Shop general manager"},
+                        new SelectListItem() {Text = "Chocolate Production manager", Value="Chocolate Production manager"},
+                        new SelectListItem() {Text = "Stock manager", Value="Stock manager"},
+                        new SelectListItem() {Text = "Accountant", Value="Accountant"},
+                        new SelectListItem() {Text = "Chocolate Production staff", Value="Chocolate Production staff"},
+                        new SelectListItem() {Text = "Stock Staff", Value="Stock Staff"},
+                        new SelectListItem() {Text = "Shop", Value="Shop"}},
                         "Select Role",
                         new { @class = "form-control" })
                     <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                    @Html.ValidationMessageFor(m => m.Role, "", new { @class = "text-danger" })
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-register">Register</button>
@@ -132,7 +151,7 @@
     <script>
         $(document).ready(function () {
             // Focus on email field when page loads
-            $('#Email').focus();
+            $('#UserName').focus();
 
             // Disable autocomplete
             $('input').attr('autocomplete', 'off');

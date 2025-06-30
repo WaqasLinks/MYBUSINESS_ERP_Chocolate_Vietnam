@@ -22,8 +22,8 @@
                                     <tr>
                                         <td>@Html.DisplayFor(modelItem => item.Id)</td>
                                         <td>@Html.DisplayFor(modelItem => item.StoreId)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.Date)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.Amount)</td>
+                                        <td>@(item.Date.HasValue ? item.Date.Value.ToString("dd/MM/yyyy") : "")</td>
+                                        <td>@(item.Amount.HasValue ? item.Amount.Value.ToString("N0") : "")</td>
                                         <td>
                                             @Html.ActionLink("Update", "Edit", new { id = item.Id }, new { @class = "btn btn-info" }) |
                                             @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
@@ -47,7 +47,21 @@
             "paging": false,
             "bInfo": false,
             "order": [[0, "desc"]],
-            "searching": true
+            "searching": true,
+            "columnDefs": [
+                {
+                    "type": "date-eu",
+                    "targets": 2,
+                    "render": function (data) {
+                        // Convert dd/MM/yyyy to yyyyMMdd for sorting
+                        var parts = data.split('/');
+                        if (parts.length === 3) {
+                            return parts[2] + parts[1] + parts[0];
+                        }
+                        return data;
+                    }
+                }
+            ]
         });
     });
 </script>

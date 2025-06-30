@@ -16,12 +16,13 @@ using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
 {
-    [Authorize(Roles = "Admin,Manager,User")]
+    [Authorize(Roles = "Admin,")]
     public class PurchaseQuotationController : Controller
     {
         private BusinessContext db = new BusinessContext();
         private DAL DAL = new DAL();
         // GET: POes
+        [Authorize(Roles = "Admin,Accountant")]
         public ActionResult Index()
         {
             int? storeId = Session["StoreId"] as int?;
@@ -316,7 +317,7 @@ namespace MYBUSINESS.Controllers
             }
             return View(pO);
         }
-
+        [Authorize(Roles = "Admin,Accountant")]
         // GET: POes/Create
         public ActionResult Create(string IsReturn)
         {

@@ -223,7 +223,7 @@ new { @class = "form-control" }
                                     int sNo = 0;
                                     foreach (var item in Model.SubItem)
                                     {
-                                        if (item.Product != null && (item.Product.PType == 5  || item.Product.PType == 6 && item.Quantity > 0))
+                                        if (item.Product != null && (item.Product.PType == 5 && item.Quantity > 0 || item.Product.PType == 6 && item.Quantity > 0))
 
                                         {
                                             <tr>
@@ -292,7 +292,7 @@ new { @class = "form-control" }
                                     {
                                         // Ensure item.Product is not null before accessing its properties
                                         //if (item.Product != null && (item.Product.FinishedProduct == true || item.Product.PType == 1))
-                                        if (item.Product != null && (item.Product.PType == 1 || item.Product.PType == 6 || item.Product.PType == 3) && item.Quantity == null)
+                                        if (item.Product != null && (item.Product.PType == 1 || item.Product.PType == 5 || item.Product.PType == 3) && item.Quantity == null)
                                         {
                                             <tr>
                                                 <td>@(sNo + 1)</td>

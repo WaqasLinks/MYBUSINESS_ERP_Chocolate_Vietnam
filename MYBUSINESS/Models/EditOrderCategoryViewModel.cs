@@ -10,6 +10,7 @@ namespace MYBUSINESS.Models
         public string CategoryName { get; set; }
         public List<OrderItemViewModel> Items { get; set; }
     }
+
     public class OrderItemViewModel
     {
         public int Id { get; set; }
@@ -17,5 +18,6 @@ namespace MYBUSINESS.Models
         public int OrderId { get; set; }
         public int? Quantity { get; set; }
         public string ProductName { get; set; }
+        public string Unit { get; set; } // Add this property
     }
 }

@@ -281,7 +281,7 @@
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Ingredients</h3>
+                        <h3 class="box-title">Main Ingredients</h3>
                     </div>
 
 
@@ -308,9 +308,10 @@
                                     int sNo = 0;
                                     foreach (var item in Model.PPSubItemProductions)
                                     {
-                                        if (item.Product != null && item.Product.PType == 5 || item.Product.PType == 6)
+                                        if ((item.Product != null && item.Product.PType == 5 || item.Product.PType == 6) && item.SubItemQty > 0)
                                         {
                                             <tr>
+                                                
                                                 <td id="SNo0">@(sNo + 1)</td>
                                                 <td style="display:none;"><input type="hidden" readonly name="PPSubItemProductions.Index" value="@sNo" / @(isReadonly ? "readonly='readonly'" : "")></td>
                                                 <td style="display:none;"><input type="text" readonly value=@item.ParentProductId readonly class="form-control classBGcolor" name="PPSubItemProductions[@sNo].ParentProductId" id="idn@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>
@@ -325,7 +326,7 @@
                                                            name="PPSubItemProductions[@sNo].SubItemQty"
                                                            id="subitemqty@(sNo)"
                                                            data-index="@sNo" />
-                                                          
+
                                                 </td>
 
                                                 <td style="display:none;">
@@ -384,7 +385,7 @@
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Product Type</h3>
+                        <h3 class="box-title">Secondary Materials</h3>
                     </div>
 
 
@@ -411,9 +412,11 @@
                                     int sNo = 0;
                                     foreach (var item in Model.PPSubItemProductions)
                                     {
-                                        if (item.Product != null && item.Product.PType == 1 || item.Product.PType == 2 || item.Product.PType == 3)
+                                        if (item.Product != null &&
+                (item.Product.PType == 1 || item.Product.PType == 5 || item.Product.PType == 3) &&
+                item.SubItemQty == null)
                                         {
-                                            
+
                                             <tr style="@(item.Product?.PType == 3 ? "display:none;" : "")">
                                                 <td id="SNo0">@(sNo + 1)</td>
                                                 <td style="display:none;"><input type="hidden" readonly name="PPSubItemProductions.Index" value="@sNo" /></td>

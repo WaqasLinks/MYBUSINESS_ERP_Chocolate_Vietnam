@@ -18,7 +18,7 @@ using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
 {
-    [Authorize(Roles = "Admin,Manager,User")]
+    [Authorize(Roles = "Admin,Purchasing manager,Technical Manager,Stock staff,Stock manager")]
     public class SPackagingController : Controller
     {
         // GET: SPackaging
@@ -75,6 +75,7 @@ namespace MYBUSINESS.Controllers
         //    //var poess = pOes.OrderByDescending(i => i.Date).ToList();
         //    return View(poess);
         //}
+        [Authorize(Roles = "Admin,Purchasing manager,Technical Manager,Stock staff,Stock manager")]
         public ActionResult Index()
         {
             int? storeId = Session["StoreId"] as int?;
@@ -346,6 +347,9 @@ namespace MYBUSINESS.Controllers
             return View(sPackaging);
         }
 
+
+
+        [Authorize(Roles = "Admin,Purchasing manager,Technical Manager,Stock staff,Stock manager")]
         // GET: POes/Create
         public ActionResult Create(string IsReturn)
         {
@@ -372,7 +376,7 @@ namespace MYBUSINESS.Controllers
 
             SPackagingViewModel spackagingViewModel = new SPackagingViewModel();
             spackagingViewModel.Suppliers = DAL.dbSuppliers;
-            spackagingViewModel.Products = DAL.dbProducts.Include(x => x.StoreProducts).Where(x => x.PType == 4 || x.PType == 7 && x.IsService == false);
+            spackagingViewModel.Products = DAL.dbProducts.Include(x => x.StoreProducts).Where(x => x.PType == 8  && x.IsService == false);
             //purchaseOrderViewModel.FundingSources = db.FundingSources.ToList() ;
             ViewBag.FundingSources = new SelectList(db.Suppliers.Where(x => x.IsCreditor == true), "Id", "Name");//db.FundingSources.ToList(); ;
             ViewBag.BankAccounts = new SelectList(db.BankAccounts, "Id", "Name");

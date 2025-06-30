@@ -15,7 +15,7 @@ using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
 {
-    [Authorize(Roles = "Admin,Manager,User")]
+    [Authorize(Roles = "Admin,Accountant,Shop general manager,Shop")]
     public class ScanCreditCardController : Controller
     {
         // GET: ScanCreditCard
@@ -24,6 +24,7 @@ namespace MYBUSINESS.Controllers
         private ScanCreditCardViewModel scancreditCardViewModel = new ScanCreditCardViewModel();
         // GET: Products
 
+        [Authorize(Roles = "Admin,Accountant,Shop general manager")]
         public ActionResult Index()
         {
             ViewBag.Suppliers = DAL.dbSuppliers;
@@ -64,6 +65,7 @@ namespace MYBUSINESS.Controllers
 
         }
 
+        [Authorize(Roles = "Admin,Shop general manager,Shop")]
         public ActionResult Create()
         {
             // Get the next available BOM ID (if needed)

@@ -172,6 +172,7 @@
           <Property Name="CompanyName" Type="nvarchar" MaxLength="500" />
           <Property Name="CompanyAddress" Type="nvarchar" MaxLength="500" />
           <Property Name="CustomerCode" Type="nvarchar" MaxLength="500" />
+          <Property Name="VatNumber" Type="nvarchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="DailyBalanceVnd">
           <Key>
@@ -406,6 +407,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="StoreId" Type="int" />
           <Property Name="OrderDate" Type="datetime" />
+          <Property Name="Validate" Type="bit" />
         </EntityType>
         <EntityType Name="Orders">
           <Key>
@@ -448,6 +450,7 @@
           <Property Name="PProdDate" Type="datetime" />
           <Property Name="Box" Type="nvarchar" MaxLength="500" />
           <Property Name="ColorCode" Type="nvarchar(max)" />
+          <Property Name="Supplier" Type="nvarchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="PackagingSubItems">
           <Key>
@@ -2715,6 +2718,18 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SubItemProduction_NewProduction">
+          <End Role="NewProduction" Type="Self.NewProduction" Multiplicity="0..1" />
+          <End Role="SubItemProduction" Type="Self.SubItemProduction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NewProduction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubItemProduction">
+              <PropertyRef Name="NewProductionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_SubItemProduction_Product1">
           <End Role="Product" Type="Self.Product" Multiplicity="0..1">
             <OnDelete Action="Cascade" />
@@ -3336,6 +3351,10 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             <End Role="BOM" EntitySet="BOM" />
             <End Role="SubItemProduction" EntitySet="SubItemProduction" />
           </AssociationSet>
+          <AssociationSet Name="FK_SubItemProduction_NewProduction" Association="Self.FK_SubItemProduction_NewProduction">
+            <End Role="NewProduction" EntitySet="NewProduction" />
+            <End Role="SubItemProduction" EntitySet="SubItemProduction" />
+          </AssociationSet>
           <AssociationSet Name="FK_SubItemProduction_Product1" Association="Self.FK_SubItemProduction_Product1">
             <End Role="Product" EntitySet="Product" />
             <End Role="SubItemProduction" EntitySet="SubItemProduction" />
@@ -3401,9 +3420,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <FunctionImport Name="spSOReport" ReturnType="Collection(Models.spSOReport_Result)">
           <Parameter Name="SaleOrderID" Mode="In" Type="String" />
           </FunctionImport>
-          <FunctionImport Name="spGetOrderPProductDetails" ReturnType="Collection(Models.spGetOrderPProductDetails_Result)">
-          <Parameter Name="OrderId" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="spGetOrderProductDetails" ReturnType="Collection(Models.spGetOrderProductDetails_Result)">
           <Parameter Name="OrderId" Mode="In" Type="Int32" />
           </FunctionImport>
@@ -3422,7 +3438,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <EntitySet Name="Colors" EntityType="Models.Color" />
           <EntitySet Name="CPReceipts" EntityType="Models.CPReceipt" />
           <EntitySet Name="Currencies" EntityType="Models.Currency" />
-          <EntitySet Name="Customers" EntityType="Models.Customer" />
           <EntitySet Name="Departments" EntityType="Models.Department" />
           <EntitySet Name="Employees" EntityType="Models.Employee" />
           <EntitySet Name="Expenses" EntityType="Models.Expense" />
@@ -3436,10 +3451,8 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <EntitySet Name="MyBusinessInfoes" EntityType="Models.MyBusinessInfo" />
           <EntitySet Name="OrderItemPProducts" EntityType="Models.OrderItemPProduct" />
           <EntitySet Name="OrderItems" EntityType="Models.OrderItem" />
-          <EntitySet Name="OrderPProducts" EntityType="Models.OrderPProduct" />
           <EntitySet Name="Orders" EntityType="Models.Order" />
           <EntitySet Name="PackagingColoreds" EntityType="Models.PackagingColored" />
-          <EntitySet Name="PackagingProductions" EntityType="Models.PackagingProduction" />
           <EntitySet Name="PackagingSubItems" EntityType="Models.PackagingSubItem" />
           <EntitySet Name="PaperColors" EntityType="Models.PaperColor" />
           <EntitySet Name="Payments" EntityType="Models.Payment" />
@@ -3447,7 +3460,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <EntitySet Name="PODs" EntityType="Models.POD" />
           <EntitySet Name="PODRecivers" EntityType="Models.PODReciver" />
           <EntitySet Name="PORecivers" EntityType="Models.POReciver" />
-          <EntitySet Name="PostProductions" EntityType="Models.PostProduction" />
           <EntitySet Name="PPBOMs" EntityType="Models.PPBOM" />
           <EntitySet Name="PPColorReceipts" EntityType="Models.PPColorReceipt" />
           <EntitySet Name="PPReceivers" EntityType="Models.PPReceiver" />
@@ -3512,10 +3524,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             <End Role="BOM" EntitySet="BOMs" />
             <End Role="SubItemProduction" EntitySet="SubItemProductions" />
           </AssociationSet>
-          <AssociationSet Name="FK_BOXProduction_PackagingProduction" Association="Models.FK_BOXProduction_PackagingProduction">
-            <End Role="PackagingProduction" EntitySet="PackagingProductions" />
-            <End Role="BOXProduction" EntitySet="BOXProductions" />
-          </AssociationSet>
           <AssociationSet Name="FK_BOXProduction_PaperColor" Association="Models.FK_BOXProduction_PaperColor">
             <End Role="PaperColor" EntitySet="PaperColors" />
             <End Role="BOXProduction" EntitySet="BOXProductions" />
@@ -3523,10 +3531,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <AssociationSet Name="FK_BOXProduction_PPSubItem" Association="Models.FK_BOXProduction_PPSubItem">
             <End Role="PPSubItem" EntitySet="PPSubItems" />
             <End Role="BOXProduction" EntitySet="BOXProductions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Customer_Business" Association="Models.FK_Customer_Business">
-            <End Role="BusinessInfo" EntitySet="BusinessInfoes" />
-            <End Role="Customer" EntitySet="Customers" />
           </AssociationSet>
           <AssociationSet Name="FK_Department_Business" Association="Models.FK_Department_Business">
             <End Role="BusinessInfo" EntitySet="BusinessInfoes" />
@@ -3540,10 +3544,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             <End Role="BusinessInfo" EntitySet="BusinessInfoes" />
             <End Role="Supplier" EntitySet="Suppliers" />
           </AssociationSet>
-          <AssociationSet Name="FK_CPReceipts_PackagingProduction" Association="Models.FK_CPReceipts_PackagingProduction">
-            <End Role="PackagingProduction" EntitySet="PackagingProductions" />
-            <End Role="CPReceipt" EntitySet="CPReceipts" />
-          </AssociationSet>
           <AssociationSet Name="FK_PPColorReceipt_PaperColor" Association="Models.FK_PPColorReceipt_PaperColor">
             <End Role="PaperColor" EntitySet="PaperColors" />
             <End Role="CPReceipt" EntitySet="CPReceipts" />
@@ -3551,18 +3551,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <AssociationSet Name="FK_PPColorReceipt_PPSubItem" Association="Models.FK_PPColorReceipt_PPSubItem">
             <End Role="PPSubItem" EntitySet="PPSubItems" />
             <End Role="CPReceipt" EntitySet="CPReceipts" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Rent_Customer" Association="Models.FK_Rent_Customer">
-            <End Role="Customer" EntitySet="Customers" />
-            <End Role="Rent" EntitySet="Rents" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Service_Customer" Association="Models.FK_Service_Customer">
-            <End Role="Customer" EntitySet="Customers" />
-            <End Role="Service" EntitySet="Services" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SO_Customer" Association="Models.FK_SO_Customer">
-            <End Role="Customer" EntitySet="Customers" />
-            <End Role="SO" EntitySet="SOes" />
           </AssociationSet>
           <AssociationSet Name="FK_Employee_Department" Association="Models.FK_Employee_Department">
             <End Role="Department" EntitySet="Departments" />
@@ -3616,17 +3604,9 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             <End Role="Loan" EntitySet="Loans" />
             <End Role="LoanDetail" EntitySet="LoanDetails" />
           </AssociationSet>
-          <AssociationSet Name="FK_OrderItemPProducts_OrderPProducts" Association="Models.FK_OrderItemPProducts_OrderPProducts">
-            <End Role="OrderPProduct" EntitySet="OrderPProducts" />
-            <End Role="OrderItemPProduct" EntitySet="OrderItemPProducts" />
-          </AssociationSet>
           <AssociationSet Name="FK_OrderItems_Orders" Association="Models.FK_OrderItems_Orders">
             <End Role="Order" EntitySet="Orders" />
             <End Role="OrderItem" EntitySet="OrderItems" />
-          </AssociationSet>
-          <AssociationSet Name="FK_OrderPProducts_Store" Association="Models.FK_OrderPProducts_Store">
-            <End Role="Store" EntitySet="Stores" />
-            <End Role="OrderPProduct" EntitySet="OrderPProducts" />
           </AssociationSet>
           <AssociationSet Name="FK_Orders_Store" Association="Models.FK_Orders_Store">
             <End Role="Store" EntitySet="Stores" />
@@ -3635,14 +3615,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <AssociationSet Name="FK_StoreOrderReceipt_Orders" Association="Models.FK_StoreOrderReceipt_Orders">
             <End Role="Order" EntitySet="Orders" />
             <End Role="StoreOrderReceipt" EntitySet="StoreOrderReceipts" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Color_PackagingProduction" Association="Models.FK_Color_PackagingProduction">
-            <End Role="PackagingProduction" EntitySet="PackagingProductions" />
-            <End Role="PaperColor" EntitySet="PaperColors" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductStockDetail_PackagingProduction" Association="Models.FK_ProductStockDetail_PackagingProduction">
-            <End Role="PackagingProduction" EntitySet="PackagingProductions" />
-            <End Role="ProductStockDetail" EntitySet="ProductStockDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_PPColorReceipts_PaperColor" Association="Models.FK_PPColorReceipts_PaperColor">
             <End Role="PaperColor" EntitySet="PaperColors" />
@@ -3671,10 +3643,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <AssociationSet Name="FK_POReciver_Supplier" Association="Models.FK_POReciver_Supplier">
             <End Role="Supplier" EntitySet="Suppliers" />
             <End Role="POReciver" EntitySet="PORecivers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_QuantityToProduce_PostProduction" Association="Models.FK_QuantityToProduce_PostProduction">
-            <End Role="PostProduction" EntitySet="PostProductions" />
-            <End Role="QuantityToProduce" EntitySet="QuantityToProduces" />
           </AssociationSet>
           <AssociationSet Name="FK_PPSubItem_PPBOM" Association="Models.FK_PPSubItem_PPBOM">
             <End Role="PPBOM" EntitySet="PPBOMs" />
@@ -3769,10 +3737,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             <End Role="Product" EntitySet="Products" />
             <End Role="OrderItem" EntitySet="OrderItems" />
           </AssociationSet>
-          <AssociationSet Name="FK_PackagingProduction_Product" Association="Models.FK_PackagingProduction_Product">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="PackagingProduction" EntitySet="PackagingProductions" />
-          </AssociationSet>
           <AssociationSet Name="FK_Color_Product" Association="Models.FK_Color_Product">
             <End Role="Product" EntitySet="Products" />
             <End Role="PaperColor" EntitySet="PaperColors" />
@@ -3784,10 +3748,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <AssociationSet Name="FK_PODReciver_Product1" Association="Models.FK_PODReciver_Product1">
             <End Role="Product" EntitySet="Products" />
             <End Role="PODReciver" EntitySet="PODRecivers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PostProduction_Product1" Association="Models.FK_PostProduction_Product1">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="PostProduction" EntitySet="PostProductions" />
           </AssociationSet>
           <AssociationSet Name="FK_PPBOM_Product" Association="Models.FK_PPBOM_Product">
             <End Role="Product" EntitySet="Products" />
@@ -3923,7 +3883,9 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             <End Role="PPPostProduction" EntitySet="PPPostProductions" />
             <End Role="PPSubItemProduction" EntitySet="PPSubItemProductions" />
           </AssociationSet>
+          <EntitySet Name="DailyBalanceVnds" EntityType="Models.DailyBalanceVnd" />
           <EntitySet Name="NewProductions" EntityType="Models.NewProduction" />
+          <EntitySet Name="PostProductions" EntityType="Models.PostProduction" />
           <AssociationSet Name="FK_NewProduction_Product" Association="Models.FK_NewProduction_Product">
             <End Role="Product" EntitySet="Products" />
             <End Role="NewProduction" EntitySet="NewProductions" />
@@ -3940,7 +3902,68 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             <End Role="NewProduction" EntitySet="NewProductions" />
             <End Role="ProductionDetail" EntitySet="ProductionDetails" />
           </AssociationSet>
-          <EntitySet Name="DailyBalanceVnds" EntityType="Models.DailyBalanceVnd" />
+          <AssociationSet Name="FK_SubItemProduction_NewProduction" Association="Models.FK_SubItemProduction_NewProduction">
+            <End Role="NewProduction" EntitySet="NewProductions" />
+            <End Role="SubItemProduction" EntitySet="SubItemProductions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PostProduction_Product1" Association="Models.FK_PostProduction_Product1">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="PostProduction" EntitySet="PostProductions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_QuantityToProduce_PostProduction" Association="Models.FK_QuantityToProduce_PostProduction">
+            <End Role="PostProduction" EntitySet="PostProductions" />
+            <End Role="QuantityToProduce" EntitySet="QuantityToProduces" />
+          </AssociationSet>
+          <EntitySet Name="PackagingProductions" EntityType="Models.PackagingProduction" />
+          <AssociationSet Name="FK_BOXProduction_PackagingProduction" Association="Models.FK_BOXProduction_PackagingProduction">
+            <End Role="PackagingProduction" EntitySet="PackagingProductions" />
+            <End Role="BOXProduction" EntitySet="BOXProductions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CPReceipts_PackagingProduction" Association="Models.FK_CPReceipts_PackagingProduction">
+            <End Role="PackagingProduction" EntitySet="PackagingProductions" />
+            <End Role="CPReceipt" EntitySet="CPReceipts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Color_PackagingProduction" Association="Models.FK_Color_PackagingProduction">
+            <End Role="PackagingProduction" EntitySet="PackagingProductions" />
+            <End Role="PaperColor" EntitySet="PaperColors" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PackagingProduction_Product" Association="Models.FK_PackagingProduction_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="PackagingProduction" EntitySet="PackagingProductions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductStockDetail_PackagingProduction" Association="Models.FK_ProductStockDetail_PackagingProduction">
+            <End Role="PackagingProduction" EntitySet="PackagingProductions" />
+            <End Role="ProductStockDetail" EntitySet="ProductStockDetails" />
+          </AssociationSet>
+          <EntitySet Name="OrderPProducts" EntityType="Models.OrderPProduct" />
+          <AssociationSet Name="FK_OrderItemPProducts_OrderPProducts" Association="Models.FK_OrderItemPProducts_OrderPProducts">
+            <End Role="OrderPProduct" EntitySet="OrderPProducts" />
+            <End Role="OrderItemPProduct" EntitySet="OrderItemPProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderPProducts_Store" Association="Models.FK_OrderPProducts_Store">
+            <End Role="Store" EntitySet="Stores" />
+            <End Role="OrderPProduct" EntitySet="OrderPProducts" />
+          </AssociationSet>
+          <FunctionImport Name="spGetOrderPProductDetails" ReturnType="Collection(Models.spGetOrderPProductDetails_Result)">
+          <Parameter Name="OrderId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="Customers" EntityType="Models.Customer" />
+          <AssociationSet Name="FK_Customer_Business" Association="Models.FK_Customer_Business">
+            <End Role="BusinessInfo" EntitySet="BusinessInfoes" />
+            <End Role="Customer" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Rent_Customer" Association="Models.FK_Rent_Customer">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="Rent" EntitySet="Rents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Service_Customer" Association="Models.FK_Service_Customer">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="Service" EntitySet="Services" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SO_Customer" Association="Models.FK_SO_Customer">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="SO" EntitySet="SOes" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
           <Property Type="Int32" Name="version" Nullable="true" />
@@ -4116,16 +4139,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <Property Type="String" Name="StoreCompanyAddress" Nullable="true" MaxLength="200" />
           <Property Type="String" Name="StoreCompanyVatNumber" Nullable="true" MaxLength="200" />
         </ComplexType>
-        <ComplexType Name="spGetOrderPProductDetails_Result">
-          <Property Type="String" Name="ProductName" Nullable="false" MaxLength="300" />
-          <Property Type="Decimal" Name="Quantity" Nullable="false" Precision="18" Scale="0" />
-          <Property Type="String" Name="StoreName" Nullable="true" MaxLength="200" />
-          <Property Type="Int32" Name="StoreId" Nullable="true" />
-          <Property Type="DateTime" Name="OrderDate" Nullable="true" Precision="23" />
-          <Property Type="Int32" Name="OrderId" Nullable="true" />
-          <Property Type="String" Name="UniqueCode" Nullable="true" MaxLength="8" />
-          <Property Type="Int32" Name="ReportOrderId" Nullable="true" />
-        </ComplexType>
         <ComplexType Name="spGetOrderProductDetails_Result">
           <Property Type="String" Name="ProductName" Nullable="false" MaxLength="300" />
           <Property Type="Decimal" Name="Quantity" Nullable="false" Precision="18" Scale="0" />
@@ -4281,9 +4294,9 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <Property Name="QuantityReceived" Type="Int32" />
           <Property Name="ToReceived" Type="Int32" />
           <Property Name="PackagingProductionId" Type="Int32" />
-          <NavigationProperty Name="PackagingProduction" Relationship="Models.FK_BOXProduction_PackagingProduction" FromRole="BOXProduction" ToRole="PackagingProduction" />
           <NavigationProperty Name="PaperColor" Relationship="Models.FK_BOXProduction_PaperColor" FromRole="BOXProduction" ToRole="PaperColor" />
           <NavigationProperty Name="PPSubItem" Relationship="Models.FK_BOXProduction_PPSubItem" FromRole="BOXProduction" ToRole="PPSubItem" />
+          <NavigationProperty Name="PackagingProduction" Relationship="Models.FK_BOXProduction_PackagingProduction" FromRole="BOXProduction" ToRole="PackagingProduction" />
         </EntityType>
         <EntityType Name="BusinessInfo">
           <Key>
@@ -4295,10 +4308,10 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <Property Name="Address" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Mobile" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="email" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Customers" Relationship="Models.FK_Customer_Business" FromRole="BusinessInfo" ToRole="Customer" />
           <NavigationProperty Name="Departments" Relationship="Models.FK_Department_Business" FromRole="BusinessInfo" ToRole="Department" />
           <NavigationProperty Name="Locations" Relationship="Models.FK_Location_Business" FromRole="BusinessInfo" ToRole="Location" />
           <NavigationProperty Name="Suppliers" Relationship="Models.FK_Supplier_Business" FromRole="BusinessInfo" ToRole="Supplier" />
+          <NavigationProperty Name="Customers" Relationship="Models.FK_Customer_Business" FromRole="BusinessInfo" ToRole="Customer" />
         </EntityType>
         <EntityType Name="Color">
           <Key>
@@ -4319,9 +4332,9 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <Property Name="QuantityReceived" Type="Int32" />
           <Property Name="ToReceived" Type="Int32" />
           <Property Name="PackagingProductionId" Type="Int32" />
-          <NavigationProperty Name="PackagingProduction" Relationship="Models.FK_CPReceipts_PackagingProduction" FromRole="CPReceipt" ToRole="PackagingProduction" />
           <NavigationProperty Name="PaperColor" Relationship="Models.FK_PPColorReceipt_PaperColor" FromRole="CPReceipt" ToRole="PaperColor" />
           <NavigationProperty Name="PPSubItem" Relationship="Models.FK_PPColorReceipt_PPSubItem" FromRole="CPReceipt" ToRole="PPSubItem" />
+          <NavigationProperty Name="PackagingProduction" Relationship="Models.FK_CPReceipts_PackagingProduction" FromRole="CPReceipt" ToRole="PackagingProduction" />
         </EntityType>
         <EntityType Name="Currency">
           <Key>
@@ -4337,30 +4350,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <Property Name="UpdatedAt" Type="DateTime" Precision="3" />
           <Property Name="CreatedBy" Type="Int32" />
           <Property Name="UpdatedBy" Type="Int32" />
-        </EntityType>
-        <EntityType Name="Customer">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="true" />
-          <Property Name="Address" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Balance" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="CreateDate" Type="DateTime" Precision="3" />
-          <Property Name="UpdateDate" Type="DateTime" Precision="3" />
-          <Property Name="bizId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="StoreId" Type="Int32" />
-          <Property Name="Vat" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="CompanyName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="CompanyAddress" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="CustomerCode" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="BusinessInfo" Relationship="Models.FK_Customer_Business" FromRole="Customer" ToRole="BusinessInfo" />
-          <NavigationProperty Name="Rents" Relationship="Models.FK_Rent_Customer" FromRole="Customer" ToRole="Rent" />
-          <NavigationProperty Name="Services" Relationship="Models.FK_Service_Customer" FromRole="Customer" ToRole="Service" />
-          <NavigationProperty Name="SOes" Relationship="Models.FK_SO_Customer" FromRole="Customer" ToRole="SO" />
         </EntityType>
         <EntityType Name="Department">
           <Key>
@@ -4570,8 +4559,8 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <Property Name="OrderId" Type="Int32" />
           <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="Quantity" Type="Decimal" Precision="18" Scale="0" />
-          <NavigationProperty Name="OrderPProduct" Relationship="Models.FK_OrderItemPProducts_OrderPProducts" FromRole="OrderItemPProduct" ToRole="OrderPProduct" />
           <NavigationProperty Name="Product" Relationship="Models.FK_OrderItemPProducts_Product" FromRole="OrderItemPProduct" ToRole="Product" />
+          <NavigationProperty Name="OrderPProduct" Relationship="Models.FK_OrderItemPProducts_OrderPProducts" FromRole="OrderItemPProduct" ToRole="OrderPProduct" />
         </EntityType>
         <EntityType Name="OrderItem">
           <Key>
@@ -4583,16 +4572,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <Property Name="Quantity" Type="Decimal" Precision="18" Scale="0" />
           <NavigationProperty Name="Order" Relationship="Models.FK_OrderItems_Orders" FromRole="OrderItem" ToRole="Order" />
           <NavigationProperty Name="Product" Relationship="Models.FK_OrderItems_Product" FromRole="OrderItem" ToRole="Product" />
-        </EntityType>
-        <EntityType Name="OrderPProduct">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="StoreId" Type="Int32" />
-          <Property Name="OrderDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="OrderItemPProducts" Relationship="Models.FK_OrderItemPProducts_OrderPProducts" FromRole="OrderPProduct" ToRole="OrderItemPProduct" />
-          <NavigationProperty Name="Store" Relationship="Models.FK_OrderPProducts_Store" FromRole="OrderPProduct" ToRole="Store" />
         </EntityType>
         <EntityType Name="Order">
           <Key>
@@ -4625,25 +4604,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="Unit" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
         </EntityType>
-        <EntityType Name="PackagingProduction">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
-          <Property Name="ProductName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Unit" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="Quantity" Type="Decimal" Precision="38" Scale="30" />
-          <Property Name="Validate" Type="Boolean" />
-          <Property Name="PProdDate" Type="DateTime" Precision="3" />
-          <Property Name="Box" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ColorCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="BOXProductions" Relationship="Models.FK_BOXProduction_PackagingProduction" FromRole="PackagingProduction" ToRole="BOXProduction" />
-          <NavigationProperty Name="CPReceipts" Relationship="Models.FK_CPReceipts_PackagingProduction" FromRole="PackagingProduction" ToRole="CPReceipt" />
-          <NavigationProperty Name="PaperColors" Relationship="Models.FK_Color_PackagingProduction" FromRole="PackagingProduction" ToRole="PaperColor" />
-          <NavigationProperty Name="ProductStockDetails" Relationship="Models.FK_ProductStockDetail_PackagingProduction" FromRole="PackagingProduction" ToRole="ProductStockDetail" />
-          <NavigationProperty Name="Product" Relationship="Models.FK_PackagingProduction_Product" FromRole="PackagingProduction" ToRole="Product" />
-        </EntityType>
         <EntityType Name="PackagingSubItem">
           <Key>
             <PropertyRef Name="Id" />
@@ -4671,10 +4631,10 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <Property Name="ColorCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="BOXProductions" Relationship="Models.FK_BOXProduction_PaperColor" FromRole="PaperColor" ToRole="BOXProduction" />
           <NavigationProperty Name="CPReceipts" Relationship="Models.FK_PPColorReceipt_PaperColor" FromRole="PaperColor" ToRole="CPReceipt" />
-          <NavigationProperty Name="PackagingProduction" Relationship="Models.FK_Color_PackagingProduction" FromRole="PaperColor" ToRole="PackagingProduction" />
           <NavigationProperty Name="PPColorReceipts" Relationship="Models.FK_PPColorReceipts_PaperColor" FromRole="PaperColor" ToRole="PPColorReceipt" />
           <NavigationProperty Name="ProductStockDetails" Relationship="Models.FK_ProductStockDetail_PaperColor" FromRole="PaperColor" ToRole="ProductStockDetail" />
           <NavigationProperty Name="Product" Relationship="Models.FK_Color_Product" FromRole="PaperColor" ToRole="Product" />
+          <NavigationProperty Name="PackagingProduction" Relationship="Models.FK_Color_PackagingProduction" FromRole="PaperColor" ToRole="PackagingProduction" />
         </EntityType>
         <EntityType Name="Payment">
           <Key>
@@ -4794,23 +4754,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <NavigationProperty Name="Employee" Relationship="Models.FK_POReciver_Employee" FromRole="POReciver" ToRole="Employee" />
           <NavigationProperty Name="PODRecivers" Relationship="Models.FK_PODReciver_POReciver" FromRole="POReciver" ToRole="PODReciver" />
           <NavigationProperty Name="Supplier" Relationship="Models.FK_POReciver_Supplier" FromRole="POReciver" ToRole="Supplier" />
-        </EntityType>
-        <EntityType Name="PostProduction">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
-          <Property Name="ProductionDate" Type="DateTime" Precision="0" />
-          <Property Name="ProductName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Unit" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="Quantity" Type="Decimal" Precision="38" Scale="30" />
-          <Property Name="ProductionId" Type="Int32" />
-          <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Validate" Type="Boolean" />
-          <NavigationProperty Name="QuantityToProduces" Relationship="Models.FK_QuantityToProduce_PostProduction" FromRole="PostProduction" ToRole="QuantityToProduce" />
-          <NavigationProperty Name="Product" Relationship="Models.FK_PostProduction_Product1" FromRole="PostProduction" ToRole="Product" />
-          <NavigationProperty Name="NewProduction" Relationship="Models.FK_PostProduction_NewProduction" FromRole="PostProduction" ToRole="NewProduction" />
         </EntityType>
         <EntityType Name="PPBOM">
           <Key>
@@ -5081,9 +5024,9 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <Property Name="Quantity" Type="Int32" />
           <Property Name="DateManufactured" Type="DateTime" Precision="3" />
           <Property Name="DateExpiry" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="PackagingProduction" Relationship="Models.FK_ProductStockDetail_PackagingProduction" FromRole="ProductStockDetail" ToRole="PackagingProduction" />
           <NavigationProperty Name="PaperColor" Relationship="Models.FK_ProductStockDetail_PaperColor" FromRole="ProductStockDetail" ToRole="PaperColor" />
           <NavigationProperty Name="Product" Relationship="Models.FK_ProductStockDetail_Product" FromRole="ProductStockDetail" ToRole="Product" />
+          <NavigationProperty Name="PackagingProduction" Relationship="Models.FK_ProductStockDetail_PackagingProduction" FromRole="ProductStockDetail" ToRole="PackagingProduction" />
         </EntityType>
         <EntityType Name="ProductType">
           <Key>
@@ -5111,9 +5054,9 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <Property Name="CalculatedWeight" Type="Decimal" Precision="18" Scale="6" />
           <Property Name="PostProductionId" Type="Int32" />
           <Property Name="Weight" Type="Decimal" Precision="18" Scale="6" />
-          <NavigationProperty Name="PostProduction" Relationship="Models.FK_QuantityToProduce_PostProduction" FromRole="QuantityToProduce" ToRole="PostProduction" />
           <NavigationProperty Name="ProductDetail" Relationship="Models.FK_QuantityToProduce_ProductDetail" FromRole="QuantityToProduce" ToRole="ProductDetail" />
           <NavigationProperty Name="Product" Relationship="Models.FK_QuantityToProduce_Product" FromRole="QuantityToProduce" ToRole="Product" />
+          <NavigationProperty Name="PostProduction" Relationship="Models.FK_QuantityToProduce_PostProduction" FromRole="QuantityToProduce" ToRole="PostProduction" />
         </EntityType>
         <EntityType Name="Rent">
           <Key>
@@ -5139,9 +5082,9 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <Property Name="EmployeeId" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="RentStartDate" Type="DateTime" Precision="3" />
           <Property Name="RentEndDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Customer" Relationship="Models.FK_Rent_Customer" FromRole="Rent" ToRole="Customer" />
           <NavigationProperty Name="Employee" Relationship="Models.FK_Rent_Employee" FromRole="Rent" ToRole="Employee" />
           <NavigationProperty Name="RentDetails" Relationship="Models.FK_RentDetail_Rent" FromRole="Rent" ToRole="RentDetail" />
+          <NavigationProperty Name="Customer" Relationship="Models.FK_Rent_Customer" FromRole="Rent" ToRole="Customer" />
         </EntityType>
         <EntityType Name="RentDetail">
           <Key>
@@ -5211,9 +5154,9 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Remarks2" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="EmployeeId" Type="Decimal" Precision="18" Scale="0" />
-          <NavigationProperty Name="Customer" Relationship="Models.FK_Service_Customer" FromRole="Service" ToRole="Customer" />
           <NavigationProperty Name="Employee" Relationship="Models.FK_Service_Employee" FromRole="Service" ToRole="Employee" />
           <NavigationProperty Name="ServiceDetails" Relationship="Models.FK_ServiceDetail_Service" FromRole="Service" ToRole="ServiceDetail" />
+          <NavigationProperty Name="Customer" Relationship="Models.FK_Service_Customer" FromRole="Service" ToRole="Customer" />
         </EntityType>
         <EntityType Name="ServiceDetail">
           <Key>
@@ -5285,11 +5228,11 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <Property Name="IsCancelled" Type="Boolean" />
           <Property Name="OrigionalId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="BankAccount" Relationship="Models.FK_SO_Account" FromRole="SO" ToRole="BankAccount" />
-          <NavigationProperty Name="Customer" Relationship="Models.FK_SO_Customer" FromRole="SO" ToRole="Customer" />
           <NavigationProperty Name="Employee" Relationship="Models.FK_SO_Employee" FromRole="SO" ToRole="Employee" />
           <NavigationProperty Name="Payments" Relationship="Models.FK_Payment_SO" FromRole="SO" ToRole="Payment" />
           <NavigationProperty Name="Store" Relationship="Models.FK_SO_Store" FromRole="SO" ToRole="Store" />
           <NavigationProperty Name="SODs" Relationship="Models.FK_SOD_SO" FromRole="SO" ToRole="SOD" />
+          <NavigationProperty Name="Customer" Relationship="Models.FK_SO_Customer" FromRole="SO" ToRole="Customer" />
         </EntityType>
         <EntityType Name="SOD">
           <Key>
@@ -5363,12 +5306,12 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <Property Name="ApiUsername" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="ApiPassword" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="InvoiceSeriesSuffix" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="OrderPProducts" Relationship="Models.FK_OrderPProducts_Store" FromRole="Store" ToRole="OrderPProduct" />
           <NavigationProperty Name="Orders" Relationship="Models.FK_Orders_Store" FromRole="Store" ToRole="Order" />
           <NavigationProperty Name="PrintedPackagings" Relationship="Models.FK_PrintedPackaging_Store" FromRole="Store" ToRole="PrintedPackaging" />
           <NavigationProperty Name="SOes" Relationship="Models.FK_SO_Store" FromRole="Store" ToRole="SO" />
           <NavigationProperty Name="StoreOrderReceipts" Relationship="Models.FK_StoreOrderReceipt_Store" FromRole="Store" ToRole="StoreOrderReceipt" />
           <NavigationProperty Name="StoreProducts" Relationship="Models.FK_StoreProduct_Store" FromRole="Store" ToRole="StoreProduct" />
+          <NavigationProperty Name="OrderPProducts" Relationship="Models.FK_OrderPProducts_Store" FromRole="Store" ToRole="OrderPProduct" />
         </EntityType>
         <EntityType Name="StoreOrderReceipt">
           <Key>
@@ -5427,6 +5370,7 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <Property Name="SubItemQty" Type="Decimal" Precision="18" Scale="4" />
           <NavigationProperty Name="BOM" Relationship="Models.FK_SubItemProduction_BOM" FromRole="SubItemProduction" ToRole="BOM" />
           <NavigationProperty Name="Product" Relationship="Models.FK_SubItemProduction_Product1" FromRole="SubItemProduction" ToRole="Product" />
+          <NavigationProperty Name="NewProduction" Relationship="Models.FK_SubItemProduction_NewProduction" FromRole="SubItemProduction" ToRole="NewProduction" />
         </EntityType>
         <EntityType Name="Supplier">
           <Key>
@@ -5572,18 +5516,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_BOXProduction_PackagingProduction">
-          <End Type="Models.PackagingProduction" Role="PackagingProduction" Multiplicity="0..1" />
-          <End Type="Models.BOXProduction" Role="BOXProduction" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PackagingProduction">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="BOXProduction">
-              <PropertyRef Name="PackagingProductionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_BOXProduction_PaperColor">
           <End Type="Models.PaperColor" Role="PaperColor" Multiplicity="0..1" />
           <End Type="Models.BOXProduction" Role="BOXProduction" Multiplicity="*" />
@@ -5605,18 +5537,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             </Principal>
             <Dependent Role="BOXProduction">
               <PropertyRef Name="PPSubItemId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Customer_Business">
-          <End Type="Models.BusinessInfo" Role="BusinessInfo" Multiplicity="0..1" />
-          <End Type="Models.Customer" Role="Customer" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="BusinessInfo">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Customer">
-              <PropertyRef Name="bizId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -5656,18 +5576,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_CPReceipts_PackagingProduction">
-          <End Type="Models.PackagingProduction" Role="PackagingProduction" Multiplicity="0..1" />
-          <End Type="Models.CPReceipt" Role="CPReceipt" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PackagingProduction">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="CPReceipt">
-              <PropertyRef Name="PackagingProductionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_PPColorReceipt_PaperColor">
           <End Type="Models.PaperColor" Role="PaperColor" Multiplicity="0..1" />
           <End Type="Models.CPReceipt" Role="CPReceipt" Multiplicity="*" />
@@ -5689,42 +5597,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             </Principal>
             <Dependent Role="CPReceipt">
               <PropertyRef Name="PPSubItemId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Rent_Customer">
-          <End Type="Models.Customer" Role="Customer" Multiplicity="0..1" />
-          <End Type="Models.Rent" Role="Rent" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Customer">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Rent">
-              <PropertyRef Name="CustomerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Service_Customer">
-          <End Type="Models.Customer" Role="Customer" Multiplicity="0..1" />
-          <End Type="Models.Service" Role="Service" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Customer">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Service">
-              <PropertyRef Name="CustomerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SO_Customer">
-          <End Type="Models.Customer" Role="Customer" Multiplicity="0..1" />
-          <End Type="Models.SO" Role="SO" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Customer">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="SO">
-              <PropertyRef Name="CustomerId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -5884,18 +5756,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_OrderItemPProducts_OrderPProducts">
-          <End Type="Models.OrderPProduct" Role="OrderPProduct" Multiplicity="0..1" />
-          <End Type="Models.OrderItemPProduct" Role="OrderItemPProduct" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="OrderPProduct">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="OrderItemPProduct">
-              <PropertyRef Name="OrderId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_OrderItems_Orders">
           <End Type="Models.Order" Role="Order" Multiplicity="0..1" />
           <End Type="Models.OrderItem" Role="OrderItem" Multiplicity="*" />
@@ -5905,18 +5765,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             </Principal>
             <Dependent Role="OrderItem">
               <PropertyRef Name="OrderId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_OrderPProducts_Store">
-          <End Type="Models.Store" Role="Store" Multiplicity="0..1" />
-          <End Type="Models.OrderPProduct" Role="OrderPProduct" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Store">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="OrderPProduct">
-              <PropertyRef Name="StoreId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -5941,30 +5789,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             </Principal>
             <Dependent Role="StoreOrderReceipt">
               <PropertyRef Name="OrderId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Color_PackagingProduction">
-          <End Type="Models.PackagingProduction" Role="PackagingProduction" Multiplicity="0..1" />
-          <End Type="Models.PaperColor" Role="PaperColor" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PackagingProduction">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="PaperColor">
-              <PropertyRef Name="PackagingProductionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductStockDetail_PackagingProduction">
-          <End Type="Models.PackagingProduction" Role="PackagingProduction" Multiplicity="0..1" />
-          <End Type="Models.ProductStockDetail" Role="ProductStockDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PackagingProduction">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ProductStockDetail">
-              <PropertyRef Name="PackagingProductionId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -6049,18 +5873,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             </Principal>
             <Dependent Role="POReciver">
               <PropertyRef Name="SupplierId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_QuantityToProduce_PostProduction">
-          <End Type="Models.PostProduction" Role="PostProduction" Multiplicity="0..1" />
-          <End Type="Models.QuantityToProduce" Role="QuantityToProduce" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PostProduction">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="QuantityToProduce">
-              <PropertyRef Name="PostProductionId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -6287,11 +6099,9 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <NavigationProperty Name="LoanDetails" Relationship="Models.FK_LoanDetail_Product1" FromRole="Product" ToRole="LoanDetail" />
           <NavigationProperty Name="OrderItemPProducts" Relationship="Models.FK_OrderItemPProducts_Product" FromRole="Product" ToRole="OrderItemPProduct" />
           <NavigationProperty Name="OrderItems" Relationship="Models.FK_OrderItems_Product" FromRole="Product" ToRole="OrderItem" />
-          <NavigationProperty Name="PackagingProductions" Relationship="Models.FK_PackagingProduction_Product" FromRole="Product" ToRole="PackagingProduction" />
           <NavigationProperty Name="PaperColors" Relationship="Models.FK_Color_Product" FromRole="Product" ToRole="PaperColor" />
           <NavigationProperty Name="PODs" Relationship="Models.FK_POD_Product" FromRole="Product" ToRole="POD" />
           <NavigationProperty Name="PODRecivers" Relationship="Models.FK_PODReciver_Product1" FromRole="Product" ToRole="PODReciver" />
-          <NavigationProperty Name="PostProductions" Relationship="Models.FK_PostProduction_Product1" FromRole="Product" ToRole="PostProduction" />
           <NavigationProperty Name="PPBOMs" Relationship="Models.FK_PPBOM_Product" FromRole="Product" ToRole="PPBOM" />
           <NavigationProperty Name="PPReciverDetails" Relationship="Models.FK_PPReciverDetail_Product" FromRole="Product" ToRole="PPReciverDetail" />
           <NavigationProperty Name="PPSubItems" Relationship="Models.FK_PPSubItem_Product" FromRole="Product" ToRole="PPSubItem" />
@@ -6316,6 +6126,8 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <NavigationProperty Name="PPSubItemProductions" Relationship="Models.FK_PPSubItemProduction_Product" FromRole="Product" ToRole="PPSubItemProduction" />
           <NavigationProperty Name="PPPostProductions" Relationship="Models.FK_PPPostProduction_Product" FromRole="Product" ToRole="PPPostProduction" />
           <NavigationProperty Name="NewProductions" Relationship="Models.FK_NewProduction_Product" FromRole="Product" ToRole="NewProduction" />
+          <NavigationProperty Name="PostProductions" Relationship="Models.FK_PostProduction_Product1" FromRole="Product" ToRole="PostProduction" />
+          <NavigationProperty Name="PackagingProductions" Relationship="Models.FK_PackagingProduction_Product" FromRole="Product" ToRole="PackagingProduction" />
         </EntityType>
         <Association Name="FK_BOM_Product1">
           <End Type="Models.Product" Role="Product" Multiplicity="0..1">
@@ -6409,18 +6221,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_PackagingProduction_Product">
-          <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
-          <End Type="Models.PackagingProduction" Role="PackagingProduction" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="PackagingProduction">
-              <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Color_Product">
           <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
           <End Type="Models.PaperColor" Role="PaperColor" Multiplicity="*" />
@@ -6457,20 +6257,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="PODReciver">
-              <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PostProduction_Product1">
-          <End Type="Models.Product" Role="Product" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="Models.PostProduction" Role="PostProduction" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="PostProduction">
               <PropertyRef Name="ProductId" />
             </Dependent>
           </ReferentialConstraint>
@@ -7043,6 +6829,26 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="DailyBalanceVnd">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OpeningDate" Type="DateTime" Precision="3" />
+          <Property Name="OpeningBalance" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="ClosingBalance" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="ClosingDate" Type="DateTime" Precision="3" />
+          <Property Name="StoreId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="OpeningCurrencyDetail" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="ClosingCurrencyDetail" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="VNDQuantity" Type="Int32" />
+          <Property Name="USDQuantity" Type="Int32" />
+          <Property Name="JPYQuantity" Type="Int32" />
+          <Property Name="CurrencyName" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
         <EntityType Name="NewProduction">
           <Key>
             <PropertyRef Name="Id" />
@@ -7058,6 +6864,24 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <NavigationProperty Name="PostProductions" Relationship="Models.FK_PostProduction_NewProduction" FromRole="NewProduction" ToRole="PostProduction" />
           <NavigationProperty Name="ProductDetails" Relationship="Models.FK_ProductDetail_NewProduction" FromRole="NewProduction" ToRole="ProductDetail" />
           <NavigationProperty Name="ProductionDetails" Relationship="Models.FK_ProductionDetail_NewProduction" FromRole="NewProduction" ToRole="ProductionDetail" />
+          <NavigationProperty Name="SubItemProductions" Relationship="Models.FK_SubItemProduction_NewProduction" FromRole="NewProduction" ToRole="SubItemProduction" />
+        </EntityType>
+        <EntityType Name="PostProduction">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="ProductionDate" Type="DateTime" Precision="0" />
+          <Property Name="ProductName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Unit" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Quantity" Type="Decimal" Precision="38" Scale="30" />
+          <Property Name="ProductionId" Type="Int32" />
+          <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Validate" Type="Boolean" />
+          <NavigationProperty Name="NewProduction" Relationship="Models.FK_PostProduction_NewProduction" FromRole="PostProduction" ToRole="NewProduction" />
+          <NavigationProperty Name="Product" Relationship="Models.FK_PostProduction_Product1" FromRole="PostProduction" ToRole="Product" />
+          <NavigationProperty Name="QuantityToProduces" Relationship="Models.FK_QuantityToProduce_PostProduction" FromRole="PostProduction" ToRole="QuantityToProduce" />
         </EntityType>
         <Association Name="FK_NewProduction_Product">
           <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
@@ -7107,26 +6931,242 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="DailyBalanceVnd">
+        <Association Name="FK_SubItemProduction_NewProduction">
+          <End Type="Models.NewProduction" Role="NewProduction" Multiplicity="0..1" />
+          <End Type="Models.SubItemProduction" Role="SubItemProduction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NewProduction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubItemProduction">
+              <PropertyRef Name="NewProductionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PostProduction_Product1">
+          <End Type="Models.Product" Role="Product" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Models.PostProduction" Role="PostProduction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PostProduction">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_QuantityToProduce_PostProduction">
+          <End Type="Models.PostProduction" Role="PostProduction" Multiplicity="0..1" />
+          <End Type="Models.QuantityToProduce" Role="QuantityToProduce" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PostProduction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="QuantityToProduce">
+              <PropertyRef Name="PostProductionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="PackagingProduction">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="ProductName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Unit" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Quantity" Type="Decimal" Precision="38" Scale="30" />
+          <Property Name="Validate" Type="Boolean" />
+          <Property Name="PProdDate" Type="DateTime" Precision="3" />
+          <Property Name="Box" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ColorCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Supplier" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="BOXProductions" Relationship="Models.FK_BOXProduction_PackagingProduction" FromRole="PackagingProduction" ToRole="BOXProduction" />
+          <NavigationProperty Name="CPReceipts" Relationship="Models.FK_CPReceipts_PackagingProduction" FromRole="PackagingProduction" ToRole="CPReceipt" />
+          <NavigationProperty Name="PaperColors" Relationship="Models.FK_Color_PackagingProduction" FromRole="PackagingProduction" ToRole="PaperColor" />
+          <NavigationProperty Name="Product" Relationship="Models.FK_PackagingProduction_Product" FromRole="PackagingProduction" ToRole="Product" />
+          <NavigationProperty Name="ProductStockDetails" Relationship="Models.FK_ProductStockDetail_PackagingProduction" FromRole="PackagingProduction" ToRole="ProductStockDetail" />
+        </EntityType>
+        <Association Name="FK_BOXProduction_PackagingProduction">
+          <End Type="Models.PackagingProduction" Role="PackagingProduction" Multiplicity="0..1" />
+          <End Type="Models.BOXProduction" Role="BOXProduction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PackagingProduction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BOXProduction">
+              <PropertyRef Name="PackagingProductionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CPReceipts_PackagingProduction">
+          <End Type="Models.PackagingProduction" Role="PackagingProduction" Multiplicity="0..1" />
+          <End Type="Models.CPReceipt" Role="CPReceipt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PackagingProduction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CPReceipt">
+              <PropertyRef Name="PackagingProductionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Color_PackagingProduction">
+          <End Type="Models.PackagingProduction" Role="PackagingProduction" Multiplicity="0..1" />
+          <End Type="Models.PaperColor" Role="PaperColor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PackagingProduction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PaperColor">
+              <PropertyRef Name="PackagingProductionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PackagingProduction_Product">
+          <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="Models.PackagingProduction" Role="PackagingProduction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PackagingProduction">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductStockDetail_PackagingProduction">
+          <End Type="Models.PackagingProduction" Role="PackagingProduction" Multiplicity="0..1" />
+          <End Type="Models.ProductStockDetail" Role="ProductStockDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PackagingProduction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductStockDetail">
+              <PropertyRef Name="PackagingProductionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="OrderPProduct">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="OpeningDate" Type="DateTime" Precision="3" />
-          <Property Name="OpeningBalance" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="ClosingBalance" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="ClosingDate" Type="DateTime" Precision="3" />
-          <Property Name="StoreId" Type="Int32" Nullable="false" />
-          <Property Name="UserId" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="OpeningCurrencyDetail" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
-          <Property Name="ClosingCurrencyDetail" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
-          <Property Name="Quantity" Type="Int32" />
-          <Property Name="VNDQuantity" Type="Int32" />
-          <Property Name="USDQuantity" Type="Int32" />
-          <Property Name="JPYQuantity" Type="Int32" />
-          <Property Name="CurrencyName" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
-          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StoreId" Type="Int32" />
+          <Property Name="OrderDate" Type="DateTime" Precision="3" />
+          <Property Name="Validate" Type="Boolean" />
+          <NavigationProperty Name="OrderItemPProducts" Relationship="Models.FK_OrderItemPProducts_OrderPProducts" FromRole="OrderPProduct" ToRole="OrderItemPProduct" />
+          <NavigationProperty Name="Store" Relationship="Models.FK_OrderPProducts_Store" FromRole="OrderPProduct" ToRole="Store" />
         </EntityType>
+        <Association Name="FK_OrderItemPProducts_OrderPProducts">
+          <End Type="Models.OrderPProduct" Role="OrderPProduct" Multiplicity="0..1" />
+          <End Type="Models.OrderItemPProduct" Role="OrderItemPProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderPProduct">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="OrderItemPProduct">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderPProducts_Store">
+          <End Type="Models.Store" Role="Store" Multiplicity="0..1" />
+          <End Type="Models.OrderPProduct" Role="OrderPProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Store">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="OrderPProduct">
+              <PropertyRef Name="StoreId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="spGetOrderPProductDetails_Result">
+          <Property Type="Int32" Name="ProductName" Nullable="true" />
+          <Property Type="Int32" Name="Quantity" Nullable="false" />
+          <Property Type="Int32" Name="StoreName" Nullable="true" />
+          <Property Type="Int32" Name="StoreId" Nullable="true" />
+          <Property Type="Int32" Name="OrderDate" Nullable="true" />
+          <Property Type="Int32" Name="OrderId" Nullable="true" />
+          <Property Type="Int32" Name="UniqueCode" Nullable="true" />
+          <Property Type="Int32" Name="ReportOrderId" Nullable="true" />
+        </ComplexType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Balance" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="3" />
+          <Property Name="bizId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StoreId" Type="Int32" />
+          <Property Name="Vat" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyAddress" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerCode" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="VatNumber" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="BusinessInfo" Relationship="Models.FK_Customer_Business" FromRole="Customer" ToRole="BusinessInfo" />
+          <NavigationProperty Name="Rents" Relationship="Models.FK_Rent_Customer" FromRole="Customer" ToRole="Rent" />
+          <NavigationProperty Name="Services" Relationship="Models.FK_Service_Customer" FromRole="Customer" ToRole="Service" />
+          <NavigationProperty Name="SOes" Relationship="Models.FK_SO_Customer" FromRole="Customer" ToRole="SO" />
+        </EntityType>
+        <Association Name="FK_Customer_Business">
+          <End Type="Models.BusinessInfo" Role="BusinessInfo" Multiplicity="0..1" />
+          <End Type="Models.Customer" Role="Customer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BusinessInfo">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Customer">
+              <PropertyRef Name="bizId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Rent_Customer">
+          <End Type="Models.Customer" Role="Customer" Multiplicity="0..1" />
+          <End Type="Models.Rent" Role="Rent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Rent">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Service_Customer">
+          <End Type="Models.Customer" Role="Customer" Multiplicity="0..1" />
+          <End Type="Models.Service" Role="Service" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Service">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SO_Customer">
+          <End Type="Models.Customer" Role="Customer" Multiplicity="0..1" />
+          <End Type="Models.SO" Role="SO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SO">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -7348,20 +7388,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="spGetOrderPProductDetails" FunctionName="Models.Store.spGetOrderPProductDetails">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="Models.spGetOrderPProductDetails_Result">
-                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="StoreName" ColumnName="StoreName" />
-                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
-                <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
-                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
-                <ScalarProperty Name="UniqueCode" ColumnName="UniqueCode" />
-                <ScalarProperty Name="ReportOrderId" ColumnName="ReportOrderId" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="spGetOrderProductDetails" FunctionName="Models.Store.spGetOrderProductDetails">
             <ResultMapping>
               <ComplexTypeMapping TypeName="Models.spGetOrderProductDetails_Result">
@@ -7564,27 +7590,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
                 <ScalarProperty Name="ExchangeRate" ColumnName="ExchangeRate" />
                 <ScalarProperty Name="Country" ColumnName="Country" />
                 <ScalarProperty Name="Symbol" ColumnName="Symbol" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Customers">
-            <EntityTypeMapping TypeName="Models.Customer">
-              <MappingFragment StoreEntitySet="Customer">
-                <ScalarProperty Name="CustomerCode" ColumnName="CustomerCode" />
-                <ScalarProperty Name="CompanyAddress" ColumnName="CompanyAddress" />
-                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Vat" ColumnName="Vat" />
-                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="bizId" ColumnName="bizId" />
-                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="Balance" ColumnName="Balance" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
@@ -7797,15 +7802,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="OrderPProducts">
-            <EntityTypeMapping TypeName="Models.OrderPProduct">
-              <MappingFragment StoreEntitySet="OrderPProducts">
-                <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
-                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="Models.Order">
               <MappingFragment StoreEntitySet="Orders">
@@ -7832,21 +7828,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
                 <ScalarProperty Name="Purchasable" ColumnName="Purchasable" />
                 <ScalarProperty Name="Saleable" ColumnName="Saleable" />
                 <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PackagingProductions">
-            <EntityTypeMapping TypeName="Models.PackagingProduction">
-              <MappingFragment StoreEntitySet="PackagingProduction">
-                <ScalarProperty Name="ColorCode" ColumnName="ColorCode" />
-                <ScalarProperty Name="Box" ColumnName="Box" />
-                <ScalarProperty Name="PProdDate" ColumnName="PProdDate" />
-                <ScalarProperty Name="Validate" ColumnName="Validate" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-                <ScalarProperty Name="Unit" ColumnName="Unit" />
-                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -7987,21 +7968,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
                 <ScalarProperty Name="BillPaid" ColumnName="BillPaid" />
                 <ScalarProperty Name="BillAmount" ColumnName="BillAmount" />
                 <ScalarProperty Name="POSerial" ColumnName="POSerial" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PostProductions">
-            <EntityTypeMapping TypeName="Models.PostProduction">
-              <MappingFragment StoreEntitySet="PostProduction">
-                <ScalarProperty Name="Validate" ColumnName="Validate" />
-                <ScalarProperty Name="Note" ColumnName="Note" />
-                <ScalarProperty Name="ProductionId" ColumnName="ProductionId" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-                <ScalarProperty Name="Unit" ColumnName="Unit" />
-                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
-                <ScalarProperty Name="ProductionDate" ColumnName="ProductionDate" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -8840,19 +8806,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="NewProductions">
-            <EntityTypeMapping TypeName="Models.NewProduction">
-              <MappingFragment StoreEntitySet="NewProduction">
-                <ScalarProperty Name="ProductionDate" ColumnName="ProductionDate" />
-                <ScalarProperty Name="Validate" ColumnName="Validate" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-                <ScalarProperty Name="Unit" ColumnName="Unit" />
-                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="DailyBalanceVnds">
             <EntityTypeMapping TypeName="Models.DailyBalanceVnd">
               <MappingFragment StoreEntitySet="DailyBalanceVnd">
@@ -8870,6 +8823,96 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
                 <ScalarProperty Name="ClosingBalance" ColumnName="ClosingBalance" />
                 <ScalarProperty Name="OpeningBalance" ColumnName="OpeningBalance" />
                 <ScalarProperty Name="OpeningDate" ColumnName="OpeningDate" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NewProductions">
+            <EntityTypeMapping TypeName="Models.NewProduction">
+              <MappingFragment StoreEntitySet="NewProduction">
+                <ScalarProperty Name="ProductionDate" ColumnName="ProductionDate" />
+                <ScalarProperty Name="Validate" ColumnName="Validate" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PostProductions">
+            <EntityTypeMapping TypeName="Models.PostProduction">
+              <MappingFragment StoreEntitySet="PostProduction">
+                <ScalarProperty Name="Validate" ColumnName="Validate" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="ProductionId" ColumnName="ProductionId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="ProductionDate" ColumnName="ProductionDate" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PackagingProductions">
+            <EntityTypeMapping TypeName="Models.PackagingProduction">
+              <MappingFragment StoreEntitySet="PackagingProduction">
+                <ScalarProperty Name="Supplier" ColumnName="Supplier" />
+                <ScalarProperty Name="ColorCode" ColumnName="ColorCode" />
+                <ScalarProperty Name="Box" ColumnName="Box" />
+                <ScalarProperty Name="PProdDate" ColumnName="PProdDate" />
+                <ScalarProperty Name="Validate" ColumnName="Validate" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderPProducts">
+            <EntityTypeMapping TypeName="Models.OrderPProduct">
+              <MappingFragment StoreEntitySet="OrderPProducts">
+                <ScalarProperty Name="Validate" ColumnName="Validate" />
+                <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
+                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="spGetOrderPProductDetails" FunctionName="Models.Store.spGetOrderPProductDetails">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Models.spGetOrderPProductDetails_Result">
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="StoreName" ColumnName="StoreName" />
+                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
+                <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+                <ScalarProperty Name="UniqueCode" ColumnName="UniqueCode" />
+                <ScalarProperty Name="ReportOrderId" ColumnName="ReportOrderId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="Customers">
+            <EntityTypeMapping TypeName="Models.Customer">
+              <MappingFragment StoreEntitySet="Customer">
+                <ScalarProperty Name="VatNumber" ColumnName="VatNumber" />
+                <ScalarProperty Name="CustomerCode" ColumnName="CustomerCode" />
+                <ScalarProperty Name="CompanyAddress" ColumnName="CompanyAddress" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Vat" ColumnName="Vat" />
+                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="bizId" ColumnName="bizId" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="Balance" ColumnName="Balance" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

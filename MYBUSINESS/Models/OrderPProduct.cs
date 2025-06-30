@@ -23,6 +23,7 @@ namespace MYBUSINESS.Models
         public int Id { get; set; }
         public Nullable<int> StoreId { get; set; }
         public Nullable<System.DateTime> OrderDate { get; set; }
+        public Nullable<bool> Validate { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderItemPProduct> OrderItemPProducts { get; set; }

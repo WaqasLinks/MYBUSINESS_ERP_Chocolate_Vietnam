@@ -92,11 +92,12 @@
                                                 @Html.DisplayFor(modelItem => item.Supplier.Name)
                                             </td>
                                             <td>
-                                                @foreach (var pod in item.PODRecivers)
+                                                @foreach (var productName in item.PODRecivers.Select(p => p.Product.Name).Distinct())
                                                 {
-                                                    @pod.Product.Name
+                                                    @productName<br />
                                                 }
                                             </td>
+
 
                                             <td style="display:none;">
                                                 @(item.PurchaseReturn ? "Return" : "Sale")

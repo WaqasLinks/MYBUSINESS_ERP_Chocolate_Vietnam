@@ -10,14 +10,14 @@ using System;
 
 namespace MYBUSINESS.Controllers
 {
-    [Authorize(Roles = "Admin,Manager,User")]
+    [Authorize(Roles = "Admin,Technical Manager,stock staff,stock manager")]
     public class ColorController : Controller
     {
         private BusinessContext db = new BusinessContext();
         private DAL DAL = new DAL();
         private ColorViewModel colorViewModel = new ColorViewModel();
         // GET: Products
-
+        [Authorize(Roles = "Admin,Technical Manager,stock staff,stock manager")]
         public ActionResult Index()
         {
             ViewBag.Suppliers = DAL.dbSuppliers;
@@ -57,7 +57,7 @@ namespace MYBUSINESS.Controllers
             }
 
         }
-
+        [Authorize(Roles = "Admin,Technical Manager,stock staff,stock manager")]
         public ActionResult Create()
         {
             // Get the next available BOM ID (if needed)

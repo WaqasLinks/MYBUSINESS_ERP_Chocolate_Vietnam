@@ -13,14 +13,17 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
 
 namespace MYBUSINESS.Controllers
 {
-    [Authorize(Roles = "Admin,Manager,User")]
+    [Authorize(Roles = "Admin,Technical Manager,Chocolate Production manager")]
     public class PostProductionController : Controller
     {
         // GET: PostProduction
         private BusinessContext db = new BusinessContext();
         private DAL DAL = new DAL();
         private PostProductionViewModel postProductionViewModel = new PostProductionViewModel();
+
+        [Authorize(Roles = "Admin,Technical Manager,Chocolate Production manager")]
         // GET: Products
+
         public ActionResult Index()
         {
             var postProductions = db.PostProductions
@@ -542,59 +545,68 @@ namespace MYBUSINESS.Controllers
     PostProductionViewModel model,
     [Bind(Prefix = "PostProduction", Include = "Id,ProductionDate,ProductName,Unit,ProductId,Quantity,ProductionId,Note")] PostProduction postProduction,
     [Bind(Prefix = "QuantityToProduce", Include = "Id,ProductionQty,BOMId,ProductDetailId,Shape,CalculatedWeight,ProductId")] List<QuantityToProduce> quantityToProduces,
-    [Bind(Prefix = "SubItemProduction", Include = "Id,ParentProductId,ProductId,Quantity,Unit,AvailableInventory,QuantitytoPrepare,QuantityRequested")] List<SubItemProduction> subItemProductions)
-
+    [Bind(Prefix = "SubItemProduction", Include = "Id,ParentProductId,ProductId,Quantity,Unit")] List<SubItemProduction> subItemProductions)
         {
             
             {
-                // Fetch the existing NewProduction entity
+                // Fetch the existing PostProduction entity
                 var existingProduction = db.PostProductions.Find(model.PostProduction.Id);
 
-                // Ensure the NewProduction entity exists
                 if (existingProduction == null)
                 {
                     return HttpNotFound();
                 }
 
-                // Update NewProduction fields
+                // Update PostProduction fields
                 existingProduction.ProductionDate = model.PostProduction.ProductionDate;
                 existingProduction.ProductName = db.Products.FirstOrDefault(p => p.Id == model.PostProduction.ProductId)?.Name;
                 existingProduction.Unit = model.PostProduction.Unit;
                 existingProduction.ProductId = model.PostProduction.ProductId;
 
-                // Remove existing QuantityToProduce entries for the current NewProduction
+                // Handle QuantityToProduce updates
                 var existingQuantityToProduces = db.QuantityToProduces
-                    .Where(x => x.NewProductionId == existingProduction.Id)
+                    .Where(x => x.PostProductionId == existingProduction.Id)
                     .ToList();
                 db.QuantityToProduces.RemoveRange(existingQuantityToProduces);
 
-                // Add new QuantityToProduce entries
                 if (quantityToProduces != null && quantityToProduces.Count > 0)
                 {
                     foreach (var item in quantityToProduces)
                     {
-                        item.ProductId = existingProduction.ProductId; // Update ProductId
-                        item.NewProductionId = existingProduction.Id;  // Associate with the current NewProduction
+                        item.ProductId = existingProduction.ProductId;
+                        item.PostProductionId = existingProduction.Id;
                         db.QuantityToProduces.Add(item);
                     }
                 }
 
-                // Save the changes to the database
+                // Handle SubItemProduction updates
+                if (subItemProductions != null && subItemProductions.Count > 0)
+                {
+                    foreach (var item in subItemProductions)
+                    {
+                        var existingItem = db.SubItemProductions.Find(item.Id);
+                        if (existingItem != null)
+                        {
+                            // Update only the fields that can be modified
+                            existingItem.Quantity = item.Quantity;
+                            existingItem.Unit = item.Unit;
+                            db.Entry(existingItem).State = EntityState.Modified;
+                        }
+                    }
+                }
+
                 db.Entry(existingProduction).State = EntityState.Modified;
                 db.SaveChanges();
 
-                // Redirect to the index page after saving changes
                 return RedirectToAction("Index");
             }
 
-            // Repopulate ViewBag on failure (when ModelState is not valid)
+            // Repopulate ViewBag on failure
             var productList = db.Products.Select(p => new { p.Id, p.Name }).ToList();
-            ViewBag.ProductList = new SelectList(productList, "Id", "Name", model.NewProduction.ProductId);
+            ViewBag.ProductList = new SelectList(productList, "Id", "Name", model.PostProduction.ProductId);
 
-            // Return the view with the model data on failure
             return View(model);
         }
-
 
 
 

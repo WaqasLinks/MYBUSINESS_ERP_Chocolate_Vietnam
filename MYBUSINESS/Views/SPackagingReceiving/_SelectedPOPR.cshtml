@@ -92,9 +92,9 @@
                                                 @Html.DisplayFor(modelItem => item.Supplier.Name)
                                             </td>
                                             <td>
-                                                @foreach (var pod in item.SPDReceivers)
+                                                @foreach (var productName in item.SPDReceivers.Select(p => p.Product.Name).Distinct())
                                                 {
-                                                @pod.Product.Name
+                                                    @productName<br />
                                                 }
                                             </td>
 

@@ -14,7 +14,7 @@ using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
 {
-    [Authorize(Roles = "Admin,Manager,User")]
+    [Authorize(Roles = "Admin,Shop general manager,Shop")]
     public class ScanMoneyInputController : Controller
     {
         // GET: ScanMoneyInput
@@ -23,6 +23,7 @@ namespace MYBUSINESS.Controllers
         private ScanMoneyInputViewModel scanmoneyInputViewModel = new ScanMoneyInputViewModel();
         // GET: Products
 
+        [Authorize(Roles = "Admin,Shop general manager")]
         public ActionResult Index()
         {
             ViewBag.Suppliers = DAL.dbSuppliers;
@@ -63,6 +64,7 @@ namespace MYBUSINESS.Controllers
 
         }
 
+        [Authorize(Roles = "Admin,Shop general manager,Shop")]
         public ActionResult Create()
         {
             // Get the next available BOM ID (if needed)

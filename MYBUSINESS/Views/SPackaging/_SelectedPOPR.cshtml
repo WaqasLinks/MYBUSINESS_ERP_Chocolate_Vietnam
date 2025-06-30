@@ -156,9 +156,36 @@
 
                                                 <td>
                                                     @{
-                                                        bool Validated = item.SPackagingDetails != null && item.SPackagingDetails.Any(p => p.Validate == true);
+                                                        // Check if any SPackagingDetail is validated
+                                                        bool isValidated = item.SPackagingDetails != null && item.SPackagingDetails.Any(p => p.Validate == true);
+
+                                                        // Check if any items have been received (QtyReceived > 0 and validated)
+                                                        var spdRecList = ViewBag.SPackagingReceivingList as List<MYBUSINESS.Models.SPDReceiver>;
+                                                        bool isReceived = false;
+
+                                                        if (spdRecList != null && item.SPackagingDetails != null)
+                                                        {
+                                                            foreach (var spd in item.SPackagingDetails)
+                                                            {
+                                                                var match = spdRecList.FirstOrDefault(r =>
+                                                                    r.ProductId == spd.ProductId &&
+                                                                    r.QtyReceived > 0 &&
+                                                                    r.Validate == true);
+
+                                                                if (match != null)
+                                                                {
+                                                                    isReceived = true;
+                                                                    break;
+                                                                }
+                                                            }
+                                                        }
                                                     }
-                                                    @if (Validated)
+
+                                                    @if (isValidated && isReceived)
+                                                    {
+                                                        <span class="badge bg-primary">Received</span>
+                                                    }
+                                                    else if (isValidated)
                                                     {
                                                         <span class="badge bg-success">Validated</span>
                                                     }
@@ -208,27 +235,24 @@
                 @Html.ActionLink(whtieSpace + "View", "Edit", new { id = item.Id, update = false }, new { @class = "btn btn-info" })
             }-->
 
-                                                    <td>
-                                                        @{
-                                                            bool isValidated = item.SPackagingDetails != null && item.SPackagingDetails.Any(p => p.Validate == true);
+                                            <td>
+                                                @if (isValidated)
+                                                {
+                                                    @Html.ActionLink("View", "Edit", new { id = item.Id, readonlyMode = true },
+                                                        new { @class = "btn btn-primary text-white" })
 
+                                                    @Html.ActionLink("Receiving", "Create", "SPackagingReceiving", new { id = item.Id, update = true },
+                                                        new { @class = "btn btn-warning text-dark fw-bold" })
 
-                                                        }
-
-                                                        @if (isValidated)
-                                                        {
-                                                            @Html.ActionLink("View", "Edit", new { id = item.Id, readonlyMode = true },
-                                                            new { @class = "btn btn-primary text-white" })
-                                                            <a href="#" id="printMe" class="btn btn-info "><i class=""></i> Print</a>
-                                                            @Html.ActionLink("Receiving", "Create", "SPackagingReceiving", new { id = item.Id, update = true },
-                                                            new { @class = "btn btn-warning text-dark fw-bold" })
-                                                        }
-                                                        else
-                                                        {
-                                                            @Html.ActionLink("Update", "Edit", new { id = item.Id, update = true },
-                                                            new { @class = "btn btn-info text-white" })
-                                                        }
-                                                    </td>
+                                                    @Html.ActionLink("Print", "PrintSPackaging", new { id = item.Id },
+                                                        new { @class = "btn btn-info" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.ActionLink("Update", "Edit", new { id = item.Id, update = true },
+                                                        new { @class = "btn btn-info text-white" })
+                                                }
+                                            </td>
 
 
 

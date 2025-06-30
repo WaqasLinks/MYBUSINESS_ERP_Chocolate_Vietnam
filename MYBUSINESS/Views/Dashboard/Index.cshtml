@@ -19,7 +19,7 @@
 <link href="~/Content/custom/downloads/datatables.min.css" rel="stylesheet" />
 <script src="~/Content/custom/downloads/datatables.min.js"></script>
 <script src="~/Content/custom/downloads/jquery.mcautocomplete.js"></script>
-<center><h2>Dashboard</h2></center>
+<center style="display:none;"><h2>Dashboard</h2></center>
 
 @*<h1>@ViewBag.myLog</h1>*@
 
@@ -32,31 +32,31 @@
 @*<button type="submit" id="CreateSO" class="btn btn-info add-new"><i class="fa fa-plus"></i>Save & Print</button>*@
 @*<a href="/SOSR/Create?IsReturn=false" id="createSOSR" class="btn btn-info "><i class=""></i> New Sale</a>*@
 <!--</div>-->
-<form name="registration_form_Product" id='registration_form_Product' class="form-inline">
+<!--<form name="registration_form_Product" id='registration_form_Product' class="form-inline">
     <center>
         <div class="row">
-            <input type="hidden" name="SaleOrder.CustomerId" id="idnCustomer" value="" />
+            <input type="hidden" name="SaleOrder.CustomerId" id="idnCustomer" value="" />-->
             @*@Html.Label("Customer Name", htmlAttributes: new { @class = "control-label col-md-2" })*@
 
             @*@Html.Editor("custName", new { htmlAttributes = new { @class = "form-control", @placeholder = "Search by customer" } })*@
-            <input type="hidden" autocomplete="off" class="form-control" name="Customer.Name" id="customer" value="" placeholder="Search by customer" data-toggle="tooltip" data-placement="top" title="Search by customer">
+            <!--<input type="hidden" autocomplete="off" class="form-control" name="Customer.Name" id="customer" value="" placeholder="Search by customer" data-toggle="tooltip" data-placement="top" title="Search by customer">-->
 
             @*@Html.Label("Time", htmlAttributes: new { @class = "control-label col-md-2" })*@
 
-            @Html.Editor("startDate", new { htmlAttributes = new { @class = "form-control datepicker", @id = "datepickerStart", @placeholder = "Start date", @Value = ViewBag.StartDate } })
+            <!--@Html.Editor("startDate", new { htmlAttributes = new { @class = "form-control datepicker", @id = "datepickerStart", @placeholder = "Start date", @Value = ViewBag.StartDate } })-->
 
 
             @*@Html.Label("Time", htmlAttributes: new { @class = "control-label col-md-2" })*@
 
-            @Html.Editor("endDate", new { htmlAttributes = new { @class = "form-control datepicker", @id = "datepickerEnd", @placeholder = "End date", @Value = ViewBag.EndDate } })
+            <!--@Html.Editor("endDate", new { htmlAttributes = new { @class = "form-control datepicker", @id = "datepickerEnd", @placeholder = "End date", @Value = ViewBag.EndDate } })
 
-            <input type="button" value="Go" id="btnSearch" class="btn btn-info add-new" />
+            <input type="button" value="Go" id="btnSearch" class="btn btn-info add-new" />-->
 
             @*<input type="date" value="Search" id="btnSearch1" class="form-control " />*@
 
-        </div>
+        <!--</div>
     </center>
-</form>
+</form>-->
 <div class="alert alert-success" id="success-alert" style="display:none;">
     <button type="button" class="close" data-dismiss="alert">x</button>
     <strong>Success! </strong> Sales Status has been changed.

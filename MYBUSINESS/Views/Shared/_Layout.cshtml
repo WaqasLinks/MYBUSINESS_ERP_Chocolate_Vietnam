@@ -85,7 +85,7 @@
 
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
-                        @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Manager") || User.IsInRole("User")))
+                        @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Accountant") || User.IsInRole("Chocolate Production manager") || User.IsInRole("Chocolate Production staff") || User.IsInRole("Purchasing Manager") || User.IsInRole("Shop") || User.IsInRole("Shop general manager") || User.IsInRole("Stock manager") || User.IsInRole("Stock Staff") || User.IsInRole("Technical Manager")))
                         {
                             //MYBUSINESS.Models.Employee user = (MYBUSINESS.Models.Employee)HttpContext.Current.Session["CurrentUser"];
                             //MYBUSINESS.Models.Employee currentUser = (MYBUSINESS.Models.Employee)HttpContext.Current.Session["CurrentUser"];
@@ -102,7 +102,7 @@
 
 
                             }
-                            if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Manager") || User.IsInRole("User")))
+                            if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Accountant") || User.IsInRole("Chocolate Production manager") || User.IsInRole("Chocolate Production staff") || User.IsInRole("Purchasing Manager") || User.IsInRole("Shop") || User.IsInRole("Shop general manager") || User.IsInRole("Stock manager") || User.IsInRole("Stock Staff") || User.IsInRole("Technical Manager")))
                             {
                                 <li>@Html.ActionLink("Support", "Contact", "Home")</li>
                             }
@@ -158,6 +158,14 @@
                     <li><a href="#"><i class=""></i> <span><b>Printed Packaging BOM</b></span></a></li>
                     <li><a href="~/PPBOM/Create"><i class="fa fa-sparkles"></i> <span>New Printed Packaging BOM</span></a></li>
                     <li><a href="~/PPBOM/Index"><i class="fa fa-gift"></i> <span>Printed Packaging BOM List</span></a></li>
+
+                    <li><a href="#"><i class=""></i> <span><b>Printed Packaging Production</b></span></a></li>
+                    <li><a href="~/PPNewProduction/Create"><i class="fa fa-sparkles"></i> <span>New Printed Packaging Production</span></a></li>
+                    <li><a href="~/PPNewProduction/Index"><i class="fa fa-gift"></i> <span>Printed Packaging Production List</span></a></li>
+                    <li><a href="~/PPPostProduction/Index"><i class="fa fa-gift"></i> <span>Chocolate Post Production List</span></a></li>  
+
+
+
                     @*Colored Paper Order*@
                     <li><a href="#"><i class=""></i> <span><b>Colored Paper Order</b></span></a></li>
                     <li><a href="~/PackagingProduction/Create"><i class="fa fa-sparkles"></i> <span>New Paper Production</span></a></li>
@@ -214,7 +222,7 @@
                     <li><a href="/Stores/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Store</span></a></li>
                     <li><a href="/Stores/Index"><i class="fa fa-search"></i> <span>Stores History</span></a></li>
                     <li><a href="/Stores/GetStoreVndBalance"><i class="fa fa-sparkles"></i> <span>Balance History</span></a></li>
-                    
+
                     <li><a href="#"><i class=""></i> <span><b>User</b></span></a></li>
                     <li><a href="/AspNetUsers/Index"><i class="fa fa-search"></i> <span>Users List</span></a></li>
 
@@ -258,8 +266,8 @@
 
 
                     @*<li><a href="/SOSR/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Sale</span></a></li>
-                        <li><a href="/SOSR/Index"><i class="fa fa-search"></i> <span>Sales History</span></a></li>
-                        <li><a href="/SOSR/IndexReturn"><i class="fa fa-search"></i> <span>Returns History</span></a></li>*@
+        <li><a href="/SOSR/Index"><i class="fa fa-search"></i> <span>Sales History</span></a></li>
+        <li><a href="/SOSR/IndexReturn"><i class="fa fa-search"></i> <span>Returns History</span></a></li>*@
 
 
 
@@ -271,21 +279,21 @@
 
                     <!--<li><a href="#"><i class=""></i> <span><b>Recieving</b></span></a></li>-->
                     @*<li><a href="/POPRReciver/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Recieving</span></a></li>
-                        <li><a href="/POPRReciver/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Recieving</span></a></li>*@
+        <li><a href="/POPRReciver/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Recieving</span></a></li>*@
                     <!--<li><a href="/POPRReciver/Index"><i class="fa fa-search"></i> <span>Recieving History</span></a></li>-->
 
                     <li style="display:none;"><a href="#"><i class=""></i> <span><b>Printed Packaging Recieving</b></span></a></li>
                     @*<li><a href="/POPRReciver/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Recieving</span></a></li>
-                        <li><a href="/POPRReciver/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Recieving</span></a></li>*@
+        <li><a href="/POPRReciver/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Recieving</span></a></li>*@
                     <li style="display:none;"><a href="/PrintedPackagingReciver/Index"><i class="fa fa-search"></i> <span>Recieving History</span></a></li>
 
 
 
 
                     <!--<li><a href="#"><i class=""></i> <span><b>Products</b></span></a></li>
-                    <li><a href="/Products/Create"><i class="fa fa-sparkles"></i> <span>New Product</span></a></li>
-                    <li><a href="/Products/Index"><i class="fa fa-gift"></i> <span>Shops Products & Stock</span></a></li>
-                    <li><a href="/Products/IndexFactory"><i class="fa fa-gift"></i> <span>Factory Products & Stock</span></a></li>-->
+    <li><a href="/Products/Create"><i class="fa fa-sparkles"></i> <span>New Product</span></a></li>
+    <li><a href="/Products/Index"><i class="fa fa-gift"></i> <span>Shops Products & Stock</span></a></li>
+    <li><a href="/Products/IndexFactory"><i class="fa fa-gift"></i> <span>Factory Products & Stock</span></a></li>-->
                     @*<li><a href="/StockTransections/Summary"><i class="fa fa-list"></i> <span>Stock Summary</span></a></li>*@
 
 
@@ -295,8 +303,8 @@
 
 
                     @*<li><a href="#"><i class=""></i> <span><b>Color</b></span></a></li>
-                        <li><a href="/Color/Create"><i class="fa fa-sparkles"></i> <span>New Color</span></a></li>
-                        <li><a href="/Color/Index"><i class="fa fa-gift"></i> <span>Color List</span></a></li>*@
+        <li><a href="/Color/Create"><i class="fa fa-sparkles"></i> <span>New Color</span></a></li>
+        <li><a href="/Color/Index"><i class="fa fa-gift"></i> <span>Color List</span></a></li>*@
 
 
 
@@ -306,8 +314,8 @@
                     @*<li><a href="~/PostProduction/Create"><i class="fa fa-sparkles"></i> <span>New PostProduction</span></a></li>*@
                     <!--<li><a href="~/PostProduction/Index"><i class="fa fa-gift"></i> <span>Post Production List</span></a></li>-->
                     @*<li><a href="#"><i class=""></i> <span><b>Final Production</b></span></a></li>
-                        <li><a href="~/FinalProduction/Create"><i class="fa fa-sparkles"></i> <span>Final Production</span></a></li>
-                        <li><a href="~/FinalProduction/Index"><i class="fa fa-gift"></i> <span>New Production List</span></a></li>*@
+        <li><a href="~/FinalProduction/Create"><i class="fa fa-sparkles"></i> <span>Final Production</span></a></li>
+        <li><a href="~/FinalProduction/Index"><i class="fa fa-gift"></i> <span>New Production List</span></a></li>*@
 
 
 

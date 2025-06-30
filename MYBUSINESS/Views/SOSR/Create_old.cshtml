@@ -1,0 +1,1343 @@
+﻿@model MYBUSINESS.Models.SaleOrderViewModel
+@{
+    // Cast ViewBag.ProductListss to the correct type
+    var groupedProductLists = ViewBag.SelectedProductListByCategory as Dictionary<string, List<MYBUSINESS.Models.Product>>;
+}
+@{
+    ViewBag.Title = "Create SO";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var categoryColors = new Dictionary<string, string>
+{
+        { "Box", "#ec8a5f" },
+        { "Bar", "#2fda90" },
+        { "Bag", "#66ddf4" },
+        { "Miscellanous", "#fff3cd" },
+        // Add more categories and their corresponding colors as needed
+    };
+    //var settingss = new Newtonsoft.Json.JsonSerializerSettings
+    //{
+    //    ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+    //};
+    //var productListJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model.ProductList, settingss);
+}
+
+<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.css">
+
+<script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="//code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-sliderAccess.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.js"></script>
+
+@*<link href="@Url.Content("~/Content/custom/custom.css")" rel="stylesheet" type="text/css" />*@
+<script src="~/Content/custom/customerSOSR.js"></script>
+<script src="~/Content/custom/downloads/jquery.mcautocomplete.js"></script>
+<script src="~/Content/custom/downloads/jquery.scannerdetection.js"></script>
+
+<!-- jQuery library -->
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>*@
+
+<!-- Latest compiled JavaScript -->
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="~/Content/custom/menuHide.js"></script>
+@*<link href="@Url.Content("~/Content/custom/downloads/datetimepicker-master/jquery.datetimepicker.css")" rel="stylesheet" type="text/css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/Content/custom/downloads/datetimepicker-master/jquery.datetimepicker.js"></script>*@
+
+<!-- Load jQuery -->
+@*<script src="~/Scripts/jquery.signalR-2.4.3.min.js"></script>*@
+<script src="~/Scripts/jquery.signalR-2.4.3.js"></script>
+<script src="~/signalr/hubs"></script>
+<style>
+    .table-wrapper2 {
+        margin: 30px auto;
+        background: #fff;
+        padding: 20px;
+        box-shadow: 0 1px 1px rgb(0 0 0 / 5%);
+    }
+
+    .scrollable-div {
+        max-height: 400px; /* Adjust as needed */
+        overflow-y: auto; /* Enable vertical scrolling */
+        padding: 0; /* Optional: remove padding */
+    }
+        /*.scrollable-div {
+            max-height: 400px;*/ /* Adjust as needed */
+        /*overflow-y: auto;
+            padding: 0;*/ /* Remove padding to align items correctly */
+        /*display: flex;
+            flex-wrap: wrap;*/ /* Allow wrapping of items */
+        /*}*/
+
+        .scrollable-div .col-md-3 {
+            padding: 0; /* Remove padding to control space manually */
+        }
+
+    .small-box {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100px; /* Fixed height for boxes */
+        margin-bottom: 15px; /* Space between rows */
+        margin-right: 15px; /* Space between columns */
+        box-sizing: border-box; /* Ensure padding and border are included in width/height */
+    }
+
+        .small-box:last-child {
+            margin-right: 4px; /* Remove right margin for last box in row */
+            margin-bottom: 5px;
+        }
+
+    .inner {
+        flex: 1; /* Ensure content takes available space */
+    }
+
+    .small-box > .inner {
+        padding-left: 12px;
+        padding-top: 0px;
+    }
+
+    .icon {
+        text-align: center;
+    }
+
+    .label-like-input {
+        background-color: transparent;
+        border: none;
+        color: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+        padding: 0;
+        width: auto;
+        cursor: default;
+        margin-top: -7px;
+        margin-left: -34px;
+    }
+
+        .label-like-input:focus {
+            outline: none; /* Remove the focus outline */
+        }
+    /*.table-wrapper2 {
+            margin: 30px auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 1px 1px rgb(0 0 0 / 5%);
+        }
+
+        .scrollable-div {
+            max-height: 400px;
+            overflow-y: scroll;
+        }
+
+        .scrollable-container {*/
+    /*max-height: 100px !important;*/ /* Set desired height */
+    /*height: 100px !important;*/ /* Set desired height */
+    /*overflow-y: auto;*/ /* Enable vertical scrolling */
+    /*overflow-x: hidden;*/ /* Prevent horizontal scrolling */
+    /*padding: 10px;*/ /* Optional: add padding for aesthetics */
+    /*border: 1px solid #ddd;*/ /* Optional: add border for visibility */
+    /*border-radius: 0.25rem;*/ /* Optional: rounded corners */
+    /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/ /* Optional: box shadow */
+    /*}
+
+        .small-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100px;*/ /* Optional: set a fixed height for each box */
+    /*}
+
+        .inner {
+            flex: 1;*/ /* Ensure the content takes available space */
+    /*}
+
+        .icon {
+            text-align: center;
+        }*/
+    /* Default product name styling */
+    .product-box .product-name {
+        font-weight: normal;
+        color: inherit;
+    }
+
+    /* Styling when the product box is hovered over */
+    .product-box:hover .product-name {
+        font-weight: bold;
+        color: black;
+    }
+
+    /* Ensure smooth transition */
+    .product-box .product-name {
+        transition: font-weight 0.2s ease, color 0.2s ease;
+    }
+
+    .loader {
+        display: none; /* Hide by default */
+        width: 12px;
+        height: 12px;
+        border: 2px solid white;
+        border-top: 2px solid transparent;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 10px; /* Adjust to position relative to button text */
+        margin-top: -6px; /* Center the loader vertically */
+    }
+
+    /* Ensure button size remains the same */
+    /*#customerByTaxCode {
+    width: 100%;*/ /* Ensure full width */
+    /*height: 40px;*/ /* Fixed height to prevent resizing */
+    /*padding-left: 35px;*/ /* Add space for the spinner */
+    /*padding-right: 35px;*/ /* Optional if needed for alignment */
+    /*position: relative;*/ /* Ensure loader and text are positioned correctly */
+    /*}*/
+    .calculator-container {
+        position: fixed;
+        top: 86px;
+        right: 14px;
+        width: 31%;
+        background-color: white;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        padding: 10px;
+    }
+
+    .quantity-calculator-container {
+        right: 14px;
+        width: 100%;
+        background-color: white;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        padding: 10px;
+    }
+
+    .highlight {
+        background-color: yellow;
+    }
+</style>
+@*<h2>Create</h2>*@
+
+@* @using (Html.BeginForm(null, null, FormMethod.Post, new { name = "SOEdit", id = "SOEdit" })) *@
+@using (Html.BeginForm("Create", "SOSR", FormMethod.Post, new { name = "SOCreate", id = "SOCreate" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    @*<input type="text" class="form-control" name="Customer.Vat" id="vndCustomerVat1" value="abcd" placeholder="VAT Number">*@
+    <div class="container" id="container">
+        <div class="table-wrapper2">
+            <div class="table-title">
+                <div class="row">
+                    @*<div id="saleOrder" class="col-sm-offset-5"><h2>Sale <b>Order</b></h2></div>*@
+                    @*<div id="saleReturn" class="col-sm-offset-5"><h2>Sale <b>Return</b></h2></div>*@
+                </div>
+                <!--hidden fields customer data-->
+                <input type="text" autocomplete="off" class="form-control" name="Customer.Id" id="customerId1" value="" placeholder="Type customer name" data-toggle="tooltip" data-placement="top" style="display:none;">
+                <input type="text" class="form-control" name="Customer.Name" id="vndCustomer1" placeholder="Customer" style="display:none;">
+                <input type="text" class="form-control" name="Customer.CompanyName" id="vndCustomerCompany1" placeholder="Customer company" style="display:none;">
+                <input type="text" class="form-control" name="Customer.Name" id="vndCustomerName1" placeholder="Customer name" style="display:none;">
+                <input type="text" class="form-control" name="Customer.Address" id="vndCustomerAddress1" placeholder="Customer address" style="display:none;">
+                <input type="text" class="form-control" name="Customer.Vat" id="vndCustomerVat1" placeholder="Customer Vat" style="display:none;">
+                <input type="text" class="form-control" name="Customer.Email" id="vndCustomerEmail1" placeholder="Customer email" style="display:none;">
+                <!--hidden fields customer data-->
+                <input type="hidden" name="SaleOrder.SaleReturn" id="saleReturn" value=@ViewBag.IsReturn />
+
+                <input type="hidden" name="SaleOrder.CustomerId" id="idnCustomer" value="" />
+                <div class="row">
+                    <div class="col-md-6">
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                    </div>
+
+
+                </div>
+
+            </div>
+            @*<div style="margin-top: -55px;">*@
+            <div>
+                @{
+                    var storeName = Session["storeName"] as string;
+                    if (storeName != null)
+                    {
+                        @*<p style="display: inline-block; color: #ffffff; background-color: #007bff; padding: 5px; border-radius: 11px;">
+                        *@<p>
+                            <b>
+                                @storeName
+                            </b>
+                        </p>
+                    }
+                }
+            </div>
+
+            @*Start function for formating numbers in thousands*@
+            @functions {
+                // Helper method to format numbers with dots instead of commas
+                public string FormatNumberWithDots(decimal number)
+                {
+                    // Format number with comma as thousands separator
+                    var formattedNumber = number.ToString("N0");
+                    // Replace commas with dots
+                    return formattedNumber.Replace(",", ".");
+                }
+            }
+            @*End function for formating numbers in thousands*@
+
+            @* input type for Barcode *@
+            @*<div>
+                    <input type="text" id="barcodeInput" placeholder="Scan or type the barcode here" />
+                </div>*@
+
+
+            <div class="row">
+                <div class="col-md-6 scrollable-div">
+                    @*@foreach (var product in Model.ProductList)
+                        {
+                            var settings = new Newtonsoft.Json.JsonSerializerSettings
+                            {
+                                ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                            };
+                            var productJson = Newtonsoft.Json.JsonConvert.SerializeObject(product, settings);
+                            var encodedProductJson = System.Web.HttpUtility.JavaScriptStringEncode(productJson);
+
+                            string formattedPrice = FormatNumberWithDots(product.SalePrice);
+                            <div class="col-md-3 col-sm-6 mb-3 product-box" onclick="addProduct('@encodedProductJson')">
+                                <div class="small-box bg-info text-black p-3 scrollable-box">
+                                    <div class="inner">
+                                        <h4 class="product-name">@product.Name</h4>
+                                        <p class="product-name">₫ @formattedPrice</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-bag"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        }*@
+                    @if (groupedProductLists != null)
+                    {
+                        foreach (var group in groupedProductLists)
+                        {
+
+                            foreach (var product in group.Value)
+                            {
+                                // Serialize the product object to JSON
+                                var settings = new Newtonsoft.Json.JsonSerializerSettings
+                                {
+                                    ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                                };
+                                var productJson = Newtonsoft.Json.JsonConvert.SerializeObject(product, settings);
+                                var encodedProductJson = System.Web.HttpUtility.JavaScriptStringEncode(productJson);
+                                var categoryColor = categoryColors.ContainsKey(product.Category)
+                                    ? categoryColors[product.Category]
+                                    : "#ffffff"; // Default color if the category is not found
+                                string formattedPrice = FormatNumberWithDots(product.SalePrice);
+
+                                <div class="col-md-3 col-sm-6 mb-3 product-box" onclick="addProduct('@encodedProductJson')">
+                                    <div class="small-box" style="background-color: @categoryColor; color: black; padding: 15px;">
+                                        <div class="inner">
+                                            <h4 class="product-name">@product.Name</h4>
+                                            <p class="product-name">₫ @formattedPrice</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="ion ion-bag"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <p>No products found.</p>
+                    }
+
+
+                    @*Old working code to bind Products*@
+                    @*@foreach (var product in Model.ProductList)
+                        {
+                            var settings = new Newtonsoft.Json.JsonSerializerSettings
+                            {
+                                ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                            };
+                            var productJson = Newtonsoft.Json.JsonConvert.SerializeObject(product, settings);
+                            var encodedProductJson = System.Web.HttpUtility.JavaScriptStringEncode(productJson);
+                            var productLists = @Html.Raw(encodedProductJson);
+                            // Retrieve the color for the product's category directly
+                            var categoryColor = categoryColors.ContainsKey(product.Category)
+                                    ? categoryColors[product.Category]
+                                    : "#ffffff"; // Default color if the category is not found
+
+                            string formattedPrice = FormatNumberWithDots(product.SalePrice);
+                            <div class="col-md-3 col-sm-6 mb-3 product-box" onclick="addProduct('@encodedProductJson')">
+                                <div class="small-box" style="background-color: @categoryColor; color: black; padding: 15px;">
+                                    <div class="inner">
+                                        <h4 class="product-name">@product.Name</h4>
+                                        <p class="product-name">₫ @formattedPrice</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-bag"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        }*@
+                </div>
+
+                <div class="col-md-6">
+                    <!-- Hidden input field for SuggestedNewProductId -->
+                    <input type="hidden" id="suggestedNewProductId" value="@ViewBag.SuggestedNewProductId" />
+                    @*<div style="display:flex; margin-top: -31px;">*@
+                    <div style="display: flex; margin-top: 0px;">
+                        <label style="width: 127px;">Bill Number:</label>
+                        @*<label name="SaleOrder.Id">@ViewBag.SuggestedNewProductIds</label>*@
+                        <input type="text" name="SaleOrder.Id" class="form-control label-like-input" value="@ViewBag.SuggestedNewProductIds" />
+                    </div>
+                    <br /> <br />
+                    <table id="selectedProducts" class="table table-bordered" style="margin-top: -34px !important;">
+                        <thead>
+                            <tr>
+                                <th style="width:5%;">#</th>
+                                <th style="width:25%;">Name</th>
+                                <th style="display:none;">Price</th>
+                                <th>Quantity</th>
+                                <th style="display:none;">Bill Number</th>
+                                <th style="width: auto;">Total</th>
+                                <th style="display:none;">Type</th>
+                                <th style="width: 62px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Add your rows here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+
+
+            <div class="table-title" style="display:none;">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
+                    </div>
+                </div>
+            </div>
+            @*<div class="table-title">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
+                        </div>
+                    </div>
+                </div>*@
+
+            <div style="display:inline" id="dvCalculations">
+                <div class="row" style="margin-top:30px;">
+                    <div class="col-md-6">
+                        @Html.DropDownList("SaleOrder.BankAccountId", (IEnumerable<SelectListItem>)ViewBag.BankAccounts, null, new { @class = "form-control", @style = "display:none" })
+                        @*<select class="form-control" name="SaleOrder.PaymentMethod" id="SaleOrder.PaymentMethod" data-toggle="tooltip" data-placement="top" title="Select Payment method">
+            <option value="Cash" selected>Cash</option>
+            <option value="Online">Online</option>
+            <option value="Cheque">Cheque</option>
+            <option value="Other">Other</option>
+        </select>*@
+                        @*<input type="text" autocomplete="off" class="form-control" name="SaleOrder.PaymentDetail" id="SaleOrder.PaymentDetail" value="" placeholder="Cheque No./Online payment No./etc..." data-toggle="tooltip" data-placement="top" title="Enter any details you want">
+        <input type="text" autocomplete="off" class="form-control" name="SaleOrder.PaymentDetail" id="SaleOrder.PaymentDetail" value="" placeholder="Cheque No./Online payment No./etc..." data-toggle="tooltip" data-placement="top" title="Enter any details you want">
+        <textarea name="SaleOrder.Remarks" rows="1" cols="100" class="form-control" placeholder="These remarks will print on bill" data-toggle="tooltip" data-placement="top" title="These remarks will print on bill"></textarea>
+        <textarea name="SaleOrder.Remarks2" rows="1" cols="100" class="form-control" placeholder="These remarks will not print on bill" data-toggle="tooltip" data-placement="top" title="These remarks will not print on bill"></textarea>*@
+
+                        @*<select class="form-control" name="SaleOrder.PaymentMethod" id="SaleOrder.PaymentMethod" data-toggle="tooltip" data-placement="top" title="Select Payment method" style="display:none;">
+            <option value="TM" selected>TM</option>
+            <option value="TM/CK" selected>TM/CK</option>
+            <option value="Online">Online</option>
+            <option value="Cheque">Cheque</option>
+            <option value="Other">Other</option>
+        </select>*@
+                        <select class="form-control" name="SaleOrder.PaymentMethod" id="SaleOrder.PaymentMethod" data-toggle="tooltip" data-placement="top" title="Select Payment method" style="display:none;">
+                            <option value="TM">TM</option>
+        <option value="TM/CK">TM/CK</option>
+                            @*<option value="Cash" selected>Cash</option>
+                            <option value="Card" selected>Cash</option>*@
+                            <option value="Online">Online</option>
+                            <option value="Cheque">Cheque</option>
+                            <option value="Other">Other</option>
+                        </select>
+
+
+                        <input type="text" autocomplete="off" class="form-control" name="SaleOrder.PaymentDetail" id="SaleOrder.PaymentDetail" value="" placeholder="Cheque No./Online payment No./etc..." data-toggle="tooltip" data-placement="top" title="Enter any details you want" style="display:none;">
+                        <input type="text" autocomplete="off" class="form-control" name="SaleOrder.PaymentDetail" id="SaleOrder.PaymentDetail" value="" placeholder="Cheque No./Online payment No./etc..." data-toggle="tooltip" data-placement="top" title="Enter any details you want" style="display:none;">
+                        <textarea name="SaleOrder.Remarks" rows="1" cols="100" class="form-control" placeholder="These remarks will print on bill" data-toggle="tooltip" data-placement="top" title="These remarks will print on bill" style="display:none;"></textarea>
+                        <textarea name="SaleOrder.Remarks2" rows="1" cols="100" class="form-control" placeholder="These remarks will not print on bill" data-toggle="tooltip" data-placement="top" title="These remarks will not print on bill" style="display:none;"></textarea>
+                    </div>
+                    <div class="col-md-6" style="margin-top:20px;">
+
+                        <table>
+                            <thead></thead>
+                            <tbody>
+                                <tr style="display:none;">
+                                    <td><input type="text" readonly class="form-control classBorder0" name="OrderTotal" id="OrderTotal" value="Order Total" tabindex="-1"></td>
+                                    <td><input type="text" readonly class="form-control classBorder0" name="SaleOrder.BillAmount" id="ItemsTotal" value="0" tabindex="-1"></td>
+                                </tr>
+                                @*<tr>
+                                        <td><input type="text" readonly class="form-control classBorder0" name="ReturnTotal" id="ReturnTotal" value="Return Total" tabindex="-1"></td>
+                                        <td><input type="text" readonly class="form-control classBorder0" name="ReturnItemsTotal" id="ReturnItemsTotal" value="0" tabindex="-1"></td>
+                                    </tr>*@
+                                <tr style="display:none;">
+                                    <td><input type="text" readonly class="form-control classBorder0" name="dc3" id="dc3" value="Order Discount" tabindex="-1"></td>
+                                    <td><input type="text" autocomplete="off" class="form-control" name="SaleOrder.Discount" id="discount" value="0"></td>
+                                </tr>
+                                <tr class="text-bold" style="display:none;">
+                                    <td><b><input type="text" readonly class="form-control classBorder0" name="st3" id="st3" value="Sub Total" tabindex="-1"></b></td>
+                                    <td><b><input type="text" readonly class="form-control classBorder0" name="subtotal" id="subtotal" value="0" tabindex="-1"></b></td>
+                                </tr>
+                                <tr style="display:none;">
+                                    <td><input type="text" readonly class="form-control classBorder0" name="pb3" id="pb3" value="Prev.Balance" tabindex="-1"></td>
+                                    <td><input readonly type="text" autocomplete="off" class="form-control" name="SaleOrder.PrevBalance" id="PreviousBalance" value="0" tabindex="-1"></td>
+                                </tr>
+                                <tr class="text-bold" style="display:none;">
+                                    <td><b><input type="text" readonly class="form-control classBorder0" name="tt3" id="tt3" value="Total" tabindex="-1"></b></td>
+                                    <td><b><input type="text" readonly class="form-control classBorder0" name="total" id="total" value="0" tabindex="-1"></b></td>
+                                </tr>
+                                <tr style="display:none;">
+                                    <td style="background-color: #c5deed;"><input type="text" readonly class="form-control classBorder0" name="pd3" id="pd3" value="Paid" tabindex="-1"></td>
+                                    <td style="background-color: #c5deed;"><input type="text" autocomplete="off" class="form-control" name="SaleOrder.BillPaid" id="paid" value="0"></td>
+                                </tr>
+                                <tr style="display:none;">
+                                    <td style="background-color: #c5deed;"><input type="text" readonly class="form-control classBorder0" name="pdc3" id="pdc3" value="Bill Paid By Cash" tabindex="-1"></td>
+                                    <td style="background-color: #c5deed;"><input type="text" autocomplete="off" class="form-control" name="SaleOrder.BillPaidByCash" id="paidByCash" value="0"></td>
+                                </tr>
+                                <tr style="display:none;">
+                                    <td><input type="text" readonly class="form-control classBorder0" name="bl3" id="bl3" value="Balance" tabindex="-1"></td>
+                                    <td><input readonly type="text" autocomplete="off" class="form-control" name="SaleOrder.Balance" id="balance" value="0" tabindex="-1"></td>
+                                </tr>
+                                <tr>
+                                    @*<td colspan="2" rowspan="2"><button type="button" id="CreateSO" class="btn btn-primary" style="background-color: #2bbdb9; width: 300px; height: 70px; margin-left: auto; margin-right: auto; display: block; margin-top: 10px; margin-bottom: 0%; font-size: 32px;">Pay</button></td>*@
+                                    <td colspan="2" rowspan="2"><button type="button" id="CreateSO" class="btn btn-primary" style="background-color: #2bbdb9; width: 300px; height: 70px; margin-left: auto; margin-right: auto; display: block; margin-top: 10px; margin-bottom: 0%; font-size: 32px;">Pay</button></td>
+                                    <td style="width: 20px;"></td>
+                                    <td colspan="2" rowspan="2"><button type="button" id="totalofAllSelecteProducts" class="btn btn-primary" style="width: 91px; height: 40px; margin-left: auto; margin-right: auto; display: block; margin-top: 10px; margin-bottom: 0%; font-size: 13px">Total</button></td>
+                                    <td style="width: 20px;"></td>
+                                    <td colspan="2" rowspan="2"><button type="button" id="deleteAllProducts" class="btn btn-danger" style="width: 126px; height: 40px; margin-left: auto; margin-right: auto; display: block; margin-top: 10px; margin-bottom: 0%; font-size: 13px ">Delete All Products</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="table-title">
+                    <div class="row">
+                        @*<div class="col-sm-8"><h2>Sale <b>Order</b></h2></div>*@
+                        <div class="col-sm-3">
+                        </div>
+                        <div class="col-sm-7">
+                            @*<textarea name="SaleOrder.PaymentMethod" rows="1" cols="100" class="form-control" placeholder="Payment method..."></textarea>*@
+                        </div>
+                    </div>
+                    <div class="row">
+                        @*<div class="col-sm-8"><h2>Sale <b>Order</b></h2></div>*@
+                        <div class="col-sm-3">
+
+                        </div>
+                        <div class="col-sm-7">
+                        </div>
+                    </div>
+                    <div class="row">
+                        @*<div class="col-sm-8"><h2>Sale <b>Order</b></h2></div>*@
+                        <div class="col-sm-3">
+                        </div>
+                        <div class="col-sm-7">
+                        </div>
+                    </div>
+                    <div class="row">
+                        @*<div class="col-sm-8"><h2>Sale <b>Order</b></h2></div>*@
+                        <div class="col-sm-3">
+                        </div>
+                        <div class="col-sm-7">
+                        </div>
+                        <div class="col-sm-2">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pay Modal -->
+    <div class="modal fade bd-pay-modal-lg" id="payModal" tabindex="-1" role="dialog" aria-labelledby="payModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="payModalTitle" style="text-align:center;">Total : <span id="totalitsmspan">0</span> </h5>
+                    <button type="button" class="close cancelPaymentButton" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container mt-5">
+                        <div class="row justify-content-center">
+                            <div class="col-md-9">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <h4 class="card-title">VND(₫)</h4>
+                                                <div id="inputFields">
+                                                    <button type="button" class="form-control styled-input quickAmountAdd" value="1000" readonly>1000 ₫</button><br />
+                                                    <button type="button" class="form-control styled-input quickAmountAdd" value="2000" readonly>2000 ₫</button><br />
+                                                    @*<button type="button" class="form-control styled-input quickAmountAdd" value="3000" readonly>4000 ₫</button><br />*@
+                                                    <button type="button" class="form-control styled-input quickAmountAdd" value="5000" readonly>5000 ₫</button><br />
+                                                    <button type="button" class="form-control styled-input quickAmountAdd" value="10000" readonly>10 000 ₫</button><br />
+                                                    <button type="button" class="form-control styled-input quickAmountAdd" value="20000" readonly>20 000 ₫</button><br />
+                                                    <button type="button" class="form-control styled-input quickAmountAdd" value="50000" readonly>50 000 ₫</button><br />
+                                                    <button type="button" class="form-control styled-input quickAmountAdd" value="100000" readonly>100 000 ₫</button><br />
+                                                    <button type="button" class="form-control styled-input quickAmountAdd" value="200000" readonly>200 000 ₫</button><br />
+                                                    <button type="button" class="form-control styled-input quickAmountAdd" value="500000" readonly>500 000 ₫</button><br />
+                                                    @*<input type="text" class="form-control styled-input quickAmountAdd" value="2000 ₫" readonly><br />
+                                                        <input type="text" class="form-control styled-input quickAmountAdd" value="3000 ₫" readonly><br />
+                                                        <input type="text" class="form-control styled-input quickAmountAdd" value="5000 ₫" readonly><br />
+                                                        <input type="text" class="form-control styled-input quickAmountAdd" value="10 000 ₫" readonly><br />
+                                                        <input type="text" class="form-control styled-input quickAmountAdd" value="20 000 ₫" readonly><br />
+                                                        <input type="text" class="form-control styled-input quickAmountAdd" value="50 000 ₫" readonly><br />
+                                                        <input type="text" class="form-control styled-input quickAmountAdd" value="100 000 ₫" readonly><br />
+                                                        <input type="text" class="form-control styled-input quickAmountAdd" value="200 000 ₫" readonly><br />
+                                                        <input type="text" class="form-control styled-input quickAmountAdd" value="500 000 ₫" readonly><br />*@
+                                                </div>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <div style="display:flex;">
+                                                    <button type="button" class="btn btn-primary" id="payallbycard">Pay all by card</button> &nbsp;
+                                                    <div style="display:flex;">
+                                                        &nbsp;
+                                                        &nbsp;
+                                                        &nbsp;
+                                                        <label for="payInMultipleCurrenciesLabel" style="font-size: 11px;">Pay in multiple currencies</label>
+                                                        <input type="checkbox" id="payInMultipleCurrencies" onclick="showHiddenInputs()" style="margin-top: -18px; margin-left: 16px;">
+                                                    </div>
+                                                </div>
+                                                <br />
+                                                <form>
+                                                    <div class="form-group">
+                                                        <label for="inputField">Card VND(₫)</label>
+                                                        <input type="text" autocomplete="off" class="form-control" name="SaleOrder.BillPaid" id="cardvnd" value="">
+                                                        @*<input type="text" autocomplete="off" class="form-control" placeholder="Card Vnd" name="SaleOrder.BillPaid" id="cardvnd" value="0">*@
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="inputField">Cash VND(₫)</label>
+                                                        <input type="text" class="form-control" id="cashvnd" value="">
+                                                    </div>
+                                                    <!--<div class="form-group">
+        <label for="inputField">Card Vnd</label>
+        <input type="text" autocomplete="off" class="form-control" name="SaleOrder.BillPaid" id="tm/ck" value="">-->
+                                                    @*<input type="text" autocomplete="off" class="form-control" placeholder="Card Vnd" name="SaleOrder.BillPaid" id="cardvnd" value="0">*@
+                                                    <!--</div>
+
+    <div class="form-group">
+        <label for="inputField">Cash Vnd</label>
+        <input type="text" class="form-control" id="tm" value="">
+    </div>-->
+                                                    <div class="form-group hiddenCurrencyInputs" style="display:none;">
+                                                        <label for="inputField">Cash USD($)</label>
+                                                        <input type="text" autocomplete="off" class="form-control" name="cashUsd" id="cashUsd" value="">
+                                                        <b><span id="totalDollarsToVnd"></span>(₫)</b>
+                                                    </div>
+
+                                                    <div class="form-group hiddenCurrencyInputs" style="display:none;">
+                                                        <label for="inputField">Cash JPY(¥)</label>
+                                                        <input type="text" class="form-control" name="cashJpy" id="cashJpy" value="">
+                                                        <b><span id="totalYensToVnd"></span>(₫)</b>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="inputField">Change (USD)</label>
+                                                        <input type="text" class="form-control" id="changeUsd" value="" placeholder="Change USD">
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="inputField">Change (JPY)</label>
+                                                        <input type="text" class="form-control" id="changejpy" value="" placeholder="Change JPY">
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="inputField">Left to pay VND</label>
+                                                        <input readonly type="text" autocomplete="off" class="form-control" name="SaleOrder.Balance" id="lefttopayvnd" value="0" tabindex="-1">
+                                                    </div>
+                                                    <!--hidden fields payment data-->
+                                                    <input type="text" autocomplete="off" class="form-control" name="SaleOrder.BillPaid" id="cardvnd1" value="0" style="display:none;">
+                                                    <input type="text" class="form-control" id="cashvnd1" placeholder="Cash Vnd" style="display:none;">
+                                                    <input type="text" autocomplete="off" class="form-control" name="cashUsd1" id="cashUsd1" value="0" style="display:none;">
+                                                    <input type="text" class="form-control" name="cashJpy1" id="cashJpy1" placeholder="Cash Vnd" value="0" style="display:none;">
+                                                    <input type="text" class="form-control" id="changeUsd1" value="" placeholder="Change USD" style="display:none;">
+                                                    <input type="text" class="form-control" id="changejpy1" value="" placeholder="Change JPY" style="display:none;">
+                                                    <input type="text" class="form-control classBorder0" name="SaleOrder.BillAmount" id="ItemsTotal1" value="0" tabindex="-1" style="display:none;">
+                                                    <input type="text" autocomplete="off" class="form-control" name="SaleOrder.Balance" id="lefttopayvnd1" value="0" tabindex="-1" style="display:none;">
+                                                    <!--hidden fields payment data-->
+                                                </form>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <!-- Calculator buttons -->
+                                                <div class="calculator">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <button class="btn btn-secondary btn-block" type="button" onclick="appendNumber(1)">1</button>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <button class="btn btn-secondary btn-block" type="button" onclick="appendNumber(2)">2</button>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <button class="btn btn-secondary btn-block" type="button" onclick="appendNumber(3)">3</button>
+                                                        </div>
+                                                    </div>
+                                                    <br />
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            @*button class="btn btn-secondary btn-block calBtn" type="button">4</button>*@
+
+                                                            <button class="btn btn-secondary btn-block" type="button" onclick="appendNumber(4)">4</button>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <button class="btn btn-secondary btn-block" type="button" onclick="appendNumber(5)">5</button>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <button class="btn btn-secondary btn-block" type="button" onclick="appendNumber(6)">6</button>
+                                                        </div>
+                                                    </div>
+                                                    <br />
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <button class="btn btn-secondary btn-block" type="button" onclick="appendNumber(7)">7</button>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <button class="btn btn-secondary btn-block" type="button" onclick="appendNumber(8)">8</button>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <button class="btn btn-secondary btn-block" type="button" onclick="appendNumber(9)">9</button>
+                                                        </div>
+
+                                                    </div>
+                                                    <br />
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <button class="btn btn-secondary btn-block" type="button" onclick="clearInput()">CE</button>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <button class="btn btn-secondary btn-block" type="button" onclick="appendNumber(0)">0</button>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <button class="btn btn-secondary btn-block" type="button" onclick="deleteLast()">X</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary cancelPaymentButton" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" name="validatepyment" id="validatepyment" disabled>Validate</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Curomer Tex Modal -->
+    <div class="modal fade bd-tax-modal-lg" id="taxModal" tabindex="-1" role="dialog" aria-labelledby="taxModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="taxModalTitle" style="text-align:center;">CUSTOMER TAX</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container mt-5">
+                        <div class="row justify-content-center">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <div class="row"></div><div class="col-md-6"></div><div class="col-md-5">
+                                            <div class="d-flex justify-content-center justify-content-md-end">
+                                                <button type="button" class="card-title btn btn-primary" id="individualWithoutVAT">Individual without VAT number</button>
+                                            </div>
+                                        </div><div class="col-md-1"></div>
+
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <form>
+                                                    <div class="form-group">
+                                                        <input type="text" autocomplete="off" class="form-control" name="Customer.Id" id="customerId" value="" placeholder="Type customer name" data-toggle="tooltip" data-placement="top" style="display:none;">
+                                                        @*<input type="hidden" name="Customer.Id" id="customerId1" value="@Model.Customer.Id" />*@
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="vndCustomerVat" class="col-sm-3 col-form-label" style="margin-left:-13px">VAT Number</label><br />
+                                                        <div class="col-sm-10" style="margin-left:-13px">
+                                                            <input type="text" class="form-control" name="Customer.Vat" id="vndCustomerVat" placeholder="VAT Number">
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <button type="button" class="btn btn-primary btn-block position-relative" id="customerByTaxCode" style="margin-left: -19px; width: 94px;">
+                                                                <i class="fa fa-search"></i>
+                                                                <span class="loader" style="margin-left: 20px;"></span>
+                                                                <span class="loading-text" style="display:none;">.</span>
+                                                            </button>
+                                                        </div>
+                                                        @*<div class="col-sm-2">
+                                                                <button type="button" class="btn btn-primary btn-block" id="customerByTaxCode"><i class="fa fa-search"></i></button>
+                                                                <span class="loader" style="display: none;"></span>
+                                                            </div>*@
+                                                        <!--<label for="field4">VAT Number</label>-->
+                                                        @*<input type="text" class="form-control" name="vndCustomerVat" id="vndCustomerVat" placeholder="VAT Number">*@
+                                                        <!--<input type="text" class="form-control" name="Customer.Vat" id="vndCustomerVat" placeholder="VAT Number">-->
+                                                        @*<input type="hidden" name="Customer.Vat" id="customerVat1" value="@Model.Customer.Vat" />*@
+                                                        <!--<button type="button" class="btn btn-primary ml-2">Submit</button>-->
+                                                    </div>
+                                                    <br />
+
+                                                    <br />
+                                                    <div class="form-group">
+                                                        <label for="dropdown">Customer Code</label>
+                                                        <input type="text" autocomplete="off" class="form-control" name="Customer.Name" id="vndCustomer" value="" placeholder="Type customer name" data-toggle="tooltip" data-placement="top" title="Type customer name">
+                                                        @*<input type="hidden" name="Customer.Name" id="customer1" value="@Model.Customer.Name" />*@
+                                                    </div>
+                                                    @*<div class="form-group">
+                                                            <label for="dropdown">Customer</label>
+                                                            <select class="form-control" id="dropdown">
+                                                                <option value="">Select customer</option>
+                                                                <option value="1">Option 1</option>
+                                                                <option value="2">Option 2</option>
+                                                                <option value="3">Option 3</option>
+                                                            </select>
+                                                        </div>*@
+                                                    <div class="form-group">
+                                                        <label for="field1">Customer Name</label>
+                                                        <input type="text" class="form-control" name="Customer.Name" id="vndCustomerName" placeholder="Cutomer name">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="field2">Customer Company</label>
+                                                        <input type="text" class="form-control" name="Customer.CompanyName" id="vndCustomerCompany" placeholder="Customer company">
+                                                        @*<input type="hidden" name="Customer.CompanyName" id="vndCustomerCompany1" value="@Model.Customer.CompanyName" />*@
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="field3">Address</label>
+                                                        <input type="text" class="form-control" name="Customer.Address" id="vndCustomerAddress" placeholder="Address">
+                                                        @*<input type="hidden" name="Customer.Address" id="vndCustomerAddress1" value="@Model.Customer.Address" />*@
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="field5">Email</label>
+                                                        <input type="text" class="form-control" name="Customer.Email" id="vndCustomerEmail" placeholder="Email">
+                                                        @*<input type="hidden" name="Customer.Email" id="vndCustomerEmail1" value="@Model.Customer.Email" />*@
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="modal-body">
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                        <h4 class="card-title">Total</h4>
+                                    </div>
+                                <div class="card-body">-->
+                @*<form>
+                        <div class="form-group">
+                            <label for="inputField">Order No</label>
+                            <input type="text" class="form-control" id="poslatestserial" placeholder="Enter something">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block btnupdatestatus">Submit</button>
+                    </form>*@
+                <!--</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" name="saveSales" id="saveSales">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @*<button type="button" class="btn btn-primary" name="addQuantityModal" id="addQuantityModal">Add Qauntity</button>*@
+
+
+    <!--Quantity Modal-->
+    <div class="modal fade bd-pay-modal-lg" id="quantityAddpopup" tabindex="-1" role="dialog" aria-labelledby="quantityAddpopupLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    @*<h5 class="modal-title" id="quantityAddpopupitle" style="text-align:center;">Total : <span id="totalitsmspan">0</span> </h5>*@
+                    <button type="button" class="close cancelQuantitButton" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container mt-5">
+                        <div class="row justify-content-center">
+                            <div class="col-md-9">
+                                <div class="card">
+                                    <div class="card-header">
+                                        @*<h4 class="card-title">Total</h4>*@
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <form>
+                                                    <div class="form-group">
+                                                        <label for="dropdown">Add Quantity</label>
+                                                        <input type="text"
+                                                               autocomplete="off"
+                                                               class="form-control"
+                                                               name="productQuantity"
+                                                               id="productQuantity"
+                                                               value="1"
+                                                               @*value="1"*@
+                                                               placeholder="Type quantity"
+                                                               data-toggle="tooltip"
+                                                               data-placement="top"
+                                                               title="Type quantity"
+                                                               maxlength="10"
+                                                               oninput="validateQuantityInput(event)" />
+                                                        @*<input type="number" autocomplete="off" class="form-control" name="productQuantity" id="productQuantity" value="1" placeholder="Type quantity" data-toggle="tooltip" data-placement="top" title="Type quantity" maxlength="10">*@
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="quantity-calculator-container">
+                                                    <div class="calculator">
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                                <button class="btn btn-secondary btn-block" type="button" onclick="appendQuantityNumber(1)">1</button>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <button class="btn btn-secondary btn-block" type="button" onclick="appendQuantityNumber(2)">2</button>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <button class="btn btn-secondary btn-block" type="button" onclick="appendQuantityNumber(3)">3</button>
+                                                            </div>
+                                                        </div>
+                                                        <br />
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                                <button class="btn btn-secondary btn-block" type="button" onclick="appendQuantityNumber(4)">4</button>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <button class="btn btn-secondary btn-block" type="button" onclick="appendQuantityNumber(5)">5</button>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <button class="btn btn-secondary btn-block" type="button" onclick="appendQuantityNumber(6)">6</button>
+                                                            </div>
+                                                        </div>
+                                                        <br />
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                                <button class="btn btn-secondary btn-block" type="button" onclick="appendQuantityNumber(7)">7</button>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <button class="btn btn-secondary btn-block" type="button" onclick="appendQuantityNumber(8)">8</button>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <button class="btn btn-secondary btn-block" type="button" onclick="appendQuantityNumber(9)">9</button>
+                                                            </div>
+                                                        </div>
+                                                        <br />
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                                <button class="btn btn-secondary btn-block" type="button" onclick="clearQuantityInput()">CE</button>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <button class="btn btnbtn-secondary btn-block" type="button" onclick="appendQuantityNumber(0)">0</button>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <button class="btn btnbtn-secondary btn-block" type="button" onclick="deleteQuantityLast()">X</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary cancelQuantitButton" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" name="validateQuantity" id="validateQuantity">Validate</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+<script>
+    
+    
+
+    $(document).ready(function () {
+        document.getElementById('SOCreate').reset(); // has to be handle
+        debugger;
+         // Start the connection working //////////////////////////////////
+        //const connection = $.connection.phevaHub;
+        ////$.connection.hub.start({ transport: 'longPolling' })
+        //$.connection.hub.start({ transport: ['webSockets', 'longPolling', 'serverSentEvents'] })
+        //    .done(function () {
+        //        console.log('Connection started!');
+        //        // Call the hub method once the connection is established
+        //        //const name = "John Doe";  // Example name
+        //        //const message = "Hello, world!"; // Example message
+        //        // Call the server-side method
+        //        const ok = "John Doe";
+        //        connection.server.getCustomerProductDetails(ok);
+        //    })
+        //    .fail(function (error) {
+        //        console.error('Could not connect to SignalR hub:', error);
+        //    });
+       ////////////////////////////////////////////////////
+    });
+    //$("[id^='quantity'],#salePrice").keyup(function () {
+    //    //alert("afasf");
+    //    update_itemTotal();
+    //});
+    //$("[id^='delete']").keyup(function (event) {
+    //    //alert("hi");
+    //    if (event.keyCode == 13) {
+    //        $("[id^='delete']").trigger('click');
+    //    }
+    //});
+    //$("[id^='delete']").click(function () {
+    //    $(this).parents("tr").remove();
+    //    $("#addNewRow").removeAttr("disabled");
+    //    update_itemTotal();
+    //});
+    //$('#SaleOrder\\.PaymentMethod').on('change', function () {
+    //    var selectedPayment = $(this).val();
+    //    alert("Selected Payment Method: ", selectedPayment); // Debugging
+
+    //    if (selectedPayment === "TM/CK") {
+    //        $('#cardvnd').attr('name', 'SaleOrder.BillPaid');
+    //        $('#cashvnd').removeAttr('name');
+    //        alert("Card VND selected, name assigned to #cardvnd");
+    //    } else if (selectedPayment === "TM") {
+    //        $('#cashvnd').attr('name', 'SaleOrder.BillPaid');
+    //        $('#cardvnd').removeAttr('name');
+    //        alert("Cash selected, name assigned to #cashvnd");
+    //    } else {
+    //        $('#cardvnd, #cashvnd').removeAttr('name');
+    //        alert("Neither TM nor TM/CK selected, names removed.");
+    //    }
+    //});
+
+    $(document).ready(function () {
+        // When the Cash or Card field value changes
+        $('#cashvnd, #cardvnd').on('input', function () {
+            var cashValue = parseFloat($('#cashvnd').val()) || 0;
+            var cardValue = parseFloat($('#cardvnd').val()) || 0;
+
+            // Calculate the total value paid
+            var totalPayment = cashValue + cardValue;
+
+            // If both cash and card amounts are greater than 0, set payment method to "TM/CK"
+            if (cashValue > 0 && cardValue > 0) {
+                $('#SaleOrder\\.PaymentMethod').val('TM/CK').trigger('change');
+            }
+            // If only cash is entered, set payment method to "TM"
+            else if (cashValue > 0) {
+                $('#SaleOrder\\.PaymentMethod').val('TM').trigger('change');
+            }
+            // If only card is entered, set payment method to "Card"
+            else if (cardValue > 0) {
+                $('#SaleOrder\\.PaymentMethod').val('Card').trigger('change');
+            }
+            // If neither is entered, reset payment method
+            else {
+                $('#SaleOrder\\.PaymentMethod').val('').trigger('change');
+            }
+
+            console.log("Cash: " + cashValue + ", Card: " + cardValue + ", Total Payment: " + totalPayment);
+        });
+
+        // When the payment method changes
+        $('#SaleOrder\\.PaymentMethod').on('change', function () {
+            var selectedPayment = $(this).val();
+            console.log("Selected Payment Method: " + selectedPayment);
+
+            if (selectedPayment === "TM/CK") {
+                $('#cashvnd').attr('name', 'SaleOrder.BillPaid'); // Cash VND
+                $('#cardvnd').attr('name', 'SaleOrder.BillPaid'); // Card VND
+                console.log("Mixed Payment (TM/CK), names assigned to both Cash and Card fields.");
+            } else if (selectedPayment === "TM") {
+                $('#cashvnd').attr('name', 'SaleOrder.BillPaid'); // Cash VND
+                $('#cardvnd').removeAttr('name'); // Remove name from Card VND
+                console.log("Cash selected (TM), name assigned to Cash field.");
+            } else if (selectedPayment === "Card") {
+                $('#cardvnd').attr('name', 'SaleOrder.BillPaid'); // Card VND
+                $('#cashvnd').removeAttr('name'); // Remove name from Cash VND
+                console.log("Card selected, name assigned to Card field.");
+            } else {
+                $('#cashvnd, #cardvnd').removeAttr('name'); // Remove names if no valid payment method
+                console.log("No valid payment method selected, names removed.");
+            }
+        });
+    });
+
+
+
+
+
+    txtSerialNum = 0;
+    TriggerBodyEvents();
+    var productsBarcodesList = [];
+    @foreach (var d in Model.Customers)
+    {
+        @*@:products.push(["@d.Name","@d.SalePrice","@d.Stock"]);*@
+        //@:customers.push(["@d.Id","@d.Name", "@d.Address", "@d.Balance","@d.Email","@d.Vat","@d.CompanyName"]);
+        @:customers.push(["@d.Id","@d.CompanyName","@d.Vat"]);
+    }
+
+    //OnTypeCustomerName('#customer');
+    OnTypeCustomerName('#vndCustomer');
+    //OpenDialogue('#name0');
+        var getPrevBalanceUrl = '@Url.Action("GetPreviousBalance", "SOSR")';                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     //OpenDialogue('#name0');
+
+    //var productColumns = [{ name: 'Product', minWidth: '320px' }, { name: 'Price', minWidth: '100px' }, { name: 'Qty', minWidth: '70px' }];
+    //var products = [['Ciplet', '10', '60'], ['Gaviscon', '85', '12'], ['Surficol', '110', '8']];
+    //alert(products);
+    @{
+        var carton = 0;
+        var piece = 0;
+        foreach (var d in Model.Products)
+        {
+            carton = (int)(d.Stock / d.PerPack);
+            piece = (int)(d.Stock % d.PerPack);
+            if (piece == 0)
+            {
+            @:products.push(["@d.Id", "@d.Name", "@d.SalePrice", "@carton", "@d.PerPack", "@d.WholeSalePrice"]);
+        }
+        else
+        {
+            @:products.push(["@d.Id", "@d.Name", "@d.SalePrice", "@carton,@piece", "@d.PerPack", "@d.WholeSalePrice"]);
+        }
+
+        @:productsBarcodesList.push({ Id: "@d.Id", Name: "@d.Name", SalePrice: "@d.SalePrice", BarCode: "@d.BarCode" });
+        }
+}
+
+    //alert(products);
+
+    //OnTypeName('#name0');
+
+</script>
+
+
+
+@{Html.RenderPartial("_ProductDetail", new List<MYBUSINESS.Models.ProductDetail>()); }
+<div class="text-center">
+    @Html.ActionLink("See Sales Details", "Index")
+</div>
+
+<script type="text/javascript">
+
+    //document.getElementById('barcodeInput').focus();
+    //document.getElementById('barcodeInput').addEventListener('keyup', function (event) {
+    //    if (event.key === 'Enter') {
+    //        var barcode = event.target.value;
+    //        if (typeof barcode === 'string') {
+    //            barcode = barcode.trim(); // Remove any leading/trailing spaces
+    //        }
+    //        console.log('Barcode entered:', barcode);
+    //        onBarcodeScans(barcode);
+    //        event.target.value = ''; // Clear the input after processing
+    //    }
+    //});
+
+
+    let barcode = '';
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            if (barcode) {
+                barcode = barcode.trim(); // Remove any leading/trailing spaces
+                //console.log('Barcode entered:', barcode);
+                onBarcodeScans(barcode);
+                barcode = ''; // Clear the barcode after processing
+            }
+        } else {
+            barcode += event.key; // Accumulate the characters
+        }
+    });
+
+     function onBarcodeScans(barcode) {
+     var productList = productsBarcodesList;
+     //console.log(productList);
+     var product = productList.find(p => p.BarCode === barcode);
+     var encodedProductJson = JSON.stringify(product);
+     if (product) {
+         handleProductAddition(encodedProductJson, 1,false);
+     } else {
+         alert('Product not found');
+     }
+    }
+
+      @*@if (ViewBag.ReportId != null && ViewBag.ReportId != "")*@
+      @if (ViewBag.ReportId != null)
+      {
+          if (ViewBag.WebserviceDownError != null) {
+          @:alert("Server is down VAT Invoice cannot print at this time");
+          }
+          else {
+           @:window.open("PrintSO3/@(ViewBag.ReportId)", "_blank");
+      }
+      }
+      else {
+          @:window.open('ProductDetailsCustomer', '_blank');
+          @:console.log("Report can not be null");
+      }
+          @*if(ViewBag.WebserviceDownError!= null) {
+          @:alert(serDownError);
+          }
+    else {
+              //string customerName = ViewBag.CustomerName ?? "N/A";
+              //string customerEmail = ViewBag.CustomerEmail ?? "N/A";
+              //string customerAddress = ViewBag.CustomerAddress ?? "N/A";
+              //string posName = ViewBag.POSName ?? "N/A";
+           @:window.open("PrintSO3/@(ViewBag.ReportId)", "_blank");
+           }*@
+
+          // Proper URL encoding for special characters
+          @*var reportUrl = Url.Action("PrintSO3", "SOSR", new
+          {
+              id = ViewBag.ReportId,
+              customerName = customerName.ToString(),
+              customerEmail = customerEmail.ToString(),
+              customerAddress = customerAddress.ToString(),
+              posName = posName.ToString()
+          });
+            @:window.open('@reportUrl', "_blank");*@
+     /* }*/
+@*@if (ViewBag.ReportId != null && ViewBag.ReportId != "") {
+            string customerName = ViewBag.CustomerName ?? "N/A";
+            string customerEmail = ViewBag.CustomerEmail ?? "N/A";
+            string customerAddress = ViewBag.CustomerAddress ?? "N/A";
+            string posName = ViewBag.POSName ?? "N/A";
+            var reportUrl = "PrintSO3/" + ViewBag.ReportId + "?customerName=" + Uri.EscapeDataString(customerName) + "&customerEmail=" + Uri.EscapeDataString(customerEmail) +
+                "&customerAddress=" + Uri.EscapeDataString(customerAddress) +
+                "&posName=" + Uri.EscapeDataString(posName);
+
+            @:window.open('@reportUrl', "_blank");
+    }*@
+    var reportId = '@(ViewBag.ReportId)';
+    //if (reportId != null && reportId != "") {
+    //    var storedTotal = localStorage.getItem('totalItems');
+    //    if (storedTotal) {
+    //        $('#lefttotalvnd').val(storedTotal); // Set the stored value
+    //    }
+    //    $('#payModal').modal('show');
+    //}
+    IsReturn = '@(ViewBag.IsReturn)';
+    //alert(IsReturn);
+
+    $('.from-date-picker').datetimepicker({
+        dateFormat: "dd-M-yy",
+        timeFormat: "hh:mm tt",
+        showOn: "both",
+        timeInput: true,
+        stepHour: 1,
+        stepMinute: 5,
+        oneLine: true,
+        //changeMonth: true,
+        //changeYear: true,
+        controlType: 'select',
+        buttonImageOnly: true,
+        buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif",
+        buttonText: "Select date"
+    });
+
+    //$('#demo').datetimepicker({
+    //    // options here
+    //});
+
+
+     $("#NewData").dialog({
+        autoOpen: false,
+         title: 'Should not sell-out, already rented on thses dates',
+        closeText: '', //Changes the text of the titlebar-close button to hello instead of default Close
+        width: 500,
+        Height:500
+
+    });
+
+    function FetchProductRentStatus() {
+        //alert('wwww');
+        var date = new Date();
+        var day = date.getDate();       // yields date
+        var month = date.getMonth() + 1;    // yields month (add one as '.getMonth()' is zero indexed)
+        var year = date.getFullYear();  // yields year
+        var hour = date.getHours();     // yields hours
+        var minute = date.getMinutes(); // yields minutes
+        var second = date.getSeconds(); // yields seconds
+
+        // After this construct a string with the above results as below
+        var sellDate = day + "/" + month + "/" + year;// + " " + hour + ':' + minute + ':' + second;
+
+        var prodId = $('#idn' + clickedIdNum).val();
+
+        //alert(prodId);
+        //alert(startDate);
+        //alert(endDate);
+        //var dataLength1 = 'qqq';
+
+
+
+        $.ajax({
+            url: "@Url.Action("ProductRentStatus", "SOSR")",
+            data: { 'prodId': prodId, 'sellDate': sellDate},
+            type: "GET",
+            cache: false,
+            success: function (data) {
+            //toastr.success('Hi! I am success message.');
+            //var abc = data;
+            //alert(data);
+            if (data.indexOf('12:00:00 AM') != -1) {
+
+            $("#NewData").html(data);
+            $("#NewData").dialog("open");
+            //}
+            }
+
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            //$('#lblCommentsNotification').text("Error encountered while saving the comments.");
+            alert('Data provided was not valid');
+            }
+            });
+            }
+
+            //alert(IsReturn);
+</script>
+
+@*@section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }*@
+

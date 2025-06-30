@@ -396,6 +396,7 @@
     <Compile Include="Controllers\PPPostProductionController.cs" />
     <Compile Include="Controllers\PrintedPackagingController.cs" />
     <Compile Include="Controllers\PrintedPackagingReciverController.cs" />
+    <Compile Include="Controllers\ProductCategoriesController.cs" />
     <Compile Include="Controllers\ScanCreditCardController.cs" />
     <Compile Include="Controllers\ScanMoneyInputController.cs" />
     <Compile Include="Controllers\ShopManageController.cs" />
@@ -3315,6 +3316,7 @@
     <Content Include="Content\custom\newProduction.js" />
     <Content Include="Content\custom\Packagingproduction.js" />
     <Content Include="Content\custom\productDetail.js" />
+    <Content Include="Content\custom\PV_Logo.png" />
     <Content Include="Content\custom\searchable.css" />
     <Content Include="Content\custom\shared.js" />
     <Content Include="Content\custom\stores.js" />
@@ -4322,6 +4324,11 @@
     <Content Include="Views\PPPostProduction\_IndexComponents.cshtml" />
     <Content Include="Views\PPPostProduction\_SelectedNewProduction.cshtml" />
     <Content Include="Views\PPPostProduction\_SelectedProducts1.cshtml" />
+    <Content Include="Views\ProductCategories\Create.cshtml" />
+    <Content Include="Views\ProductCategories\Delete.cshtml" />
+    <Content Include="Views\ProductCategories\Details.cshtml" />
+    <Content Include="Views\ProductCategories\Edit.cshtml" />
+    <Content Include="Views\ProductCategories\Index.cshtml" />
     <None Include="Web.Debug.Config">
       <DependentUpon>Web.Config</DependentUpon>
     </None>
@@ -4384,12 +4391,12 @@
     <EmbeddedResource Include="Reports\FinishProducts_Receipt.rdlc" />
     <EmbeddedResource Include="Reports\PackagingProducts_Receipt.rdlc" />
     <EmbeddedResource Include="Reports\Report1.rdlc" />
-    <EmbeddedResource Include="Reports\Sale_Receipt009.rdlc" />
+    <Content Include="Reports\Sale_Receipt009.rdlc" />
     <Content Include="Reports\Sale_ReceiptBankDeposit.rdlc" />
     <Content Include="Reports\Sale_ReceiptMoneyInput.rdlc" />
     <Content Include="Reports\Sale_ReceiptOrder.rdlc" />
     <Content Include="Reports\Sale_ReceiptOrderPP.rdlc" />
-    <EmbeddedResource Include="Reports\Sale_ReceiptWoutCustomer.rdlc" />
+    <Content Include="Reports\Sale_ReceiptWoutCustomer.rdlc" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

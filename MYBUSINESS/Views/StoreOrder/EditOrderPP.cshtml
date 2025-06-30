@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = "Edit Order Items";
+    bool isReadonly = ViewBag.ReadonlyMode ?? false;
+    int? currentStoreId = ViewBag.CurrentStoreId as int?; // Make nullable
 }
 
 <h2 style="text-align:center; margin-top: 20px;">Edit Packaging Products Order</h2>
@@ -15,25 +17,65 @@
                     <h3 class="box-title">Packaging Products List</h3>
                 </div>
                 <div class="box-body">
-                    <table class="table table-bordered">
+                    @if (!isReadonly)
+                    {
+                        <div class="form-group">
+                            <label>Select Store:</label>
+                            @Html.DropDownList("storeId", ViewBag.Stores as SelectList, "Select Store", new
+                            {
+                                @class = "form-control",
+                                style = "width: 200px;",
+                                required = "required",
+                                disabled = isReadonly ? "disabled" : null // Use disabled instead of readonly for dropdown
+                            })
+                            @if (isReadonly)
+                            {
+                                @Html.Hidden("storeId", currentStoreId)
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <label>Store:</label>
+                            <input type="text" class="form-control"
+                                   value="@((ViewBag.Stores as SelectList)?.FirstOrDefault(s => currentStoreId.HasValue && s.Value == currentStoreId.Value.ToString())?.Text)"
+                                   readonly />
+                            @Html.Hidden("storeId", currentStoreId)
+                        </div>
+                    }
+
+
+                    <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th>Product Name</th>
-                                <th>Quantity</th>
+                                <th style="width:10%;">Name</th>
+                                <th style="width:10%;">Quantity</th>
+                                <th style="width:10%;">Unit</th>
                             </tr>
                         </thead>
                         <tbody>
                             @for (int i = 0; i < Model.Count; i++)
                             {
                                 <tr>
-                                    <td>
-                                        @Html.DisplayFor(m => m[i].Product.Name) <!-- Display product name -->
+                                    <td style="width: 80px;">
+                                        @Html.DisplayFor(m => m[i].Product.Name)
                                         @Html.HiddenFor(m => m[i].Id)
                                         @Html.HiddenFor(m => m[i].OrderId)
                                         @Html.HiddenFor(m => m[i].ProductId)
                                     </td>
                                     <td>
-                                        @Html.TextBoxFor(m => m[i].Quantity, new { @class = "form-control", type = "number", min = "1" })
+                                        @Html.TextBoxFor(m => m[i].Quantity, new
+                                        {
+                                            @class = "form-control",
+                                            type = "number",
+                                            min = "1",
+                                            style = "width: 80px;",
+                                            @readonly = isReadonly ? "readonly" : null
+                                        })
+                                    </td>
+                                    <td style="width: 80px;">
+                                        @Model[i].Product.Unit
                                     </td>
                                 </tr>
                             }
@@ -41,7 +83,10 @@
                     </table>
                 </div>
                 <div class="box-footer">
-                    <button type="submit" class="btn btn-success">Save Changes</button>
+                    @if (!isReadonly)
+                    {
+                        <button type="submit" class="btn btn-success">Save Changes</button>
+                    }
                 </div>
             </div>
         </section>

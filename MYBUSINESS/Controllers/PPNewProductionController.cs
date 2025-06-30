@@ -15,12 +15,14 @@ using System.Data.SqlClient;
 
 namespace MYBUSINESS.Controllers
 {
+    [Authorize(Roles = "Admin,Technical Manager,stock staff,stock manager")]
     public class PPNewProductionController : Controller
     {
         private BusinessContext db = new BusinessContext();
         private DAL DAL = new DAL();
         private PPNewProductionViewModel ppnewproductionViewModel = new PPNewProductionViewModel();
         // GET: PPNewProduction
+        [Authorize(Roles = "Admin,Technical Manager,stock staff,stock manager")]
         public ActionResult Index()
         {
             var ppnewProductions = db.PPNewProductions
@@ -62,7 +64,10 @@ namespace MYBUSINESS.Controllers
 
         }
 
+
+        [Authorize(Roles = "Admin,Technical Manager,stock staff,stock manager")]
         [HttpGet]
+
         public ActionResult Create()
         {
             decimal maxId = db.PPNewProductions.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
@@ -434,7 +439,10 @@ PPNewProductionViewModel model,
             return Json(subItems, JsonRequestBehavior.AllowGet);
         }
 
+
+        [Authorize(Roles = "Admin")]
         [HttpPost]
+
         public JsonResult ValidateStock(List<FinalProductionViewModel> LstProductionVM)
         {
             if (LstProductionVM == null || !LstProductionVM.Any())

@@ -301,21 +301,37 @@
                                     @Html.DropDownList("PurchaseOrderDetail[" + sNo + "].SaleType", new SelectList(ViewBag.OptionLst, "Value", "Text", item.SaleType),
                                         new { @class = "form-control", id = "saleType" + sNo })
                                 </td>
+                                @*<td>
+            <input type="date"
+                   autocomplete="off"
+                   class="form-control from-date-picker"
+                   value="@(ViewBag.MalaysiaTime != null ? ((DateTime)ViewBag.MalaysiaTime).ToString("yyyy-dd-MM") : "")"
+                   name="PurchaseReciverOrderDetail[@(sNo)].PurchasingDate"
+                   id="purchasingdate@(sNo)" @(isReadonly ? "readonly='readonly'" : "")>
+        </td>
+
+        <td>
+            <input type="date"
+                   class="form-control from-date-picker"
+                   value="@(ViewBag.FutureTime != null ? ((DateTime)ViewBag.FutureTime).ToString("yyyy-dd-MM") : "")"
+                   name="PurchaseReciverOrderDetail[@(sNo)].ExpiryDate"
+                   id="expirydate@(sNo)" @(isReadonly ? "readonly='readonly'" : "")>
+        </td>*@
                                 <td>
                                     <input type="date"
                                            autocomplete="off"
                                            class="form-control from-date-picker"
-                                           value="@(ViewBag.MalaysiaTime != null ? ((DateTime)ViewBag.MalaysiaTime).ToString("yyyy-dd-MM") : "")"
+                                           value="@(ViewBag.MalaysiaTime != null ? ((DateTime)ViewBag.MalaysiaTime).ToString("yyyy-MM-dd") : "")"
                                            name="PurchaseReciverOrderDetail[@(sNo)].PurchasingDate"
-                                           id="purchasingdate@(sNo)" @(isReadonly ? "readonly='readonly'" : "")>
+                                           id="purchasingdate@(sNo)" @(isReadonly ? "readonly" : "")>
                                 </td>
 
                                 <td>
                                     <input type="date"
                                            class="form-control from-date-picker"
-                                           value="@(ViewBag.FutureTime != null ? ((DateTime)ViewBag.FutureTime).ToString("yyyy-dd-MM") : "")"
+                                           value="@(ViewBag.FutureTime != null ? ((DateTime)ViewBag.FutureTime).ToString("yyyy-MM-dd") : "")"
                                            name="PurchaseReciverOrderDetail[@(sNo)].ExpiryDate"
-                                           id="expirydate@(sNo)" @(isReadonly ? "readonly='readonly'" : "")>
+                                           id="expirydate@(sNo)" @(isReadonly ? "readonly" : "")>
                                 </td>
 
 

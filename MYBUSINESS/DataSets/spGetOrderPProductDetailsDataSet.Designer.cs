@@ -429,7 +429,7 @@ namespace MYBUSINESS.DataSets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public spGetOrderPProductDetailsRow AddspGetOrderPProductDetailsRow(string ProductName, decimal Quantity, string StoreName, int StoreId, System.DateTime OrderDate, int OrderId, string UniqueCode, int ReportOrderId) {
+            public spGetOrderPProductDetailsRow AddspGetOrderPProductDetailsRow(int ProductName, int Quantity, int StoreName, int StoreId, int OrderDate, int OrderId, int UniqueCode, int ReportOrderId) {
                 spGetOrderPProductDetailsRow rowspGetOrderPProductDetailsRow = ((spGetOrderPProductDetailsRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         ProductName,
@@ -475,29 +475,29 @@ namespace MYBUSINESS.DataSets {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             private void InitClass() {
-                this.columnProductName = new global::System.Data.DataColumn("ProductName", typeof(string), null, global::System.Data.MappingType.Element);
+                this.columnProductName = new global::System.Data.DataColumn("ProductName", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnProductName);
-                this.columnQuantity = new global::System.Data.DataColumn("Quantity", typeof(decimal), null, global::System.Data.MappingType.Element);
+                this.columnQuantity = new global::System.Data.DataColumn("Quantity", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnQuantity);
-                this.columnStoreName = new global::System.Data.DataColumn("StoreName", typeof(string), null, global::System.Data.MappingType.Element);
+                this.columnStoreName = new global::System.Data.DataColumn("StoreName", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnStoreName);
                 this.columnStoreId = new global::System.Data.DataColumn("StoreId", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnStoreId);
-                this.columnOrderDate = new global::System.Data.DataColumn("OrderDate", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
+                this.columnOrderDate = new global::System.Data.DataColumn("OrderDate", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnOrderDate);
                 this.columnOrderId = new global::System.Data.DataColumn("OrderId", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnOrderId);
-                this.columnUniqueCode = new global::System.Data.DataColumn("UniqueCode", typeof(string), null, global::System.Data.MappingType.Element);
+                this.columnUniqueCode = new global::System.Data.DataColumn("UniqueCode", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnUniqueCode);
                 this.columnReportOrderId = new global::System.Data.DataColumn("ReportOrderId", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnReportOrderId);
-                this.columnProductName.AllowDBNull = false;
-                this.columnProductName.MaxLength = 300;
+                this.columnProductName.ReadOnly = true;
                 this.columnQuantity.ReadOnly = true;
-                this.columnStoreName.MaxLength = 200;
+                this.columnStoreName.ReadOnly = true;
+                this.columnStoreId.ReadOnly = true;
+                this.columnOrderDate.ReadOnly = true;
                 this.columnOrderId.ReadOnly = true;
                 this.columnUniqueCode.ReadOnly = true;
-                this.columnUniqueCode.MaxLength = 8;
                 this.columnReportOrderId.ReadOnly = true;
             }
             
@@ -641,9 +641,15 @@ namespace MYBUSINESS.DataSets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string ProductName {
+            public int ProductName {
                 get {
-                    return ((string)(this[this.tablespGetOrderPProductDetails.ProductNameColumn]));
+                    try {
+                        return ((int)(this[this.tablespGetOrderPProductDetails.ProductNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'ProductName\' in table \'spGetOrderPProductDetails\' is DBNull" +
+                                ".", e);
+                    }
                 }
                 set {
                     this[this.tablespGetOrderPProductDetails.ProductNameColumn] = value;
@@ -652,10 +658,10 @@ namespace MYBUSINESS.DataSets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public decimal Quantity {
+            public int Quantity {
                 get {
                     try {
-                        return ((decimal)(this[this.tablespGetOrderPProductDetails.QuantityColumn]));
+                        return ((int)(this[this.tablespGetOrderPProductDetails.QuantityColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
                         throw new global::System.Data.StrongTypingException("The value for column \'Quantity\' in table \'spGetOrderPProductDetails\' is DBNull.", e);
@@ -668,10 +674,10 @@ namespace MYBUSINESS.DataSets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string StoreName {
+            public int StoreName {
                 get {
                     try {
-                        return ((string)(this[this.tablespGetOrderPProductDetails.StoreNameColumn]));
+                        return ((int)(this[this.tablespGetOrderPProductDetails.StoreNameColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
                         throw new global::System.Data.StrongTypingException("The value for column \'StoreName\' in table \'spGetOrderPProductDetails\' is DBNull.", e);
@@ -700,10 +706,10 @@ namespace MYBUSINESS.DataSets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public System.DateTime OrderDate {
+            public int OrderDate {
                 get {
                     try {
-                        return ((global::System.DateTime)(this[this.tablespGetOrderPProductDetails.OrderDateColumn]));
+                        return ((int)(this[this.tablespGetOrderPProductDetails.OrderDateColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
                         throw new global::System.Data.StrongTypingException("The value for column \'OrderDate\' in table \'spGetOrderPProductDetails\' is DBNull.", e);
@@ -732,10 +738,10 @@ namespace MYBUSINESS.DataSets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string UniqueCode {
+            public int UniqueCode {
                 get {
                     try {
-                        return ((string)(this[this.tablespGetOrderPProductDetails.UniqueCodeColumn]));
+                        return ((int)(this[this.tablespGetOrderPProductDetails.UniqueCodeColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
                         throw new global::System.Data.StrongTypingException("The value for column \'UniqueCode\' in table \'spGetOrderPProductDetails\' is DBNull." +
@@ -762,6 +768,18 @@ namespace MYBUSINESS.DataSets {
                 set {
                     this[this.tablespGetOrderPProductDetails.ReportOrderIdColumn] = value;
                 }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsProductNameNull() {
+                return this.IsNull(this.tablespGetOrderPProductDetails.ProductNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetProductNameNull() {
+                this[this.tablespGetOrderPProductDetails.ProductNameColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

@@ -1,6 +1,6 @@
 ﻿@model List<MYBUSINESS.Models.EditOrderCategoryViewModel>
 
-<h2 style="text-align:center; margin-top: 20px;">@(ViewBag.IsValidated ? "View" : "Edit") Finish Product Order</h2>
+<h2 style="text-align:center; margin-top: 20px;">@(ViewBag.IsValidated ?? false ? "View" : "Edit") Finish Product Order</h2>
 @{
     bool isReadonly = ViewBag.ReadonlyMode ?? false;
     int currentStoreId = ViewBag.CurrentStoreId;
@@ -12,14 +12,18 @@
         <section class="content">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title" style="text-align:center;">Finished Product List</h3>
+                    <h3 class="box-title" style="text-align:center;">Saleable Product Order</h3>
                 </div>
                 <div class="box-body">
                     @if (!isReadonly)
                     {
                         <div class="form-group">
                             <label>Store:</label>
-                            @Html.DropDownList("storeId", ViewBag.Stores as SelectList, new { @class = "form-control  readonly" })
+                            @Html.DropDownList("storeId", ViewBag.Stores as SelectList, new
+                       {
+                           @class = "form-control  readonly",
+                           style = "width: 200px;"
+                       })
                         </div>
                     }
                     else
@@ -39,6 +43,7 @@
                                 <tr>
                                     <th style="width:10%;">Product</th>
                                     <th style="width:10%;">Quantity</th>
+                                    <th style="width:10%;">Unit</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -59,6 +64,9 @@
                                                    min="1"
                                                    style="width: 80px;"
                                                    @(isReadonly ? "readonly" : "") />
+                                        </td>
+                                        <td style="width: 80px;">
+                                            @Model[c].Items[i].Unit
                                         </td>
                                     </tr>
                                 }

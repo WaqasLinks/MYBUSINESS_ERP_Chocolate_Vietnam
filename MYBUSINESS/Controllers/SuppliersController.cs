@@ -11,12 +11,14 @@ using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
 {
-    [Authorize(Roles = "Admin,Manager,User")]
+    [Authorize(Roles = "Admin,Technical Manager")]
     public class SuppliersController : Controller
     {
         private BusinessContext db = new BusinessContext();
         private DAL DAL = new DAL();
         // GET: Suppliers
+
+        [Authorize(Roles = "Admin,Technical Manager")]
         public ActionResult Index(string id)
         {
             int? storeId = Session["StoreId"] as int?;
@@ -56,7 +58,7 @@ namespace MYBUSINESS.Controllers
             var indexCreditors = DAL.dbSuppliers.Where(x => x.IsCreditor == true && x.StoreId == 1).ToList();
             return View();
         }
-
+        [Authorize(Roles = "Admin,Technical Manager")]
         // GET: Suppliers/Create
         public ActionResult Create()
         {

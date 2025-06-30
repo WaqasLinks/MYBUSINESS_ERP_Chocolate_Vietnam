@@ -14,7 +14,7 @@ using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
 {
-    [Authorize(Roles = "Admin,Manager,User")]
+    [Authorize(Roles = "Admin,Technical Manager")]
     public class PPBOMController : Controller
     {
         private BusinessContext db = new BusinessContext();
@@ -22,6 +22,7 @@ namespace MYBUSINESS.Controllers
         private PPBOMViewModel ppBOMViewModel = new PPBOMViewModel();
         // GET: Products
 
+        [Authorize(Roles = "Admin,Technical Manager")]
         public ActionResult Index()
         {
             ViewBag.Suppliers = DAL.dbSuppliers;
@@ -62,6 +63,7 @@ namespace MYBUSINESS.Controllers
 
         }
 
+        [Authorize(Roles = "Admin,Technical Manager")]
         public ActionResult Create()
         {
             // Get the next available BOM ID (if needed)
@@ -137,7 +139,8 @@ namespace MYBUSINESS.Controllers
                 {
                     ppbom.ProductName = product.Name;
                 }
-
+                ppbom.CreateDate = DateTime.Now;
+                ppbom.UpdateDate = DateTime.Now;
                 // First save the PPBOM
                 db.PPBOMs.Add(ppbom);
                 db.SaveChanges(); // Now ppbom.Id is generated
@@ -232,7 +235,7 @@ namespace MYBUSINESS.Controllers
                 }
                 // Remove existing SubItems for the BOM
                 var existingSubItems = db.PPSubItems.Where(x => x.PPBOMId == bom.Id).ToList();
-                
+                bom.UpdateDate = DateTime.Now;
                 db.PPSubItems.RemoveRange(existingSubItems);
                 
                 // Update the BOM record

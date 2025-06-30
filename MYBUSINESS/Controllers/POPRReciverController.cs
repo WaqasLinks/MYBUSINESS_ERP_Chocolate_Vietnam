@@ -17,7 +17,7 @@ using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
 {
-    [Authorize(Roles = "Admin,Manager,User")]
+    [Authorize(Roles = "Admin,Purchasing manager,Technical Manager,Chocolate Production staff,Chocolate Production manager")]
     public class POPRReciverController : Controller
     {
         // GET: POPRReciver
@@ -66,6 +66,7 @@ namespace MYBUSINESS.Controllers
         //    //var poess = pOes.OrderByDescending(i => i.Date).ToList();
         //    return View(poess);
         //}
+        [Authorize(Roles = "Admin,Purchasing manager,Technical Manager,Chocolate Production staff,Chocolate Production manager")]
         public ActionResult Index()
         {
             int? storeId = Session["StoreId"] as int?;

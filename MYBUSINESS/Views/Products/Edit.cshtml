@@ -187,7 +187,7 @@
 
                                 <div id="sale-price-field" class="form-group optional-field">
                                     @*@Html.LabelFor(model => model.Product.SalePrice, htmlAttributes: new { @class = "control-label" })*@
-                                    <leble><b>Excluded Sale Price (VAT) </b></leble>
+                                    <leble><b>Sale Price (VAT excluded)</b></leble>
 
                                     @Html.EditorFor(model => model.Product.SalePrice, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.Product.SalePrice, "", new { @class = "text-danger" })
@@ -202,7 +202,10 @@
 
         </div>*@
                                 <div id="wholesale-field" class="form-group optional-field">
-                                    @Html.LabelFor(model => model.Product.WholeSalePrice, htmlAttributes: new { @class = "control-label" })
+                                    @*@Html.LabelFor(model => model.Product.WholeSalePrice, htmlAttributes: new { @class = "control-label" })*@
+                                    <label>
+                                        Wholesale Price (VAT excluded)
+                                    </label>
 
                                     @Html.EditorFor(model => model.Product.WholeSalePrice, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.Product.WholeSalePrice, "", new { @class = "text-danger" })
@@ -384,7 +387,7 @@
                     break;
                 case "8": // Flat Packaging
                 // Finish Packaging
-                    $('#supplier-field, #category-field, #unit-field').show();
+                    $('#supplier-field, #category-field, #unit-field, #purchase-price-field, #shape-detail').show();
                     break;
                 case "9": 
                     $('#barcode-field,#einvoice-field, #supplier-field, #category-field, #unit-field,#purchase-price-field,#sale-price-field,#wholesale-field').show();

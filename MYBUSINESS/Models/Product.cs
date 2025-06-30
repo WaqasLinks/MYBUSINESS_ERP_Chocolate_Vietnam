@@ -24,11 +24,9 @@ namespace MYBUSINESS.Models
             this.LoanDetails = new HashSet<LoanDetail>();
             this.OrderItemPProducts = new HashSet<OrderItemPProduct>();
             this.OrderItems = new HashSet<OrderItem>();
-            this.PackagingProductions = new HashSet<PackagingProduction>();
             this.PaperColors = new HashSet<PaperColor>();
             this.PODs = new HashSet<POD>();
             this.PODRecivers = new HashSet<PODReciver>();
-            this.PostProductions = new HashSet<PostProduction>();
             this.PPBOMs = new HashSet<PPBOM>();
             this.PPReciverDetails = new HashSet<PPReciverDetail>();
             this.PPSubItems = new HashSet<PPSubItem>();
@@ -53,6 +51,8 @@ namespace MYBUSINESS.Models
             this.PPSubItemProductions = new HashSet<PPSubItemProduction>();
             this.PPPostProductions = new HashSet<PPPostProduction>();
             this.NewProductions = new HashSet<NewProduction>();
+            this.PostProductions = new HashSet<PostProduction>();
+            this.PackagingProductions = new HashSet<PackagingProduction>();
         }
     
         public decimal Id { get; set; }
@@ -99,15 +99,11 @@ namespace MYBUSINESS.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderItem> OrderItems { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PackagingProduction> PackagingProductions { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PaperColor> PaperColors { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<POD> PODs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PODReciver> PODRecivers { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PostProduction> PostProductions { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PPBOM> PPBOMs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -156,5 +152,9 @@ namespace MYBUSINESS.Models
         public virtual ICollection<PPPostProduction> PPPostProductions { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<NewProduction> NewProductions { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PostProduction> PostProductions { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PackagingProduction> PackagingProductions { get; set; }
     }
 }

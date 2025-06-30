@@ -240,9 +240,11 @@
                         <td style="display:none;">
                             <input type="text" autocomplete="off" class="form-control classBGcolor" name="PurchaseOrderDetail[0].PurchasePrice" id="purchasePrice0">
                         </td>*@
-                        <td>
-                            <input type="text" autocomplete="off" class="form-control" name="SPDReceiver[0].QtyReceived" id="quantityreceived0" >
-                        </td>
+                    <td>
+                        <input type="text" autocomplete="off" class="form-control received-qty" name="SPDReceiver[0].QtyReceived" id="quantityreceived0">
+                        <span class="text-danger qty-error" style="display:none;">Received quantity cannot exceed ordered quantity</span>
+
+                    </td>
 
                         <td style="display:none;">
                             <input type="text" autocomplete="off" readonly class="form-control" name="SPackagingDetail[0].Unit" id="unit0">
@@ -262,16 +264,16 @@
                                 new { @class = "form-control", id = "saleType0" })
                         </td>
                         <td>
-                            <input type="datetime-local"
+                            <input type="date"
                                    class="form-control from-date-picker"
-                                   value="@(ViewBag.MalaysiaTime != null ? ((DateTime)ViewBag.MalaysiaTime).ToString("yyyy-MM-ddTHH:mm") : "")"
+                                   value="@(ViewBag.MalaysiaTime != null ? ((DateTime)ViewBag.MalaysiaTime).ToString("yyyy-dd-MM") : "")"
                                    name="SPDReceiver[0].PurchasingDate"
                                    id="purchasingdate0">
                         </td>
                         <td>
-                            <input type="datetime-local"
+                            <input type="date"
                                    class="form-control from-date-picker"
-                                   value="@(ViewBag.FutureTime != null ? ((DateTime)ViewBag.FutureTime).ToString("yyyy-MM-ddTHH:mm") : "")"
+                                   value="@(ViewBag.FutureTime != null ? ((DateTime)ViewBag.FutureTime).ToString("yyyy-dd-MM") : "")"
                                    name="SPDReceiver[0].ExpiryDate"
                                    id="expirydate0">
                         </td>
@@ -482,6 +484,28 @@
 
 
 <script type="text/javascript">
+    $(document).ready(function () {
+        // Validate all received quantity inputs
+        $('.received-qty').each(function () {
+            var sNo = this.id.replace('quantityreceived', '');
+            var orderedQty = parseFloat($('#quantity' + sNo).val()) || 0;
+
+            $(this).on('input', function () {
+                var receivedQty = parseFloat($(this).val()) || 0;
+                var errorSpan = $(this).next('.qty-error');
+
+                if (receivedQty > orderedQty) {
+                    errorSpan.show();
+                    $(this).addClass('is-invalid');
+                    $('button[type="submit"]').prop('disabled', true);
+                } else {
+                    errorSpan.hide();
+                    $(this).removeClass('is-invalid');
+                    $('button[type="submit"]').prop('disabled', false);
+                }
+            });
+        });
+    });
     //$(document).ready(function () {
 
 

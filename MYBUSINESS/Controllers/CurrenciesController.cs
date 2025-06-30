@@ -12,7 +12,7 @@ using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
 {
-    [Authorize(Roles = "Admin,Manager,User")]
+    [Authorize(Roles = "Admin")]
     public class CurrenciesController : Controller
     {
         private BusinessContext db = new BusinessContext();
@@ -149,7 +149,7 @@ namespace MYBUSINESS.Controllers
                 //var parseId = int.Parse(storeId);
                 db.Entry(currency).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("StockIndex");
+                return RedirectToAction("Index");
             }
             return View(currency);
         }

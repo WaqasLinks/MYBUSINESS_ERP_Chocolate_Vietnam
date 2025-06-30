@@ -13,13 +13,13 @@ namespace MYBUSINESS.Models
     
     public partial class spGetOrderPProductDetails_Result
     {
-        public string ProductName { get; set; }
-        public decimal Quantity { get; set; }
-        public string StoreName { get; set; }
+        public Nullable<int> ProductName { get; set; }
+        public int Quantity { get; set; }
+        public Nullable<int> StoreName { get; set; }
         public Nullable<int> StoreId { get; set; }
-        public Nullable<System.DateTime> OrderDate { get; set; }
+        public Nullable<int> OrderDate { get; set; }
         public Nullable<int> OrderId { get; set; }
-        public string UniqueCode { get; set; }
+        public Nullable<int> UniqueCode { get; set; }
         public Nullable<int> ReportOrderId { get; set; }
     }
 }

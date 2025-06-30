@@ -21,6 +21,7 @@ namespace MYBUSINESS.Controllers
 
     //[OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     //[NoCache]
+    [Authorize]
     public class DashboardController : Controller
     {
         private BusinessContext db = new BusinessContext();
@@ -284,7 +285,7 @@ namespace MYBUSINESS.Controllers
 
         //    return View(model);
         //}
-
+        [Authorize(Roles = "Admin,Accountant,Shop general manager")]
         public ActionResult DashboardStats(DateTime? startDate, DateTime? endDate, int? storeId)
         {
             // Set default dates with time components

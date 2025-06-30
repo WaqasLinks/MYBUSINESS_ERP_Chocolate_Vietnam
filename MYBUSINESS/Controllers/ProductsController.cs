@@ -18,7 +18,7 @@ using OfficeOpenXml;
 using System.Diagnostics;
 namespace MYBUSINESS.Controllers
 {
-    [Authorize(Roles = "Admin,Manager,User")]
+    [Authorize(Roles = "Admin,Purchasing manager,Technical Manager,Chocolate Production staff,Chocolate Production manager")]
     public class ProductsController : Controller
     {
         private BusinessContext db = new BusinessContext();
@@ -262,6 +262,7 @@ namespace MYBUSINESS.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin,Purchasing manager,Technical Manager,Chocolate Production staff,Chocolate Production manager")]
         // GET: Products
         public ActionResult Index()
         {
@@ -336,6 +337,7 @@ namespace MYBUSINESS.Controllers
         //    //return View(DAL.dbProducts.Include(x => x.StoreProducts).ToList());
         //}
 
+        [Authorize(Roles = "Admin,Purchasing manager,Technical Manager,Chocolate Production staff,Chocolate Production manager")]
         public ActionResult StockIndex(int? pType = null)
         {
             // 1. Get all necessary data for dropdowns
@@ -376,6 +378,8 @@ namespace MYBUSINESS.Controllers
 
             return View(products);
         }
+
+        [Authorize(Roles = "Admin,Purchasing manager,Technical Manager,Chocolate Production staff,Chocolate Production manager")]
         public ActionResult IndexStock(int? pType = null)
         {
             // 1. Get all necessary data for dropdowns
@@ -469,7 +473,7 @@ namespace MYBUSINESS.Controllers
 
         }
 
-
+        [Authorize(Roles = "Admin,Purchasing manager,Technical Manager,Chocolate Production staff,Chocolate Production manager")]
         public ActionResult Create()
         {
             int? storeId = Session["StoreId"] as int?;

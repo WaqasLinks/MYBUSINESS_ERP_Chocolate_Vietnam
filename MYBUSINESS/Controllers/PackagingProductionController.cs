@@ -18,7 +18,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
 
 namespace MYBUSINESS.Controllers
 {
-    [Authorize(Roles = "Admin,Manager,User")]
+    [Authorize(Roles = "Admin,Technical Manager,stock staff,stock manager")]
     public class PackagingProductionController : Controller
     {
         // GET: PackagingProduction
@@ -26,6 +26,7 @@ namespace MYBUSINESS.Controllers
         private DAL DAL = new DAL();
         private PackagingProductionViewModel packagingproductionViewModel = new PackagingProductionViewModel();
         // GET: Products
+        [Authorize(Roles = "Admin,Technical Manager,stock staff,stock manager")]
         public ActionResult Index()
         {
             var packagingProductions = db.PackagingProductions

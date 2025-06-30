@@ -22,14 +22,14 @@ using System.Threading.Tasks;
 
 namespace MYBUSINESS.Controllers
 {
-    [Authorize(Roles = "Admin,Manager,User")]
+    [Authorize(Roles = "Admin,Technical Manager,stock staff,stock manager")]
     public class StoreOrderController : Controller
     {
         private BusinessContext db = new BusinessContext();
         public const string LeavON_Email = "postmaster@phevasoft.com";
         public const string LeavON_Password = "l5wA0w3_[w7";
 
-
+        [Authorize(Roles = "Admin,Technical Manager,stock staff,stock manager")]
         public ActionResult IndexOrderPP()
         {            
             var orderitemspp = db.OrderPProducts.OrderByDescending(p => p.Id) // Sorting by Id in descending order
@@ -38,17 +38,7 @@ namespace MYBUSINESS.Controllers
             //return View(DAL.dbBOMs.Where(x => x.SubItems.Count() == 0).ToList());
         }
 
-
-        //public ActionResult Index()
-        //{
-
-        //    var orderitems = db.Orders
-        //                .Include(o => o.Store)
-        //                .OrderByDescending(p => p.Id)
-        //                .ToList();
-        //    return View(orderitems);
-
-        //}
+        [Authorize(Roles = "Admin,Technical Manager,stock staff,stock manager")]
         public ActionResult Index()
         {
             var orders = db.Orders
@@ -73,25 +63,8 @@ namespace MYBUSINESS.Controllers
             return View(orderitems);
             
         }
-        //public ActionResult CreateOrder()
-        //{
-        //    var finishProducts = db.Products.Where(p => p.PType == 4).ToList();
-        //    return View(finishProducts);
-        //}
-        //public ActionResult CreateOrder()
-        //{
-        //    var finishProducts = db.Products.Where(p => p.PType == 4).ToList();
 
-        //    var groupedProducts = finishProducts
-        //        .GroupBy(p => p.Category)
-        //        .Select(g => new ProductCategoryViewModel
-        //        {
-        //            CategoryName = g.Key,
-        //            Products = g.ToList()
-        //        }).ToList();
-
-        //    return View(groupedProducts);
-        //}
+        [Authorize(Roles = "Admin,Technical Manager,stock staff,stock manager")]
         public ActionResult CreateOrder()
         {
             var finishProducts = db.Products.Where(p => p.PType == 4).ToList();
@@ -109,7 +82,7 @@ namespace MYBUSINESS.Controllers
             return View(groupedProducts);
         }
 
-
+        [Authorize(Roles = "Admin,Technical Manager,stock staff,stock manager")]
         public ActionResult ReceiveOrder(int orderId)
         {
             var order = db.Orders.Include(o => o.Store).FirstOrDefault(o => o.Id == orderId);
@@ -129,7 +102,9 @@ namespace MYBUSINESS.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Admin,Technical Manager,stock staff,stock manager")]
         [HttpPost]
+
         [ValidateAntiForgeryToken]
         public ActionResult ReceiveOrder(ReceiveOrderViewModel model)
         {
@@ -291,20 +266,6 @@ namespace MYBUSINESS.Controllers
             catch { /* Ensure logging doesn't throw */ }
         }
 
-
-
-
-
-
-
-        //public ActionResult CreatePackagingOrder()
-        //{
-        //    var packagingProducts = db.Products.Where(p => p.PType == 8 || p.PType == 9).ToList();
-        //    var stores = db.Stores.ToList();
-        //    ViewBag.Stores = new SelectList(stores, "Id", "StoreShortName");
-        //    return View(packagingProducts);
-        //}
-
         public ActionResult CreatePackagingOrder()
         {
             var packagingProducts = db.Products.Where(p => p.PType == 8 || p.PType == 9).ToList();
@@ -315,34 +276,7 @@ namespace MYBUSINESS.Controllers
 
             return View(packagingProducts);
         }
-        //[HttpPost]
-        //public ActionResult SubmitOrder(List<OrderItem> orderitem)
-        //{
-        //    var order = new Order
-        //    {
-        //        StoreId = 20,
-        //        OrderDate = DateTime.Now
-        //    };
-
-        //    db.Orders.Add(order);
-        //    db.SaveChanges();
-
-        //    foreach (var item in orderitem)
-        //    {
-        //        // Create a new OrderItem instead of using the one from the form
-        //        var orderItem = new OrderItem
-        //        {
-        //            OrderId = order.Id,
-        //            ProductId = item.ProductId,
-        //            Quantity = item.Quantity
-        //        };
-        //        db.OrderItems.Add(orderItem);
-        //    }
-
-        //    db.SaveChanges();
-        //    return RedirectToAction("Index");
-        //}
-
+        
         [HttpPost]
         public ActionResult SubmitOrder(List<OrderItem> orderitem, int storeId)
         {
@@ -525,22 +459,6 @@ namespace MYBUSINESS.Controllers
             return File(renderedBytes, mimeType, $"Order_Receipt_{orderId}.pdf");
         }
 
-
-
-        //public ActionResult Edit(int orderId)
-        //{
-        //    var orderItems = db.OrderItems
-        //                       .Where(oi => oi.OrderId == orderId)
-        //                       .ToList();
-
-        //    if (!orderItems.Any())
-        //    {
-        //        return HttpNotFound("Order Items not found.");
-        //    }
-
-        //    return View(orderItems);
-        //}
-
         public ActionResult EditOrderPP(int orderId, bool? readonlyMode = false)
         {
             var orderItems = db.OrderItemPProducts
@@ -552,83 +470,23 @@ namespace MYBUSINESS.Controllers
                 return HttpNotFound("Order Items not found.");
             }
 
+            // ✅ Set ViewBag.Stores like you did in CreatePackagingOrder
+            var stores = db.Stores.ToList();
+            ViewBag.Stores = new SelectList(stores, "Id", "StoreShortName");
+
+            // ✅ Set current store ID to show selected store in readonly mode
+            ViewBag.CurrentStoreId = db.Stores
+                                       .Where(o => o.Id == orderId)
+                                       .Select(o => o.Id)
+                                       .FirstOrDefault();
+
+            ViewBag.ReadonlyMode = readonlyMode;
+
             return View(orderItems);
         }
 
 
-        //public ActionResult Edit(int orderId, bool? readonlyMode = false)
-        //{
-        //    var orderItems = db.OrderItems
-        //        .Where(oi => oi.OrderId == orderId)
-        //        .Include(oi => oi.Product) // make sure Product navigation is loaded
-        //        .ToList();
 
-        //    if (!orderItems.Any())
-        //    {
-        //        return HttpNotFound("Order Items not found.");
-        //    }
-
-        //    var grouped = orderItems
-        //        .GroupBy(oi => oi.Product.Category)
-        //        .Select(g => new EditOrderCategoryViewModel
-        //        {
-        //            CategoryName = g.Key,
-        //            Items = g.Select(oi => new OrderItemViewModel
-        //            {
-        //                Id = oi.Id,
-        //                ProductId = oi.ProductId.HasValue ? (int)oi.ProductId.Value : 0, // or (int?)oi.ProductId
-        //                OrderId = oi.OrderId ?? 0,
-        //                Quantity = oi.Quantity.HasValue ? (int)oi.Quantity.Value : 0,
-        //                ProductName = oi.Product.Name
-        //            }).ToList()
-        //        }).ToList();
-        //    ViewBag.ReadonlyMode = readonlyMode;
-        //    return View(grouped);
-        //}
-
-
-        //public ActionResult Edit(int orderId, bool? readonlyMode = false) Existing
-        //{
-        //    // Get the order first to know which store it belongs to
-        //    var order = db.Orders.Include(o => o.Store).FirstOrDefault(o => o.Id == orderId);
-        //    if (order == null)
-        //    {
-        //        return HttpNotFound("Order not found.");
-        //    }
-
-        //    var orderItems = db.OrderItems
-        //        .Where(oi => oi.OrderId == orderId)
-        //        .Include(oi => oi.Product)
-        //        .ToList();
-
-        //    if (!orderItems.Any())
-        //    {
-        //        return HttpNotFound("Order Items not found.");
-        //    }
-
-        //    var grouped = orderItems
-        //        .GroupBy(oi => oi.Product.Category)
-        //        .Select(g => new EditOrderCategoryViewModel
-        //        {
-        //            CategoryName = g.Key,
-        //            Items = g.Select(oi => new OrderItemViewModel
-        //            {
-        //                Id = oi.Id,
-        //                ProductId = oi.ProductId.HasValue ? (int)oi.ProductId.Value : 0,
-        //                OrderId = oi.OrderId ?? 0,
-        //                Quantity = oi.Quantity.HasValue ? (int)oi.Quantity.Value : 0,
-        //                ProductName = oi.Product.Name
-        //            }).ToList()
-        //        }).ToList();
-
-        //    // Get all stores for dropdown
-        //    var stores = db.Stores.ToList();
-        //    ViewBag.Stores = new SelectList(stores, "Id", "Name", order.StoreId);
-        //    ViewBag.ReadonlyMode = readonlyMode;
-        //    ViewBag.CurrentStoreId = order.StoreId; // Store current store ID
-
-        //    return View(grouped);
-        //}
 
         public ActionResult Edit(int orderId, bool? readonlyMode = false)
         {
@@ -666,7 +524,8 @@ namespace MYBUSINESS.Controllers
                         ProductId = oi.ProductId.HasValue ? (int)oi.ProductId.Value : 0,
                         OrderId = oi.OrderId ?? 0,
                         Quantity = oi.Quantity.HasValue ? (int)oi.Quantity.Value : 0,
-                        ProductName = oi.Product.Name
+                        ProductName = oi.Product.Name,
+                        Unit = oi.Product.Unit
                     }).ToList()
                 }).ToList();
 

@@ -39,9 +39,9 @@ namespace MYBUSINESS.Models
         public string Remarks2 { get; set; }
         public Nullable<decimal> EmployeeId { get; set; }
     
-        public virtual Customer Customer { get; set; }
         public virtual Employee Employee { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ServiceDetail> ServiceDetails { get; set; }
+        public virtual Customer Customer { get; set; }
     }
 }

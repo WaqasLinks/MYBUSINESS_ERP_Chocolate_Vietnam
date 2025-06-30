@@ -16,7 +16,8 @@ using System.Diagnostics;
 
 namespace MYBUSINESS.Controllers
 {
-    [Authorize(Roles = "Admin,Manager,User")]
+    //[Authorize(Roles = "Admin,Shop")]
+    [Authorize]
     public class StoresController : Controller
     {
         private BusinessContext db = new BusinessContext();
@@ -26,7 +27,7 @@ namespace MYBUSINESS.Controllers
         {
 
         }
-
+        [Authorize(Roles = "Admin")]
         public ActionResult Index(string id)
         {
             return View(DAL.dbStore);
@@ -77,6 +78,8 @@ namespace MYBUSINESS.Controllers
 
             return View(getDailyBalance);
         }
+
+        [Authorize(Roles = "Admin,Shop")]
         // GET: Stores Dashboard
         public ActionResult StoreDashboard(string id)
         {
@@ -230,7 +233,7 @@ namespace MYBUSINESS.Controllers
         //    return summaries;
         //}
 
-
+        [Authorize(Roles = "Admin,Accountant")]
         public ActionResult DailySummary(DateTime? startDate, DateTime? endDate)
         {
             // Set default dates: yesterday for start, today for end
@@ -353,7 +356,7 @@ namespace MYBUSINESS.Controllers
             }
             return View(store);
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: Customers/Create
         public ActionResult Create()
         {
@@ -374,7 +377,7 @@ namespace MYBUSINESS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Description,Address,PhoneNumber,VatNumber,CompanyName,CompanyAddress,CompanyVatNumber,StoreShortCode,StoreShortName")] Store store)
+        public ActionResult Create([Bind(Include = "Id,Name,Description,Address,PhoneNumber,VatNumber,CompanyName,CompanyAddress,CompanyVatNumber,StoreShortCode,StoreShortName,Email,ApiBaseUrl,ApiUsername,ApiPassword")] Store store)
         {
             if (ModelState.IsValid)
             {
@@ -486,7 +489,7 @@ namespace MYBUSINESS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Address,Description,Address,PhoneNumber")] Store store)
+        public ActionResult Edit([Bind(Include = "Id,Name,Address,Description,Address,PhoneNumber,,VatNumber,CompanyName,CompanyAddress,CompanyVatNumber,StoreShortCode,StoreShortName,Email,ApiBaseUrl,ApiUsername,ApiPassword")] Store store)
         {
             if (ModelState.IsValid)
             {

@@ -62,13 +62,7 @@
                                         <th>
                                            @Html.DisplayNameFor(model => model.Stock)
                                         </th>
-                                        <th style="display:none;">
-                                            @if (currentUser.EmployeeTypeId == 0)
-                                            {
-                                                @Html.DisplayNameFor(model => model.PurchasePrice)
-                                            }
-                                        </th>
-
+                                        
                                         <th style="display:none;">
                                             @Html.DisplayNameFor(model => model.SalePrice)
                                         </th>
@@ -135,19 +129,7 @@
                                             <td class="ProductNameForSearch">
                                                 @Html.DisplayFor(modelItem => item.Stock)
                                             </td>
-                                            <td style="display:none;">
-                                                @if (currentUser.EmployeeTypeId == 0)
-                                                {
-                                                    if (!item.IsService)
-                                                    {
-                                                        @Html.DisplayFor(modelItem => item.PurchasePrice)
-                                                    }
-                                                    else
-                                                    {
-                                                        @Html.DisplayName("---------")
-                                                    }
-                                                }
-                                            </td>
+                                            
 
                                             <td style="display:none;">
                                                 @Html.DisplayFor(modelItem => item.SalePrice)
@@ -365,39 +347,10 @@
             if ($.fn.DataTable.isDataTable('#ProductIndex')) {
                 $('#ProductIndex').DataTable().destroy();
             }
-            //$("#printMe").hide();
             window.print();
         });
 
-            // Initialize DataTable if you're using it
-        $('#ProductIndex').DataTable();
-        /*alert('hi');*/
-            // You can add additional store change handling here if needed
-            $('#storeId').change(function () {
-                // Show loading indicator
-                $('.box-body').html('<div class="text-center"><i class="fa fa-spinner fa-spin fa-3x"></i></div>');
-            });
-
-        //$('#SOSRIndex').DataTable({
-        //    fixedHeader: {
-        //        footer: true
-        //    }
-        //});
-
-        //$('#ProductIndex').DataTable({
-        //    //fixedHeader: {
-        //    //    header: true,
-        //    //    footer: true
-        //    //},
-        //    "scrollY": "400px",
-        //    "scrollCollapse": true,
-        //    "paging": false,
-        //    "bInfo": false,
-        //    "order": [[0, "desc"]],
-        //    "searching": true
-
-        //});
-
+        // Initialize DataTable with all configurations (only once)
         $('#ProductIndex').DataTable({
             "paging": true,
             "lengthChange": true,
@@ -447,18 +400,15 @@
                 },
                 'colvis'
             ],
-
             "footerCallback": function (row, data, start, end, display) {
                 var api = this.api(), data;
 
-                // Remove the formatting to get integer data for summation
                 var intVal = function (i) {
                     return typeof i === 'string' ?
                         i.replace(/[\$,]/g, '') * 1 :
                         typeof i === 'number' ?
                             i : 0;
                 };
-
 
                 // Order Qty
                 pageTotal = api
@@ -468,8 +418,6 @@
                         return intVal(a) + intVal(b);
                     }, 0);
                 $(api.column(4).footer()).html(pageTotal);
-
-
 
                 // Order Amount
                 pageTotal = api
@@ -515,14 +463,13 @@
                         return intVal(a) + intVal(b);
                     }, 0);
                 $(api.column(9).footer()).html(pageTotal);
-
-
-
             }
-
-
         });
 
+        // Store change handling
+        $('#storeId').change(function () {
+            $('.box-body').html('<div class="text-center"><i class="fa fa-spinner fa-spin fa-3x"></i></div>');
+        });
     });
 
 </script>

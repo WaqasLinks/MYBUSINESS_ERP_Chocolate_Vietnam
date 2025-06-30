@@ -614,7 +614,7 @@ $('#productDropdown').change(function () {
 
 
 // Trigger sub-item details fetch and update rows
-$('#productDropdown').change(function () {
+@*$('#productDropdown').change(function () {
     var productId = $(this).val(); // Get the selected product ID
 
     if (productId) {
@@ -668,7 +668,7 @@ $('#productDropdown').change(function () {
         </td>`;
                             $('#selectedProducts tbody').append(newRow);
 
-                        } else if (subItem.PType === "Variable" || subItem.PType === "Excess" || subItem.PType === "ByProduct") {
+                        } else if (subItem.PType === "Variable" || subItem.PType === "IntermediaryIngredient" || subItem.PType === "ByProduct") {
                             // Add row to Product Type Table (Final Product Table)
                             newRow += `
         <td>
@@ -720,8 +720,134 @@ $('#productDropdown').change(function () {
         $('#selectedProducts tbody').empty();
         $('#productTypeTable tbody').empty();
     }
-});
+});*@
+$('#productDropdown').change(function () {
+    var productId = $(this).val(); // Get the selected product ID
 
+    if (productId) {
+        $.ajax({
+            url: '@Url.Action("GetSubItemDetails", "PPNewProduction")',
+            type: 'GET',
+            data: { productId: productId },
+            success: function (data) {
+                if (data && data.length > 0) {
+                    // Clear existing rows in both tables
+                    $('#selectedProducts tbody').empty();
+                    $('#productTypeTable tbody').empty();
+
+                    // Loop through sub-items and append rows to the respective table
+                    data.forEach((subItem, index) => {
+                        let isByProduct = subItem.PType === "ByProduct"; // Check if PType is "ByProduct"
+                        let quantityValue = subItem.Quantity !== null && subItem.Quantity !== undefined ? subItem.Quantity : "0";
+
+                        let newRow = `
+    <tr ${isByProduct ? 'style="display: none;"' : ''}>  <!-- Hide ByProduct Rows -->
+        <td>${index + 1}</td>
+        <td style="display:none;">
+            <input type="hidden" name="PPSubItemProduction[${index}].ProductId" value="${subItem.ProductId}" />
+        </td>
+        <td>
+            <input type="text" readonly class="form-control"
+               name="PPSubItemProduction[${index}].Product.Name"
+               value="${subItem.ProductName}" />
+        </td>`;
+
+                        if ((subItem.Ingredient || subItem.IntermediaryIngredient) && subItem.Quantity > 0 ) {
+                            // Add row to Selected Products (Ingredient Table)
+                            newRow += `
+        </td>
+        <td style="display:none;">
+            <input type="hidden" readonly class="form-control"
+                   name="PPSubItemProduction[${index}].Quantity"
+                   value="${quantityValue}"
+                   placeholder="Quantity" />
+        </td>
+        <td>
+            <span class="calculated-subitem">0.00</span>
+            <input type="hidden" name="PPSubItemProduction[${index}].SubItemQty" class="subitem-qty-hidden" value="0.00" />
+        </td>
+        <td>
+            <input type="text" readonly class="form-control"
+                   name="PPSubItemProduction[${index}].Unit"
+                   value="${subItem.Unit || ''}"
+                   placeholder="Unit" />
+        </td>
+        <td>
+            <input type="text" readonly class="form-control"
+                   name="PPSubItemProduction[${index}].Product.PType"
+                   value="${subItem.PType === 'Excess' ? 'Intermediary Ingredient' : subItem.PType}"
+                   placeholder="Product Type" />
+        </td>`;
+                            $('#selectedProducts tbody').append(newRow + '</tr>');
+
+                        }
+                        if (
+                            (subItem.PType === "Variable" ||
+                                subItem.PType === "Excess" ||
+                                subItem.PType === "ByProduct" ||
+                                subItem.Ingredient) &&
+                            (subItem.Quantity === null || subItem.Quantity === undefined)
+                        )  {
+                            // Add row to Product Type Table (Final Product Table)
+                            let typeRow = `
+    <tr ${isByProduct ? 'style="display: none;"' : ''}>
+        <td>${index + 1}</td>
+        <td style="display:none;">
+            <input type="hidden" name="PPSubItemProduction[${index}].ProductId" value="${subItem.ProductId}" />
+        </td>
+        <td>
+            <input type="text" readonly class="form-control"
+               name="PPSubItemProduction[${index}].Product.Name"
+               value="${subItem.ProductName}" />
+        </td>
+        <td>
+            <input type="text" class="form-control production-qty1"
+                data-variable-product-id="${subItem.VariableProduct}"
+                name="PPSubItemProduction[${index}].Quantity"
+                value="${quantityValue}"
+                placeholder="Quantity" />
+        </td>
+        <td>
+            <input type="text" readonly class="form-control"
+                   name="PPSubItemProduction[${index}].Unit"
+                   value="${subItem.Unit || ''}"
+                   placeholder="Unit" />
+        </td>
+        <td>
+            <input type="text" readonly class="form-control"
+                   name="PPSubItemProduction[${index}].Product.PType"
+                   value="${subItem.PType === 'Excess' ? 'Ingredient' : subItem.PType}"
+                   placeholder="Product Type" />
+        </td>
+        <td>
+            <input type="hidden"
+                   name="PPSubItemProduction[${index}].ProductType"
+                   value="${subItem.PType === 'Excess' ? 'Ingredient' : subItem.PType}" />
+        </td>
+    </tr>`;
+                            $('#productTypeTable tbody').append(typeRow);
+                        }
+                    });
+
+                    // Update calculations after adding rows
+                    updateSubItemCalculations();
+                } else {
+                    // If no data, clear tables and show alert
+                    $('#selectedProducts tbody').empty();
+                    $('#productTypeTable tbody').empty();
+                    alert('No sub-item details found.');
+                }
+            },
+            error: function () {
+                alert('Failed to fetch sub-item details.');
+            }
+        });
+    } else {
+        // If no product selected, clear both tables
+        $('#selectedProducts tbody').empty();
+        $('#productTypeTable tbody').empty();
+    }
+});
 
 
 

@@ -18,7 +18,7 @@ using MYBUSINESS.Models;
 
 namespace MYBUSINESS.Controllers
 {
-    [Authorize(Roles = "Admin,Manager,User")]
+    [Authorize(Roles = "Admin,Purchasing manager,Technical Manager,Chocolate Production staff,Chocolate Production manager")]
     public class POPRController : Controller
     {
         private BusinessContext db = new BusinessContext();
@@ -74,6 +74,7 @@ namespace MYBUSINESS.Controllers
         //    //var poess = pOes.OrderByDescending(i => i.Date).ToList();
         //    return View(poess);
         //}
+        [Authorize(Roles = "Admin,Purchasing manager,Technical Manager,Chocolate Production staff,Chocolate Production manager")]
         public ActionResult Index()
         {
             int? storeId = Session["StoreId"] as int?;
@@ -352,6 +353,7 @@ namespace MYBUSINESS.Controllers
             return View(pO);
         }
 
+        [Authorize(Roles = "Admin,Purchasing manager,Technical Manager,Chocolate Production staff,Chocolate Production manager")]
         // GET: POes/Create
         public ActionResult Create(string IsReturn)
         {
@@ -378,7 +380,7 @@ namespace MYBUSINESS.Controllers
 
             PurchaseOrderViewModel purchaseOrderViewModel = new PurchaseOrderViewModel();
             purchaseOrderViewModel.Suppliers = DAL.dbSuppliers;
-            purchaseOrderViewModel.Products = DAL.dbProducts.Include(x => x.StoreProducts).Where(x => /*x.PType == 4 || x.PType == 7 &&*/ x.IsService == false);
+            purchaseOrderViewModel.Products = DAL.dbProducts.Include(x => x.StoreProducts).Where(x => x.PType == 5 || x.PType == 7 || x.PType == 9 && x.IsService == false);
             //purchaseOrderViewModel.FundingSources = db.FundingSources.ToList() ;
             ViewBag.FundingSources = new SelectList(db.Suppliers.Where(x => x.IsCreditor == true), "Id", "Name");//db.FundingSources.ToList(); ;
             ViewBag.BankAccounts = new SelectList(db.BankAccounts, "Id", "Name");
@@ -1090,7 +1092,7 @@ namespace MYBUSINESS.Controllers
 
 
 
-
+        [Authorize(Roles = "Admin,Purchasing manager")]
         [HttpPost]
         
         public JsonResult Validation(List<MYBUSINESS.Models.POPViewModel> LstProductionVM)
