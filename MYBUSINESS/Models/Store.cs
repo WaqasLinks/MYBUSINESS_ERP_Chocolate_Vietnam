@@ -19,10 +19,11 @@ namespace MYBUSINESS.Models
         {
             this.Orders = new HashSet<Order>();
             this.PrintedPackagings = new HashSet<PrintedPackaging>();
-            this.SOes = new HashSet<SO>();
             this.StoreOrderReceipts = new HashSet<StoreOrderReceipt>();
             this.StoreProducts = new HashSet<StoreProduct>();
             this.OrderPProducts = new HashSet<OrderPProduct>();
+            this.ScanCreditCards = new HashSet<ScanCreditCard>();
+            this.SOes = new HashSet<SO>();
         }
     
         public int Id { get; set; }
@@ -50,12 +51,14 @@ namespace MYBUSINESS.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PrintedPackaging> PrintedPackagings { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SO> SOes { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<StoreOrderReceipt> StoreOrderReceipts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<StoreProduct> StoreProducts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderPProduct> OrderPProducts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ScanCreditCard> ScanCreditCards { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SO> SOes { get; set; }
     }
 }

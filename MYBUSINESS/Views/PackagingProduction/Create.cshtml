@@ -54,14 +54,14 @@
 model => model.PackagingProduction.ProductId,
 (SelectList)ViewBag.ProductList,
 "Select a Product",
-new { @class = "form-control product-dropdown", @id = "productDropdown" }
+new { @class = "form-control product-dropdown", @id = "productDropdown", required = "required" }
 )
                             @Html.ValidationMessageFor(model => model.PackagingProduction.ProductId, "", new { @class = "text-danger" })
                         </div>
 
                         
                         <div id="supplier-field" class="form-group optional-field">
-                            @Html.LabelFor(model => Model.PackagingProduction.Supplier, htmlAttributes: new { @class = "control-label" })
+                            @Html.LabelFor(model => Model.PackagingProduction.Supplier, htmlAttributes: new { @class = "control-label", required = "required" })
                             <input type="text" autocomplete="off" class="form-control"
                                    name="PackagingProduction.Supplier"
                                    id="packagingSupplier"
@@ -86,7 +86,7 @@ new { @class = "form-control product-dropdown", @id = "productDropdown" }
                         <div class="form-group">
                             @*@Html.LabelFor(model => Model.PackagingProduction.PProdDate, htmlAttributes: new { @class = "control-label" })*@
                             <label>Paper Order Date</label>
-                            @Html.TextBoxFor(model => Model.PackagingProduction.PProdDate, new { @class = "form-control", type = "date" })
+                            @Html.TextBoxFor(model => Model.PackagingProduction.PProdDate, new { @class = "form-control", type = "date", required = "required", })
                             @Html.ValidationMessageFor(model => Model.PackagingProduction.PProdDate, "", new { @class = "text-danger" })
                         </div>
 

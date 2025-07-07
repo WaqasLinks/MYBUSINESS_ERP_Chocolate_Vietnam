@@ -78,7 +78,7 @@ namespace MYBUSINESS.Controllers
             // Get products without BOM
             // Get all stores and show their Name
             var stores = db.Stores
-                .Select(s => new { Value = s.Id.ToString(), Text = s.Name }) // Use Store Name instead of Product Name
+                .Select(s => new { Value = s.Id.ToString(), Text = s.StoreShortName }) // Use Store Name instead of Product Name
                 .ToList();
 
             // Assign to ViewBag for dropdown

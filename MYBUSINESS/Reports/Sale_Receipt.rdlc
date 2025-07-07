@@ -7,7 +7,7 @@
         <DataProvider>System.Data.DataSet</DataProvider>
         <ConnectString>/* Local Connection */</ConnectString>
       </ConnectionProperties>
-      <rd:DataSourceID>9950e189-b309-4b3f-9bf9-8d6f04dfd0b4</rd:DataSourceID>
+      <rd:DataSourceID>cb860ad1-12fb-407a-9878-7be67f254c4a</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>
@@ -36,6 +36,10 @@
         <Field Name="SaleOrderAmountWithVaT">
           <DataField>SaleOrderAmountWithVaT</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="SaleOrderAmountWithC">
+          <DataField>SaleOrderAmountWithC</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Name">
           <DataField>Name</DataField>
@@ -1130,7 +1134,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=FormatNumber(Fields!SaleOrderAmount.Value, 2)</Value>
+                    <Value>=First(Fields!SaleOrderAmountWithC.Value, "DataSet1")</Value>
                     <Style>
                       <FontFamily />
                       <FontSize>6pt</FontSize>
@@ -1165,7 +1169,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=FormatNumber(Fields!Balance.Value, 2)</Value>
+                    <Value>=FormatNumber(Abs(Fields!Balance.Value), 2)</Value>
                     <Style>
                       <FontFamily />
                       <FontSize>6pt</FontSize>

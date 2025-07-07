@@ -26,37 +26,72 @@
     </div>
 </form>
 
+@*<div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-light shadow-sm p-3 mb-2 rounded">
+                <h5>Number of Sales:</h5>
+                <h3>@Model.NumberOfSales</h3>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-light shadow-sm p-3 mb-2 rounded">
+                <h5>Total Sales Without VAT:</h5>
+                <h3>@string.Format("{0}đ", Model.TotalSalesWithoutVAT.ToString("N2"))</h3>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-light shadow-sm p-3 mb-2 rounded">
+                <h5>Total Sales With VAT:</h5>
+                <h3>@string.Format("{0}đ", Model.TotalSalesWithVAT.ToString("N2"))</h3>
+            </div>
+        </div>
+        <br />
+        <br />
+
+        <div class="col-md-4">
+            <div class="card bg-light shadow-sm p-3 mb-2 rounded">
+                <h5>Average Sale Without VAT:</h5>
+                <h3>@string.Format("{0}đ", Model.AverageSaleWithoutVAT.ToString("N2"))</h3>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-light shadow-sm p-3 mb-2 rounded">
+                <h5>Average Sale With VAT:</h5>
+                <h3>@string.Format("{0}đ", Model.AverageSaleWithVAT.ToString("N2"))</h3>
+            </div>
+        </div>
+    </div>*@
 <div class="row mb-4">
+    <!-- Top row: Total Sales Without VAT and With VAT -->
+    <div class="col-md-6">
+        <div class="card bg-light shadow-sm p-3 mb-3 rounded text-center">
+            <h5>Total Sales Without VAT</h5>
+            <h3>@string.Format("{0}đ", Model.TotalSalesWithoutVAT.ToString("N2"))</h3>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card bg-light shadow-sm p-3 mb-3 rounded text-center">
+            <h5>Total Sales With VAT</h5>
+            <h3>@string.Format("{0}đ", Model.TotalSalesWithVAT.ToString("N2"))</h3>
+        </div>
+    </div>
+
+    <!-- Bottom row: 3 columns -->
     <div class="col-md-4">
-        <div class="card bg-light shadow-sm p-3 mb-2 rounded">
-            <h5>Number of Sales:</h5>
+        <div class="card bg-light shadow-sm p-3 mb-3 rounded text-center">
+            <h5>Number of Sales</h5>
             <h3>@Model.NumberOfSales</h3>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card bg-light shadow-sm p-3 mb-2 rounded">
-            <h5>Total Sales Without VAT:</h5>
-            <h3>@string.Format("{0}đ", Model.TotalSalesWithoutVAT.ToString("N2"))</h3>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card bg-light shadow-sm p-3 mb-2 rounded">
-            <h5>Total Sales With VAT:</h5>
-            <h3>@string.Format("{0}đ", Model.TotalSalesWithVAT.ToString("N2"))</h3>
-        </div>
-    </div>
-    <br />
-    <br />
-    
-    <div class="col-md-4">
-        <div class="card bg-light shadow-sm p-3 mb-2 rounded">
-            <h5>Average Sale Without VAT:</h5>
+        <div class="card bg-light shadow-sm p-3 mb-3 rounded text-center">
+            <h5>Average Sale Without VAT</h5>
             <h3>@string.Format("{0}đ", Model.AverageSaleWithoutVAT.ToString("N2"))</h3>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card bg-light shadow-sm p-3 mb-2 rounded">
-            <h5>Average Sale With VAT:</h5>
+        <div class="card bg-light shadow-sm p-3 mb-3 rounded text-center">
+            <h5>Average Sale With VAT</h5>
             <h3>@string.Format("{0}đ", Model.AverageSaleWithVAT.ToString("N2"))</h3>
         </div>
     </div>

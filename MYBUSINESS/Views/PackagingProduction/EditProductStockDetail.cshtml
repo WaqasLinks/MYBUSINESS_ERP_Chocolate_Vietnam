@@ -9,145 +9,124 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.js"></script>
 
 <link href="@Url.Content("~/Content/custom/custom.css")" rel="stylesheet" type="text/css" />
-<script src="~/Content/custom/colorproduction.js"></script>
+@*<script src="~/Content/custom/colorproduction.js"></script>
 
 <script src="~/Content/custom/downloads/jquery.mcautocomplete.js"></script>
-<script src="~/Content/custom/downloads/jquery.scannerdetection.js"></script>
+<script src="~/Content/custom/downloads/jquery.scannerdetection.js"></script>*@
 
 @{
     bool isReadonly = ViewBag.ReadonlyMode ?? false;
 }
-@using (Html.BeginForm("EditProductStockDetail", "PackagingProduction", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-    <div class="container" id="container">
-        <div class="table-wrapper">
-            <div class="table-title">
-                <div class="row">
-                    <div class="col-sm-offset-5">
-                        <h3>Product: @Model.ProductName</h3>
-                        <h2>Edit Production Stock</h2>
-                    </div>
+<div class="container" id="container">
+    <div class="table-wrapper">
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-offset-5">
+                    <h3>Product: @Model.ProductName</h3>
+                    <h2>Edit Production Stock</h2>
                 </div>
             </div>
+        </div>
 
-            <table id="production-table" class="table table-bordered">
-                <thead>
-                    <tr class="table-info">
-                        <td style="width:10%"><strong>Flat Box in Stock</strong></td>
-                        @foreach (var color in Model.ColorComponents)
-                        {
-                            <td>@color.Quantity</td>
-                        }
-                    </tr>
-                </thead>
-            </table>
+        @Html.AntiForgeryToken()
 
-            <table id="selectedProducts" class="table table-bordered">
-                <thead>
-                    <tr class="table-info">
-                        <th style="width:2%;">#</th>
-                        <th style="width:8%">Colors</th>
-                        @foreach (var color in Model.ColorComponents)
-                        {
-                            <th>@color.ColorName</th>
-                        }
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td id="SNo0">1</td>
-                        <td><strong>Stock Update</strong></td>
-                        @for (int i = 0; i < Model.ColorComponents.Count; i++)
-                        {
-                            var color = Model.ColorComponents[i];
-                            <td>
-                                <input type="hidden" name="@($"ColorComponents[{i}].ColorId")" value="@color.ColorId" />
-                                <input type="hidden" name="@($"ColorComponents[{i}].ColorName")" value="@color.ColorName" />
-                                <input type="number"
-                                       name="@($"ColorComponents[{i}].Quantity")"
-                                       class="form-control produced-qty"
-                                       value="@color.Quantity"
-                                       min="0" />
-                            </td>
-                        }
-                    </tr>
-                </tbody>
-            </table>
+        <table id="production-table" class="table table-bordered">
+            <thead>
+                <tr class="table-info">
+                    <td style="width:10%"><strong>Flat Box in Stock</strong></td>
+                    @foreach (var color in Model.ColorComponents)
+                    {
+                        <td>@color.Quantity</td>
+                    }
+                </tr>
+            </thead>
+        </table>
 
-            <div class="form-group">
-                <button type="submit" class="btn btn-success mt-3" id="saveBtn">Update Stock</button>
-                @Html.ActionLink("Back to List", "FlatBoxStockSummary", null, new { @class = "btn btn-default mt-3" })
-            </div>
+        <table id="selectedProducts" class="table table-bordered">
+            <thead>
+                <tr class="table-info">
+                    <th style="width:2%;">#</th>
+                    <th style="width:8%">Colors</th>
+                    @foreach (var color in Model.ColorComponents)
+                    {
+                        <th>@color.ColorName</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="SNo0">1</td>
+                    <td><strong>Stock Update</strong></td>
+                    @for (int i = 0; i < Model.ColorComponents.Count; i++)
+                    {
+                        var color = Model.ColorComponents[i];
+                        <td>
+                            <input type="hidden" class="js-color-id" value="@color.ColorId" />
+                            <input type="hidden" class="js-packaging-production-id" value="@Model.PackagingProductionId" />
+                            <input type="hidden" class="js-product-id" value="@Model.ProductId" />
+                            <input type="number"
+                                   class="form-control js-quantity"
+                                   value="@color.Quantity"
+                                   min="0" />
+                        </td>
+                    }
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="form-group">
+            <button type="button" class="btn btn-success mt-3" id="saveBtn">Update Stock</button>
+            @Html.ActionLink("Back to List", "FlatBoxStockSummary", null, new { @class = "btn btn-default mt-3" })
         </div>
     </div>
-}
+</div>
 
 @section Scripts {
     <script>
-        const modelData = @Html.Raw(JsonConvert.SerializeObject(Model));
+    $(document).ready(function() {
+    $('#saveBtn').click(function() {
+        var colorComponents = [];
+        var packagingProductionId = $('.js-packaging-production-id').first().val();
+        var productId = $('.js-product-id').first().val();
 
-        $(document).on("click", "#saveBtn", function(e) {
-            e.preventDefault();
-            console.log("Save button clicked!");
-            saveProductionData();
+        $('.js-quantity').each(function(index) {
+            var $row = $(this).closest('td');
+            colorComponents.push({
+                ColorId: parseInt($row.find('.js-color-id').val()) || 0,
+                PackagingProductionId: parseInt(packagingProductionId) || 0,
+                ProductId: parseInt(productId) || 0,
+                Quantity: parseInt($(this).val()) || 0,
+                ColorName: $row.find('.js-color-name').val() || "@Model.ColorComponents[0].ColorName"
+            });
         });
 
-        function saveProductionData() {
-            const formData = [];
-            const productionId = modelData.PackagingProductionId || 0;
+        console.log("Submitting:", colorComponents);
 
-            // Get all color components
-            const colorComponents = modelData.ColorComponents || [];
-
-            // Get the quantities from the inputs
-            colorComponents.forEach((color, index) => {
-                const quantityInput = document.querySelector(`input[name="ColorComponents[${index}].Quantity"]`);
-                const colorIdInput = document.querySelector(`input[name="ColorComponents[${index}].ColorId"]`);
-
-                formData.push({
-                    PaperColorId: colorIdInput ? parseInt(colorIdInput.value) : 0,
-                    PackagingProductionId: productionId,
-                    Quantity: quantityInput ? parseInt(quantityInput.value) || 0 : 0,
-                    ProductId: modelData.ProductId || 0,
-                    ColorId: color.ColorId,
-                    ColorName: color.ColorName
-                });
-            });
-
-            console.log("Data being sent:", formData);
-
-            fetch('@Url.Action("EditProductStockDetail", "PackagingProduction")', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
-                },
-                body: JSON.stringify(formData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert("Stock data updated successfully!");
-                    window.location.href = '@Url.Action("FlatBoxStockSummary", "PackagingProduction")';
+        $.ajax({
+            url: '@Url.Action("EditProductStockDetail", "PackagingProduction")',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ colorComponents: colorComponents }), // Wrapped in object
+            headers: {
+                'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+            },
+            success: function(response) {
+                if (response && response.success) {
+                    window.location.href = response.redirectUrl ||
+                        '@Url.Action("FlatBoxStockSummary", "PackagingProduction")';
                 } else {
-                    alert("Failed to update: " + (data.message || 'Unknown Error'));
+                    alert("Error: " + (response?.message || "Unknown error occurred"));
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert("Error occurred while updating.");
-            });
-        }
-
-        function getTotalReceivedForColor(color) {
-            let total = 0;
-            $(`.qty-input[data-color="${color}"]`).each(function() {
-                total += parseFloat($(this).val()) || 0;
-            });
-            return total;
-        }
+            },
+            error: function(xhr) {
+                var errorMsg = xhr.responseJSON?.message ||
+                              xhr.statusText ||
+                              "Server error occurred";
+                alert("Error: " + errorMsg);
+            }
+        });
+    });
+});
     </script>
 }

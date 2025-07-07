@@ -175,7 +175,7 @@
 
                                     <div id="purchase-price-field" class="form-group optional-field">
                                         @*@Html.LabelFor(model => model.PurchasePrice, htmlAttributes: new { @class = "control-label" })*@
-                                        <lebel><b>Purchase Price</b></lebel>
+                                        <lebel><b>Purchase Price (VAT excluded)</b></lebel>
                                         @Html.EditorFor(model => model.Product.PurchasePrice, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.Product.PurchasePrice, "", new { @class = "text-danger" })
 
@@ -327,7 +327,7 @@
                                 </div>
                                 <div class="box-footer">
                                     <input type="submit" value="Create" id="CreateProduct" class="btn btn-primary" />
-                                    @Html.ActionLink("Back to List", "Index")
+                                    @Html.ActionLink("Back to List", "StockIndex")
                                 </div>
 
 </form>

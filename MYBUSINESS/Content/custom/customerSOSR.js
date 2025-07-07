@@ -709,18 +709,54 @@ function addProduct(encodedProductJson) {
     //    //After getting the quantity, call the function to add the product
     //    handleProductAddition(encodedProductJson, quantityFromModal, true);
     //});
+   //Current $('#validateQuantity').off('click').on('click', function (e) {
+   //     debugger;
+   //     var quantityFromModal = parseInt($('#productQuantity').val(), 10) || 0; // Ensure it's a number and default to 0 if invalid
+   //     if (quantityFromModal == 0) {
+   //         return;
+   //     }
+
+   //     // Hide the modal and reset the input
+   //     $('#quantityAddpopup').modal('hide');
+   //     $('#productQuantity').val(1);
+
+   //     // Get the product name stored in the modal
+   //     if (isPupdateQuantity) {
+   //         var productJsonString = $('#quantityAddpopup').data('productDetails');
+   //         if (productJsonString != undefined) {
+   //             var product = JSON.parse(productJsonString);
+   //             if (product != undefined) {
+   //                 var existingRow = findProductRow(product.Name);
+   //                 if (existingRow) {
+   //                     debugger;
+   //                     // If the product row exists, update it directly
+   //                     handleProductAddition(productJsonString, quantityFromModal, true);
+   //                     isPupdateQuantity = false;
+   //                 }
+   //                 else {
+   //                     return;
+   //                 }
+   //             }
+   //             else {
+   //                 handleProductAddition(encodedProductJson, quantityFromModal, false);
+   //             }
+   //         }
+   //         else { handleProductAddition(encodedProductJson, quantityFromModal, false); }
+   //     }
+   //     else { debugger; handleProductAddition(encodedProductJson, quantityFromModal, false); }
+   //     // Find the row for the existing product based on the product name
+
+   // });
     $('#validateQuantity').off('click').on('click', function (e) {
         debugger;
-        var quantityFromModal = parseInt($('#productQuantity').val(), 10) || 0; // Ensure it's a number and default to 0 if invalid
+        var quantityFromModal = parseInt($('#productQuantity').val(), 10) || 0;
         if (quantityFromModal == 0) {
             return;
         }
 
-        // Hide the modal and reset the input
         $('#quantityAddpopup').modal('hide');
         $('#productQuantity').val(1);
 
-        // Get the product name stored in the modal
         if (isPupdateQuantity) {
             var productJsonString = $('#quantityAddpopup').data('productDetails');
             if (productJsonString != undefined) {
@@ -728,9 +764,8 @@ function addProduct(encodedProductJson) {
                 if (product != undefined) {
                     var existingRow = findProductRow(product.Name);
                     if (existingRow) {
-                        debugger;
-                        // If the product row exists, update it directly
-                        handleProductAddition(productJsonString, quantityFromModal, true);
+                        // CHANGE: Set the new quantity directly (do NOT add to existing)
+                        handleProductAddition(productJsonString, quantityFromModal, true); // Just pass the new value
                         isPupdateQuantity = false;
                     }
                     else {
@@ -741,13 +776,14 @@ function addProduct(encodedProductJson) {
                     handleProductAddition(encodedProductJson, quantityFromModal, false);
                 }
             }
-            else { handleProductAddition(encodedProductJson, quantityFromModal, false); }
+            else {
+                handleProductAddition(encodedProductJson, quantityFromModal, false);
+            }
         }
-        else { debugger; handleProductAddition(encodedProductJson, quantityFromModal, false); }
-        // Find the row for the existing product based on the product name
-
+        else {
+            handleProductAddition(encodedProductJson, quantityFromModal, false);
+        }
     });
-
 }
 function findProductRow(productName) {
     debugger
@@ -1207,63 +1243,53 @@ function findProductRow(productName) {
 function handleProductAddition(encodedProductJson, quantityFromScanner, isUpdate = false) {
     debugger;
     var product = JSON.parse(encodedProductJson);
-    var rowIndex = document.querySelectorAll('#selectedProducts tbody tr').length; // Zero-based index
+    var rowIndex = document.querySelectorAll('#selectedProducts tbody tr').length;
     var suggestedNewProductId = document.getElementById('suggestedNewProductId').value;
-    //var aa=$('#quantityAddpopup').data('productName');
-    var existingRow = findProductRow(product.Name); // Find if product already exists in the table
+    var existingRow = findProductRow(product.Name);
 
     if (existingRow && isUpdate) {
-        // Existing product logic, used for updating quantity
-        var qtyInput = existingRow.cells[3].querySelector('input'); // Select input from qtyCell
-        var totalCell = existingRow.cells[5]; // Assuming total price is the 6th cell (index 5)
-        var currentQty = parseInt(qtyInput.value, 10);
-
-        // Set the new quantity based on update flag
-        var newQty = quantityFromScanner;
-
-        // Calculate the new total price
-        var newTotalPrice = newQty * product.SalePrice;
-        totalCell.innerText = formatNumberWithDots(newTotalPrice);
-
-        // Update quantity input
-        qtyInput.value = newQty;
-
-        // Update hidden inputs
-        var hiddenQtyInput = existingRow.querySelector("[name^='SaleOrderDetail'][name$='Quantity']");
-        hiddenQtyInput.value = newQty;
-
-        // Update the totalVndBalanceHeader by adding the difference in price
+        // === UPDATE MODE: Replace quantity (NOT add) ===
+        var qtyInput = existingRow.cells[3].querySelector('input');
+        var currentQty = parseInt(qtyInput.value, 10) || 0;
         var oldTotalPrice = currentQty * product.SalePrice;
+
+        var newQty = quantityFromScanner;
+        var newTotalPrice = newQty * product.SalePrice;
+
+        // Update input field, hidden input, and total column
+        qtyInput.value = newQty;
+        existingRow.querySelector("[name^='SaleOrderDetail'][name$='Quantity']").value = newQty;
+        existingRow.cells[5].innerText = formatNumberWithDots(newTotalPrice);
+
+        // Update header balance
         totalVndBalanceHeader += newTotalPrice - oldTotalPrice;
+
+        // Debug
+        console.log("Updated:", product.Name, "| Old Qty:", currentQty, "| New Qty:", newQty);
+
         saveSelectedProductsToLocalStorage();
         isPupdateQuantity = false;
-
     } else if (existingRow && !isUpdate) {
-        // If we are adding and the product already exists, just increase the quantity
-        var qtyInput = existingRow.cells[3].querySelector('input'); // Select input from qtyCell
-        var totalCell = existingRow.cells[5]; // Assuming total price is the 6th cell (index 5)
+        // === ADD MODE: Add to existing quantity ===
+        var qtyInput = existingRow.cells[3].querySelector('input');
+        var totalCell = existingRow.cells[5];
         var currentQty = parseInt(qtyInput.value, 10);
 
-        // Increment by the new quantity
         var newQty = currentQty + quantityFromScanner;
-
-        // Calculate the new total price
         var newTotalPrice = newQty * product.SalePrice;
+        var oldTotalPrice = currentQty * product.SalePrice;
+
+        qtyInput.value = newQty;
+        existingRow.querySelector("[name^='SaleOrderDetail'][name$='Quantity']").value = newQty;
         totalCell.innerText = formatNumberWithDots(newTotalPrice);
 
-        // Update quantity input
-        qtyInput.value = newQty;
-
-        // Update hidden inputs
-        var hiddenQtyInput = existingRow.querySelector("[name^='SaleOrderDetail'][name$='Quantity']");
-        hiddenQtyInput.value = newQty;
-
-        // Update the totalVndBalanceHeader by adding the difference in price
-        var oldTotalPrice = currentQty * product.SalePrice;
         totalVndBalanceHeader += newTotalPrice - oldTotalPrice;
+
+        console.log("Added:", product.Name, "| New Qty:", newQty);
+
         saveSelectedProductsToLocalStorage();
     } else {
-        // Create a new row if the product does not exist
+        // === NEW PRODUCT ROW ===
         var newRow = document.createElement('tr');
         var indexCell = document.createElement('td');
         var nameCell = document.createElement('td');
@@ -1275,94 +1301,55 @@ function handleProductAddition(encodedProductJson, quantityFromScanner, isUpdate
         totalCell.id = 'selectedProductTotal' + rowIndex;
         var actionsCell = document.createElement('td');
 
-        // Fill the cells with product data
-        indexCell.innerText = rowIndex + 1; // Row index starts from 1
+        // Cell data
+        indexCell.innerText = rowIndex + 1;
         nameCell.innerText = product.Name;
-
         priceCell.innerText = formatNumberWithDots(product.SalePrice);
-        priceCell.style.display = 'none'; // Hide Price cell
+        priceCell.style.display = 'none';
 
-        // Create an editable input for quantity
+        // Quantity input
         var qtyInput = document.createElement('input');
         qtyInput.type = 'number';
         qtyInput.min = '1';
         qtyInput.value = quantityFromScanner;
         qtyInput.className = 'form-control';
-        qtyInput.style.width = '60px'; // Adjust width as needed
-        // Listen for changes in the quantity input (on key press)
-        qtyInput.addEventListener('input', function () {
-            var newQty = parseInt(qtyInput.value, 10);
-            if (isNaN(newQty) || newQty < 1) {
-                newQty = 1; // Prevent invalid or negative values
-                qtyInput.value = 1;
-            }
+        qtyInput.style.width = '60px';
 
-            // Calculate the new total price
+        // Hidden quantity input for syncing
+        var hiddenQuantityInput = createHiddenInput('SaleOrderDetail[' + rowIndex + '].Quantity', quantityFromScanner);
+
+        // Live quantity change
+        qtyInput.addEventListener('input', function () {
+            var newQty = parseInt(qtyInput.value, 10) || 1;
             var newTotalPrice = newQty * product.SalePrice;
             totalCell.innerText = formatNumberWithDots(newTotalPrice);
-
-            // Update hidden quantity input
             hiddenQuantityInput.value = newQty;
-            //localStorage.setItem('selectedProducts', JSON.stringify(product));
-            // Recalculate total balance
             updatePayButton();
         });
 
+        // Popup for editing
         qtyInput.addEventListener('click', function () {
-            debugger;
+            $('#quantityAddpopup').data('productDetails', JSON.stringify(product)); // Set data
             $('#quantityAddpopup').modal('show');
-            //$('#quantityAddpopup').on('shown.bs.modal', function () {
-            //    //$('#productQuantity').focus().select();
-            //    $('#productQuantity').focus();
-            //});
-            //// Highlight text and reset flag when input gains focus
-            //$('#productQuantity').on('focus', function () {
-            //    isFirstEntry = true; // Reset flag on focus
-            //    focusedInput = $(this); // Set focusedInput to the current input
-            //    $(this).select(); // Highlight the text in the input
-            //});
             isPupdateQuantity = true;
-            //$('#quantityAddpopup').data('productDetails', JSON.stringify(product));
         });
 
-        // Append the input to the qtyCell
         qtyCell.appendChild(qtyInput);
 
         billNumberCell.innerText = suggestedNewProductId;
-        billNumberCell.style.display = 'none'; // Hide bill number cell
+        billNumberCell.style.display = 'none';
 
         var totalAmount = quantityFromScanner * product.SalePrice;
         totalCell.innerText = formatNumberWithDots(totalAmount);
-
         totalVndBalanceHeader += totalAmount;
 
-        // Create hidden inputs
-        var hiddenProductIdInput = document.createElement('input');
-        hiddenProductIdInput.type = 'hidden';
-        hiddenProductIdInput.name = 'SaleOrderDetail[' + rowIndex + '].ProductId';
-        hiddenProductIdInput.value = product.Id;
+        // Hidden inputs
+        var hiddenProductIdInput = createHiddenInput('SaleOrderDetail[' + rowIndex + '].ProductId', product.Id);
+        var hiddenProductNameInput = createHiddenInput('SaleOrderDetail[' + rowIndex + '].Product.Name', product.Name);
+        var hiddenSalePriceInput = createHiddenInput('SaleOrderDetail[' + rowIndex + '].SalePrice', product.SalePrice);
+        var hiddenPurchasePriceInput = createHiddenInput('SaleOrderDetail[' + rowIndex + '].PurchasePrice', product.PurchasePrice);
 
-        var hiddenProductNameInput = document.createElement('input');
-        hiddenProductNameInput.type = 'hidden';
-        hiddenProductNameInput.name = 'SaleOrderDetail[' + rowIndex + '].Product.Name';
-        hiddenProductNameInput.value = product.Name;
-
-        var hiddenSalePriceInput = document.createElement('input');
-        hiddenSalePriceInput.type = 'hidden';
-        hiddenSalePriceInput.name = 'SaleOrderDetail[' + rowIndex + '].SalePrice';
-        hiddenSalePriceInput.value = product.SalePrice;
-
-        var hiddenPurchasePriceInput = document.createElement('input');
-        hiddenPurchasePriceInput.type = 'hidden';
-        hiddenPurchasePriceInput.name = 'SaleOrderDetail[' + rowIndex + '].PurchasePrice';
-        hiddenPurchasePriceInput.value = product.PurchasePrice;
-
-        var hiddenQuantityInput = document.createElement('input');
-        hiddenQuantityInput.type = 'hidden';
-        hiddenQuantityInput.name = 'SaleOrderDetail[' + rowIndex + '].Quantity';
-        hiddenQuantityInput.value = quantityFromScanner;
-
-        // Add action button for row deletion
+        // Delete button
         var removeButton = document.createElement('button');
         removeButton.type = 'button';
         removeButton.className = 'btn btn-sm';
@@ -1376,7 +1363,7 @@ function handleProductAddition(encodedProductJson, quantityFromScanner, isUpdate
         };
         actionsCell.appendChild(removeButton);
 
-        // Append the cells to the new row
+        // Build row
         newRow.appendChild(indexCell);
         newRow.appendChild(nameCell);
         newRow.appendChild(priceCell);
@@ -1384,26 +1371,28 @@ function handleProductAddition(encodedProductJson, quantityFromScanner, isUpdate
         newRow.appendChild(billNumberCell);
         newRow.appendChild(totalCell);
         newRow.appendChild(actionsCell);
-
-        // Append hidden inputs to the row
         newRow.appendChild(hiddenProductIdInput);
         newRow.appendChild(hiddenProductNameInput);
         newRow.appendChild(hiddenSalePriceInput);
         newRow.appendChild(hiddenPurchasePriceInput);
         newRow.appendChild(hiddenQuantityInput);
 
-        // Append the new row to the table body
         document.querySelector('#selectedProducts tbody').appendChild(newRow);
-
-        // Update row indices
         updateRowIndices();
-
-        // After adding the row, store all selected products in localStorage
         saveSelectedProductsToLocalStorage();
     }
 
-    // Update the total amount for the "Pay" button
     updatePayButton();
+}
+
+
+// Helper function for hidden inputs
+function createHiddenInput(name, value) {
+    var input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = name;
+    input.value = value;
+    return input;
 }
 // Utility function to set a cookie
 function setCookie(name, value, days) {
@@ -3494,6 +3483,16 @@ function calculateLeftToPay() {
 
     // If the remaining balance is negative or zero, update lefttopayvnd accordingly
     $('#lefttopayvnd').val(formatNumberWithDots(leftVndBalance));
+
+    const $field = $('#lefttopayvnd');
+    $field[0].removeAttribute("style"); // clear any existing inline style
+
+    if (!isNaN(leftVndBalance) && leftVndBalance < 0) {
+        $field[0].style.backgroundColor = "#28a745"; // green background
+        $field[0].style.color = "#ffffff";           // white text
+        $field[0].style.borderColor = "#28a745";     // green border
+    }
+
 
     // Enable or disable the payment button based on whether the balance is fully paid or overpaid
     if (leftVndBalance <= 0) {

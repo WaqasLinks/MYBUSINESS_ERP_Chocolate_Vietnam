@@ -418,6 +418,42 @@
           <Property Name="OrderDate" Type="datetime" />
           <Property Name="Validate" Type="bit" />
         </EntityType>
+        <EntityType Name="PackagingBOM">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Remarks" Type="nvarchar" MaxLength="500" />
+          <Property Name="Saleable" Type="bit" Nullable="false" />
+          <Property Name="Purchasable" Type="bit" Nullable="false" />
+          <Property Name="Manufacturable" Type="bit" Nullable="false" />
+          <Property Name="ShelfLife" Type="int" />
+          <Property Name="TimeUnit" Type="nvarchar" MaxLength="500" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="UpdateDate" Type="datetime" />
+          <Property Name="ProductionProcessCateogry" Type="nchar" MaxLength="10" />
+          <Property Name="ProductionProcessDescription" Type="nvarchar(max)" />
+          <Property Name="ProductName" Type="nvarchar" MaxLength="300" />
+          <Property Name="ProductId" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Unit" Type="nvarchar" MaxLength="500" />
+          <Property Name="Quantity" Type="decimal" Precision="18" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PackagingColor">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="ParentProductId" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="ProductId" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Quantity" Type="decimal" Precision="18" Scale="6" />
+          <Property Name="BOMId" Type="int" />
+          <Property Name="Unit" Type="nvarchar" MaxLength="50" />
+          <Property Name="AvailableInventory" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="QuantityRequested" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="QuantitytoPrepare" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="ProductType" Type="tinyint" />
+          <Property Name="Color" Type="nvarchar(max)" />
+        </EntityType>
         <EntityType Name="PackagingColored">
           <Key>
             <PropertyRef Name="Id" />
@@ -461,6 +497,21 @@
           <Property Name="ProductId" Type="decimal" Precision="18" Scale="0" />
           <Property Name="Quantity" Type="decimal" Precision="18" Scale="6" />
           <Property Name="PakColoredId" Type="int" />
+          <Property Name="Unit" Type="nvarchar" MaxLength="50" />
+          <Property Name="AvailableInventory" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="QuantityRequested" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="QuantitytoPrepare" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="ProductType" Type="tinyint" />
+        </EntityType>
+        <EntityType Name="PacSubitem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="ParentProductId" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="ProductId" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Quantity" Type="decimal" Precision="18" Scale="6" />
+          <Property Name="PackagingBOMId" Type="int" />
           <Property Name="Unit" Type="nvarchar" MaxLength="50" />
           <Property Name="AvailableInventory" Type="decimal" Precision="18" Scale="0" />
           <Property Name="QuantityRequested" Type="decimal" Precision="18" Scale="0" />
@@ -1274,6 +1325,15 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <Property Name="UniqueCode" Type="nvarchar(max)" />
           <Property Name="OrderId" Type="int" />
         </EntityType>
+        <EntityType Name="StoreOrderReceiptPP">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StoreId" Type="int" />
+          <Property Name="UniqueCode" Type="nvarchar(max)" />
+          <Property Name="OrderId" Type="int" />
+        </EntityType>
         <EntityType Name="StoreProduct">
           <Key>
             <PropertyRef Name="Id" />
@@ -1752,6 +1812,42 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_PackagingBOM_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+          <End Role="PackagingBOM" Type="Self.PackagingBOM" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PackagingBOM">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PackagingColor_PackagingBOM">
+          <End Role="PackagingBOM" Type="Self.PackagingBOM" Multiplicity="0..1" />
+          <End Role="PackagingColor" Type="Self.PackagingColor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PackagingBOM">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PackagingColor">
+              <PropertyRef Name="BOMId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PackagingColor_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+          <End Role="PackagingColor" Type="Self.PackagingColor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PackagingColor">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_PackagingProduction_Product">
           <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
           <End Role="PackagingProduction" Type="Self.PackagingProduction" Multiplicity="*" />
@@ -1760,6 +1856,30 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="PackagingProduction">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PacSubitem_PackagingBOM">
+          <End Role="PackagingBOM" Type="Self.PackagingBOM" Multiplicity="0..1" />
+          <End Role="PacSubitem" Type="Self.PacSubitem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PackagingBOM">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PacSubitem">
+              <PropertyRef Name="PackagingBOMId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PacSubitem_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+          <End Role="PacSubitem" Type="Self.PacSubitem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PacSubitem">
               <PropertyRef Name="ProductId" />
             </Dependent>
           </ReferentialConstraint>
@@ -2446,6 +2566,18 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ScanCreditCard_Store">
+          <End Role="Store" Type="Self.Store" Multiplicity="0..1" />
+          <End Role="ScanCreditCard" Type="Self.ScanCreditCard" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Store">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ScanCreditCard">
+              <PropertyRef Name="StoreId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Service_Customer">
           <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
           <End Role="Service" Type="Self.Service" Multiplicity="*" />
@@ -2668,6 +2800,18 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_StoreOrderReceiptPP_OrderItemPProducts">
+          <End Role="OrderItemPProducts" Type="Self.OrderItemPProducts" Multiplicity="0..1" />
+          <End Role="StoreOrderReceiptPP" Type="Self.StoreOrderReceiptPP" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderItemPProducts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="StoreOrderReceiptPP">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_StoreProduct_Product">
           <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
           <End Role="StoreProduct" Type="Self.StoreProduct" Multiplicity="*" />
@@ -2757,6 +2901,15 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           </ReferentialConstraint>
         </Association>
         <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+        <Function Name="GetColorQuantitiesByProductionId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PackagingProductionId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetPackagingProductionColorDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PackagingProductionId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetPackagingProductionColorDetailsCombined" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PackagingProductionId" Type="int" Mode="In" />
+        </Function>
         <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
           <Parameter Name="owner_id" Type="int" Mode="In" />
@@ -2852,9 +3005,12 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <EntitySet Name="OrderItems" EntityType="Self.OrderItems" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderPProducts" EntityType="Self.OrderPProducts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PackagingBOM" EntityType="Self.PackagingBOM" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PackagingColor" EntityType="Self.PackagingColor" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PackagingColored" EntityType="Self.PackagingColored" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PackagingProduction" EntityType="Self.PackagingProduction" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PackagingSubItems" EntityType="Self.PackagingSubItems" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PacSubitem" EntityType="Self.PacSubitem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PaperColor" EntityType="Self.PaperColor" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Payment" EntityType="Self.Payment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PO" EntityType="Self.PO" Schema="dbo" store:Type="Tables" />
@@ -2899,6 +3055,7 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <EntitySet Name="SPDReceiver" EntityType="Self.SPDReceiver" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Store" EntityType="Self.Store" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StoreOrderReceipt" EntityType="Self.StoreOrderReceipt" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StoreOrderReceiptPP" EntityType="Self.StoreOrderReceiptPP" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StoreProduct" EntityType="Self.StoreProduct" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SubItem" EntityType="Self.SubItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SubItemProduction" EntityType="Self.SubItemProduction" Schema="dbo" store:Type="Tables" />
@@ -3039,9 +3196,29 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             <End Role="Store" EntitySet="Store" />
             <End Role="Orders" EntitySet="Orders" />
           </AssociationSet>
+          <AssociationSet Name="FK_PackagingBOM_Product" Association="Self.FK_PackagingBOM_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="PackagingBOM" EntitySet="PackagingBOM" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PackagingColor_PackagingBOM" Association="Self.FK_PackagingColor_PackagingBOM">
+            <End Role="PackagingBOM" EntitySet="PackagingBOM" />
+            <End Role="PackagingColor" EntitySet="PackagingColor" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PackagingColor_Product" Association="Self.FK_PackagingColor_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="PackagingColor" EntitySet="PackagingColor" />
+          </AssociationSet>
           <AssociationSet Name="FK_PackagingProduction_Product" Association="Self.FK_PackagingProduction_Product">
             <End Role="Product" EntitySet="Product" />
             <End Role="PackagingProduction" EntitySet="PackagingProduction" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PacSubitem_PackagingBOM" Association="Self.FK_PacSubitem_PackagingBOM">
+            <End Role="PackagingBOM" EntitySet="PackagingBOM" />
+            <End Role="PacSubitem" EntitySet="PacSubitem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PacSubitem_Product" Association="Self.FK_PacSubitem_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="PacSubitem" EntitySet="PacSubitem" />
           </AssociationSet>
           <AssociationSet Name="FK_Payment_SO" Association="Self.FK_Payment_SO">
             <End Role="SO" EntitySet="SO" />
@@ -3263,6 +3440,10 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             <End Role="Rent" EntitySet="Rent" />
             <End Role="RentDetail" EntitySet="RentDetail" />
           </AssociationSet>
+          <AssociationSet Name="FK_ScanCreditCard_Store" Association="Self.FK_ScanCreditCard_Store">
+            <End Role="Store" EntitySet="Store" />
+            <End Role="ScanCreditCard" EntitySet="ScanCreditCard" />
+          </AssociationSet>
           <AssociationSet Name="FK_Service_Customer" Association="Self.FK_Service_Customer">
             <End Role="Customer" EntitySet="Customer" />
             <End Role="Service" EntitySet="Service" />
@@ -3334,6 +3515,10 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <AssociationSet Name="FK_StoreOrderReceipt_Store" Association="Self.FK_StoreOrderReceipt_Store">
             <End Role="Store" EntitySet="Store" />
             <End Role="StoreOrderReceipt" EntitySet="StoreOrderReceipt" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StoreOrderReceiptPP_OrderItemPProducts" Association="Self.FK_StoreOrderReceiptPP_OrderItemPProducts">
+            <End Role="OrderItemPProducts" EntitySet="OrderItemPProducts" />
+            <End Role="StoreOrderReceiptPP" EntitySet="StoreOrderReceiptPP" />
           </AssociationSet>
           <AssociationSet Name="FK_StoreProduct_Product" Association="Self.FK_StoreProduct_Product">
             <End Role="Product" EntitySet="Product" />
@@ -3417,9 +3602,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <FunctionImport Name="spBankDepositReport" ReturnType="Collection(Models.spBankDepositReport_Result)">
           <Parameter Name="BankDepositId" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="spSOReport" ReturnType="Collection(Models.spSOReport_Result)">
-          <Parameter Name="SaleOrderID" Mode="In" Type="String" />
-          </FunctionImport>
           <FunctionImport Name="spGetOrderProductDetails" ReturnType="Collection(Models.spGetOrderProductDetails_Result)">
           <Parameter Name="OrderId" Mode="In" Type="Int32" />
           </FunctionImport>
@@ -3479,12 +3661,10 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <EntitySet Name="Rents" EntityType="Models.Rent" />
           <EntitySet Name="RentDetails" EntityType="Models.RentDetail" />
           <EntitySet Name="ScanBankDeposits" EntityType="Models.ScanBankDeposit" />
-          <EntitySet Name="ScanCreditCards" EntityType="Models.ScanCreditCard" />
           <EntitySet Name="ScanMoneyInputs" EntityType="Models.ScanMoneyInput" />
           <EntitySet Name="Services" EntityType="Models.Service" />
           <EntitySet Name="ServiceDetails" EntityType="Models.ServiceDetail" />
           <EntitySet Name="ShopManages" EntityType="Models.ShopManage" />
-          <EntitySet Name="SOes" EntityType="Models.SO" />
           <EntitySet Name="SODs" EntityType="Models.SOD" />
           <EntitySet Name="SPackagings" EntityType="Models.SPackaging" />
           <EntitySet Name="Stores" EntityType="Models.Store" />
@@ -3505,16 +3685,12 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             <End Role="AspNetUserLogin" EntitySet="AspNetUserLogins" />
           </AssociationSet>
           <AssociationSet Name="FK_PO_Account" Association="Models.FK_PO_Account">
-            <End Role="BankAccount" EntitySet="BankAccounts" />
-            <End Role="PO" EntitySet="POes" />
+            <End EntitySet="BankAccounts" Role="BankAccount" />
+            <End EntitySet="POes" Role="PO" />
           </AssociationSet>
           <AssociationSet Name="FK_PrintedPackaging_BankAccount" Association="Models.FK_PrintedPackaging_BankAccount">
-            <End Role="BankAccount" EntitySet="BankAccounts" />
-            <End Role="PrintedPackaging" EntitySet="PrintedPackagings" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SO_Account" Association="Models.FK_SO_Account">
-            <End Role="BankAccount" EntitySet="BankAccounts" />
-            <End Role="SO" EntitySet="SOes" />
+            <End EntitySet="BankAccounts" Role="BankAccount" />
+            <End EntitySet="PrintedPackagings" Role="PrintedPackaging" />
           </AssociationSet>
           <AssociationSet Name="FK_ProductType_BOM" Association="Models.FK_ProductType_BOM">
             <End Role="BOM" EntitySet="BOMs" />
@@ -3584,10 +3760,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             <End Role="Employee" EntitySet="Employees" />
             <End Role="Service" EntitySet="Services" />
           </AssociationSet>
-          <AssociationSet Name="FK_SO_Employee" Association="Models.FK_SO_Employee">
-            <End Role="Employee" EntitySet="Employees" />
-            <End Role="SO" EntitySet="SOes" />
-          </AssociationSet>
           <AssociationSet Name="FK_Expense_Supplier" Association="Models.FK_Expense_Supplier">
             <End Role="Supplier" EntitySet="Suppliers" />
             <End Role="Expense" EntitySet="Expenses" />
@@ -3623,10 +3795,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <AssociationSet Name="FK_ProductStockDetail_PaperColor" Association="Models.FK_ProductStockDetail_PaperColor">
             <End Role="PaperColor" EntitySet="PaperColors" />
             <End Role="ProductStockDetail" EntitySet="ProductStockDetails" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Payment_SO" Association="Models.FK_Payment_SO">
-            <End Role="SO" EntitySet="SOes" />
-            <End Role="Payment" EntitySet="Payments" />
           </AssociationSet>
           <AssociationSet Name="FK_PO_Supplier" Association="Models.FK_PO_Supplier">
             <End Role="Supplier" EntitySet="Suppliers" />
@@ -3683,14 +3851,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <AssociationSet Name="FK_ServiceDetail_Service" Association="Models.FK_ServiceDetail_Service">
             <End Role="Service" EntitySet="Services" />
             <End Role="ServiceDetail" EntitySet="ServiceDetails" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SO_Store" Association="Models.FK_SO_Store">
-            <End Role="Store" EntitySet="Stores" />
-            <End Role="SO" EntitySet="SOes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SOD_SO" Association="Models.FK_SOD_SO">
-            <End Role="SO" EntitySet="SOes" />
-            <End Role="SOD" EntitySet="SODs" />
           </AssociationSet>
           <AssociationSet Name="FK_SPackaging_Supplier" Association="Models.FK_SPackaging_Supplier">
             <End Role="Supplier" EntitySet="Suppliers" />
@@ -3960,9 +4120,79 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             <End Role="Customer" EntitySet="Customers" />
             <End Role="Service" EntitySet="Services" />
           </AssociationSet>
+          <FunctionImport Name="GetPackagingProductionColorDetails" ReturnType="Collection(Models.GetPackagingProductionColorDetails_Result)">
+          <Parameter Name="PackagingProductionId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetPackagingProductionColorDetailsCombined" ReturnType="Collection(Models.GetPackagingProductionColorDetailsCombined_Result)">
+          <Parameter Name="PackagingProductionId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetColorQuantitiesByProductionId" ReturnType="Collection(Models.GetColorQuantitiesByProductionId_Result)">
+          <Parameter Name="PackagingProductionId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="ScanCreditCards" EntityType="Models.ScanCreditCard" />
+          <AssociationSet Name="FK_ScanCreditCard_Store" Association="Models.FK_ScanCreditCard_Store">
+            <End Role="Store" EntitySet="Stores" />
+            <End Role="ScanCreditCard" EntitySet="ScanCreditCards" />
+          </AssociationSet>
+          <EntitySet Name="StoreOrderReceiptPPs" EntityType="Models.StoreOrderReceiptPP" />
+          <AssociationSet Name="FK_StoreOrderReceiptPP_OrderItemPProducts" Association="Models.FK_StoreOrderReceiptPP_OrderItemPProducts">
+            <End Role="OrderItemPProduct" EntitySet="OrderItemPProducts" />
+            <End Role="StoreOrderReceiptPP" EntitySet="StoreOrderReceiptPPs" />
+          </AssociationSet>
+          <EntitySet Name="PackagingBOMs" EntityType="Models.PackagingBOM" />
+          <AssociationSet Name="FK_PackagingBOM_Product" Association="Models.FK_PackagingBOM_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="PackagingBOM" EntitySet="PackagingBOMs" />
+          </AssociationSet>
+          <EntitySet Name="PacSubitems" EntityType="Models.PacSubitem" />
+          <AssociationSet Name="FK_PacSubitem_PackagingBOM" Association="Models.FK_PacSubitem_PackagingBOM">
+            <End Role="PackagingBOM" EntitySet="PackagingBOMs" />
+            <End Role="PacSubitem" EntitySet="PacSubitems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PacSubitem_Product" Association="Models.FK_PacSubitem_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="PacSubitem" EntitySet="PacSubitems" />
+          </AssociationSet>
+          <FunctionImport Name="spSOReport" ReturnType="Collection(Models.spSOReport_Result)">
+          <Parameter Name="SaleOrderID" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="SOes" EntityType="Models.SO" />
+          <AssociationSet Name="FK_SO_Account" Association="Models.FK_SO_Account">
+            <End EntitySet="BankAccounts" Role="BankAccount" />
+            <End EntitySet="SOes" Role="SO" />
+          </AssociationSet>
           <AssociationSet Name="FK_SO_Customer" Association="Models.FK_SO_Customer">
             <End Role="Customer" EntitySet="Customers" />
             <End Role="SO" EntitySet="SOes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SO_Employee" Association="Models.FK_SO_Employee">
+            <End Role="Employee" EntitySet="Employees" />
+            <End Role="SO" EntitySet="SOes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Payment_SO" Association="Models.FK_Payment_SO">
+            <End EntitySet="SOes" Role="SO" />
+            <End EntitySet="Payments" Role="Payment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SO_Store" Association="Models.FK_SO_Store">
+            <End Role="Store" EntitySet="Stores" />
+            <End Role="SO" EntitySet="SOes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SOD_SO" Association="Models.FK_SOD_SO">
+            <End Role="SO" EntitySet="SOes" />
+            <End Role="SOD" EntitySet="SODs" />
+          </AssociationSet>
+          <EntitySet Name="PackagingColors" EntityType="Models.PackagingColor" />
+          <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId1" Association="Models.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId1">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserLogin" EntitySet="AspNetUserLogins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PackagingColor_PackagingBOM" Association="Models.FK_PackagingColor_PackagingBOM">
+            <End Role="PackagingBOM" EntitySet="PackagingBOMs" />
+            <End Role="PackagingColor" EntitySet="PackagingColors" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PackagingColor_Product" Association="Models.FK_PackagingColor_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="PackagingColor" EntitySet="PackagingColors" />
           </AssociationSet>
           </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
@@ -4101,44 +4331,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <Property Type="String" Name="CustomerEmail" Nullable="true" MaxLength="500" />
           <Property Type="String" Name="CustomerAddress" Nullable="true" MaxLength="500" />
         </ComplexType>
-        <ComplexType Name="spSOReport_Result">
-          <Property Type="String" Name="Id" Nullable="false" MaxLength="50" />
-          <Property Type="Decimal" Name="SOSerial" Nullable="true" Precision="18" Scale="0" />
-          <Property Type="Decimal" Name="SaleOrderQty" Nullable="true" Precision="18" Scale="8" />
-          <Property Type="String" Name="PaymentMethod" Nullable="true" MaxLength="100" />
-          <Property Type="Decimal" Name="SaleOrderAmountWithVaT" Nullable="true" Precision="18" Scale="8" />
-          <Property Type="String" Name="Name" Nullable="true" MaxLength="300" />
-          <Property Type="String" Name="Address" Nullable="true" MaxLength="500" />
-          <Property Type="String" Name="CustomerRemarks" Nullable="true" MaxLength="500" />
-          <Property Type="String" Name="ProductName" Nullable="true" MaxLength="300" />
-          <Property Type="Decimal" Name="SalePrice" Nullable="true" Precision="18" Scale="2" />
-          <Property Type="Int32" Name="Quantity" Nullable="true" />
-          <Property Type="Decimal" Name="PerPack" Nullable="true" Precision="18" Scale="0" />
-          <Property Type="Boolean" Name="IsPack" Nullable="true" />
-          <Property Type="String" Name="BizName" Nullable="true" MaxLength="500" />
-          <Property Type="String" Name="BizAddress" Nullable="true" MaxLength="500" />
-          <Property Type="String" Name="Mobile" Nullable="true" MaxLength="500" />
-          <Property Type="String" Name="Email" Nullable="true" MaxLength="500" />
-          <Property Type="String" Name="Website" Nullable="true" MaxLength="500" />
-          <Property Type="String" Name="Tagline" Nullable="true" MaxLength="500" />
-          <Property Type="String" Name="CompanyName" Nullable="true" MaxLength="500" />
-          <Property Type="String" Name="CompanyAddress" Nullable="true" MaxLength="500" />
-          <Property Type="String" Name="VatNumber" Nullable="true" MaxLength="500" />
-          <Property Type="Decimal" Name="TaxInPercent" Nullable="true" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="ItemTotal" Nullable="true" Precision="38" Scale="2" />
-          <Property Type="String" Name="SaleType" Nullable="false" MaxLength="1" />
-          <Property Type="Decimal" Name="SaleOrderAmount" Nullable="true" Precision="18" Scale="8" />
-          <Property Type="Decimal" Name="BillPaid" Nullable="false" Precision="18" Scale="8" />
-          <Property Type="Decimal" Name="BillPaidByCash" Nullable="true" Precision="18" Scale="8" />
-          <Property Type="Decimal" Name="Discount" Nullable="true" Precision="18" Scale="8" />
-          <Property Type="Decimal" Name="Balance" Nullable="true" Precision="18" Scale="8" />
-          <Property Type="Decimal" Name="PrevBalance" Nullable="true" Precision="18" Scale="8" />
-          <Property Type="DateTime" Name="Date" Nullable="true" Precision="23" />
-          <Property Type="String" Name="Remarks" Nullable="true" MaxLength="500" />
-          <Property Type="String" Name="StoreCompanyName" Nullable="true" MaxLength="200" />
-          <Property Type="String" Name="StoreCompanyAddress" Nullable="true" MaxLength="200" />
-          <Property Type="String" Name="StoreCompanyVatNumber" Nullable="true" MaxLength="200" />
-        </ComplexType>
         <ComplexType Name="spGetOrderProductDetails_Result">
           <Property Type="String" Name="ProductName" Nullable="false" MaxLength="300" />
           <Property Type="Decimal" Name="Quantity" Nullable="false" Precision="18" Scale="0" />
@@ -4225,8 +4417,9 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           </Key>
           <Property Name="LoginProvider" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="ProviderKey" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="UserId" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" Type="String" />
           <NavigationProperty Name="AspNetUser" Relationship="Models.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUserLogin" ToRole="AspNetUser" />
+          <NavigationProperty Name="AspNetUser1" Relationship="Models.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId1" FromRole="AspNetUserLogin" ToRole="AspNetUser" />
         </EntityType>
         <EntityType Name="AspNetUser">
           <Key>
@@ -4247,16 +4440,17 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <NavigationProperty Name="AspNetUserClaims" Relationship="Models.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserClaim" />
           <NavigationProperty Name="AspNetUserLogins" Relationship="Models.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserLogin" />
           <NavigationProperty Name="AspNetRoles" Relationship="Models.AspNetUserRoles" FromRole="AspNetUser" ToRole="AspNetRole" />
+          <NavigationProperty Name="AspNetUserLogins1" Relationship="Models.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId1" FromRole="AspNetUser" ToRole="AspNetUserLogin" />
         </EntityType>
         <EntityType Name="BankAccount">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="true" />
-          <Property Name="Name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Id" Nullable="false" MaxLength="36" FixedLength="false" Unicode="true" Type="String" />
+          <Property Name="Name" MaxLength="500" FixedLength="false" Unicode="true" Type="String" />
           <Property Name="AccountType" Type="Int32" />
-          <Property Name="Balance" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Balance" Precision="18" Scale="2" Type="Decimal" />
+          <Property Name="Description" MaxLength="500" FixedLength="false" Unicode="true" Type="String" />
           <NavigationProperty Name="POes" Relationship="Models.FK_PO_Account" FromRole="BankAccount" ToRole="PO" />
           <NavigationProperty Name="PrintedPackagings" Relationship="Models.FK_PrintedPackaging_BankAccount" FromRole="BankAccount" ToRole="PrintedPackaging" />
           <NavigationProperty Name="SOes" Relationship="Models.FK_SO_Account" FromRole="BankAccount" ToRole="SO" />
@@ -4561,6 +4755,7 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <Property Name="Quantity" Type="Decimal" Precision="18" Scale="0" />
           <NavigationProperty Name="Product" Relationship="Models.FK_OrderItemPProducts_Product" FromRole="OrderItemPProduct" ToRole="Product" />
           <NavigationProperty Name="OrderPProduct" Relationship="Models.FK_OrderItemPProducts_OrderPProducts" FromRole="OrderItemPProduct" ToRole="OrderPProduct" />
+          <NavigationProperty Name="StoreOrderReceiptPPs" Relationship="Models.FK_StoreOrderReceiptPP_OrderItemPProducts" FromRole="OrderItemPProduct" ToRole="StoreOrderReceiptPP" />
         </EntityType>
         <EntityType Name="OrderItem">
           <Key>
@@ -5114,16 +5309,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <Property Name="StoreId" Type="Int32" />
           <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
-        <EntityType Name="ScanCreditCard">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="StoreId" Type="Int32" />
-          <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Date" Type="DateTime" Precision="0" />
-          <Property Name="Amount" Type="Decimal" Precision="18" Scale="0" />
-        </EntityType>
         <EntityType Name="ScanMoneyInput">
           <Key>
             <PropertyRef Name="Id" />
@@ -5194,46 +5379,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <Property Name="USDQuantity" Type="Int32" />
           <Property Name="Date" Type="DateTime" Precision="0" />
         </EntityType>
-        <EntityType Name="SO">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="SOSerial" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="BillAmount" Type="Decimal" Nullable="false" Precision="18" Scale="8" />
-          <Property Name="BillPaid" Type="Decimal" Nullable="false" Precision="18" Scale="8" />
-          <Property Name="Discount" Type="Decimal" Precision="18" Scale="8" />
-          <Property Name="Balance" Type="Decimal" Precision="18" Scale="8" />
-          <Property Name="PrevBalance" Type="Decimal" Precision="18" Scale="8" />
-          <Property Name="Date" Type="DateTime" Precision="3" />
-          <Property Name="SaleReturn" Type="Boolean" Nullable="false" />
-          <Property Name="CustomerId" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="SaleOrderAmount" Type="Decimal" Precision="18" Scale="8" />
-          <Property Name="SaleOrderQty" Type="Decimal" Precision="18" Scale="8" />
-          <Property Name="Profit" Type="Decimal" Precision="18" Scale="8" />
-          <Property Name="PaymentMethod" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="PaymentDetail" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Remarks2" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="EmployeeId" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="BankAccountId" Type="String" MaxLength="36" FixedLength="false" Unicode="true" />
-          <Property Name="Quotation" Type="Boolean" />
-          <Property Name="StoreId" Type="Int32" />
-          <Property Name="BillPaidByCash" Type="Decimal" Precision="18" Scale="8" />
-          <Property Name="UserId" Type="Int32" />
-          <Property Name="VatNumber" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="VatAmountInPercent" Type="Decimal" Precision="18" Scale="8" />
-          <Property Name="SaleOrderAmountWithVaT" Type="Decimal" Precision="18" Scale="8" />
-          <Property Name="SaleOrderAmountWithC" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <Property Name="IsCancelled" Type="Boolean" />
-          <Property Name="OrigionalId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="BankAccount" Relationship="Models.FK_SO_Account" FromRole="SO" ToRole="BankAccount" />
-          <NavigationProperty Name="Employee" Relationship="Models.FK_SO_Employee" FromRole="SO" ToRole="Employee" />
-          <NavigationProperty Name="Payments" Relationship="Models.FK_Payment_SO" FromRole="SO" ToRole="Payment" />
-          <NavigationProperty Name="Store" Relationship="Models.FK_SO_Store" FromRole="SO" ToRole="Store" />
-          <NavigationProperty Name="SODs" Relationship="Models.FK_SOD_SO" FromRole="SO" ToRole="SOD" />
-          <NavigationProperty Name="Customer" Relationship="Models.FK_SO_Customer" FromRole="SO" ToRole="Customer" />
-        </EntityType>
         <EntityType Name="SOD">
           <Key>
             <PropertyRef Name="Auto" />
@@ -5251,8 +5396,8 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <Property Name="SaleType" Type="Boolean" />
           <Property Name="Profit" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="SO" Relationship="Models.FK_SOD_SO" FromRole="SOD" ToRole="SO" />
           <NavigationProperty Name="Product" Relationship="Models.FK_SOD_Product1" FromRole="SOD" ToRole="Product" />
+          <NavigationProperty Name="SO" Relationship="Models.FK_SOD_SO" FromRole="SOD" ToRole="SO" />
         </EntityType>
         <EntityType Name="SPackaging">
           <Key>
@@ -5308,10 +5453,11 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <Property Name="InvoiceSeriesSuffix" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Orders" Relationship="Models.FK_Orders_Store" FromRole="Store" ToRole="Order" />
           <NavigationProperty Name="PrintedPackagings" Relationship="Models.FK_PrintedPackaging_Store" FromRole="Store" ToRole="PrintedPackaging" />
-          <NavigationProperty Name="SOes" Relationship="Models.FK_SO_Store" FromRole="Store" ToRole="SO" />
           <NavigationProperty Name="StoreOrderReceipts" Relationship="Models.FK_StoreOrderReceipt_Store" FromRole="Store" ToRole="StoreOrderReceipt" />
           <NavigationProperty Name="StoreProducts" Relationship="Models.FK_StoreProduct_Store" FromRole="Store" ToRole="StoreProduct" />
           <NavigationProperty Name="OrderPProducts" Relationship="Models.FK_OrderPProducts_Store" FromRole="Store" ToRole="OrderPProduct" />
+          <NavigationProperty Name="ScanCreditCards" Relationship="Models.FK_ScanCreditCard_Store" FromRole="Store" ToRole="ScanCreditCard" />
+          <NavigationProperty Name="SOes" Relationship="Models.FK_SO_Store" FromRole="Store" ToRole="SO" />
         </EntityType>
         <EntityType Name="StoreOrderReceipt">
           <Key>
@@ -5453,10 +5599,10 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_PO_Account">
-          <End Type="Models.BankAccount" Role="BankAccount" Multiplicity="0..1">
+          <End Type="Models.BankAccount" Multiplicity="0..1" Role="BankAccount">
             <OnDelete Action="Cascade" />
           </End>
-          <End Type="Models.PO" Role="PO" Multiplicity="*" />
+          <End Type="Models.PO" Multiplicity="*" Role="PO" />
           <ReferentialConstraint>
             <Principal Role="BankAccount">
               <PropertyRef Name="Id" />
@@ -5467,27 +5613,13 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_PrintedPackaging_BankAccount">
-          <End Type="Models.BankAccount" Role="BankAccount" Multiplicity="0..1" />
-          <End Type="Models.PrintedPackaging" Role="PrintedPackaging" Multiplicity="*" />
+          <End Type="Models.BankAccount" Multiplicity="0..1" Role="BankAccount" />
+          <End Type="Models.PrintedPackaging" Multiplicity="*" Role="PrintedPackaging" />
           <ReferentialConstraint>
             <Principal Role="BankAccount">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="PrintedPackaging">
-              <PropertyRef Name="BankAccountId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SO_Account">
-          <End Type="Models.BankAccount" Role="BankAccount" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="Models.SO" Role="SO" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="BankAccount">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="SO">
               <PropertyRef Name="BankAccountId" />
             </Dependent>
           </ReferentialConstraint>
@@ -5696,18 +5828,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_SO_Employee">
-          <End Type="Models.Employee" Role="Employee" Multiplicity="0..1" />
-          <End Type="Models.SO" Role="SO" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Employee">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="SO">
-              <PropertyRef Name="EmployeeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Expense_Supplier">
           <End Type="Models.Supplier" Role="Supplier" Multiplicity="0..1" />
           <End Type="Models.Expense" Role="Expense" Multiplicity="*" />
@@ -5813,18 +5933,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             </Principal>
             <Dependent Role="ProductStockDetail">
               <PropertyRef Name="PaperColorId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Payment_SO">
-          <End Type="Models.SO" Role="SO" Multiplicity="0..1" />
-          <End Type="Models.Payment" Role="Payment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SO">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Payment">
-              <PropertyRef Name="SOId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -5996,30 +6104,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_SO_Store">
-          <End Type="Models.Store" Role="Store" Multiplicity="0..1" />
-          <End Type="Models.SO" Role="SO" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Store">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="SO">
-              <PropertyRef Name="StoreId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SOD_SO">
-          <End Type="Models.SO" Role="SO" Multiplicity="0..1" />
-          <End Type="Models.SOD" Role="SOD" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SO">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="SOD">
-              <PropertyRef Name="SOId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_SPackaging_Supplier">
           <End Type="Models.Supplier" Role="Supplier" Multiplicity="0..1" />
           <End Type="Models.SPackaging" Role="SPackaging" Multiplicity="*" />
@@ -6128,6 +6212,9 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
           <NavigationProperty Name="NewProductions" Relationship="Models.FK_NewProduction_Product" FromRole="Product" ToRole="NewProduction" />
           <NavigationProperty Name="PostProductions" Relationship="Models.FK_PostProduction_Product1" FromRole="Product" ToRole="PostProduction" />
           <NavigationProperty Name="PackagingProductions" Relationship="Models.FK_PackagingProduction_Product" FromRole="Product" ToRole="PackagingProduction" />
+          <NavigationProperty Name="PackagingBOMs" Relationship="Models.FK_PackagingBOM_Product" FromRole="Product" ToRole="PackagingBOM" />
+          <NavigationProperty Name="PacSubitems" Relationship="Models.FK_PacSubitem_Product" FromRole="Product" ToRole="PacSubitem" />
+          <NavigationProperty Name="PackagingColors" Relationship="Models.FK_PackagingColor_Product" FromRole="Product" ToRole="PackagingColor" />
         </EntityType>
         <Association Name="FK_BOM_Product1">
           <End Type="Models.Product" Role="Product" Multiplicity="0..1">
@@ -7155,6 +7242,260 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="GetPackagingProductionColorDetails_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="ProductName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Unit" Nullable="true" MaxLength="500" />
+          <Property Type="Decimal" Name="ProductId" Nullable="true" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="TotalQuantity" Nullable="true" Precision="38" Scale="30" />
+          <Property Type="Boolean" Name="Validate" Nullable="true" />
+          <Property Type="DateTime" Name="PProdDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Box" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="ColorCode" Nullable="true" />
+          <Property Type="String" Name="Supplier" Nullable="true" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="GetPackagingProductionColorDetailsCombined_Result">
+          <Property Type="Int32" Name="PackagingProductionId" Nullable="false" />
+          <Property Type="String" Name="ProductName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Unit" Nullable="true" MaxLength="500" />
+          <Property Type="Decimal" Name="ProductId" Nullable="true" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="TotalQuantity" Nullable="true" Precision="38" Scale="30" />
+          <Property Type="Boolean" Name="Validate" Nullable="true" />
+          <Property Type="DateTime" Name="PProdDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Box" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="ProductColorCode" Nullable="true" />
+          <Property Type="String" Name="Supplier" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="ColorId" Nullable="true" />
+          <Property Type="String" Name="Color" Nullable="true" />
+          <Property Type="Decimal" Name="ColorQuantity" Nullable="true" Precision="18" Scale="0" />
+          <Property Type="String" Name="ColorSpecificCode" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetColorQuantitiesByProductionId_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="Int32" Name="PaperColorId" Nullable="true" />
+          <Property Type="String" Name="ColorName" Nullable="true" />
+          <Property Type="Int32" Name="QuantityReceived" Nullable="true" />
+          <Property Type="Int32" Name="ToReceived" Nullable="true" />
+          <Property Type="String" Name="Unit" Nullable="true" MaxLength="500" />
+          <Property Type="DateTime" Name="ReceivedDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="ProductName" Nullable="true" MaxLength="100" />
+          <Property Type="Decimal" Name="ProductId" Nullable="true" Precision="18" Scale="0" />
+          <Property Type="Int32" Name="PackagingProductionId" Nullable="true" />
+        </ComplexType>
+        <EntityType Name="ScanCreditCard">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StoreId" Type="Int32" />
+          <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="DateTime" Precision="0" />
+          <Property Name="Amount" Type="Decimal" Precision="18" Scale="0" />
+          <NavigationProperty Name="Store" Relationship="Models.FK_ScanCreditCard_Store" FromRole="ScanCreditCard" ToRole="Store" />
+        </EntityType>
+        <Association Name="FK_ScanCreditCard_Store">
+          <End Type="Models.Store" Role="Store" Multiplicity="0..1" />
+          <End Type="Models.ScanCreditCard" Role="ScanCreditCard" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Store">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ScanCreditCard">
+              <PropertyRef Name="StoreId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="StoreOrderReceiptPP">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StoreId" Type="Int32" />
+          <Property Name="UniqueCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="OrderId" Type="Int32" />
+          <NavigationProperty Name="OrderItemPProduct" Relationship="Models.FK_StoreOrderReceiptPP_OrderItemPProducts" FromRole="StoreOrderReceiptPP" ToRole="OrderItemPProduct" />
+        </EntityType>
+        <Association Name="FK_StoreOrderReceiptPP_OrderItemPProducts">
+          <End Type="Models.OrderItemPProduct" Role="OrderItemPProduct" Multiplicity="0..1" />
+          <End Type="Models.StoreOrderReceiptPP" Role="StoreOrderReceiptPP" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderItemPProduct">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="StoreOrderReceiptPP">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="PackagingBOM">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Saleable" Type="Boolean" Nullable="false" />
+          <Property Name="Purchasable" Type="Boolean" Nullable="false" />
+          <Property Name="Manufacturable" Type="Boolean" Nullable="false" />
+          <Property Name="ShelfLife" Type="Int32" />
+          <Property Name="TimeUnit" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="3" />
+          <Property Name="ProductionProcessCateogry" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="ProductionProcessDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ProductName" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Unit" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Quantity" Type="Decimal" Nullable="false" Precision="18" Scale="0" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Product" Relationship="Models.FK_PackagingBOM_Product" FromRole="PackagingBOM" ToRole="Product" />
+          <NavigationProperty Name="PacSubitems" Relationship="Models.FK_PacSubitem_PackagingBOM" FromRole="PackagingBOM" ToRole="PacSubitem" />
+          <NavigationProperty Name="PackagingColors" Relationship="Models.FK_PackagingColor_PackagingBOM" FromRole="PackagingBOM" ToRole="PackagingColor" />
+        </EntityType>
+        <Association Name="FK_PackagingBOM_Product">
+          <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="Models.PackagingBOM" Role="PackagingBOM" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PackagingBOM">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="PacSubitem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="ParentProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Quantity" Type="Decimal" Precision="18" Scale="6" />
+          <Property Name="PackagingBOMId" Type="Int32" />
+          <Property Name="Unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AvailableInventory" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="QuantityRequested" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="QuantitytoPrepare" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="ProductType" Type="Byte" />
+          <NavigationProperty Name="PackagingBOM" Relationship="Models.FK_PacSubitem_PackagingBOM" FromRole="PacSubitem" ToRole="PackagingBOM" />
+          <NavigationProperty Name="Product" Relationship="Models.FK_PacSubitem_Product" FromRole="PacSubitem" ToRole="Product" />
+        </EntityType>
+        <Association Name="FK_PacSubitem_PackagingBOM">
+          <End Type="Models.PackagingBOM" Role="PackagingBOM" Multiplicity="0..1" />
+          <End Type="Models.PacSubitem" Role="PacSubitem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PackagingBOM">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PacSubitem">
+              <PropertyRef Name="PackagingBOMId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PacSubitem_Product">
+          <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="Models.PacSubitem" Role="PacSubitem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PacSubitem">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="spSOReport_Result">
+          <Property Type="String" Name="Id" Nullable="false" MaxLength="50" />
+          <Property Type="Decimal" Name="SOSerial" Nullable="true" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="SaleOrderQty" Nullable="true" Precision="18" Scale="8" />
+          <Property Type="String" Name="PaymentMethod" Nullable="true" MaxLength="100" />
+          <Property Type="Decimal" Name="SaleOrderAmountWithVaT" Nullable="true" Precision="18" Scale="8" />
+          <Property Type="String" Name="SaleOrderAmountWithC" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="300" />
+          <Property Type="String" Name="Address" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="CustomerRemarks" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="ProductName" Nullable="true" MaxLength="300" />
+          <Property Type="Decimal" Name="SalePrice" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Int32" Name="Quantity" Nullable="true" />
+          <Property Type="Decimal" Name="PerPack" Nullable="true" Precision="18" Scale="0" />
+          <Property Type="Boolean" Name="IsPack" Nullable="true" />
+          <Property Type="String" Name="BizName" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="BizAddress" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="Mobile" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="Website" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="Tagline" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="CompanyName" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="CompanyAddress" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="VatNumber" Nullable="true" MaxLength="500" />
+          <Property Type="Decimal" Name="TaxInPercent" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="ItemTotal" Nullable="true" Precision="38" Scale="2" />
+          <Property Type="String" Name="SaleType" Nullable="false" MaxLength="1" />
+          <Property Type="Decimal" Name="SaleOrderAmount" Nullable="true" Precision="18" Scale="8" />
+          <Property Type="Decimal" Name="BillPaid" Nullable="false" Precision="18" Scale="8" />
+          <Property Type="Decimal" Name="BillPaidByCash" Nullable="true" Precision="18" Scale="8" />
+          <Property Type="Decimal" Name="Discount" Nullable="true" Precision="18" Scale="8" />
+          <Property Type="Decimal" Name="Balance" Nullable="true" Precision="18" Scale="8" />
+          <Property Type="Decimal" Name="PrevBalance" Nullable="true" Precision="18" Scale="8" />
+          <Property Type="DateTime" Name="Date" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Remarks" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="StoreCompanyName" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="StoreCompanyAddress" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="StoreCompanyVatNumber" Nullable="true" MaxLength="200" />
+        </ComplexType>
+        <EntityType Name="SO">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SOSerial" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="BillAmount" Type="Decimal" Nullable="false" Precision="18" Scale="8" />
+          <Property Name="BillPaid" Type="Decimal" Nullable="false" Precision="18" Scale="8" />
+          <Property Name="Discount" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="Balance" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="PrevBalance" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <Property Name="SaleReturn" Type="Boolean" Nullable="false" />
+          <Property Name="CustomerId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="SaleOrderAmount" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="SaleOrderQty" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="Profit" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="PaymentMethod" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="PaymentDetail" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Remarks2" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="EmployeeId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="BankAccountId" Type="String" MaxLength="36" FixedLength="false" Unicode="true" />
+          <Property Name="Quotation" Type="Boolean" />
+          <Property Name="StoreId" Type="Int32" />
+          <Property Name="BillPaidByCash" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="VatNumber" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="VatAmountInPercent" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="SaleOrderAmountWithVaT" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="SaleOrderAmountWithC" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="IsCancelled" Type="Boolean" />
+          <Property Name="OrigionalId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="BankAccount" Relationship="Models.FK_SO_Account" FromRole="SO" ToRole="BankAccount" />
+          <NavigationProperty Name="Customer" Relationship="Models.FK_SO_Customer" FromRole="SO" ToRole="Customer" />
+          <NavigationProperty Name="Employee" Relationship="Models.FK_SO_Employee" FromRole="SO" ToRole="Employee" />
+          <NavigationProperty Name="Payments" Relationship="Models.FK_Payment_SO" FromRole="SO" ToRole="Payment" />
+          <NavigationProperty Name="Store" Relationship="Models.FK_SO_Store" FromRole="SO" ToRole="Store" />
+          <NavigationProperty Name="SODs" Relationship="Models.FK_SOD_SO" FromRole="SO" ToRole="SOD" />
+        </EntityType>
+        <Association Name="FK_SO_Account">
+          <End Type="Models.BankAccount" Multiplicity="0..1" Role="BankAccount">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Models.SO" Multiplicity="*" Role="SO" />
+          <ReferentialConstraint>
+            <Principal Role="BankAccount">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SO">
+              <PropertyRef Name="BankAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_SO_Customer">
           <End Type="Models.Customer" Role="Customer" Multiplicity="0..1" />
           <End Type="Models.SO" Role="SO" Multiplicity="*" />
@@ -7164,6 +7505,110 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
             </Principal>
             <Dependent Role="SO">
               <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SO_Employee">
+          <End Type="Models.Employee" Role="Employee" Multiplicity="0..1" />
+          <End Type="Models.SO" Role="SO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SO">
+              <PropertyRef Name="EmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Payment_SO">
+          <End Type="Models.SO" Multiplicity="0..1" Role="SO" />
+          <End Type="Models.Payment" Multiplicity="*" Role="Payment" />
+          <ReferentialConstraint>
+            <Principal Role="SO">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Payment">
+              <PropertyRef Name="SOId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SO_Store">
+          <End Type="Models.Store" Role="Store" Multiplicity="0..1" />
+          <End Type="Models.SO" Role="SO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Store">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SO">
+              <PropertyRef Name="StoreId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SOD_SO">
+          <End Type="Models.SO" Role="SO" Multiplicity="0..1" />
+          <End Type="Models.SOD" Role="SOD" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SO">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SOD">
+              <PropertyRef Name="SOId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="PackagingColor">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="ParentProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="ProductId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Quantity" Type="Decimal" Precision="18" Scale="6" />
+          <Property Name="BOMId" Type="Int32" />
+          <Property Name="Unit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AvailableInventory" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="QuantityRequested" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="QuantitytoPrepare" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="ProductType" Type="Byte" />
+          <Property Name="Color" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="PackagingBOM" Relationship="Models.FK_PackagingColor_PackagingBOM" FromRole="PackagingColor" ToRole="PackagingBOM" />
+          <NavigationProperty Name="Product" Relationship="Models.FK_PackagingColor_Product" FromRole="PackagingColor" ToRole="Product" />
+        </EntityType>
+        <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId1">
+          <End Type="Models.AspNetUser" Role="AspNetUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Models.AspNetUserLogin" Role="AspNetUserLogin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserLogin">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PackagingColor_PackagingBOM">
+          <End Type="Models.PackagingBOM" Role="PackagingBOM" Multiplicity="0..1" />
+          <End Type="Models.PackagingColor" Role="PackagingColor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PackagingBOM">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PackagingColor">
+              <PropertyRef Name="BOMId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PackagingColor_Product">
+          <End Type="Models.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="Models.PackagingColor" Role="PackagingColor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PackagingColor">
+              <PropertyRef Name="ProductId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -7343,48 +7788,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
                 <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
                 <ScalarProperty Name="CustomerEmail" ColumnName="CustomerEmail" />
                 <ScalarProperty Name="CustomerAddress" ColumnName="CustomerAddress" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="spSOReport" FunctionName="Models.Store.spSOReport">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="Models.spSOReport_Result">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="SOSerial" ColumnName="SOSerial" />
-                <ScalarProperty Name="SaleOrderQty" ColumnName="SaleOrderQty" />
-                <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
-                <ScalarProperty Name="SaleOrderAmountWithVaT" ColumnName="SaleOrderAmountWithVaT" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="CustomerRemarks" ColumnName="CustomerRemarks" />
-                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
-                <ScalarProperty Name="SalePrice" ColumnName="SalePrice" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="PerPack" ColumnName="PerPack" />
-                <ScalarProperty Name="IsPack" ColumnName="IsPack" />
-                <ScalarProperty Name="BizName" ColumnName="BizName" />
-                <ScalarProperty Name="BizAddress" ColumnName="BizAddress" />
-                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Website" ColumnName="Website" />
-                <ScalarProperty Name="Tagline" ColumnName="Tagline" />
-                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
-                <ScalarProperty Name="CompanyAddress" ColumnName="CompanyAddress" />
-                <ScalarProperty Name="VatNumber" ColumnName="VatNumber" />
-                <ScalarProperty Name="TaxInPercent" ColumnName="TaxInPercent" />
-                <ScalarProperty Name="ItemTotal" ColumnName="ItemTotal" />
-                <ScalarProperty Name="SaleType" ColumnName="SaleType" />
-                <ScalarProperty Name="SaleOrderAmount" ColumnName="SaleOrderAmount" />
-                <ScalarProperty Name="BillPaid" ColumnName="BillPaid" />
-                <ScalarProperty Name="BillPaidByCash" ColumnName="BillPaidByCash" />
-                <ScalarProperty Name="Discount" ColumnName="Discount" />
-                <ScalarProperty Name="Balance" ColumnName="Balance" />
-                <ScalarProperty Name="PrevBalance" ColumnName="PrevBalance" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="StoreCompanyName" ColumnName="StoreCompanyName" />
-                <ScalarProperty Name="StoreCompanyAddress" ColumnName="StoreCompanyAddress" />
-                <ScalarProperty Name="StoreCompanyVatNumber" ColumnName="StoreCompanyVatNumber" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -8310,17 +8713,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ScanCreditCards">
-            <EntityTypeMapping TypeName="Models.ScanCreditCard">
-              <MappingFragment StoreEntitySet="ScanCreditCard">
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="Note" ColumnName="Note" />
-                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="ScanMoneyInputs">
             <EntityTypeMapping TypeName="Models.ScanMoneyInput">
               <MappingFragment StoreEntitySet="ScanMoneyInput">
@@ -8386,41 +8778,6 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
                 <ScalarProperty Name="TransactionType" ColumnName="TransactionType" />
                 <ScalarProperty Name="ShoreId" ColumnName="ShoreId" />
                 <ScalarProperty Name="Balance" ColumnName="Balance" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="SOes">
-            <EntityTypeMapping TypeName="Models.SO">
-              <MappingFragment StoreEntitySet="SO">
-                <ScalarProperty Name="OrigionalId" ColumnName="OrigionalId" />
-                <ScalarProperty Name="IsCancelled" ColumnName="IsCancelled" />
-                <ScalarProperty Name="SaleOrderAmountWithC" ColumnName="SaleOrderAmountWithC" />
-                <ScalarProperty Name="SaleOrderAmountWithVaT" ColumnName="SaleOrderAmountWithVaT" />
-                <ScalarProperty Name="VatAmountInPercent" ColumnName="VatAmountInPercent" />
-                <ScalarProperty Name="VatNumber" ColumnName="VatNumber" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="BillPaidByCash" ColumnName="BillPaidByCash" />
-                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
-                <ScalarProperty Name="Quotation" ColumnName="Quotation" />
-                <ScalarProperty Name="BankAccountId" ColumnName="BankAccountId" />
-                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
-                <ScalarProperty Name="Remarks2" ColumnName="Remarks2" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="PaymentDetail" ColumnName="PaymentDetail" />
-                <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
-                <ScalarProperty Name="Profit" ColumnName="Profit" />
-                <ScalarProperty Name="SaleOrderQty" ColumnName="SaleOrderQty" />
-                <ScalarProperty Name="SaleOrderAmount" ColumnName="SaleOrderAmount" />
-                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
-                <ScalarProperty Name="SaleReturn" ColumnName="SaleReturn" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="PrevBalance" ColumnName="PrevBalance" />
-                <ScalarProperty Name="Balance" ColumnName="Balance" />
-                <ScalarProperty Name="Discount" ColumnName="Discount" />
-                <ScalarProperty Name="BillPaid" ColumnName="BillPaid" />
-                <ScalarProperty Name="BillAmount" ColumnName="BillAmount" />
-                <ScalarProperty Name="SOSerial" ColumnName="SOSerial" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -8913,6 +9270,211 @@ warning 6002: The table/view 'db_aab342_business.dbo.PTypeDesc' does not have a 
                 <ScalarProperty Name="Balance" ColumnName="Balance" />
                 <ScalarProperty Name="Address" ColumnName="Address" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetPackagingProductionColorDetails" FunctionName="Models.Store.GetPackagingProductionColorDetails">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Models.GetPackagingProductionColorDetails_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="TotalQuantity" ColumnName="TotalQuantity" />
+                <ScalarProperty Name="Validate" ColumnName="Validate" />
+                <ScalarProperty Name="PProdDate" ColumnName="PProdDate" />
+                <ScalarProperty Name="Box" ColumnName="Box" />
+                <ScalarProperty Name="ColorCode" ColumnName="ColorCode" />
+                <ScalarProperty Name="Supplier" ColumnName="Supplier" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetPackagingProductionColorDetailsCombined" FunctionName="Models.Store.GetPackagingProductionColorDetailsCombined">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Models.GetPackagingProductionColorDetailsCombined_Result">
+                <ScalarProperty Name="PackagingProductionId" ColumnName="PackagingProductionId" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="TotalQuantity" ColumnName="TotalQuantity" />
+                <ScalarProperty Name="Validate" ColumnName="Validate" />
+                <ScalarProperty Name="PProdDate" ColumnName="PProdDate" />
+                <ScalarProperty Name="Box" ColumnName="Box" />
+                <ScalarProperty Name="ProductColorCode" ColumnName="ProductColorCode" />
+                <ScalarProperty Name="Supplier" ColumnName="Supplier" />
+                <ScalarProperty Name="ColorId" ColumnName="ColorId" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="ColorQuantity" ColumnName="ColorQuantity" />
+                <ScalarProperty Name="ColorSpecificCode" ColumnName="ColorSpecificCode" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetColorQuantitiesByProductionId" FunctionName="Models.Store.GetColorQuantitiesByProductionId">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Models.GetColorQuantitiesByProductionId_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="PaperColorId" ColumnName="PaperColorId" />
+                <ScalarProperty Name="ColorName" ColumnName="ColorName" />
+                <ScalarProperty Name="QuantityReceived" ColumnName="QuantityReceived" />
+                <ScalarProperty Name="ToReceived" ColumnName="ToReceived" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="ReceivedDate" ColumnName="ReceivedDate" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="PackagingProductionId" ColumnName="PackagingProductionId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="ScanCreditCards">
+            <EntityTypeMapping TypeName="Models.ScanCreditCard">
+              <MappingFragment StoreEntitySet="ScanCreditCard">
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StoreOrderReceiptPPs">
+            <EntityTypeMapping TypeName="Models.StoreOrderReceiptPP">
+              <MappingFragment StoreEntitySet="StoreOrderReceiptPP">
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+                <ScalarProperty Name="UniqueCode" ColumnName="UniqueCode" />
+                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PackagingBOMs">
+            <EntityTypeMapping TypeName="Models.PackagingBOM">
+              <MappingFragment StoreEntitySet="PackagingBOM">
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="ProductionProcessDescription" ColumnName="ProductionProcessDescription" />
+                <ScalarProperty Name="ProductionProcessCateogry" ColumnName="ProductionProcessCateogry" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="TimeUnit" ColumnName="TimeUnit" />
+                <ScalarProperty Name="ShelfLife" ColumnName="ShelfLife" />
+                <ScalarProperty Name="Manufacturable" ColumnName="Manufacturable" />
+                <ScalarProperty Name="Purchasable" ColumnName="Purchasable" />
+                <ScalarProperty Name="Saleable" ColumnName="Saleable" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PacSubitems">
+            <EntityTypeMapping TypeName="Models.PacSubitem">
+              <MappingFragment StoreEntitySet="PacSubitem">
+                <ScalarProperty Name="ProductType" ColumnName="ProductType" />
+                <ScalarProperty Name="QuantitytoPrepare" ColumnName="QuantitytoPrepare" />
+                <ScalarProperty Name="QuantityRequested" ColumnName="QuantityRequested" />
+                <ScalarProperty Name="AvailableInventory" ColumnName="AvailableInventory" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="PackagingBOMId" ColumnName="PackagingBOMId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ParentProductId" ColumnName="ParentProductId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="spSOReport" FunctionName="Models.Store.spSOReport">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Models.spSOReport_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="SOSerial" ColumnName="SOSerial" />
+                <ScalarProperty Name="SaleOrderQty" ColumnName="SaleOrderQty" />
+                <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
+                <ScalarProperty Name="SaleOrderAmountWithVaT" ColumnName="SaleOrderAmountWithVaT" />
+                <ScalarProperty Name="SaleOrderAmountWithC" ColumnName="SaleOrderAmountWithC" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="CustomerRemarks" ColumnName="CustomerRemarks" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="SalePrice" ColumnName="SalePrice" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="PerPack" ColumnName="PerPack" />
+                <ScalarProperty Name="IsPack" ColumnName="IsPack" />
+                <ScalarProperty Name="BizName" ColumnName="BizName" />
+                <ScalarProperty Name="BizAddress" ColumnName="BizAddress" />
+                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Website" ColumnName="Website" />
+                <ScalarProperty Name="Tagline" ColumnName="Tagline" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="CompanyAddress" ColumnName="CompanyAddress" />
+                <ScalarProperty Name="VatNumber" ColumnName="VatNumber" />
+                <ScalarProperty Name="TaxInPercent" ColumnName="TaxInPercent" />
+                <ScalarProperty Name="ItemTotal" ColumnName="ItemTotal" />
+                <ScalarProperty Name="SaleType" ColumnName="SaleType" />
+                <ScalarProperty Name="SaleOrderAmount" ColumnName="SaleOrderAmount" />
+                <ScalarProperty Name="BillPaid" ColumnName="BillPaid" />
+                <ScalarProperty Name="BillPaidByCash" ColumnName="BillPaidByCash" />
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="Balance" ColumnName="Balance" />
+                <ScalarProperty Name="PrevBalance" ColumnName="PrevBalance" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="StoreCompanyName" ColumnName="StoreCompanyName" />
+                <ScalarProperty Name="StoreCompanyAddress" ColumnName="StoreCompanyAddress" />
+                <ScalarProperty Name="StoreCompanyVatNumber" ColumnName="StoreCompanyVatNumber" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="SOes">
+            <EntityTypeMapping TypeName="Models.SO">
+              <MappingFragment StoreEntitySet="SO">
+                <ScalarProperty Name="OrigionalId" ColumnName="OrigionalId" />
+                <ScalarProperty Name="IsCancelled" ColumnName="IsCancelled" />
+                <ScalarProperty Name="SaleOrderAmountWithC" ColumnName="SaleOrderAmountWithC" />
+                <ScalarProperty Name="SaleOrderAmountWithVaT" ColumnName="SaleOrderAmountWithVaT" />
+                <ScalarProperty Name="VatAmountInPercent" ColumnName="VatAmountInPercent" />
+                <ScalarProperty Name="VatNumber" ColumnName="VatNumber" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="BillPaidByCash" ColumnName="BillPaidByCash" />
+                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
+                <ScalarProperty Name="Quotation" ColumnName="Quotation" />
+                <ScalarProperty Name="BankAccountId" ColumnName="BankAccountId" />
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+                <ScalarProperty Name="Remarks2" ColumnName="Remarks2" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="PaymentDetail" ColumnName="PaymentDetail" />
+                <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
+                <ScalarProperty Name="Profit" ColumnName="Profit" />
+                <ScalarProperty Name="SaleOrderQty" ColumnName="SaleOrderQty" />
+                <ScalarProperty Name="SaleOrderAmount" ColumnName="SaleOrderAmount" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="SaleReturn" ColumnName="SaleReturn" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="PrevBalance" ColumnName="PrevBalance" />
+                <ScalarProperty Name="Balance" ColumnName="Balance" />
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="BillPaid" ColumnName="BillPaid" />
+                <ScalarProperty Name="BillAmount" ColumnName="BillAmount" />
+                <ScalarProperty Name="SOSerial" ColumnName="SOSerial" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PackagingColors">
+            <EntityTypeMapping TypeName="Models.PackagingColor">
+              <MappingFragment StoreEntitySet="PackagingColor">
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="ProductType" ColumnName="ProductType" />
+                <ScalarProperty Name="QuantitytoPrepare" ColumnName="QuantitytoPrepare" />
+                <ScalarProperty Name="QuantityRequested" ColumnName="QuantityRequested" />
+                <ScalarProperty Name="AvailableInventory" ColumnName="AvailableInventory" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="BOMId" ColumnName="BOMId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ParentProductId" ColumnName="ParentProductId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

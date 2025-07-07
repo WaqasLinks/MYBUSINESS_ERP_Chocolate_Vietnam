@@ -42,18 +42,20 @@
                                             @Html.DisplayNameFor(model => model.PerPack)
                                         </th>
 
-                                        
+
 
                                         @*<th>
-                                                Total Purchase Price
-                                            </th>*@
+            Total Purchase Price
+        </th>*@
                                         @*<th>
-                                                Total Sale Price
-                                            </th>*@
+            Total Sale Price
+        </th>*@
 
                                         <th>
                                             @Html.DisplayNameFor(model => model.Saleable)
                                         </th>
+                                        <th>Shape</th>
+                                        <th>Weight</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -85,7 +87,7 @@
                                                             <li><a href="@Url.Action("SearchProduct", "SOSR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product in Sales">Search in Sales History</a></li>
                                                             <li><a href="@Url.Action("SearchProduct", "POPR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product in Purchasess">Search in Purchases History</a></li>
                                                             @*<li><a href="@Url.Action("PerMonthSale","SOSR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product in Per Month Sales">Per Month Sales</a></li>
-                                                                <li><a href="@Url.Action("PerMonthPurchase","POPR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product in Per Month Purchasess">Per Month Purchases</a></li>*@
+                        <li><a href="@Url.Action("PerMonthPurchase","POPR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product in Per Month Purchasess">Per Month Purchases</a></li>*@
                                                         </ul>
                                                     </li>
                                                 </ul>
@@ -105,23 +107,35 @@
                                                 @{ TotalStock += (int)item.Stock;}
                                             </td>
                                             <td>
+                                                @if (item.ProductDetails != null && item.ProductDetails.Any())
+                                                {
+                                                    @Html.DisplayFor(modelItem => item.ProductDetails.First().Shape)
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (item.ProductDetails != null && item.ProductDetails.Any())
+                                                {
+                                                    @Html.DisplayFor(modelItem => item.ProductDetails.First().Weight)
+                                                }
+                                            </td>
+                                            <td>
                                                 @Html.DisplayFor(modelItem => item.PerPack)
                                             </td>
-                                            
 
 
 
-                                            @*<td>
-                                                    @(item.PurchasePrice * item.Stock)
-                                                    @{ TotalPurchasePrice += (double)(item.PurchasePrice * item.Stock);}
-
-                                                </td>*@
 
                                             @*<td>
-                                                    @(item.SalePrice * item.Stock)
-                                                    @{ TotalSalePrice += (double)(item.SalePrice * item.Stock);}
+            @(item.PurchasePrice * item.Stock)
+            @{ TotalPurchasePrice += (double)(item.PurchasePrice * item.Stock);}
 
-                                                </td>*@
+        </td>*@
+
+                                            @*<td>
+            @(item.SalePrice * item.Stock)
+            @{ TotalSalePrice += (double)(item.SalePrice * item.Stock);}
+
+        </td>*@
 
 
                                             <td>
@@ -129,11 +143,11 @@
                                             </td>
                                             <td>
                                                 @Html.ActionLink("Update", "Edit", new { id = item.Id }) @*|
-                                                    <a href="@Url.Action("ProductWiseSale","SOSR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product">Product Wise Sale</a>*@
+            <a href="@Url.Action("ProductWiseSale","SOSR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product">Product Wise Sale</a>*@
 
                                                 @*|
-                                                    @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-                                                    @Html.ActionLink("Delete", "Delete", new { id=item.Id })*@
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })*@
                                             </td>
                                         </tr>
                                     }

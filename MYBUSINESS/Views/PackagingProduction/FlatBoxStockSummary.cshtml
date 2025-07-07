@@ -71,8 +71,11 @@
                             @for (int i = 0; i < production.ColorComponents.Count; i++)
                             {
                                 var color = production.ColorComponents[i];
+                               
                                 <td>
-                                    <input type="hidden" name="@($"ProductStockDetail[0].Items[{i}].PaperColorId")" value="@color.ColorId" />
+                                    <input type="hidden" name="@($"ProductStockDetail[0].Items[{i}].PaperColorId")" value="@color.PaperColorId" />
+                                    <input type="hidden" name="@($"ProductStockDetail[0].Items[{i}].PPSubItemId")" value="@color.PPSubItemId" />
+                                    <input type="hidden" name="@($"ProductStockDetail[0].Items[{i}].PackagingProductionId")" value="@color.PackagingProductionId" />
                                     <input type="number"
                                            name="@($"ProductStockDetail[0].Items[{i}].Quantity")"
                                            class="form-control produced-qty"
@@ -110,29 +113,19 @@ function saveProductionData() {
     const formData = [];
     const productionId = modelData[0]?.PackagingProductionId || 0;
 
-    // Get all color components from the first item in modelData
-    const colorComponents = modelData[0]?.ColorComponents || [];
-
-    // Get the quantities from the inputs
-    colorComponents.forEach((color, index) => {
-        const quantityInput = document.querySelector(`input[name="ProductStockDetail[0].Items[${index}].Quantity"]`);
-        const paperColorIdInput = document.querySelector(`input[name="ProductStockDetail[0].Items[${index}].PaperColorId"]`);
-        const ppSubItemIdInput = document.querySelector(`input[name="ProductStockDetail[0].Items[${index}].PPSubItemId"]`);
-        const packagingProductionIdInput = document.querySelector(`input[name="ProductStockDetail[0].Items[${index}].PackagingProductionId"]`);
-
+    // Get all inputs
+    $('tr:has(td input[name^="ProductStockDetail"])').each(function(index) {
+        const inputs = $(this).find('input');
         formData.push({
-            PaperColorId: paperColorIdInput ? parseInt(paperColorIdInput.value) : 0,
-            PPSubItemId: ppSubItemIdInput ? parseInt(ppSubItemIdInput.value) : 0,
-            PackagingProductionId: packagingProductionIdInput ? parseInt(packagingProductionIdInput.value) : 0,
-            Quantity: quantityInput ? parseInt(quantityInput.value) || 0 : 0,
-            ProductId: modelData[0]?.ProductId || 0,
-            ProductName: modelData[0]?.ProductName || "",
-            ColorId: color.ColorId,
-            ColorName: color.ColorName
+            PaperColorId: parseInt($(inputs[0]).val()) || 0,
+            PPSubItemId: parseInt($(inputs[1]).val()) || 0,
+            PackagingProductionId: parseInt($(inputs[2]).val()) || 0,
+            Quantity: parseInt($(inputs[3]).val()) || 0,
+            ProductId: modelData[0]?.ProductId || 0
         });
     });
 
-    console.log("Data being sent:", formData);
+    console.log("Final data being sent:", formData);
 
     fetch('@Url.Action("ProductStockDetail", "PackagingProduction")', {
         method: 'POST',

@@ -75,34 +75,45 @@
                                                 }
                                             </td>
                                             <td class="no-print">
-                                                @Html.ActionLink("Update", "EditOrderPP", new { orderId = item.Id }, new { @class = "btn btn-info" })
+                                                @if (item.Validate == true)
+                                                {
+                                                    @Html.ActionLink("View", "EditOrderPP", new { orderId = item.Id }, new { @class = "btn btn-info" })
+                                                    if (!isReceived)
+                                                    {
+                                                        @Html.ActionLink("Receive", "ReceiveOrderPP", new { orderId = item.Id }, new { @class = "btn btn-warning" })
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    @Html.ActionLink("Update/Validate", "Edit", new { orderId = item.Id }, new { @class = "btn btn-info" })
+                                                }
                                                 @Html.ActionLink("Print", "PrintOrderPPdf", new { orderId = item.Id }, new { @class = "btn btn-success" })
                                                 @*<a href="@Url.Action("PrintOrderPdf", "Order", new { orderId = item.Id })" class="btn btn-success">
-                Print
-            </a>*@
+            Print
+        </a>*@
                                                 @*@{
-                if (item.IsService == false)
-                {
-                    @Html.ActionLink("Update", "Edit", new { id = item.Id })
-                }
-                else
-                {
-                    @Html.ActionLink("Update", "EditService", new { id = item.Id })
-                }
-            }*@
+            if (item.IsService == false)
+            {
+                @Html.ActionLink("Update", "Edit", new { id = item.Id })
+            }
+            else
+            {
+                @Html.ActionLink("Update", "EditService", new { id = item.Id })
+            }
+        }*@
 
 
 
                                                 @*<a href="@Url.Action("ProductWiseSale","SOSR", new { productId = item.Id })" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Search this product">Product Wise Sale</a>
 
-            |*@
+        |*@
                                                 @*@Html.ActionLink("Details", "Details", new { id=item.Id }) |*@
                                                 @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
 
                                                 <div class="dropdown">
                                                     @*<button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    more ...
-                </button>*@
+                more ...
+            </button>*@
                                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                         <a class="dropdown-item" href="@Url.Action("SearchProduct", "SOSR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product in Sales">Search in Sales History</a>
                                                         <a class="dropdown-item" href="@Url.Action("SearchProduct", "POPR", new { productId = item.Id })" data-toggle="tooltip" data-placement="top" title="Search this product in Purchasess">Search in Purchases History</a>

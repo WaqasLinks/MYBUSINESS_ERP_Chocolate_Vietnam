@@ -607,64 +607,126 @@ namespace MYBUSINESS.Controllers
         //    return View(viewModel);
         //}
 
+        //[HttpGet]
+        //public ActionResult FlatBoxStockSummary(int? productId)
+        //{
+        //    var stockData = from r in db.CPReceipts
+        //                    join pc in db.PaperColors on r.PaperColorId equals pc.Id
+        //                    join p in db.Products on pc.ProductId equals p.Id
+        //                    where !productId.HasValue || p.Id == productId
+        //                    group r by new
+        //                    {
+        //                        ProductId = p.Id,
+        //                        ProductName = p.Name,
+        //                        ColorName = pc.Color
+        //                    } into g
+        //                    select new
+        //                    {
+        //                        g.Key.ProductId,
+        //                        g.Key.ProductName,
+        //                        g.Key.ColorName,
+        //                        TotalReceived = g.Sum(x => (int?)x.QuantityReceived) ?? 0
+        //                    };
+
+        //    var viewModel = new List<FlatBoxStockViewModel>();
+
+        //    if (productId.HasValue)
+        //    {
+        //        // Get all unique color names for the selected product
+        //        var allColors = db.PaperColors
+        //                          .Where(pc => pc.ProductId == productId)
+        //                          .Select(pc => pc.Color)
+        //                          .Distinct()
+        //                          .ToList();
+
+        //        var summedQuantities = stockData.ToList();
+
+        //        viewModel.Add(new FlatBoxStockViewModel
+        //        {
+        //            ProductId = productId.Value,
+        //            ProductName = db.Products.Find(productId.Value)?.Name ?? "",
+        //            ColorComponents = allColors.Select(colorName => new ColorStockInfo
+        //            {
+        //                ColorId = 0, // optional or leave null, since we’re combining across IDs
+        //                ColorName = colorName,
+        //                Quantity = summedQuantities
+        //                            .Where(c => c.ColorName == colorName)
+        //                            .Sum(c => c.TotalReceived)
+        //            }).ToList(),
+        //            LastUpdated = DateTime.Now
+        //        });
+        //    }
+
+        //    ViewBag.Products = db.Products.ToList();
+        //    if (productId.HasValue)
+        //    {
+        //        ViewBag.SelectedProduct = db.Products.Find(productId.Value)?.Name;
+        //    }
+
+        //    return View(viewModel);
+        //}
+
         [HttpGet]
-        public ActionResult FlatBoxStockSummary(int? productId)
-        {
-            var stockData = from r in db.CPReceipts
-                            join pc in db.PaperColors on r.PaperColorId equals pc.Id
-                            join p in db.Products on pc.ProductId equals p.Id
-                            where !productId.HasValue || p.Id == productId
-                            group r by new
-                            {
-                                ProductId = p.Id,
-                                ProductName = p.Name,
-                                ColorName = pc.Color
-                            } into g
-                            select new
-                            {
-                                g.Key.ProductId,
-                                g.Key.ProductName,
-                                g.Key.ColorName,
-                                TotalReceived = g.Sum(x => (int?)x.QuantityReceived) ?? 0
-                            };
+public ActionResult FlatBoxStockSummary(int? productId)
+{
+    // Get all stock data with PaperColorId, PPSubItemId, and PackagingProductionId
+    var stockData = from r in db.CPReceipts
+                    join pc in db.PaperColors on r.PaperColorId equals pc.Id
+                    join p in db.Products on pc.ProductId equals p.Id
+                    where !productId.HasValue || p.Id == productId
+                    group r by new
+                    {
+                        ProductId = p.Id,
+                        ProductName = p.Name,
+                        PaperColorId = pc.Id,
+                        ColorName = pc.Color,
+                        r.PPSubItemId,
+                        r.PackagingProductionId
+                    } into g
+                    select new
+                    {
+                        g.Key.ProductId,
+                        g.Key.ProductName,
+                        g.Key.PaperColorId,
+                        g.Key.ColorName,
+                        g.Key.PPSubItemId,
+                        g.Key.PackagingProductionId,
+                        TotalReceived = g.Sum(x => (int?)x.QuantityReceived) ?? 0
+                    };
 
             var viewModel = new List<FlatBoxStockViewModel>();
 
-            if (productId.HasValue)
-            {
-                // Get all unique color names for the selected product
-                var allColors = db.PaperColors
-                                  .Where(pc => pc.ProductId == productId)
-                                  .Select(pc => pc.Color)
-                                  .Distinct()
-                                  .ToList();
+    if (productId.HasValue)
+    {
+        var productName = db.Products.Find(productId.Value)?.Name ?? "";
 
-                var summedQuantities = stockData.ToList();
+        var colorComponents = stockData
+                                .Where(c => c.ProductId == productId.Value)
+                                .Select(c => new ColorStockInfo
+                                {
+                                    PaperColorId = c.PaperColorId,
+                                    ColorName = c.ColorName,
+                                    Quantity = c.TotalReceived,
+                                    PPSubItemId = (int)(c.PPSubItemId ?? 0),
+                                    PackagingProductionId = c.PackagingProductionId ?? 0
+                                })
+                                .ToList();
 
-                viewModel.Add(new FlatBoxStockViewModel
-                {
-                    ProductId = productId.Value,
-                    ProductName = db.Products.Find(productId.Value)?.Name ?? "",
-                    ColorComponents = allColors.Select(colorName => new ColorStockInfo
-                    {
-                        ColorId = 0, // optional or leave null, since we’re combining across IDs
-                        ColorName = colorName,
-                        Quantity = summedQuantities
-                                    .Where(c => c.ColorName == colorName)
-                                    .Sum(c => c.TotalReceived)
-                    }).ToList(),
-                    LastUpdated = DateTime.Now
-                });
-            }
+        viewModel.Add(new FlatBoxStockViewModel
+        {
+            ProductId = productId.Value,
+            ProductName = productName,
+            ColorComponents = colorComponents,
+            LastUpdated = DateTime.Now
+        });
 
-            ViewBag.Products = db.Products.ToList();
-            if (productId.HasValue)
-            {
-                ViewBag.SelectedProduct = db.Products.Find(productId.Value)?.Name;
-            }
+        ViewBag.SelectedProduct = productName;
+    }
 
-            return View(viewModel);
-        }
+    ViewBag.Products = db.Products.ToList();
+
+    return View(viewModel);
+}
 
 
         [HttpPost]
@@ -990,27 +1052,29 @@ namespace MYBUSINESS.Controllers
             return View(viewModel);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult EditProductStockDetail(FlatBoxStockViewModel model)
+        [System.Web.Mvc.HttpPost]
+        [System.Web.Mvc.ValidateAntiForgeryToken]
+        [ValidateInput(false)]
+        public ActionResult EditProductStockDetail([System.Web.Http.FromBody] List<ColorStockInfo> colorComponents)
         {
-            if (!ModelState.IsValid)
+            if (colorComponents == null || !colorComponents.Any())
             {
-                // Repopulate necessary ViewBag data if needed
-                var production = db.PackagingProductions.Find(model.PackagingProductionId);
-                ViewBag.PackagingProductionName = production?.ProductName;
-                return View(model);
+                return Json(new { success = false, message = "No data received" });
             }
 
             try
             {
-                // Get existing stock details for this production
+                // Get common IDs from first item
+                var firstItem = colorComponents.First();
+                var packagingProductionId = firstItem.PackagingProductionId;
+                var productId = firstItem.ProductId;
+
+                // Get existing stock details
                 var existingDetails = db.ProductStockDetails
-                    .Where(s => s.PackagingProductionId == model.PackagingProductionId)
+                    .Where(s => s.PackagingProductionId == packagingProductionId)
                     .ToList();
 
-                // Process each color component
-                foreach (var colorInfo in model.ColorComponents)
+                foreach (var colorInfo in colorComponents)
                 {
                     var existingDetail = existingDetails.FirstOrDefault(s => s.PaperColorId == colorInfo.ColorId);
 
@@ -1025,8 +1089,8 @@ namespace MYBUSINESS.Controllers
                         // Create new record
                         var newDetail = new ProductStockDetail
                         {
-                            PackagingProductionId = model.PackagingProductionId,
-                            ProductId = model.ProductId,
+                            PackagingProductionId = packagingProductionId,
+                            ProductId = productId,
                             PaperColorId = colorInfo.ColorId,
                             Quantity = colorInfo.Quantity,
                             DateManufactured = DateTime.Now
@@ -1035,21 +1099,20 @@ namespace MYBUSINESS.Controllers
                     }
                 }
 
-                // Save changes
                 db.SaveChanges();
-
-                TempData["SuccessMessage"] = "Product stock details updated successfully";
-                return RedirectToAction("FlatBoxStockSummary", new { packagingProductionId = model.PackagingProductionId });
+                return Json(new
+                {
+                    success = true,
+                    redirectUrl = Url.Action("FlatBoxStockSummary", new { packagingProductionId })
+                });
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "An error occurred while saving: " + ex.Message);
-
-                // Repopulate ViewBag data
-                var production = db.PackagingProductions.Find(model.PackagingProductionId);
-                ViewBag.PackagingProductionName = production?.ProductName;
-
-                return View(model);
+                return Json(new
+                {
+                    success = false,
+                    message = "An error occurred: " + ex.Message
+                });
             }
         }
 
@@ -1389,6 +1452,12 @@ namespace MYBUSINESS.Controllers
         {
             if (ModelState.IsValid)
             {
+                var product = db.Products.Find(packagingProduction.ProductId);
+                if (product != null)
+                {
+                    packagingProduction.ProductName = product.Name;
+                }
+
                 db.PackagingProductions.Add(packagingProduction);
 
                 if (color != null)
@@ -2266,7 +2335,7 @@ namespace MYBUSINESS.Controllers
 
             // Get data from the new stored procedure
             var data = db.Database.SqlQuery<PaperOrderViewModel>(
-                "EXEC [dbo].[sp_GetPackagingProductionDetails] @PackagingProductionId",
+                "EXEC [dbo].[GetPackagingProductionColorDetailsCombined] @PackagingProductionId",
                 new SqlParameter("@PackagingProductionId", orderId)).ToList();
 
             if (!data.Any())
@@ -2300,6 +2369,50 @@ namespace MYBUSINESS.Controllers
 
             return File(renderedBytes, mimeType, $"Production_Order_{orderId}.pdf");
         }
+
+        [HttpGet]
+        public ActionResult PrintColorOrderPdf(int orderId)
+        {
+            LocalReport localReport = new LocalReport();
+            localReport.ReportPath = Server.MapPath("~/Reports/Sale_ReceiptPaperColor.rdlc");
+
+            // Get data from the new stored procedure
+            var data = db.Database.SqlQuery<ColorQuantityViewModel>(
+                "EXEC [dbo].[GetColorQuantitiesByProductionId] @PackagingProductionId",
+                new SqlParameter("@PackagingProductionId", orderId)).ToList();
+
+            if (!data.Any())
+            {
+                return Content("No data found for this production order.");
+            }
+
+            // Add data source to report
+            ReportDataSource reportDataSource = new ReportDataSource(
+                "DataSet1", // This should match your RDLC dataset name
+                data);
+            localReport.DataSources.Add(reportDataSource);
+
+            // Set parameters if your report requires any
+            // localReport.SetParameters(new ReportParameter("OrderId", orderId.ToString()));
+
+            // Render report
+            string mimeType, encoding, fileNameExtension;
+            string[] streams;
+            Warning[] warnings;
+
+            byte[] renderedBytes = localReport.Render(
+                "PDF",
+                null,
+                out mimeType,
+                out encoding,
+                out fileNameExtension,
+                out streams,
+                out warnings
+            );
+
+            return File(renderedBytes, mimeType, $"Production_Order_{orderId}.pdf");
+        }
+
         [HttpGet]
         public ActionResult FinalExcess()
         {

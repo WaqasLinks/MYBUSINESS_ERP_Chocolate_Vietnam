@@ -178,8 +178,8 @@
                                             </td>
                                             <td>
 
-                                                <div style="background-color: @Model.PaperColor[@sNo].Color;  padding: 5px;">
-                                                    @Model.PaperColor[@sNo].Color (@Model.PaperColor[@sNo].Color)
+                                                <div style="background-color: @Model.PaperColor[@sNo].Color; color: #fff;  padding: 5px;">
+                                                    @Model.PaperColor[@sNo].Color 
                                                 </div>
                                                 <input type="hidden" name="PaperColor[@sNo].Color" value="@Model.PaperColor[sNo].Color" />
                                             </td>
@@ -249,7 +249,8 @@
                     alert(response.message);
                     if (response.success) {
                         // Optionally refresh the page or update UI
-                        window.location.reload();
+                        /*window.location.reload();*/
+                        window.location.href = '@Url.Action("Index", "PackagingProduction")';
                     }
                 },
                 error: function(xhr, status, error) {

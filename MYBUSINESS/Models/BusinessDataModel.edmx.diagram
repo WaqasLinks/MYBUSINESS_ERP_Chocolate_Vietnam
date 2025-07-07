@@ -10,7 +10,7 @@
         <EntityTypeShape EntityType="Models.AspNetUserClaim" Width="1.5" PointX="5.25" PointY="3.625" />
         <EntityTypeShape EntityType="Models.AspNetUserLogin" Width="1.5" PointX="5.25" PointY="1" />
         <EntityTypeShape EntityType="Models.AspNetUser" Width="1.5" PointX="3" PointY="1.375" />
-        <EntityTypeShape EntityType="Models.BankAccount" Width="1.5" PointX="7.5" PointY="27.75" />
+        <EntityTypeShape EntityType="Models.BankAccount" PointX="13.375" PointY="7" Width="1.5" />
         <EntityTypeShape EntityType="Models.BOM" Width="1.5" PointX="3" PointY="124.5" />
         <EntityTypeShape EntityType="Models.BOXProduction" Width="1.5" PointX="5.25" PointY="82" />
         <EntityTypeShape EntityType="Models.BusinessInfo" Width="1.5" PointX="3" PointY="33" />
@@ -58,12 +58,10 @@
         <EntityTypeShape EntityType="Models.Rent" Width="1.5" PointX="0.75" PointY="75.875" />
         <EntityTypeShape EntityType="Models.RentDetail" Width="1.5" PointX="3" PointY="60.625" />
         <EntityTypeShape EntityType="Models.ScanBankDeposit" Width="1.5" PointX="2.75" PointY="10.75" />
-        <EntityTypeShape EntityType="Models.ScanCreditCard" Width="1.5" PointX="10.75" PointY="4.75" />
         <EntityTypeShape EntityType="Models.ScanMoneyInput" Width="1.5" PointX="10.75" PointY="7.75" />
         <EntityTypeShape EntityType="Models.Service" Width="1.5" PointX="0.75" PointY="92" />
         <EntityTypeShape EntityType="Models.ServiceDetail" Width="1.5" PointX="3" PointY="69.625" />
         <EntityTypeShape EntityType="Models.ShopManage" Width="1.5" PointX="10.75" PointY="10.75" />
-        <EntityTypeShape EntityType="Models.SO" Width="1.5" PointX="3.75" PointY="101.625" />
         <EntityTypeShape EntityType="Models.SOD" Width="1.5" PointX="6" PointY="65.625" />
         <EntityTypeShape EntityType="Models.SPackaging" Width="1.5" PointX="9.75" PointY="46.75" />
         <EntityTypeShape EntityType="Models.Store" Width="1.5" PointX="1.5" PointY="44.625" />
@@ -79,7 +77,6 @@
         <AssociationConnector Association="Models.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" />
         <AssociationConnector Association="Models.FK_PO_Account" />
         <AssociationConnector Association="Models.FK_PrintedPackaging_BankAccount" />
-        <AssociationConnector Association="Models.FK_SO_Account" />
         <AssociationConnector Association="Models.FK_ProductType_BOM" />
         <AssociationConnector Association="Models.FK_SubItemProduction_BOM" />
         <AssociationConnector Association="Models.FK_BOXProduction_PaperColor" />
@@ -97,7 +94,6 @@
         <AssociationConnector Association="Models.FK_ProductionOrder_Employee" />
         <AssociationConnector Association="Models.FK_Rent_Employee" />
         <AssociationConnector Association="Models.FK_Service_Employee" />
-        <AssociationConnector Association="Models.FK_SO_Employee" />
         <AssociationConnector Association="Models.FK_Expense_Supplier" />
         <AssociationConnector Association="Models.FK_ExpenseDetail_Expense" />
         <AssociationConnector Association="Models.FK_Loan_Supplier" />
@@ -107,7 +103,6 @@
         <AssociationConnector Association="Models.FK_StoreOrderReceipt_Orders" />
         <AssociationConnector Association="Models.FK_PPColorReceipts_PaperColor" />
         <AssociationConnector Association="Models.FK_ProductStockDetail_PaperColor" />
-        <AssociationConnector Association="Models.FK_Payment_SO" />
         <AssociationConnector Association="Models.FK_PO_Supplier" />
         <AssociationConnector Association="Models.FK_POD_PO" />
         <AssociationConnector Association="Models.FK_PODReciver_POReciver" />
@@ -122,8 +117,6 @@
         <AssociationConnector Association="Models.FK_ProductionOrderDetail_ProductionOrder" />
         <AssociationConnector Association="Models.FK_RentDetail_Rent" />
         <AssociationConnector Association="Models.FK_ServiceDetail_Service" />
-        <AssociationConnector Association="Models.FK_SO_Store" />
-        <AssociationConnector Association="Models.FK_SOD_SO" />
         <AssociationConnector Association="Models.FK_SPackaging_Supplier" />
         <AssociationConnector Association="Models.FK_StoreOrderReceipt_Store" />
         <AssociationConnector Association="Models.FK_StoreProduct_Store" />
@@ -200,7 +193,26 @@
         <AssociationConnector Association="Models.FK_Customer_Business" />
         <AssociationConnector Association="Models.FK_Rent_Customer" />
         <AssociationConnector Association="Models.FK_Service_Customer" />
+        <EntityTypeShape EntityType="Models.ScanCreditCard" Width="1.5" PointX="3.75" PointY="75.5" />
+        <AssociationConnector Association="Models.FK_ScanCreditCard_Store" />
+        <EntityTypeShape EntityType="Models.StoreOrderReceiptPP" Width="1.5" PointX="11.25" PointY="59.75" />
+        <AssociationConnector Association="Models.FK_StoreOrderReceiptPP_OrderItemPProducts" />
+        <EntityTypeShape EntityType="Models.PackagingBOM" Width="1.5" PointX="3" PointY="140.25" />
+        <AssociationConnector Association="Models.FK_PackagingBOM_Product" />
+        <EntityTypeShape EntityType="Models.PacSubitem" Width="1.5" PointX="5.25" PointY="113.875" />
+        <AssociationConnector Association="Models.FK_PacSubitem_PackagingBOM" />
+        <AssociationConnector Association="Models.FK_PacSubitem_Product" />
+        <EntityTypeShape EntityType="Models.SO" Width="1.5" PointX="12.75" PointY="30" />
+        <AssociationConnector Association="Models.FK_SO_Account" />
         <AssociationConnector Association="Models.FK_SO_Customer" />
+        <AssociationConnector Association="Models.FK_SO_Employee" />
+        <AssociationConnector Association="Models.FK_Payment_SO" />
+        <AssociationConnector Association="Models.FK_SO_Store" />
+        <AssociationConnector Association="Models.FK_SOD_SO" />
+        <EntityTypeShape EntityType="Models.PackagingColor" Width="1.5" PointX="8.25" PointY="115.875" />
+        <AssociationConnector Association="Models.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId1" />
+        <AssociationConnector Association="Models.FK_PackagingColor_PackagingBOM" />
+        <AssociationConnector Association="Models.FK_PackagingColor_Product" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

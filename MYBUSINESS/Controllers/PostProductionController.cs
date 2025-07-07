@@ -206,7 +206,8 @@ namespace MYBUSINESS.Controllers
                 NewProduction = newProduction,
                 PostProduction = new PostProduction
                 {
-                    Unit = newProduction.Unit // <-- Make sure to copy this value into the correct object
+                    Unit = newProduction.Unit, // <-- Make sure to copy this value into the correct object
+                    ProductionDate = DateTime.Today
                 },
                 Products = db.Products, // Include all products
                 /* SubItems = db.SubItems.Where(x => x.ParentProductId == newProduction.Id).ToList(), */// Get SubItems associated with this NewProduction

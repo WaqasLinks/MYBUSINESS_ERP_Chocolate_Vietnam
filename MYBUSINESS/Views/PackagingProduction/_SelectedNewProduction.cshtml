@@ -34,60 +34,46 @@
                                 {
                                     <tr>
                                         <td>@Html.DisplayFor(modelItem => item.Id)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.PProdDate)</td>
+                                        @*<td>@Html.DisplayFor(modelItem => item.PProdDate)</td>*@
+                                        <td>@(item.PProdDate?.ToString("d/M/yyyy"))</td>
                                         <td>@Html.DisplayFor(modelItem => item.ProductName)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.Box)</td>
-                                        @*<td>
-            @if (item.Validate ?? false)
-            {
-                @Html.ActionLink("View", "Edit", new { id = item.Id, readonlyMode = true }, new { @class = "btn btn-secondary" })
+                                        <td style="display:none">@Html.DisplayFor(modelItem => item.Box)</td>
 
-            }
-            else
-            {
-                @Html.ActionLink("Update", "Edit", new { id = item.Id }, new { @class = "btn btn-info" })
-            }
-            |
-            @Html.ActionLink("Post Production", "Create", "PostProduction", new { id = item.Id }, new { @class = "btn btn-light text-dark" })
-            @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
-        </td>*@
                                         <td>
                                             @if (item.Validate ?? false)
                                             {
                                                 @Html.ActionLink("View", "Edit", new { id = item.Id, readonlyMode = true },
-new { @class = "btn btn-primary text-white" }) <!-- Blue color for View -->
-
-                                                <!-- Show Post Production button only when Validate is true -->
-
-                                            }
-                                            else
-                                            {
-                                                @Html.ActionLink("Update", "Edit", new { id = item.Id },
-new { @class = "btn btn-info text-white" }) <!-- Light Blue for Update -->
+new { @class = "btn btn-primary text-white" })
                                             <td>
-                                                @Html.ActionLink("Next", "Index3", new { packagingProductionId = item.Id }, new { @class = "btn btn-success fw-bold" })
+                                                @Html.ActionLink("Colored Packaging Production", "Index3", new { packagingProductionId = item.Id }, new { @class = "btn btn-success fw-bold" })
 
                                             </td>
                                             <td style="display:none;">
                                                 @Html.ActionLink("Phse3", "FlatBoxStockSummary", new { packagingProductionId = item.Id }, new { @class = "btn btn-success fw-bold" })
 
                                             </td>
-                                            <td>
+                                            <td style="display:none;">
                                                 @Html.ActionLink("Phse4", "Index4", new { packagingProductionId = item.Id }, new { @class = "btn btn-success fw-bold" })
 
                                             </td>
                                             <td>
-                                            @Html.ActionLink("Print", "PrintOrderPdf", new { orderId = item.Id }, new { @class = "btn btn-success" })
-                                                </td>
-                                        }
+                                                @Html.ActionLink("Print", "PrintOrderPdf", new { orderId = item.Id }, new { @class = "btn btn-success" })
+                                            </td>
 
-                                            |
+                                        }
+                                        else
+                                        {
+                                            @Html.ActionLink("Update/Validate", "Edit", new { id = item.Id },
+new { @class = "btn btn-info text-white" }) <!-- Light Blue for Update -->
+
+                                        }
+                                            </td>
                                             <span style="display:none;">
                                                 @Html.ActionLink("Delete", "Delete", new { id = item.Id },
                                           new { @class = "btn btn-danger text-white" }) <!-- Red color for Delete -->
                                             </span>
 
-                                            </td>
+
 
 
 

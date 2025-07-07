@@ -157,7 +157,7 @@
                                                             <input type="text" autocomplete="off" value="@item.ProductionQty"
                                                                    class="form-control production-qty"
                                                                    name="QuantityToProduce[@sNo].ProductionQty"
-                                                                   id="productionqty@(sNo)" readonly
+                                                                   id="productionqty@(sNo)" 
                                                                    data-weight="@item.Weight"> <!-- ✅ Corrected: Using actual weight -->
                                                         </td>
 
@@ -166,7 +166,7 @@
                                                                    class="form-control calculated-weight"
                                                                    name="QuantityToProduce[@sNo].CalculatedWeight"
                                                                    id="calculatedWeight@(sNo)"
-                                                                   placeholder="Calculated weight" readonly
+                                                                   placeholder="Calculated weight" 
                                                                    data-toggle="tooltip" data-placement="top" title="Calculated weight">
                                                         </td>
 
@@ -606,67 +606,40 @@ $('#productDropdown').change(function () {
         $('#selectedProduct tbody').empty();
     }
 });
-     $(document).on('input', '.production-qty1', function () {
+    $(document).on('input', '.production-qty1', function () {
         let $row = $(this).closest('tr');
         let newProductionQty = parseFloat($(this).val()) || 0;
-        let weightPerUnit = parseFloat($(this).data('weight')) || 5;
-        let variableProductId = $(this).attr('data-variable-product-id'); // Ensure it's correctly retrieved
+        let variableProductId = $(this).data('variable-product-id') || $(this).attr('data-variable-product-id');
         let variableConsumptionRate = parseFloat($(this).data('consumption-rate')) || 1;
 
-        console.log(variableProductId, "Variable Product ID from Input Field"); // Debugging log
+        console.log("Variable Product ID:", variableProductId, "New Qty:", newProductionQty);
 
-        // Get the previous weight stored in the row
-        let previousWeight = parseFloat($row.find('.calculated-weight').data('previous-weight')) || 0;
-
-        // Calculate new weight for the row
-        let newWeight = newProductionQty * weightPerUnit;
-
-        // Update the field with new weight and store it as previous weight for next time
-        $row.find('.calculated-weight').val(newWeight.toFixed(2)).data('previous-weight', newWeight);
-
-        // Update the total weight dynamically
-        //updateTotalWeight(newWeight, previousWeight);
-
-        // ✅ Update only the rows that match variableProductId
+        // Update corresponding rows in selectedProducts table
         $('#selectedProducts > tbody > tr').each(function () {
-            let variableProdId = $(this).find("input[name$='Product.Id']").val();
-            if (variableProdId) {
-                variableProdId = variableProdId.toString().trim();  // Ensure it's a clean string
-            }
-            if (variableProductId) {
-                variableProductId = variableProductId.toString().trim();
-            }
+            // Handle both Create and Edit view name formats
+            let rowProductId = $(this).find("input[name*='Product.Id']").val() ||
+                $(this).find("input[name*='ProductId']").val() ||
+                $(this).find("input[name*='Product.Id']").val();
 
-            console.log(`Checking: ${variableProdId} == ${variableProductId}`);
+            if (rowProductId) rowProductId = rowProductId.toString().trim();
+            if (variableProductId) variableProductId = variableProductId.toString().trim();
 
-            // ✅ Convert to string for accurate comparison
-            //if (variableProdId && variableProductId && variableProdId === variableProductId) {
-            //    const quantity = parseFloat($(this).find("[name$='Quantity']").val()) || 0;
-            //    console.log(quantity, 'quantity');
-            //    // Get total weight (Make sure gtotalWeight is updated before use)
-            //    let totalWeight = parseFloat($('#gtotalWeight').text()) || 0;
-            //    console.log(totalWeight, 'totalWeight');
-            //    // Calculate new result
-            //    const calculatedValue = quantity * totalWeight;
-            //    const result = gtotalWeight - newProductionQty;
+            console.log(`Comparing: ${rowProductId} with ${variableProductId}`);
 
-            //    // Update only matching row
-            //    $(this).find('.calculated-subitem').text(result.toFixed(2));
-            //    console.log(`✅ Updated row with ProductId: ${variableProductId}, New Result: ${result}`);
-            //}
-            if (variableProdId && variableProductId && variableProdId === variableProductId) {
-                const quantity = parseFloat($(this).find("input[name^='SubItemProduction'][name$='Quantity']").val()) || 0;
-                console.log(quantity, 'quantity');
+            if (rowProductId && variableProductId && rowProductId === variableProductId) {
+                // Get quantity - handle both name formats
+                let quantity = parseFloat($(this).find("input[name*='Quantity']").val()) ||
+                    parseFloat($(this).find("input[name*='SubItemQty']").val()) ||
+                    0;
 
-                let totalWeight = parseFloat($('#gtotalWeight').text()) || 0;
-                console.log(totalWeight, 'totalWeight');
+                // Use the same calculation as Create view
+                let result = (gtotalWeight * quantity) - newProductionQty;
 
-                const calculatedValue = quantity * totalWeight;
-                console.log(calculatedValue);
-                const result = (gtotalWeight * quantity) - newProductionQty;
-                console.log(result);
+                // Update display and hidden field
                 $(this).find('.calculated-subitem').text(result.toFixed(2));
-                console.log(`✅ Updated row with ProductId: ${variableProductId}, New Result: ${result}`);
+                $(this).find("input[name*='SubItemQty']").val(result.toFixed(2));
+
+                console.log(`Updated row: ProductId=${variableProductId}, Qty=${quantity}, GTotal=${gtotalWeight}, NewValue=${result}`);
             }
         });
     });

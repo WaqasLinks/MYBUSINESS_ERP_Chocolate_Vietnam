@@ -91,7 +91,7 @@ namespace MYBUSINESS.Controllers
                              select new
                              {
                                  StoreId = s.Id,
-                                 StoreName = s.Name,
+                                 StoreName = s.StoreShortName,
                                  Balance = sg != null ? sg.Balance : 0,
                                  Date = sg != null ? sg.Date : (DateTime?)null
                              }).ToList();

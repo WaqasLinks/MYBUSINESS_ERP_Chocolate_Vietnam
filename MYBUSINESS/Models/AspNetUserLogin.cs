@@ -19,5 +19,6 @@ namespace MYBUSINESS.Models
         public string UserId { get; set; }
     
         public virtual AspNetUser AspNetUser { get; set; }
+        public virtual AspNetUser AspNetUser1 { get; set; }
     }
 }

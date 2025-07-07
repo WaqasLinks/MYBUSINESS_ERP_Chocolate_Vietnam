@@ -18,6 +18,7 @@ namespace MYBUSINESS.Models
         public Nullable<decimal> SaleOrderQty { get; set; }
         public string PaymentMethod { get; set; }
         public Nullable<decimal> SaleOrderAmountWithVaT { get; set; }
+        public string SaleOrderAmountWithC { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
         public string CustomerRemarks { get; set; }

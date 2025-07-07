@@ -15,10 +15,10 @@
                 <div class="col-xs-12">
                     <div class="box">
                         @*<div class="box-header">
-                                <h3 class="box-title">Hover Data Table</h3>
-                            </div>*@
+            <h3 class="box-title">Hover Data Table</h3>
+        </div>*@
                         <!-- /.box-header -->
-                        <div class="box-header">
+                        @*<div class="box-header">
                             @using (Html.BeginForm("StockIndex", "Products", FormMethod.Get))
                             {
                                 <div class="form-inline">
@@ -29,6 +29,32 @@
                                                  "-- All Product Types --",
                                                  new { @class = "form-control", onchange = "this.form.submit()" })
                                     </div>
+                                    <noscript>
+                                        <input type="submit" value="Go" class="btn btn-primary" />
+                                    </noscript>
+                                </div>
+                            }
+                        </div>*@
+                        <div class="box-header">
+                            @using (Html.BeginForm("IndexStock", "Products", FormMethod.Get))
+                            {
+                                <div class="form-inline">
+                                    <div class="form-group">
+                                        <label>Select Store:</label>
+                                        @Html.DropDownList("storeId",
+                                                 new SelectList(ViewBag.Stores, "Value", "Text", ViewBag.CurrentStoreId),
+                                                 "-- Select Store --",
+                                                 new { @class = "form-control", onchange = "this.form.submit()" })
+                                    </div>
+
+                                    <div class="form-group" style="margin-left:10px;">
+                                        <label>Select Product Type:</label>
+                                        @Html.DropDownList("pType",
+                                                 new SelectList(ViewBag.ProductTypes, "Value", "Text", ViewBag.CurrentPType),
+                                                 "-- All Product Types --",
+                                                 new { @class = "form-control", onchange = "this.form.submit()" })
+                                    </div>
+
                                     <noscript>
                                         <input type="submit" value="Go" class="btn btn-primary" />
                                     </noscript>
@@ -60,9 +86,10 @@
                                             @Html.DisplayNameFor(model => model.Unit)
                                         </th>
                                         <th>
-                                           @Html.DisplayNameFor(model => model.Stock)
+                                            @Html.DisplayNameFor(model => model.Stock)
                                         </th>
-                                        
+                                        <th>Shape</th>
+                                        <th>Weight</th>
                                         <th style="display:none;">
                                             @Html.DisplayNameFor(model => model.SalePrice)
                                         </th>
@@ -129,7 +156,28 @@
                                             <td class="ProductNameForSearch">
                                                 @Html.DisplayFor(modelItem => item.Stock)
                                             </td>
-                                            
+                                            <td>
+                                                @if (item.ProductDetails != null && item.ProductDetails.Any())
+                                                {
+                                                    <ul style="list-style-type:none; padding-left:0; margin:0;">
+                                                        @foreach (var detail in item.ProductDetails)
+                                                        {
+                                                            <li>@detail.Shape</li>
+                                                        }
+                                                    </ul>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (item.ProductDetails != null && item.ProductDetails.Any())
+                                                {
+                                                    <ul style="list-style-type:none; padding-left:0; margin:0;">
+                                                        @foreach (var detail in item.ProductDetails)
+                                                        {
+                                                            <li>@detail.Weight</li>
+                                                        }
+                                                    </ul>
+                                                }
+                                            </td>
 
                                             <td style="display:none;">
                                                 @Html.DisplayFor(modelItem => item.SalePrice)
@@ -284,7 +332,7 @@
                                         @*<td>@Model.Count()</td>*@
                                         @*<td></td>
 
-                                            <td></td>*@
+                        <td></td>*@
                                         <td></td>
 
                                         <td></td>
@@ -296,16 +344,16 @@
                                         @*<td>@TotalStock</td>
 
 
-                                            <td>
-                                                @if (currentUser.EmployeeTypeId == 0)
-                                                {
-                                                    @TotalPurchasePrice
-                                                }
-                                            </td>
+                        <td>
+                            @if (currentUser.EmployeeTypeId == 0)
+                            {
+                                @TotalPurchasePrice
+                            }
+                        </td>
 
-                                            <td>@TotalSalePrice</td>
+                        <td>@TotalSalePrice</td>
 
-                                            <td></td>*@
+                        <td></td>*@
                                         <td></td>
                                         <td style="display:none;"></td>
                                         <td style="display:none;"></td>
@@ -351,120 +399,7 @@
         });
 
         // Initialize DataTable with all configurations (only once)
-        $('#ProductIndex').DataTable({
-            "paging": true,
-            "lengthChange": true,
-            "pageLength": 100,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
-            "responsive": true,
-            "autoWidth": false,
-            "order": [[0, "desc"]],
-            dom: 'Bfrtip',
-            buttons: [
-                {
-                    extend: 'copyHtml5',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-                    }
-                },
-                {
-                    extend: 'csvHtml5',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-                    }
-                },
-                {
-                    extend: 'excelHtml5',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-                    }
-                },
-                {
-                    extend: 'pdfHtml5',
-                    orientation: 'landscape',
-                    pageSize: 'LEGAL',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-                    }
-                },
-                {
-                    extend: 'print',
-                    exportOptions: {
-                        columns: [0, 3, 5, 6]
-                    }
-                },
-                'colvis'
-            ],
-            "footerCallback": function (row, data, start, end, display) {
-                var api = this.api(), data;
-
-                var intVal = function (i) {
-                    return typeof i === 'string' ?
-                        i.replace(/[\$,]/g, '') * 1 :
-                        typeof i === 'number' ?
-                            i : 0;
-                };
-
-                // Order Qty
-                pageTotal = api
-                    .column(4, { page: 'current' })
-                    .data()
-                    .reduce(function (a, b) {
-                        return intVal(a) + intVal(b);
-                    }, 0);
-                $(api.column(4).footer()).html(pageTotal);
-
-                // Order Amount
-                pageTotal = api
-                    .column(5, { page: 'current' })
-                    .data()
-                    .reduce(function (a, b) {
-                        return intVal(a) + intVal(b);
-                    }, 0);
-                $(api.column(5).footer()).html(pageTotal);
-
-                // Return Qty
-                pageTotal = api
-                    .column(6, { page: 'current' })
-                    .data()
-                    .reduce(function (a, b) {
-                        return intVal(a) + intVal(b);
-                    }, 0);
-                $(api.column(6).footer()).html(pageTotal);
-
-                // Return amnt
-                pageTotal = api
-                    .column(7, { page: 'current' })
-                    .data()
-                    .reduce(function (a, b) {
-                        return intVal(a) + intVal(b);
-                    }, 0);
-                $(api.column(7).footer()).html(pageTotal);
-
-                // Discount
-                pageTotal = api
-                    .column(8, { page: 'current' })
-                    .data()
-                    .reduce(function (a, b) {
-                        return intVal(a) + intVal(b);
-                    }, 0);
-                $(api.column(8).footer()).html(pageTotal);
-
-                // Bill paid
-                pageTotal = api
-                    .column(9, { page: 'current' })
-                    .data()
-                    .reduce(function (a, b) {
-                        return intVal(a) + intVal(b);
-                    }, 0);
-                $(api.column(9).footer()).html(pageTotal);
-            }
-        });
+    
 
         // Store change handling
         $('#storeId').change(function () {

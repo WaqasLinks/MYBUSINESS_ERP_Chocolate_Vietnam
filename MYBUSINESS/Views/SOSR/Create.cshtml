@@ -51,10 +51,14 @@
 <script src="~/signalr/hubs"></script>
 <style>
 
-    #lefttopayvnd {
-        transition: all 0.3s ease;
-        font-weight: bold;
+
+
+    .lefttopay-green {
+        background-color: #28a745 !important;
+        color: #ffffff !important;
+        border-color: #28a745 !important;
     }
+
 
     /* For the quick amount buttons */
     .styled-input {
@@ -236,6 +240,31 @@
 @*<h2>Create</h2>*@
 
 @* @using (Html.BeginForm(null, null, FormMethod.Post, new { name = "SOEdit", id = "SOEdit" })) *@
+<div class="col-md-12">
+    <div class="form-inline" style="margin-bottom: 15px;">
+        @using (Html.BeginForm("Create", "SOSR", FormMethod.Get))
+        {
+            <div class="form-inline mb-3" style="margin-bottom: 15px;">
+                <div class="form-group" style="margin-top:50px;">
+                    <label style="margin-right: 10px; margin-left:20px;"><b>Filter Products by Category:</b></label>
+                    @Html.DropDownList("category",
+                        ViewBag.Categories as SelectList,
+                        "-- All Categories --",
+                        new
+                             {
+                            @class = "form-control",
+                            onchange = "this.form.submit()",
+                            style = "width: 200px; display: inline-block;"
+                        })
+                </div>
+                <noscript>
+                    <input type="submit" value="Filter" class="btn btn-primary" />
+                </noscript>
+            </div>
+        }
+    </div>
+
+</div>
 @using (Html.BeginForm("Create", "SOSR", FormMethod.Post, new { name = "SOCreate", id = "SOCreate" }))
 {
     @Html.AntiForgeryToken()
@@ -261,7 +290,7 @@
                 <input type="hidden" name="SaleOrder.SaleReturn" id="saleReturn" value=@ViewBag.IsReturn />
 
                 <input type="hidden" name="SaleOrder.CustomerId" id="idnCustomer" value="" />
-                <div class="row">
+                @*<div class="row">
                     <div class="col-md-6">
 
                     </div>
@@ -271,7 +300,7 @@
                     </div>
 
 
-                </div>
+                </div>*@
 
             </div>
             @*<div style="margin-top: -55px;">*@
@@ -311,33 +340,9 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <h2>@ViewBag.StoreName</h2>
+                    <h2 style="margin-top:-10px;">@ViewBag.StoreName</h2>
                 </div>
-                <div class="col-md-12">
-                    <div class="form-inline" style="margin-bottom: 20px;">
-                        @using (Html.BeginForm("Create", "SOSR", FormMethod.Get))
-                        {
-                            <div class="form-inline mb-3" style="margin-bottom: 15px;">
-                                <div class="form-group">
-                                    <label style="margin-right: 10px;"><b>Filter Products by Category:</b></label>
-                                    @Html.DropDownList("category",
-                                        ViewBag.Categories as SelectList,
-                                        "-- All Categories --",
-                                        new
-                                             {
-                                            @class = "form-control",
-                                            onchange = "this.form.submit()",
-                                            style = "width: 200px; display: inline-block;"
-                                        })
-                                </div>
-                                <noscript>
-                                    <input type="submit" value="Filter" class="btn btn-primary" />
-                                </noscript>
-                            </div>
-                        }
-                    </div>
 
-                </div>
                 <div class="col-md-6 scrollable-div">
 
                     @*@foreach (var product in Model.ProductList)
@@ -941,12 +946,12 @@
                                                     <div class="form-group">
                                                         <label for="field1">Customer Name</label>
                                                         <input type="text" class="form-control" name="Customer.Name" id="vndCustomerName" placeholder="Cutomer name">
-                                                        
+
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="field2">Customer Company</label>
                                                         <input type="text" class="form-control" name="Customer.CompanyName" id="vndCustomerCompany" placeholder="Customer company">
-                                                        
+
 
                                                         @*<input type="hidden" name="Customer.CompanyName" id="vndCustomerCompany1" value="@Model.Customer.CompanyName" />*@
                                                     </div>
@@ -1137,11 +1142,11 @@
                     // Open the print view in a new tab
                     window.open('@Url.Action("PrintSO3", "SOSR")?id=' + response.Id, '_blank');
                 } else {
-                    alert(response.Message);
+                    /*alert(response.Message);*/
                 }
             },
             error: function() {
-                alert('Error occurred while fetching last bill');
+                /*alert('Error occurred while fetching last bill');*/
             }
         });
     });
@@ -1155,7 +1160,7 @@ $(document).ready(function() {
     });
 
     function fetchSalesData() {
-        alert('alert');
+        /*alert('alert');*/
         // Get today and yesterday dates in YYYY-MM-DD format
         const today = new Date();
         const yesterday = new Date(today);
@@ -1182,7 +1187,7 @@ $(document).ready(function() {
             },
             error: function(xhr, status, error) {
                 console.error('Error fetching sales data:', error);
-                alert('Error loading sales data. Please try again.');
+                /*alert('Error loading sales data. Please try again.');*/
             }
         });
     }
@@ -1256,7 +1261,7 @@ $(document).ready(function() {
     function formatCurrency(amount) {
         return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
-   
+
     $(document).ready(function () {
         document.getElementById('SOCreate').reset(); // has to be handle
         debugger;
@@ -1311,97 +1316,121 @@ $(document).ready(function() {
     //    }
     //});
     // Add this to your existing JavaScript code
-    $(document).ready(function () {
-        // Function to update the left to pay amount and color
-        function updateLeftToPay() {
-           
-            // Update the left to pay field
-            var leftToPayText = $('#lefttopayvnd').val().replace(/\./g, '') || '0';
-            var leftToPay = parseFloat(leftToPayText);
-
-            // Update the left to pay field styling based on value
-            $('#lefttopayvnd').css({
-                'background-color': '',
-                'color': '',
-                'border-color': ''
-            });
-
-            // Update the left to pay field styling based on value
-            if (leftToPay < 0) {  // Only when payment exceeds the due amount
-                $('#lefttopayvnd').css({
-                    'background-color': '#Green',  // Light green
-                    'color': '#155724',             // Dark green text
-                    'border-color': '#C3E6CB'       // Green border
-                });
-            }
-
-            // Enable/disable validate button
-            $('#validatepyment').prop('disabled', leftToPay > 0);
-        }
-
-        // Set up event listeners for all payment inputs
-        
-        // Initial update
-        updateLeftToPay();
-    });
+   
 
 
     $(document).ready(function () {
-        // When the Cash or Card field value changes
-        $('#cashvnd, #cardvnd').on('input', function () {
+        // Function to update payment method and field names
+        function updatePaymentMethod() {
             var cashValue = parseFloat($('#cashvnd').val()) || 0;
             var cardValue = parseFloat($('#cardvnd').val()) || 0;
 
-            // Calculate the total value paid
-            var totalPayment = cashValue + cardValue;
-
-            // If both cash and card amounts are greater than 0, set payment method to "TM/CK"
+            // Determine payment method
+            var paymentMethod = "";
             if (cashValue > 0 && cardValue > 0) {
-                $('#SaleOrder\\.PaymentMethod').val('TM/CK').trigger('change');
-            }
-            // If only cash is entered, set payment method to "TM"
-            else if (cashValue > 0) {
-                $('#SaleOrder\\.PaymentMethod').val('TM').trigger('change');
-            }
-            // If only card is entered, set payment method to "Card"
-            else if (cardValue > 0) {
-                $('#SaleOrder\\.PaymentMethod').val('Card').trigger('change');
-            }
-            // If neither is entered, reset payment method
-            else {
-                $('#SaleOrder\\.PaymentMethod').val('').trigger('change');
+                paymentMethod = "TM/CK"; // Both cash and card
+            } else if (cashValue > 0) {
+                paymentMethod = "TM"; // Cash only
+            } else if (cardValue > 0) {
+                paymentMethod = "TM/CK"; // Card only
             }
 
-            console.log("Cash: " + cashValue + ", Card: " + cardValue + ", Total Payment: " + totalPayment);
+            // Set the payment method without triggering change event
+            $('#SaleOrder\\.PaymentMethod').val(paymentMethod);
+
+            // Update field names based on payment method
+            if (paymentMethod === "TM") {
+                // Cash only - use BillPaidByCash
+                $('#cashvnd').attr('name', 'SaleOrder.BillPaidByCash');
+                $('#cardvnd').removeAttr('name');
+            }
+            else if (paymentMethod === "TM/CK") {
+                if (cashValue > 0 && cardValue > 0) {
+                    // Both cash and card - use both fields
+                    $('#cashvnd').attr('name', 'SaleOrder.BillPaidByCash');
+                    $('#cardvnd').attr('name', 'SaleOrder.BillPaid');
+                } else if (cardValue > 0) {
+                    // Card only - use BillPaid
+                    $('#cardvnd').attr('name', 'SaleOrder.BillPaid');
+                    $('#cashvnd').removeAttr('name');
+                }
+            }
+            else {
+                // No payment method selected
+                $('#cashvnd, #cardvnd').removeAttr('name');
+            }
+
+            console.log("Payment Method:", paymentMethod,
+                "| Cash:", cashValue,
+                "| Card:", cardValue);
+        }
+
+        // Initialize with empty names
+        $('#cashvnd, #cardvnd').removeAttr('name');
+
+        // Handle input changes
+        $('#cashvnd, #cardvnd').on('input', updatePaymentMethod);
+
+        // Handle quick payment buttons
+        $('.quickAmountAdd').click(function () {
+            var amount = parseFloat($(this).val());
+            var currentCash = parseFloat($('#cashvnd').val());
+            $('#cashvnd').val(currentCash + amount).trigger('input');
         });
 
-        // When the payment method changes
-        $('#SaleOrder\\.PaymentMethod').on('change', function () {
-            var selectedPayment = $(this).val();
-            console.log("Selected Payment Method: " + selectedPayment);
+        // Pay all by card button
+        $('#payallbycard').click(function () {
+            var total = parseFloat($('#totalitsmspan').text());
+            $('#cardvnd').val(total).trigger('input');
+            $('#cashvnd').val('').trigger('input');
 
-            if (selectedPayment === "TM/CK") {
-                $('#cashvnd').attr('name', 'SaleOrder.BillPaid'); // Cash VND
-                $('#cardvnd').attr('name', 'SaleOrder.BillPaid'); // Card VND
-                console.log("Mixed Payment (TM/CK), names assigned to both Cash and Card fields.");
-            } else if (selectedPayment === "TM") {
-                $('#cashvnd').attr('name', 'SaleOrder.BillPaid'); // Cash VND
-                $('#cardvnd').removeAttr('name'); // Remove name from Card VND
-                console.log("Cash selected (TM), name assigned to Cash field.");
-            } else if (selectedPayment === "Card") {
-                $('#cardvnd').attr('name', 'SaleOrder.BillPaid'); // Card VND
-                $('#cashvnd').removeAttr('name'); // Remove name from Cash VND
-                console.log("Card selected, name assigned to Card field.");
-            } else {
-                $('#cashvnd, #cardvnd').removeAttr('name'); // Remove names if no valid payment method
-                console.log("No valid payment method selected, names removed.");
-            }
+
         });
     });
 
 
 
 
+
+    $(document).ready(function () {
+        // Function to update the left to pay amount and color
+        function updateLeftToPay() {
+            const $field = $('#lefttopayvnd');
+            const rawValue = $field.val() || '0';
+
+            // Remove non-numeric characters except - and .
+            const sanitized = rawValue.replace(/[^\d\.\-]/g, '');
+            const leftToPay = parseFloat(sanitized);
+
+            console.log("Parsed leftToPay value:", leftToPay);
+
+            // Remove ALL inline styles first
+            $field[0].removeAttribute("style");
+
+            if (!isNaN(leftToPay) && leftToPay < 0) {
+                // Apply styles directly
+                $field[0].style.backgroundColor = "#28a745";
+                $field[0].style.color = "#ffffff";
+                $field[0].style.borderColor = "#28a745";
+                console.log("Style applied: Green Background");
+            } else {
+                console.log("Style not applied: Not negative");
+            }
+
+            // Enable/disable the button
+            $('#validatepyment').prop('disabled', isNaN(leftToPay) || leftToPay > 0);
+        }
+
+
+
+
+
+
+        // Set up event listeners for all payment inputs
+
+        // Initial update
+        updateLeftToPay();
+    });
 
     txtSerialNum = 0;
     TriggerBodyEvents();
@@ -1493,7 +1522,7 @@ $(document).ready(function() {
      if (product) {
          handleProductAddition(encodedProductJson, 1,false);
      } else {
-         alert('Product not found');
+         /*alert('Product not found');*/
      }
     }
 

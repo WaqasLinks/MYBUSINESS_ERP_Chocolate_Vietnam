@@ -33,8 +33,8 @@
                                         <td>@Html.DisplayFor(modelItem => item.ProductionProcessCateogry)</td>
                                         <td>@Html.DisplayFor(modelItem => item.Unit)</td>
                                         <td style="display:none;">@Html.DisplayFor(modelItem => item.Manufacturable)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.CreateDate)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.UpdateDate)</td>
+                                        <td>@(item.CreateDate?.ToString("d/M/yyyy"))</td>
+                                        <td>@(item.UpdateDate?.ToString("d/M/yyyy"))</td>
                                         <td>
                                             @Html.ActionLink("Update", "Edit", new { id = item.Id }, new { @class = "btn btn-info" }) |
                                             @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })

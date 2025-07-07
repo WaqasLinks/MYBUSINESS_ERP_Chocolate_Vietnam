@@ -164,7 +164,7 @@ namespace MYBUSINESS.Controllers
                 ViewBag.Suppliers = DAL.dbSuppliers;  // Assuming this contains the supplier list
 
             var products = db.Products
-       .Where(p => p.PType == 4)
+       .Where(p => p.PType == 4 || p.PType == 6)
        .Select(p => new
        {
            Value = p.Id.ToString(),  // ID of the product
@@ -740,8 +740,11 @@ namespace MYBUSINESS.Controllers
         PType = s.Product != null ?
             (s.Product.PType == 1 ? "Variable" :
              s.Product.PType == 6 ? "Excess" :
-             s.Product.PType == 3 ? "ByProduct" : "Unknown")
-            : "Unknown",
+             s.Product.PType == 3 ? "ByProduct" :
+                 s.Product.PType == 5 ? "Ingredient" :  // Added this line
+                 s.Product.PType == 6 ? "Intermediary" : // Added this line
+                 "Unknown")
+                : "Unknown",
         VariableProduct = s.Product != null ? s.Product.VarProdParentId : (int?)null,
     })
     .ToList();

@@ -19,5 +19,7 @@ namespace MYBUSINESS.Models
         public string Note { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
         public Nullable<decimal> Amount { get; set; }
+    
+        public virtual Store Store { get; set; }
     }
 }

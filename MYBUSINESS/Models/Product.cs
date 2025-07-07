@@ -53,6 +53,9 @@ namespace MYBUSINESS.Models
             this.NewProductions = new HashSet<NewProduction>();
             this.PostProductions = new HashSet<PostProduction>();
             this.PackagingProductions = new HashSet<PackagingProduction>();
+            this.PackagingBOMs = new HashSet<PackagingBOM>();
+            this.PacSubitems = new HashSet<PacSubitem>();
+            this.PackagingColors = new HashSet<PackagingColor>();
         }
     
         public decimal Id { get; set; }
@@ -156,5 +159,11 @@ namespace MYBUSINESS.Models
         public virtual ICollection<PostProduction> PostProductions { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PackagingProduction> PackagingProductions { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PackagingBOM> PackagingBOMs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PacSubitem> PacSubitems { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PackagingColor> PackagingColors { get; set; }
     }
 }

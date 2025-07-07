@@ -80,12 +80,10 @@ namespace MYBUSINESS.Models
         public virtual DbSet<Rent> Rents { get; set; }
         public virtual DbSet<RentDetail> RentDetails { get; set; }
         public virtual DbSet<ScanBankDeposit> ScanBankDeposits { get; set; }
-        public virtual DbSet<ScanCreditCard> ScanCreditCards { get; set; }
         public virtual DbSet<ScanMoneyInput> ScanMoneyInputs { get; set; }
         public virtual DbSet<Service> Services { get; set; }
         public virtual DbSet<ServiceDetail> ServiceDetails { get; set; }
         public virtual DbSet<ShopManage> ShopManages { get; set; }
-        public virtual DbSet<SO> SOes { get; set; }
         public virtual DbSet<SOD> SODs { get; set; }
         public virtual DbSet<SPackaging> SPackagings { get; set; }
         public virtual DbSet<Store> Stores { get; set; }
@@ -111,6 +109,12 @@ namespace MYBUSINESS.Models
         public virtual DbSet<PackagingProduction> PackagingProductions { get; set; }
         public virtual DbSet<OrderPProduct> OrderPProducts { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
+        public virtual DbSet<ScanCreditCard> ScanCreditCards { get; set; }
+        public virtual DbSet<StoreOrderReceiptPP> StoreOrderReceiptPPs { get; set; }
+        public virtual DbSet<PackagingBOM> PackagingBOMs { get; set; }
+        public virtual DbSet<PacSubitem> PacSubitems { get; set; }
+        public virtual DbSet<SO> SOes { get; set; }
+        public virtual DbSet<PackagingColor> PackagingColors { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {
@@ -269,15 +273,6 @@ namespace MYBUSINESS.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spBankDepositReport_Result>("spBankDepositReport", bankDepositIdParameter);
         }
     
-        public virtual ObjectResult<spSOReport_Result> spSOReport(string saleOrderID)
-        {
-            var saleOrderIDParameter = saleOrderID != null ?
-                new ObjectParameter("SaleOrderID", saleOrderID) :
-                new ObjectParameter("SaleOrderID", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spSOReport_Result>("spSOReport", saleOrderIDParameter);
-        }
-    
         public virtual ObjectResult<spGetOrderProductDetails_Result> spGetOrderProductDetails(Nullable<int> orderId)
         {
             var orderIdParameter = orderId.HasValue ?
@@ -312,6 +307,42 @@ namespace MYBUSINESS.Models
                 new ObjectParameter("OrderId", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetOrderPProductDetails_Result>("spGetOrderPProductDetails", orderIdParameter);
+        }
+    
+        public virtual ObjectResult<GetPackagingProductionColorDetails_Result> GetPackagingProductionColorDetails(Nullable<int> packagingProductionId)
+        {
+            var packagingProductionIdParameter = packagingProductionId.HasValue ?
+                new ObjectParameter("PackagingProductionId", packagingProductionId) :
+                new ObjectParameter("PackagingProductionId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetPackagingProductionColorDetails_Result>("GetPackagingProductionColorDetails", packagingProductionIdParameter);
+        }
+    
+        public virtual ObjectResult<GetPackagingProductionColorDetailsCombined_Result> GetPackagingProductionColorDetailsCombined(Nullable<int> packagingProductionId)
+        {
+            var packagingProductionIdParameter = packagingProductionId.HasValue ?
+                new ObjectParameter("PackagingProductionId", packagingProductionId) :
+                new ObjectParameter("PackagingProductionId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetPackagingProductionColorDetailsCombined_Result>("GetPackagingProductionColorDetailsCombined", packagingProductionIdParameter);
+        }
+    
+        public virtual ObjectResult<GetColorQuantitiesByProductionId_Result> GetColorQuantitiesByProductionId(Nullable<int> packagingProductionId)
+        {
+            var packagingProductionIdParameter = packagingProductionId.HasValue ?
+                new ObjectParameter("PackagingProductionId", packagingProductionId) :
+                new ObjectParameter("PackagingProductionId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetColorQuantitiesByProductionId_Result>("GetColorQuantitiesByProductionId", packagingProductionIdParameter);
+        }
+    
+        public virtual ObjectResult<spSOReport_Result> spSOReport(string saleOrderID)
+        {
+            var saleOrderIDParameter = saleOrderID != null ?
+                new ObjectParameter("SaleOrderID", saleOrderID) :
+                new ObjectParameter("SaleOrderID", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spSOReport_Result>("spSOReport", saleOrderIDParameter);
         }
     }
 }

@@ -236,9 +236,13 @@ namespace MYBUSINESS.Controllers
         [Authorize(Roles = "Admin,Accountant")]
         public ActionResult DailySummary(DateTime? startDate, DateTime? endDate)
         {
+            TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime vnNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnTimeZone);
             // Set default dates: yesterday for start, today for end
-            startDate = startDate ?? DateTime.Today.AddDays(-1);
-            endDate = endDate ?? DateTime.Today;
+            //startDate = startDate ?? DateTime.Today.AddDays(-1);
+            //endDate = endDate ?? DateTime.Today;
+            startDate = startDate ?? vnNow.Date.AddDays(-1);
+            endDate = endDate ?? vnNow.Date;
 
             // Convert to start of day and end of day
             var startDateAdjusted = startDate.Value.Date;
@@ -729,8 +733,75 @@ namespace MYBUSINESS.Controllers
         //    }
         //}
 
+        // Working  [HttpPost]
+        ////[ValidateAntiForgeryToken]
+        //public ActionResult BankDeposit(ShopManagementViewModel shopmanagementDto)
+        //{
+        //    if (shopmanagementDto == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+
+        //    // Generate a 10-character ID (since Id is `nchar(10)`)
+        //    string newId = Guid.NewGuid().ToString("N").Substring(0, 10);
+
+        //    var shopmanagement = new ShopManage
+        //    {
+        //        Id = newId,  // Ensure it matches the nchar(10) type
+        //        Balance = shopmanagementDto.Balance,
+        //        Quantity = shopmanagementDto.Quantity,
+        //        VNDQuantity = shopmanagementDto.VNDQuantity,
+        //        USDQuantity = shopmanagementDto.USDQuantity,
+        //        JPYQuantity = shopmanagementDto.JPYQuantity,  // Fixed incorrect assignment
+        //        CurrencyName = shopmanagementDto.CurrencyName,
+        //        Date = DateTime.UtcNow,
+        //        TransactionType = 1,  // Default transaction type
+        //        ShoreId = 17,  // Default shore ID
+        //     /*   Note = shopmanagementDto.Note ?? "No Note"*/  // Ensure Note is not null
+        //    };
+
+        //    db.ShopManages.Add(shopmanagement);
+
+        //    int changes = db.SaveChanges();
+        //    if (changes == 0)
+        //    {
+        //        return Json(new { Success = false, Message = "Database save failed." });
+        //    }
+
+        //    var bankDepositId = shopmanagement.Id;  // Get the ID of the saved record
+
+        //    return Json(new { Success = true, bankDepositId = bankDepositId });
+        //}
+
+        //[HttpGet]
+        //public ActionResult GenerateBankDepositReport(string bankDepositId)  // Change int to string
+        //{
+        //    LocalReport localReport = new LocalReport();
+        //    localReport.ReportPath = Server.MapPath("~/Reports/Sale_ReceiptBankDeposit.rdlc");
+
+        //    var bankDepositData = db.Database.SqlQuery<BankDepositReportViewModel>(
+        //        "EXEC spBankDepositReport @BankDepositId = {0}", bankDepositId).ToList();
+
+        //    if (bankDepositData == null || !bankDepositData.Any())
+        //    {
+        //        throw new Exception("No data found for the selected Bank Deposit ID.");
+        //    }
+
+        //    ReportDataSource reportDataSource = new ReportDataSource("DataSet1", bankDepositData);
+        //    localReport.DataSources.Add(reportDataSource);
+
+        //    string mimeType, encoding, fileNameExtension;
+        //    Warning[] warnings;
+        //    string[] streams;
+        //    byte[] renderBytes;
+
+        //    renderBytes = localReport.Render(
+        //        "PDF", null, out mimeType, out encoding, out fileNameExtension, out streams, out warnings);
+
+        //    return File(renderBytes, mimeType, "BankDepositReport.pdf");
+        //}
+
         [HttpPost]
-        //[ValidateAntiForgeryToken]
         public ActionResult BankDeposit(ShopManagementViewModel shopmanagementDto)
         {
             if (shopmanagementDto == null)
@@ -738,39 +809,35 @@ namespace MYBUSINESS.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            // Generate a 10-character ID (since Id is `nchar(10)`)
-            string newId = Guid.NewGuid().ToString("N").Substring(0, 10);
+            string newId = Guid.NewGuid().ToString("N").Substring(0, 10);  // nchar(10)
 
             var shopmanagement = new ShopManage
             {
-                Id = newId,  // Ensure it matches the nchar(10) type
+                Id = newId,
                 Balance = shopmanagementDto.Balance,
                 Quantity = shopmanagementDto.Quantity,
                 VNDQuantity = shopmanagementDto.VNDQuantity,
                 USDQuantity = shopmanagementDto.USDQuantity,
-                JPYQuantity = shopmanagementDto.JPYQuantity,  // Fixed incorrect assignment
+                JPYQuantity = shopmanagementDto.JPYQuantity,
                 CurrencyName = shopmanagementDto.CurrencyName,
                 Date = DateTime.UtcNow,
-                TransactionType = 1,  // Default transaction type
-                ShoreId = 17,  // Default shore ID
-             /*   Note = shopmanagementDto.Note ?? "No Note"*/  // Ensure Note is not null
+                TransactionType = 1,
+                ShoreId = 17,
             };
 
             db.ShopManages.Add(shopmanagement);
-
             int changes = db.SaveChanges();
+
             if (changes == 0)
             {
                 return Json(new { Success = false, Message = "Database save failed." });
             }
 
-            var bankDepositId = shopmanagement.Id;  // Get the ID of the saved record
-
+            var bankDepositId = shopmanagement.Id;
             return Json(new { Success = true, bankDepositId = bankDepositId });
         }
-
         [HttpGet]
-        public ActionResult GenerateBankDepositReport(string bankDepositId)  // Change int to string
+        public ActionResult GenerateBankDepositReport(string bankDepositId)  // Keep as string
         {
             LocalReport localReport = new LocalReport();
             localReport.ReportPath = Server.MapPath("~/Reports/Sale_ReceiptBankDeposit.rdlc");
@@ -796,6 +863,7 @@ namespace MYBUSINESS.Controllers
 
             return File(renderBytes, mimeType, "BankDepositReport.pdf");
         }
+
 
 
         [HttpPost]

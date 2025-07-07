@@ -14,6 +14,12 @@ namespace MYBUSINESS.Models
     
     public partial class OrderItemPProduct
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public OrderItemPProduct()
+        {
+            this.StoreOrderReceiptPPs = new HashSet<StoreOrderReceiptPP>();
+        }
+    
         public int Id { get; set; }
         public Nullable<int> OrderId { get; set; }
         public Nullable<decimal> ProductId { get; set; }
@@ -21,5 +27,7 @@ namespace MYBUSINESS.Models
     
         public virtual Product Product { get; set; }
         public virtual OrderPProduct OrderPProduct { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<StoreOrderReceiptPP> StoreOrderReceiptPPs { get; set; }
     }
 }

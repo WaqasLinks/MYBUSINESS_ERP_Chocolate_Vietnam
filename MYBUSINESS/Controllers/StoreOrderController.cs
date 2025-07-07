@@ -75,7 +75,12 @@ namespace MYBUSINESS.Controllers
                 .Select(g => new ProductCategoryViewModel
                 {
                     CategoryName = g.Key,
-                    Products = g.ToList()
+                    Products = g.Select(p => new ProductOrderViewModel
+                    {
+                        ProductId = (int)p.Id,
+                        Name = p.Name,
+                        Unit = p.Unit
+                    }).ToList()
                 }).ToList();
 
             ViewBag.Stores = new SelectList(stores, "Id", "StoreShortName"); // Assuming Store has Id and Name properties
@@ -102,6 +107,24 @@ namespace MYBUSINESS.Controllers
             return View(model);
         }
 
+        public ActionResult ReceiveOrderPP(int orderId)
+        {
+            var order = db.OrderPProducts.Include(o => o.Store).FirstOrDefault(o => o.Id == orderId);
+            if (order == null)
+            {
+                return HttpNotFound();
+            }
+
+            var model = new ReceiveOrderViewModel
+            {
+                OrderId = order.Id,
+                StoreName = order.Store?.Name,
+                StoreId = order.StoreId ?? 0 // or any default/fallback value
+
+            };
+
+            return View(model);
+        }
         [Authorize(Roles = "Admin,Technical Manager,stock staff,stock manager")]
         [HttpPost]
 
@@ -137,6 +160,65 @@ namespace MYBUSINESS.Controllers
 
                     // Step 2: Fetch Order Items
                     var orderItems = db.OrderItems.Where(oi => oi.OrderId == model.OrderId).ToList();
+
+                    // Step 3: Update product stock
+                    foreach (var item in orderItems)
+                    {
+                        var product = db.Products.FirstOrDefault(p => p.Id == item.ProductId);
+                        if (product != null)
+                        {
+                            product.Stock += item.Quantity;
+                        }
+                    }
+
+                    // Step 4: Save all changes
+                    db.SaveChanges();
+                    transaction.Commit();
+
+                    TempData["SuccessMessage"] = "Order received and stock updated successfully!";
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    ModelState.AddModelError("", "Error receiving order: " + ex.Message);
+                    return View(model);
+                }
+            }
+        }
+
+        [ValidateAntiForgeryToken]
+        public ActionResult ReceiveOrderPPPost(ReceiveOrderViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            // Check for existing receipt to prevent duplicates
+            var existingReceipt = db.StoreOrderReceiptPPs.FirstOrDefault(r => r.OrderId == model.OrderId);
+            if (existingReceipt != null)
+            {
+                ModelState.AddModelError("", "This order has already been received.");
+                return View(model);
+            }
+
+            // Begin transaction to ensure atomicity
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    // Step 1: Save the receipt
+                    var receipt = new StoreOrderReceiptPP
+                    {
+                        OrderId = model.OrderId,
+                        StoreId = model.StoreId,
+                        UniqueCode = model.ReceivedCode
+                    };
+                    db.StoreOrderReceiptPPs.Add(receipt);
+
+                    // Step 2: Fetch Order Items
+                    var orderItems = db.OrderItemPProducts.Where(oi => oi.OrderId == model.OrderId).ToList();
 
                     // Step 3: Update product stock
                     foreach (var item in orderItems)
@@ -278,12 +360,18 @@ namespace MYBUSINESS.Controllers
         }
         
         [HttpPost]
-        public ActionResult SubmitOrder(List<OrderItem> orderitem, int storeId)
+        public ActionResult SubmitOrder(List<ProductCategoryViewModel> categories, int storeId)
         {
             // Filter out items where Quantity is null or <= 0
-            var itemsToSave = orderitem?
-                .Where(item => item.Quantity > 0)
-                .ToList() ?? new List<OrderItem>();
+            var itemsToSave = categories
+        .SelectMany(c => c.Products)
+        .Where(p => p.Quantity.HasValue && p.Quantity > 0)
+        .Select(p => new OrderItem
+        {
+            ProductId = p.ProductId,
+            Quantity = p.Quantity.Value
+        })
+        .ToList();
 
             if (!itemsToSave.Any())
             {
@@ -669,7 +757,73 @@ namespace MYBUSINESS.Controllers
                 redirectUrl = Url.Action("Index", "StoreOrder")
             });
         }
+        [HttpPost]
+        [ValidateInput(false)]
+        public JsonResult ValidationPP(List<OrderItemsViewModel> LstProductionVM)
+        {
+            if (LstProductionVM == null || !LstProductionVM.Any())
+            {
+                return Json(new { success = false, message = "No items to validate." });
+            }
 
+            int orderId = LstProductionVM.First().OrderId;
+
+            // Get the parent order (from OrderPProducts table)
+            var order = db.OrderPProducts.Find(orderId);
+            if (order == null)
+            {
+                return Json(new { success = false, message = "Order not found." });
+            }
+
+            // Check if order is already validated
+            if (order.Validate == true)
+            {
+                return Json(new { success = false, message = "Order is already validated." });
+            }
+
+            foreach (var item in LstProductionVM)
+            {
+                var product = db.Products.Find(item.ProductId);
+                var orderItem = db.OrderItemPProducts.FirstOrDefault(oi => oi.Id == item.Id);
+
+                if (product != null && orderItem != null)
+                {
+                    // For packaging products, you might want different validation logic
+                    if (product.PType == 4) // Assuming 4 is packaging products type
+                    {
+                        if (product.Stock < item.Quantity)
+                        {
+                            return Json(new
+                            {
+                                success = false,
+                                message = $"Insufficient stock for {product.Name}. Available: {product.Stock}, Requested: {item.Quantity}"
+                            });
+                        }
+
+                        // Subtract quantity from product stock
+                        product.Stock -= item.Quantity;
+                    }
+
+                    // Update quantity if needed
+                    orderItem.Quantity = item.Quantity;
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Product or order item not found." });
+                }
+            }
+
+            // Mark order as validated
+            order.Validate = true;
+            db.SaveChanges();
+
+            return Json(new
+            {
+                success = true,
+                message = "Order validated successfully!",
+                redirectUrl = Url.Action("IndexOrderPP", "StoreOrder")
+            });
+        }
 
 
         public static void TestEmail()

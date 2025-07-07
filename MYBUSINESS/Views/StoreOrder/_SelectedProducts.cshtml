@@ -19,7 +19,7 @@
                                 <tr>
                                     <th>@Html.DisplayNameFor(model => model.Id)</th>
                                     <th>Store Name</th>
-                                    <th>@Html.DisplayNameFor(model => model.OrderDate)</th>
+                                    <th>Order Date</th>
                                     <th>Status</th>
                                     <th class="no-print">Actions</th>
                                 </tr>
@@ -48,9 +48,10 @@
                                                 @item.Store.Name
                                             }
                                         </td>
-                                        <td class="ProductNameForSearch">
-                                            @Html.DisplayFor(modelItem => item.OrderDate)
-                                        </td>
+                                        @*<td class="ProductNameForSearch">
+            @Html.DisplayFor(modelItem => item.OrderDate)
+        </td>*@
+                                        <td>@(item.OrderDate?.ToString("d/M/yyyy"))</td>
                                         <td>
                                             @if (isReceived)
                                             {

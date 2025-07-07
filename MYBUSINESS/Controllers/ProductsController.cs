@@ -380,7 +380,7 @@ namespace MYBUSINESS.Controllers
         }
 
         [Authorize(Roles = "Admin,Purchasing manager,Technical Manager,Chocolate Production staff,Chocolate Production manager")]
-        public ActionResult IndexStock(int? pType = null)
+        public ActionResult IndexStock(int? pType = null, int? storeId = null)
         {
             // 1. Get all necessary data for dropdowns
             var productTypes = new List<SelectListItem>
@@ -391,25 +391,46 @@ namespace MYBUSINESS.Controllers
         new SelectListItem { Value = "4", Text = "FinishedProduct" },
         new SelectListItem { Value = "5", Text = "IngredientProduct" },
         new SelectListItem { Value = "6", Text = "IntermedataryProduct" },
-        new SelectListItem { Value = "7", Text = "Merchendise" }
+        new SelectListItem { Value = "7", Text = "Merchendise" },
+        new SelectListItem { Value = "8", Text = "PackagingProduct" },
+        new SelectListItem { Value = "9", Text = "Saleable Merchandise" }
     };
+
+            // Get stores for dropdown - FIXED: Compare with string "true" instead of bool true
+            var stores = DAL.dbStore
+                // assuming status is stored as string
+                .Select(s => new SelectListItem
+                {
+                    Value = s.Id.ToString(),
+                    Text = s.StoreShortName
+                })
+                .ToList();
 
             // 2. Maintain all ViewBag items that the view expects
             ViewBag.ProductTypes = productTypes;
+            ViewBag.Stores = stores;
             ViewBag.CurrentPType = pType;
-            ViewBag.Suppliers = DAL.dbSuppliers; // This is required by your view
+            ViewBag.CurrentStoreId = storeId ?? (Session["StoreId"] as int?);
+            ViewBag.Suppliers = DAL.dbSuppliers;
 
-            // 3. Get current store from session
-            int? storeId = Session["StoreId"] as int?;
-            if (storeId == null)
+            // 3. Get current store from session or parameter
+            int? currentStoreId = storeId ?? (Session["StoreId"] as int?);
+            if (currentStoreId == null)
             {
                 return RedirectToAction("StoreNotFound", "UserManagement");
+            }
+
+            // Update session if store was changed via dropdown
+            if (storeId != null)
+            {
+                Session["StoreId"] = storeId;
             }
 
             // 4. Query products with filters
             var query = DAL.dbProducts
                 .Include(x => x.StoreProducts)
-                .Where(x => x.StoreId == storeId);
+        .Include(x => x.ProductDetails) // Include ProductDetails
+        .Where(x => x.StoreId == currentStoreId);
 
             if (pType != null)
             {
@@ -420,6 +441,63 @@ namespace MYBUSINESS.Controllers
 
             return View(products);
         }
+
+        [Authorize(Roles = "Admin,Purchasing manager,Technical Manager,Chocolate Production staff,Chocolate Production manager")]
+        public ActionResult ColorStock(int? pType = null, int? storeId = null)
+        {
+            // 1. Get all necessary data for dropdowns
+            var productTypes = new List<SelectListItem>
+    {
+        new SelectListItem { Value = "1", Text = "VariableProduct" },
+        // ... rest of your product types ...
+    };
+
+            // Get stores for dropdown
+            var stores = DAL.dbStore
+                .Select(s => new SelectListItem
+                {
+                    Value = s.Id.ToString(),
+                    Text = s.StoreShortName
+                })
+                .ToList();
+
+            // 2. Maintain all ViewBag items
+            ViewBag.ProductTypes = productTypes;
+            ViewBag.Stores = stores;
+            ViewBag.CurrentPType = pType;
+            ViewBag.CurrentStoreId = storeId ?? (Session["StoreId"] as int?);
+            ViewBag.Suppliers = DAL.dbSuppliers;
+
+            // 3. Get current store from session or parameter
+            int? currentStoreId = storeId ?? (Session["StoreId"] as int?);
+            if (currentStoreId == null)
+            {
+                return RedirectToAction("StoreNotFound", "UserManagement");
+            }
+
+            // Update session if store was changed via dropdown
+            if (storeId != null)
+            {
+                Session["StoreId"] = storeId;
+            }
+
+            // 4. Query products with filters and include PaperColors
+            var query = DAL.dbProducts
+                .Include(x => x.StoreProducts)
+                .Include(x => x.ProductDetails)
+                .Include(x => x.PaperColors) // Include PaperColors
+                .Where(x => x.StoreId == currentStoreId);
+
+            if (pType != null)
+            {
+                query = query.Where(x => x.PType == pType);
+            }
+
+            var products = query.ToList();
+
+            return View(products);
+        }
+
         //public ActionResult Index()
         //{
         //    int? storeId = Session["StoreId"] as int?;
@@ -612,7 +690,7 @@ namespace MYBUSINESS.Controllers
                     db.StoreProducts.Add(storeProduct);
                 }
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("StockIndex");
             }
             //in case any error
             decimal maxId = db.Products.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
@@ -799,7 +877,7 @@ namespace MYBUSINESS.Controllers
                 }
 
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("StockIndex");
             }
 
             // Reload data in case of error

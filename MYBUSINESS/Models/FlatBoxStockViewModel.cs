@@ -23,5 +23,10 @@ namespace MYBUSINESS.Models
         public int ColorId { get; set; }
         public string ColorName { get; set; }
         public int Quantity { get; set; }
+        public int PaperColorId { get; set; }
+        public int PPSubItemId { get; set; }
+        public int PackagingProductionId { get; set; }
+        public int ProductId { get; set; } // Changed to int
+        public string ProductName { get; set; }
     }
 }

@@ -242,7 +242,7 @@
                                                            class="form-control production-qty1"
                                                            name="SubItemProduction[@sNo].Quantity"
                                                            id="quantity@(sNo)"
-                                                           @(isReadonly || item.Product.PType == 3 ? "readonly='readonly'" : "")>
+                                                           @(isReadonly || item.Product.PType == 9 ? "readonly='readonly'" : "")>
                                                 </td>
                                                 <td><input type="text" readonly autocomplete="off" value=@item.Unit class="form-control" name="SubItemProduction[@sNo].Unit" id="unit@(sNo)" @(isReadonly ? "readonly='readonly'" : "")></td>
                                                 @*<td><input type="text" readonly autocomplete="off" value=@item.Product.PType class="form-control" name="SubItemProduction[@sNo].Product.PType" id="ptype@(sNo)"></td>*@

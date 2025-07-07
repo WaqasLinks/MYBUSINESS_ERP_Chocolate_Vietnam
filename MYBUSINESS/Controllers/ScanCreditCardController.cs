@@ -28,8 +28,12 @@ namespace MYBUSINESS.Controllers
         public ActionResult Index()
         {
             ViewBag.Suppliers = DAL.dbSuppliers;
-            var shopmanage = db.ScanCreditCards.OrderByDescending(p => p.Id) // Sorting by Id in descending order
-                           .ToList().ToList();
+            //var shopmanage = db.ScanCreditCards.OrderByDescending(p => p.Id) // Sorting by Id in descending order
+            //               .ToList().ToList();
+            var shopmanage = db.ScanCreditCards
+    .Include("Store") // or use .Include(x => x.Store) if using EF Core
+    .OrderByDescending(p => p.Id)
+    .ToList();
             return View(shopmanage);
             //return View(DAL.dbBOMs.Where(x => x.SubItems.Count() == 0).ToList());
         }

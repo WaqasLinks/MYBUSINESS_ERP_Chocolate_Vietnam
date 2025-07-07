@@ -76,12 +76,30 @@ new { @class = "form-control product-dropdown", @id = "productDropdown", @readon
 
 
 
+                        <!--<div class="form-group">-->
+                        @*@Html.LabelFor(model => Model.PostProduction.ProductionDate, htmlAttributes: new { @class = "control-label" })*@
+                        <!--<label>Production Date</label>
+        @Html.TextBoxFor(model => Model.PostProduction.ProductionDate, new { @class = "form-control", type = "date", required = "required", })
+        @Html.ValidationMessageFor(model => Model.PostProduction.ProductionDate, "", new { @class = "text-danger" })
+    </div>-->
                         <div class="form-group">
-                            @*@Html.LabelFor(model => Model.PostProduction.ProductionDate, htmlAttributes: new { @class = "control-label" })*@
                             <label>Production Date</label>
-                            @Html.TextBoxFor(model => Model.PostProduction.ProductionDate, new { @class = "form-control", type = "date" })
+                            @{
+                                // Format today's date as yyyy-MM-dd for HTML5 date input
+                                var todayDate = DateTime.Today.ToString("yyyy-MM-dd");
+                            }
+                            @Html.TextBoxFor(model => Model.PostProduction.ProductionDate,
+                                new
+                                    {
+                                    @class = "form-control",
+                                    type = "date",
+                                    @Value = todayDate,  // Set default value to today
+                                    required = "required"
+                                })
                             @Html.ValidationMessageFor(model => Model.PostProduction.ProductionDate, "", new { @class = "text-danger" })
                         </div>
+
+
 
 
 
@@ -298,8 +316,10 @@ new { @class = "form-control product-dropdown", @id = "productDropdown", @readon
                                                 <td>
                                                     <input type="text" readonly autocomplete="off"
                                                            value="@(item.Product.PType == 1 ? "Variable" :
-item.Product.PType == 2 ? "Excess" :
-item.Product.PType == 3 ? "ByProduct" : "Unknown")"
+   item.Product.PType == 2 ? "Excess" :
+                  item.Product.PType == 3 ? "ByProduct" :
+                  item.Product.PType == 5 ? "Excess" :
+                  item.Product.PType == 6 ? "Excess" : "Unknown")"
                                                            class="form-control"
                                                            name="SubItemProduction[@sNo].Product.PType"
                                                            id="ptype@(sNo)"

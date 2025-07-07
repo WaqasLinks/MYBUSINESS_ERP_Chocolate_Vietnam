@@ -1025,7 +1025,13 @@ namespace MYBUSINESS.Controllers
             maxId += 1;
             var storess = db.Stores.FirstOrDefault(s => s.Id == storeId);
             string storeShortCode = storess?.StoreShortCode ?? "UNKNOWN";
-            string datePart = DateTime.Now.ToString("dd-MM-yyyy");
+            DateTime utcNow = DateTime.UtcNow;
+
+            // Convert to Vietnam timezone (UTC+7)
+            TimeZoneInfo vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"); // Windows timezone ID
+            DateTime vietnamTime = TimeZoneInfo.ConvertTimeFromUtc(utcNow, vietnamTimeZone);
+            //string datePart = DateTime.Now.ToString("dd-MM-yyyy");
+            string datePart = vietnamTime.ToString("dd-MM-yyyy");
             string serialPart = $"{maxId:000}";
 
             ViewBag.SuggestedNewCustId = maxId;
@@ -1309,7 +1315,8 @@ namespace MYBUSINESS.Controllers
                         //StoreProduct storeProduct = db.StoreProducts.FirstOrDefault(x => x.ProductId == sod.ProductId && x.StoreId == parseId); commented due to session issue
                         StoreProduct storeProduct = db.StoreProducts.FirstOrDefault(x => x.ProductId == sod.ProductId && x.StoreId == storeId); //commented due to session issue
                         decimal salePriceWithVat = sod.SalePrice.Value; // The price with VAT included
-
+                        /*decimal billPaid = sO.BillPaid is decimal b ? b : 0m;*/
+                        if (sO.BillPaidByCash == null) sO.BillPaidByCash = 0m;
                         // Reverse VAT removal (divide by 1 + VAT rate in decimal)
                         decimal salePriceWithoutVat = salePriceWithVat / (1 + vatTaxPercent / 100);
                         sO.SaleOrderAmountWithC = (sO.BillPaid + sO.BillPaidByCash).ToString();
@@ -2092,7 +2099,7 @@ namespace MYBUSINESS.Controllers
                         dchi = cust.Address,
                         //inv_buyerEmail = cust.Email ?? "unknown@example.com",
                         email = cust.Email,
-                        htttoan = saleOrder.PaymentMethod ?? "TM/CK",
+                        htttoan = saleOrder.PaymentMethod,
                         ttcktmai = (decimal)saleOrder.Discount,
                         tgtcthue = (decimal)saleOrder.SaleOrderAmount / (1 + tax / 100),//saleOrder.TotalAmountWithoutVat ?? 0,
                         tgtthue = (decimal)(saleOrder.SaleOrderAmount * tax / 100m),

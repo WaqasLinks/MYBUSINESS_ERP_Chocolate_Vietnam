@@ -76,7 +76,7 @@ namespace MYBUSINESS.Controllers
             ViewBag.Suppliers = DAL.dbSuppliers;  // Assuming this contains the supplier list
 
             var products = db.Products
-       .Where(p => p.PType == 4)
+       .Where(p => p.PType == 8)
        .Select(p => new
        {
            Value = p.Id.ToString(),  // ID of the product
@@ -132,7 +132,10 @@ namespace MYBUSINESS.Controllers
 
             var viewModel = new PPNewProductionViewModel
             {
-                PPNewProduction = new PPNewProduction(),
+                PPNewProduction = new PPNewProduction()
+                {
+                    ProductionDate = DateTime.Today
+                },
                 Products = DAL.dbProducts,
                 SubItems = subItems,
                 PPQuantityToProduce = new List<PPQuantityToProduce> { new PPQuantityToProduce() },

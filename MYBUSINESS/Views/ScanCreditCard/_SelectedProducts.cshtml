@@ -10,7 +10,7 @@
                             <thead>
                                 <tr>
                                     <th>@Html.DisplayNameFor(model => model.First().Id)</th>
-                                    <th>@Html.DisplayNameFor(model => model.First().StoreId)</th>
+                                    <th>Store Name</th>
                                     <th>@Html.DisplayNameFor(model => model.First().Date)</th>
                                     <th>@Html.DisplayNameFor(model => model.First().Amount)</th>
                                     <th>Actions</th>
@@ -21,7 +21,8 @@
                                 {
                                     <tr>
                                         <td>@Html.DisplayFor(modelItem => item.Id)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.StoreId)</td>
+                                        @*<td>@Html.DisplayFor(modelItem => item.StoreShortName)</td>*@
+                                        <td>@Html.DisplayFor(modelItem => item.Store.StoreShortName)</td>
                                         <td>@(item.Date.HasValue ? item.Date.Value.ToString("dd/MM/yyyy") : "")</td>
                                         <td>@(item.Amount.HasValue ? item.Amount.Value.ToString("N0") : "")</td>
                                         <td>

@@ -11,42 +11,42 @@
                     <h3 class="box-title" style="text-align:center;">Saleable Product Order</h3>
                 </div>
                 <div class="box-body">
-                   <div class="form-group">
-                       <label>Select Store:</label>
-                       @Html.DropDownList("storeId", ViewBag.Stores as SelectList, "Select Store", new
-                       {
-                           @class = "form-control",
-                           required = "required",
-                           style = "width: 200px;" 
-                       })
-                   </div>
+                    <div class="form-group">
+                        <label>Select Store:</label>
+                        @Html.DropDownList("storeId", ViewBag.Stores as SelectList, "Select Store", new
+                        {
+                            @class = "form-control",
+                            required = "required",
+                            style = "width: 200px;"
+                        })
+                    </div>
 
-                    @for (int c = 0; c < Model.Count; c++)
+                    @for (int i = 0; i < Model.Count; i++)
                     {
-                        <h4 style="margin-top:20px;"><strong>Category: @Model[c].CategoryName</strong></h4>
-                        <table id="productTable" class="table table-bordered table-striped">
-                            <thead>
+                    <h4 style="margin-top:20px;"><strong>Category: @Model[i].CategoryName</strong></h4>
+                    <table id="productTable" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th style="width:10%;">Name</th>
+                                <th style="width:10%;">Quantity</th>
+                                <th style="width:10%;">Unit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int j = 0; j < Model[i].Products.Count; j++)
+                            {
+                                
                                 <tr>
-                                    <th style="width:10%;">Name</th>
-                                    <th style="width:10%;">Quantity</th>
-                                    <th style="width:10%;">Unit</th>
+                                    <td>@Model[i].Products[j].Name</td>
+                                    <td>
+                                        @Html.HiddenFor(m => m[i].Products[j].ProductId)
+                                        @Html.TextBoxFor(m => m[i].Products[j].Quantity, new { @class = "form-control", type = "number", step = "0.01" })
+                                    </td>
+                                    <td>@Model[i].Products[j].Unit</td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @for (int i = 0; i < Model[c].Products.Count; i++)
-                                {
-                                    var product = Model[c].Products[i];
-                                    <tr>
-                                        <td style="width: 80px;">@product.Name</td>
-                                        <td>
-                                            <input type="hidden" name="orderitem[@i].ProductId" value="@product.Id" />
-                                            <input type="number" name="orderitem[@i].Quantity" class="form-control" min="1" style="width: 80px;" />
-                                        </td>
-                                        <td style="width: 80px;">@product.Unit</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
+                            }
+                        </tbody>
+                    </table>
                     }
                 </div>
                 <div class="box-footer">

@@ -29,6 +29,7 @@
               <Mapping SourceColumn="SaleOrderQty" DataSetColumn="SaleOrderQty" />
               <Mapping SourceColumn="PaymentMethod" DataSetColumn="PaymentMethod" />
               <Mapping SourceColumn="SaleOrderAmountWithVaT" DataSetColumn="SaleOrderAmountWithVaT" />
+              <Mapping SourceColumn="SaleOrderAmountWithC" DataSetColumn="SaleOrderAmountWithC" />
               <Mapping SourceColumn="Name" DataSetColumn="Name" />
               <Mapping SourceColumn="Address" DataSetColumn="Address" />
               <Mapping SourceColumn="CustomerRemarks" DataSetColumn="CustomerRemarks" />
@@ -91,6 +92,13 @@
                 </xs:simpleType>
               </xs:element>
               <xs:element name="SaleOrderAmountWithVaT" msprop:Generator_ColumnPropNameInRow="SaleOrderAmountWithVaT" msprop:Generator_ColumnPropNameInTable="SaleOrderAmountWithVaTColumn" msprop:Generator_ColumnVarNameInTable="columnSaleOrderAmountWithVaT" msprop:Generator_UserColumnName="SaleOrderAmountWithVaT" type="xs:decimal" minOccurs="0" />
+              <xs:element name="SaleOrderAmountWithC" msprop:Generator_ColumnPropNameInRow="SaleOrderAmountWithC" msprop:Generator_ColumnPropNameInTable="SaleOrderAmountWithCColumn" msprop:Generator_ColumnVarNameInTable="columnSaleOrderAmountWithC" msprop:Generator_UserColumnName="SaleOrderAmountWithC" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="10" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
               <xs:element name="Name" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_ColumnPropNameInTable="NameColumn" msprop:Generator_ColumnVarNameInTable="columnName" msprop:Generator_UserColumnName="Name" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">

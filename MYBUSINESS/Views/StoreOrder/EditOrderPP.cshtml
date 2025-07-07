@@ -22,12 +22,12 @@
                         <div class="form-group">
                             <label>Select Store:</label>
                             @Html.DropDownList("storeId", ViewBag.Stores as SelectList, "Select Store", new
-                            {
-                                @class = "form-control",
-                                style = "width: 200px;",
-                                required = "required",
-                                disabled = isReadonly ? "disabled" : null // Use disabled instead of readonly for dropdown
-                            })
+                       {
+                           @class = "form-control",
+                           style = "width: 200px;",
+                           required = "required",
+                           disabled = isReadonly ? "disabled" : null // Use disabled instead of readonly for dropdown
+                       })
                             @if (isReadonly)
                             {
                                 @Html.Hidden("storeId", currentStoreId)
@@ -66,13 +66,13 @@
                                     </td>
                                     <td>
                                         @Html.TextBoxFor(m => m[i].Quantity, new
-                                        {
-                                            @class = "form-control",
-                                            type = "number",
-                                            min = "1",
-                                            style = "width: 80px;",
-                                            @readonly = isReadonly ? "readonly" : null
-                                        })
+                                   {
+                                       @class = "form-control",
+                                       type = "number",
+                                       min = "1",
+                                       style = "width: 80px;",
+                                       @readonly = isReadonly ? "readonly" : null
+                                   })
                                     </td>
                                     <td style="width: 80px;">
                                         @Model[i].Product.Unit
@@ -87,8 +87,73 @@
                     {
                         <button type="submit" class="btn btn-success">Save Changes</button>
                     }
+                    <button type="button" class="btn btn-primary" id="btnValidate" @(isReadonly ? "disabled" : "")>Validate</button>
                 </div>
             </div>
         </section>
     </div>
 }
+
+<script>
+    $("#btnValidate").click(function () {
+    alert('Validating...');
+
+    let productUpdates = [];
+    let orderId = null;
+
+    // Loop through each table row
+    $(".table-bordered tbody tr").each(function () {
+        // Get all required values from the row
+        let id = $(this).find('input[name$=".Id"]').val();
+        let productId = $(this).find('input[name$=".ProductId"]').val();
+        let currentOrderId = $(this).find('input[name$=".OrderId"]').val();
+        let quantity = $(this).find('input[name$=".Quantity"]').val();
+
+        // Store the orderId (should be same for all rows)
+        if (currentOrderId) orderId = currentOrderId;
+
+        // Only add the item if all values are present and quantity > 0
+        if (id && productId && currentOrderId && quantity && parseInt(quantity) > 0) {
+            productUpdates.push({
+                Id: parseInt(id),
+                ProductId: parseInt(productId),
+                OrderId: parseInt(currentOrderId),
+                Quantity: parseInt(quantity)
+            });
+        }
+    });
+
+    if (!orderId) {
+        alert("Order ID not found!");
+        return;
+    }
+
+    if (productUpdates.length === 0) {
+        alert("No valid items to validate (quantity must be > 0).");
+        return;
+    }
+
+    console.log("Sending Data:", JSON.stringify({ LstProductionVM: productUpdates }));
+
+    // Send AJAX request
+    $.ajax({
+        url: '@Url.Action("ValidationPP", "StoreOrder")',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ LstProductionVM: productUpdates }),
+        headers: {
+            'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+        },
+        success: function (response) {
+            alert(response.message);
+            if (response.success) {
+                window.location.href = response.redirectUrl;
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error:", error);
+            alert("An error occurred while validating. Please try again.");
+        }
+    });
+});
+</script>
