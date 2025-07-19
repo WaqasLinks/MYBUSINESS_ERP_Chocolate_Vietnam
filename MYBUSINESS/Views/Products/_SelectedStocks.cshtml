@@ -88,8 +88,8 @@
                                         <th>
                                             @Html.DisplayNameFor(model => model.Stock)
                                         </th>
-                                        <th>Shape</th>
-                                        <th>Weight</th>
+                                        @*<th>Shape</th>
+                                        <th>Weight</th>*@
                                         <th style="display:none;">
                                             @Html.DisplayNameFor(model => model.SalePrice)
                                         </th>
@@ -156,7 +156,7 @@
                                             <td class="ProductNameForSearch">
                                                 @Html.DisplayFor(modelItem => item.Stock)
                                             </td>
-                                            <td>
+                                            <td style="display:none;">
                                                 @if (item.ProductDetails != null && item.ProductDetails.Any())
                                                 {
                                                     <ul style="list-style-type:none; padding-left:0; margin:0;">
@@ -167,7 +167,7 @@
                                                     </ul>
                                                 }
                                             </td>
-                                            <td>
+                                            <td style="display:none;">
                                                 @if (item.ProductDetails != null && item.ProductDetails.Any())
                                                 {
                                                     <ul style="list-style-type:none; padding-left:0; margin:0;">

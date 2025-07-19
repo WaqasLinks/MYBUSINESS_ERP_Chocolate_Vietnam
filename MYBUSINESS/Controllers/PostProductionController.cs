@@ -10,6 +10,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.Windows.Media;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
+using Microsoft.Reporting.WebForms;
+using System.Data.SqlClient;
 
 namespace MYBUSINESS.Controllers
 {
@@ -261,7 +263,7 @@ namespace MYBUSINESS.Controllers
      [Bind(Prefix = "PostProduction", Include = "Id,ProductionDate,ProductName,Unit,Quantity,ProductId,ProductionId,Note")] PostProduction postProduction,
      //[Bind(Prefix = "SubItem", Include = "Id,ParentProductId,ProductId,Quantity,Unit,AvailableInventory,QuantitytoPrepare,QuantityRequested")] List<SubItem> subItems,
      [Bind(Prefix = "SubItemProduction", Include = "Id,ParentProductId,ProductId,Quantity,Unit,AvailableInventory,QuantitytoPrepare,QuantityRequested")] List<SubItemProduction> subItemProductions,
-     [Bind(Prefix = "QuantityToProduce", Include = "Id,ProductionQty,BOMId,ProductDetailId,Shape,CalculatedWeight,ProductId")] List<QuantityToProduce> quantityToProduces)
+     [Bind(Prefix = "QuantityToProduce", Include = "Id,ProductionQty,BOMId,ProductDetailId,Shape,CalculatedWeight,ProductId,Weight")] List<QuantityToProduce> quantityToProduces)
         {
             if (ModelState.IsValid)
             {
@@ -386,7 +388,7 @@ namespace MYBUSINESS.Controllers
     .Where(x => x.PostProductionId == postProduction.Id) // Correct filtering
     .ToList();
 
-            var totalWeight = quantityToProduce.Sum(x => x.CalculatedWeight) ?? 0;
+            var totalWeight = quantityToProduce.Sum(x => (x.CalculatedWeight ?? 0) * (x.Weight ?? 0));
 
 
 
@@ -545,7 +547,7 @@ namespace MYBUSINESS.Controllers
         public ActionResult Edit(
     PostProductionViewModel model,
     [Bind(Prefix = "PostProduction", Include = "Id,ProductionDate,ProductName,Unit,ProductId,Quantity,ProductionId,Note")] PostProduction postProduction,
-    [Bind(Prefix = "QuantityToProduce", Include = "Id,ProductionQty,BOMId,ProductDetailId,Shape,CalculatedWeight,ProductId")] List<QuantityToProduce> quantityToProduces,
+    [Bind(Prefix = "QuantityToProduce", Include = "Id,ProductionQty,BOMId,ProductDetailId,Shape,CalculatedWeight,ProductId,Weight")] List<QuantityToProduce> quantityToProduces,
     [Bind(Prefix = "SubItemProduction", Include = "Id,ParentProductId,ProductId,Quantity,Unit")] List<SubItemProduction> subItemProductions)
         {
             
@@ -609,6 +611,54 @@ namespace MYBUSINESS.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public ActionResult PrintProductionsPdf(int productionId)
+        {
+            LocalReport localReport = new LocalReport();
+            localReport.ReportPath = Server.MapPath("~/Reports/Sale_ChocolateProductionPost.rdlc");
+
+            // Get data from stored procedures
+            var headerData = db.Database.SqlQuery<ChocolatePostProductionHeaderViewModel>(
+                "EXEC GetPostChocolateProductionHeader @PostProductionId",
+                new SqlParameter("@PostProductionId", productionId)).ToList();
+
+            var shapeData = db.Database.SqlQuery<ChocolatePotProductionShapeViewModel>(
+                "EXEC GetPostChocolateProductionShapes @PostProductionId",
+                new SqlParameter("@PostProductionId", productionId)).ToList();
+
+            var ingredientData = db.Database.SqlQuery<ChocolatePostProductionIngredientViewModel>(
+                "EXEC GetPostChocolateProductionIngredients @PostProductionId",
+                new SqlParameter("@PostProductionId", productionId)).ToList();
+
+            if (!headerData.Any())
+            {
+                return Content("No data found.");
+            }
+
+            // Add data sources to report
+            localReport.DataSources.Clear();
+
+            localReport.DataSources.Add(new ReportDataSource("DataSet1", headerData));
+            localReport.DataSources.Add(new ReportDataSource("DataSet2", shapeData));
+            localReport.DataSources.Add(new ReportDataSource("DataSet3", ingredientData));
+
+            // Render report
+            string mimeType, encoding, fileNameExtension;
+            string[] streams;
+            Warning[] warnings;
+
+            byte[] renderedBytes = localReport.Render(
+                "PDF",
+                null,
+                out mimeType,
+                out encoding,
+                out fileNameExtension,
+                out streams,
+                out warnings
+            );
+
+            return File(renderedBytes, mimeType, $"Chocolate_Production_{productionId}.pdf");
+        }
 
 
 

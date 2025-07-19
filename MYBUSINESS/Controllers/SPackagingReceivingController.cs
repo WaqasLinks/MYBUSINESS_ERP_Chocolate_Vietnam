@@ -993,7 +993,7 @@ namespace MYBUSINESS.Controllers
                 // Save all changes to the database
                 db.SaveChanges();
 
-                string redirectUrl = Url.Action("Index", "POPR");
+                string redirectUrl = Url.Action("Index", "SPackaging");
                 return Json(new { success = true, message = "Validation completed and records updated.", redirectUrl = redirectUrl });
             }
             catch (Exception ex)

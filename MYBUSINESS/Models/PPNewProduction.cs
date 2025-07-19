@@ -30,12 +30,12 @@ namespace MYBUSINESS.Models
         public Nullable<bool> Validate { get; set; }
         public Nullable<System.DateTime> ProductionDate { get; set; }
     
-        public virtual Product Product { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PPQuantityToProduce> PPQuantityToProduces { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PPSubItemProduction> PPSubItemProductions { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PPPostProduction> PPPostProductions { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

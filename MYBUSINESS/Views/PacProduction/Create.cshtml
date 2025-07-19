@@ -1,0 +1,1228 @@
+﻿@model MYBUSINESS.Models.PacProductionViewModel
+@{
+    ViewBag.Title = "Create NewProduction";
+}
+
+<!-- Content Wrapper. Contains page content -->
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <section class="content">
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-6">
+                <!-- general form elements -->
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Create New Packaging Production</h3>
+                    </div>
+
+                    <div class="box-body">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => Model.PacProduction.Id, htmlAttributes: new { @class = "control-label" })
+                            @Html.EditorFor(model => Model.PacProduction.Id, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.SuggestedId, @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => Model.PacProduction.Id, "", new { @class = "text-danger" })
+                        </div>
+
+
+                        @*<div class="form-group">
+            @Html.Label("BOM Name", new { @class = "control-label" })
+            @Html.DropDownList(
+                "SelectedRemark",
+                (SelectList)ViewBag.Remarks,
+                "Select a BOM Name",
+                new
+                {
+                    @class = "form-control",
+                    id = "remarksDropdown",
+                    data_remarks = @Html.Raw(Json.Encode(ViewBag.RemarksData))
+                }
+            )
+        </div>
+
+        <div class="form-group">
+            <label for="unitField" class="control-label">Unit</label>
+            <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
+        </div>*@
+                        @*<div class="form-group">
+                                    @Html.LabelFor(model => Model.NewProduction.ProductId, "Select Product", new { @class = "control-label" })
+                                    @Html.DropDownListFor(
+        model => model.NewProduction.ProductId,
+        (SelectList)ViewBag.ProductList,
+        "Select a Product to Manufacture",
+        new { @class = "form-control product-dropdown", @id = "productDropdown" }
+        )
+                                    @Html.ValidationMessageFor(model => model.NewProduction.ProductId, "", new { @class = "text-danger" })
+                                </div>*@
+                        <div class="form-group">
+                            @Html.LabelFor(model => Model.PacProduction.ProductId, "Select Product", new { @class = "control-label" })
+                            @Html.DropDownListFor(
+                                model => model.PacProduction.ProductId,
+                                (SelectList)ViewBag.ProductList,
+                                "Select a Product to Manufacture",
+                                new
+                                    {
+                                    @class = "form-control product-dropdown select2",
+                                    @id = "productDropdown",
+                                    @style = "width: 100%;"
+                                }
+                            )
+                            @Html.ValidationMessageFor(model => model.PacProduction.ProductId, "", new { @class = "text-danger" })
+                        </div>
+
+
+
+                        <div class="form-group">
+                            @Html.Label("Unit", new { @class = "control-label" })
+                            <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
+                            @Html.HiddenFor(model => model.PacProduction.Unit, new { @id = "unitHiddenField" })
+                            @Html.ValidationMessageFor(model => model.PacProduction.Unit, "", new { @class = "text-danger" })
+                        </div>
+
+
+
+
+                        <!--<div class="form-group">-->
+                        @*@Html.LabelFor(model => Model.NewProduction.ProductionDate, htmlAttributes: new { @class = "control-label" })*@
+                        <!--<label>Production Date</label>
+        @Html.TextBoxFor(model => Model.PacProduction.ProductionDate, new { @class = "form-control", type = "date" })
+        @Html.ValidationMessageFor(model => Model.PacProduction.ProductionDate, "", new { @class = "text-danger" })
+    </div>-->
+
+                        <div class="form-group">
+                            <label>Production Date</label>
+                            @{
+                                // Format today's date as yyyy-MM-dd for HTML5 date input
+                                var todayDate = DateTime.Today.ToString("yyyy-MM-dd");
+                            }
+                            @Html.TextBoxFor(model => Model.PacProduction.ProductionDate,
+                                new
+                                    {
+                                    @class = "form-control",
+                                    type = "date",
+                                    @Value = todayDate,  // Set default value to today
+                                    required = "required"
+                                })
+                            @Html.ValidationMessageFor(model => Model.PacProduction.ProductionDate, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            <label>Production Quantity</label>
+                            @Html.EditorFor(model => Model.PacProduction.Quantity, new { htmlAttributes = new { @class = "form-control",} })
+                            @Html.ValidationMessageFor(model => Model.PacProduction.Quantity, "", new { @class = "text-danger" })
+                        </div>
+
+
+
+                        @*<div class="form-group">
+            @Html.Label("BOM Name", new { @class = "control-label" })
+            @Html.DropDownList(
+                "SelectedRemark",
+                (SelectList)ViewBag.Remarks,
+                "Select a Remark",
+                new
+                {
+                    @class = "form-control",
+                    id = "remarksDropdown",
+                    data_remarks = @Html.Raw(Json.Encode(ViewBag.RemarksData))
+                }
+            )
+        </div>
+
+        <div class="form-group">
+            <label for="unitField" class="control-label">Unit</label>
+            <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
+        </div>*@
+
+
+
+
+
+                        @*<div class="form-group">
+            @Html.LabelFor(model => Model.Product.Id, "Select Product", new { @class = "control-label" })
+            @Html.DropDownListFor(
+                model => Model.NewProduction.ProductName,
+                (SelectList)ViewBag.ProductList,
+                "Select a Product",
+                new { @class = "form-control" }
+            )
+            @Html.ValidationMessageFor(model => Model.NewProduction.ProductName, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NewProduction.Unit, htmlAttributes: new { @class = "control-label" })
+            @Html.DropDownListFor(
+                model => model.NewProduction.Unit,
+                new SelectList(new List<string> { "Kg", "Gram", "Square", "Bar" }),
+                new { @class = "form-control" }
+            )
+            @Html.ValidationMessageFor(model => model.NewProduction.Unit, "", new { @class = "text-danger" })
+        </div>*@
+
+                        @*<div class="form-group">
+            @Html.LabelFor(model => Model.NewProduction.QuantityToProduce, htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => Model.NewProduction.QuantityToProduce, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => Model.NewProduction.QuantityToProduce, "", new { @class = "text-danger" })
+        </div>*@
+                    </div>
+
+                    <div class="box-footer">
+                        <input type="submit" id="CreateSO" value="Create" class="btn btn-primary" />
+                        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-secondary" })
+                        <button id="validateBtn" class="btn btn-primary" style="margin-left:250px; display:none;">Validate</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right column for Sub Items -->
+            <div class="col-md-6">
+                <!-- general form elements -->
+                <!-- general form elements -->
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Main Ingredients</h3>
+                    </div>
+
+                    <div class="box-body">
+
+
+
+                        <table id="selectedProducts" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th style="width: 5%;">#</th>
+                                    <th style="width: 35%;">Name</th>
+                                    <th style="width: 25%;">Qty</th>
+                                    <th style="width: 20%;">Unit</th>
+                                    @*<th style="width: 20%;">Calculated Weight</th>*@
+                                    @*<th style="width: 12%;"></th>*@
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td id="SNo0">1</td>
+                                    <td style="display:none;"><input type="hidden" name="PacSubitem.Index" value="0" /></td>
+                                    <td style="display:none;"><input type="text" readonly class="form-control" name="PacSubitem[0].ProductId" id="idn0"></td>
+                                    <td><input type="text" readonly class="form-control" name="PacSubitem[0].Product.Name" id="name0" placeholder="Type product name"></td>
+                                    <td><input type="text" readonly class="form-control" name="PacSubitem[0].Quantity" id="quantity0"></td>
+                                    <td><input type="text" readonly class="form-control" name="PacSubitem[0].Unit" id="unit0"></td>
+
+                                    @*<td>
+                                            <input type="text" readonly class="form-control calculated-weight" name="QuantityToProduce[${index}].CalculatedWeight" />
+                                        </td>*@
+                                    <!-- New Calculated Weight Field -->
+                                    @*<td>
+                                            <input type="text" readonly class="form-control calculated-weight" name="QuantityToProduce[0].CalculatedWeight" />
+                                        </td>*@
+                                    @*<td>
+                                            <button type="button" class="delete btn btn-default add-new">
+                                                <i class="material-icons">&#xE872;</i>
+                                            </button>
+                                        </td>*@
+                                </tr>
+                            </tbody>
+
+
+                        </table>
+
+
+                        @*<div class="table-title">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
+                                    </div>
+                                </div>
+                            </div>*@
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <!-- general form elements -->
+                <!-- general form elements -->
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Packaging</h3>
+                    </div>
+
+                    <div class="box-body">
+
+
+
+                        <table id="productTypeTable" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th style="width: 5%;">#</th>
+                                    <th style="width: 35%;">Name</th>
+                                    <th style="width: 25%;">Color</th>
+                                    <th style="width: 20%;">Quantity</th>
+
+                                    @*<th style="width: 20%;">Calculated Weight</th>*@
+                                    @*<th style="width: 12%;"></th>*@
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td id="SNo0">1</td>
+                                    <td style="display:none;"><input type="hidden" name="PacColor.Index" value="0" /></td>
+                                    <td style="display:none;"><input type="text" readonly class="form-control" name="PacColor[0].ProductId" id="idn0"></td>
+                                    <td><input type="text" readonly class="form-control" name="PacColor[0].Product.Name" id="name0" placeholder="Type product name"></td>
+                                    <td><input type="text" readonly class="form-control" name="PacColor[0].Color" id="color0"></td>
+                                    <td><input type="text" class="form-control" name="PacColor[0].Quantity" id="quantity0"></td>
+                                    <td>
+                                        <button type="button" id="delete0" class="delete btn btn-default add-new"><a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button>
+                                    </td>
+                                    @*<td><input type="text" readonly class="form-control" name="PacSubitem[0].Product.PType" id="ptype0" placeholder=""></td>*@
+                                    @*<td>
+                        <input type="text" readonly class="form-control calculated-weight" name="QuantityToProduce[${index}].CalculatedWeight" />
+                    </td>*@
+                                    <!-- New Calculated Weight Field -->
+                                    @*<td>
+                        <input type="text" readonly class="form-control calculated-weight" name="QuantityToProduce[0].CalculatedWeight" />
+                    </td>*@
+                                    @*<td>
+                        <button type="button" class="delete btn btn-default add-new">
+                            <i class="material-icons">&#xE872;</i>
+                        </button>
+                    </td>*@
+                                </tr>
+                            </tbody>
+
+
+                        </table>
+
+                        <!-- Remove one of these duplicate divs -->
+                        <div class="table-title">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <button type="button" id="addNewPackagingRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;">
+                                        <i class="fa fa-plus"></i> New Row
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        @*<div class="table-title">
+            <div class="row">
+                <div class="col-sm-3">
+                    <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
+                </div>
+            </div>
+        </div>*@
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+
+
+
+        </div>
+    </section>
+    @*@Html.ActionLink("Validate", "ValidateStock", null, new { @class = "btn btn-secondary" })*@
+    @*<button id="validateBtn" class="btn btn-primary">Validate</button>*@
+}
+
+<!-- Your existing form content -->
+@*<button id="validateBtn" class="btn btn-primary">Validate</button>*@
+
+
+@*<button id="validateBtn" value="ValidateStock" class="btn btn-primary">Validate</button>*@
+
+
+
+<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.css">
+<script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="//code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-sliderAccess.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.js"></script>
+<!-- In your _Layout.cshtml or view head section -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<!-- At the bottom of your _Layout.cshtml or before closing body tag -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+<link href="@Url.Content("~/Content/custom/custom.css")" rel="stylesheet" type="text/css" />
+<script src="~/Content/custom/PackagingProduction .js"></script>
+<script src="~/Content/custom/downloads/jquery.mcautocomplete.js"></script>
+<script src="~/Content/custom/downloads/jquery.scannerdetection.js"></script>
+<script>
+      var colorColumns = [
+        { name: 'Id', minWidth: '50px' },
+        { name: 'ColorName', minWidth: '200px' },
+        { name: 'ColorCode', minWidth: '100px' }
+    ];
+
+    var colors = []; // this will hold color list
+
+    function fetchColorList() {
+        $.ajax({
+            url: '@Url.Action("GetColors", "PackagingBOM")', // Make sure this URL is correct
+            type: 'GET',
+            success: function (data) {
+                colors = data.map(item => [item.Id, item.ColorName, item.ColorCode]);
+                console.log("Colors loaded:", colors);
+            },
+            error: function (xhr, status, error) {
+                console.error("Failed to load colors:", status, error);
+            }
+        });
+    }
+
+    // This function adds the autocomplete to an input
+    function OnColorName(inputElement) {
+        $(inputElement).mcautocomplete({
+            showHeader: true,
+            columns: colorColumns,
+            source: colors,
+            select: function (event, ui) {
+                this.value = ui.item ? ui.item[1] : ''; // set ColorName
+                $(inputElement).closest('td').find('input[type="hidden"]').val(ui.item ? ui.item[0] : ''); // set Id if needed
+                return false;
+            }
+        });
+    }
+
+    // Run this on page load
+    $(document).ready(function () {
+        fetchColorList(); // Fetch colors once
+
+        // When any packagingColor input gets focus, run autocomplete
+        $('#productTypeTable').on('focus', 'input[id^="packagingColor"]', function () {
+            OnColorName(this);
+        });
+    });
+
+
+
+      $(document).ready(function () {
+    document.getElementById('SOCreate').reset(); // has to be handle
+      });
+    $('#productDropdown').select2({
+        placeholder: "Select a Product to Manufacture",
+        allowClear: true,
+        width: '100%'
+    });
+
+
+  $('#productDropdown').change(function () {
+    var productId = $(this).val(); // Get selected product ID
+
+    if (productId) {
+        $.ajax({
+            url: '@Url.Action("GetProductUnit", "BOM")',
+            type: 'GET',
+            data: { id: productId },
+            success: function (data) {
+                $('#unitField').val(data.unit); // Update the visible unit field
+                $('#unitHiddenField').val(data.unit); // Update the hidden unit field
+            },
+            error: function () {
+                alert('Failed to fetch unit details.');
+            }
+        });
+    } else {
+        $('#unitField').val(''); // Clear the unit field if no product is selected
+        $('#unitHiddenField').val(''); // Clear the hidden unit field
+    }
+});
+
+
+    // Trigger when the product dropdown changes
+$('#productDropdown').change(function () {
+    var productId = $(this).val(); // Get the selected product ID
+
+    if (productId) {
+        $.ajax({
+            url: '@Url.Action("GetProductDetails", "BOM")',
+            type: 'GET',
+            data: { productId: productId },
+            success: function (data) {
+                if (data && data.length > 0) {
+                    // Clear existing rows in the Production Output table
+                    $('#selectedProduct tbody').empty();
+
+                    // Loop through the product details and create rows
+                    data.forEach((detail, index) => {
+                        const newRow = `
+                       <tr>
+    <td>${index + 1}</td>
+    <td style="display:none;">
+        <input type="hidden" name="QuantityToProduce.Index" value="${index}" />
+    </td>
+    <td>
+        <input type="hidden" name="QuantityToProduce[${index}].ProductDetailId" value="${detail.Id}" />
+        <input type="text" readonly class="form-control" name="QuantityToProduce[${index}].Shape" value="${detail.Shape}" />
+    </td>
+    <td>
+        <input type="text" class="form-control production-qty" data-weight="${detail.Weight}" name="QuantityToProduce[${index}].ProductionQty" />
+    </td>
+    <td>
+        <input type="hidden" name="QuantityToProduce[${index}].Weight" value="${detail.Weight}" />
+        <input type="text" readonly class="form-control calculated-weight" name="QuantityToProduce[${index}].CalculatedWeight" />
+    </td>
+</tr>`;
+                        $('#selectedProduct tbody').append(newRow); // Append rows
+                    });
+                } else {
+                    $('#selectedProduct tbody').empty();
+                    alert('No product details found.');
+                }
+            },
+            error: function () {
+                alert('Failed to fetch product details.');
+            }
+        });
+    } else {
+        $('#selectedProduct tbody').empty();
+    }
+});
+
+    $(document).on('input', '.production-qty1', function () {
+
+        let $row = $(this).closest('tr');
+        let newProductionQty = parseFloat($(this).val()) || 0;
+        let weightPerUnit = parseFloat($(this).data('weight')) || 5;
+        let variableProductId = $(this).attr('data-variable-product-id'); // Ensure it's correctly retrieved
+        let variableConsumptionRate = parseFloat($(this).data('consumption-rate')) || 1;
+
+        console.log(variableProductId, "Variable Product ID from Input Field"); // Debugging log
+        /*alert(variableProductId, "Variable Product ID from Input Field");*/
+        // Get the previous weight stored in the row
+        let previousWeight = parseFloat($row.find('.calculated-weight').data('previous-weight')) || 0;
+
+        // Calculate new weight for the row
+        let newWeight = newProductionQty * weightPerUnit;
+
+        // Update the field with new weight and store it as previous weight for next time
+        $row.find('.calculated-weight').val(newWeight.toFixed(2)).data('previous-weight', newWeight);
+
+        // Update the total weight dynamically
+        //updateTotalWeight(newWeight, previousWeight);
+
+        // ✅ Update only the rows that match variableProductId
+        $('#selectedProducts > tbody > tr').each(function () {
+            let variableProdId = $(this).find("input[name$='ProductId']").val();
+            if (variableProdId) {
+                variableProdId = variableProdId.toString().trim();  // Ensure it's a clean string
+            }
+            if (variableProductId) {
+                variableProductId = variableProductId.toString().trim();
+            }
+
+            console.log(`Checking: ${variableProdId} == ${variableProductId}`);
+
+            // ✅ Convert to string for accurate comparison
+            if (variableProdId && variableProductId && variableProdId === variableProductId) {
+                const quantity = parseFloat($(this).find("[name$='Quantity']").val()) || 0;
+                console.log(quantity, 'quantity');
+                // Get total weight (Make sure gtotalWeight is updated before use)
+                let totalWeight = parseFloat($('#gtotalWeight').text()) || 0;
+                console.log(totalWeight, 'totalWeight');
+                // Calculate new result
+                const calculatedValue = quantity * totalWeight;
+                console.log(calculatedValue);
+                const result = (gtotalWeight * quantity) - newProductionQty;
+                console.log(result);
+                // Update only matching row
+                $(this).find('.calculated-subitem').text(result.toFixed(2));
+                console.log(`✅ Updated row with ProductId: ${variableProductId}, New Result: ${result}`);
+            }
+        });
+    });
+
+
+    // ✅ Unified function to update total weight correctly
+    // Unified function to update total weight correctly
+    function updateTotalWeight(newWeight, previousWeight) {
+        let totalWeight = parseFloat($('#totalWeightDisplay').data('total-weight')) || 0;
+
+        // Update the total weight properly: subtract previous weight and add the new one
+        totalWeight = totalWeight - previousWeight + newWeight;
+
+        // Update total weight display and store the updated value
+        $('#totalWeightDisplay').text(totalWeight.toFixed(2)).data('total-weight', totalWeight);
+
+        // Update sub-items dynamically based on new total weight
+        updateSubItemCalculations(totalWeight);
+    }
+
+
+    // ✅ Function to update sub-items based on the total weight
+    function updateSubItemCalculations(totalWeight) {
+        $('#selectedProducts > tbody  > tr').each(function () {
+            let quantity = parseFloat($(this).find("[name$='Quantity']").val()) || 0;
+
+            let calculatedValue = quantity * totalWeight;
+            $(this).find('.calculated-subitem').text(calculatedValue.toFixed(2));
+        });
+    }
+
+
+// Calculate the calculated weight on production quantity input
+    $(document).on('input', '.production-qty', function () {
+        const productionQty = parseFloat($(this).val()) || 0;
+        const weight = parseFloat($(this).data('weight')) || 0;
+        const variableProductId = $(this).data('variable-product-id'); // Get Variable Product ID
+        const variableConsumptionRate = parseFloat($(this).data('consumption-rate')) || 1; // Get consumption rate per unit
+
+        // Alert to check input values
+        /*alert(`Production Qty Changed: ${productionQty}, Weight: ${weight}, Variable Product ID: ${variableProductId}, Consumption Rate: ${variableConsumptionRate}`);*/
+
+        // Calculate the weight and update the corresponding field
+        const calculatedWeight = productionQty * weight;
+        $(this).closest('tr').find('.calculated-weight').val(calculatedWeight.toFixed(2));
+        console.log(productionQty)
+        console.log(weight)
+        // Recalculate the total weight
+        calculateTotalWeight();
+
+        // Update the corresponding Variable Product row
+        $('#productTypeTable > tbody > tr').each(function () {
+            let rowProductId = $(this).find("[name$='Product.Id']").val(); // Find Product ID in the row
+
+            if (rowProductId == variableProductId) {
+                let newVariableProductQty = productionQty * variableConsumptionRate;
+              /*  alert(`Updating Variable Product ID ${variableProductId}: New Quantity = ${newVariableProductQty}`);*/
+                $(this).find('.calculated-subitem').text(newVariableProductQty.toFixed(2)); // Update quantity
+            }
+        });
+    });
+
+    let gtotalWeight = 0;
+
+    // Function to calculate the total weight
+    function calculateTotalWeight() {
+        let totalWeight = 0;
+
+        // Sum up all the calculated weights
+        $('.calculated-weight').each(function () {
+            const weight = parseFloat($(this).val()) || 0;
+            totalWeight += weight;
+        });
+
+        // Update global total weight
+        gtotalWeight = totalWeight;
+
+        // Display the total weight
+        $('#totalWeightDisplay').text(totalWeight.toFixed(2));
+
+        // Alert to check updated total weight
+    /*    alert(`Total Weight Updated: ${gtotalWeight}`);*/
+
+        // Update the sub-items with the total weight multiplied by quantity
+        updateSubItemCalculations();
+    }
+
+    // Function to update sub-item calculations
+    function updateSubItemCalculations() {
+        $('#selectedProducts > tbody  > tr').each(function () {
+            const quantity = parseFloat($(this).find("[name$='Quantity']").val()) || 0; // Get quantity value
+            const calculatedValue = quantity * gtotalWeight; // Multiply quantity by total weight
+            $(this).find('.calculated-subitem').text(calculatedValue.toFixed(2));
+            console.log('quantity');
+            console.log('calculatedValue');// Update calculated value
+        });
+
+        // Alert to check updated sub-item values
+       /* alert(`Sub-Item Calculations Updated`);*/
+    }
+
+
+
+
+
+
+
+// Trigger sub-item details fetch and update rows
+@*$('#productDropdown').change(function () {
+    var productId = $(this).val(); // Get the selected product ID
+
+    if (productId) {
+        $.ajax({
+            url: '@Url.Action("GetSubItemDetails", "NewProduction")', // Replace with your actual action name
+            type: 'GET',
+            data: { productId: productId },
+            success: function (data) {
+                if (data && data.length > 0) {
+                    // Clear existing rows in both tables
+                    $('#selectedProducts tbody').empty();
+                    $('#productTypeTable tbody').empty();
+
+                    // Loop through sub-items and append rows to the respective table
+                    data.forEach((subItem, index) => {
+                        let isByProduct = subItem.PType === "ByProduct"; // Check if PType is "ByProduct"
+
+                        let quantityValue = subItem.Quantity !== null && subItem.Quantity !== undefined ? subItem.Quantity : "0";
+
+                        let newRow = `
+    <tr ${isByProduct ? 'style="display: none;"' : ''}>  <!-- Hide ByProduct Rows -->
+        <td>${index + 1}</td>
+        <td style="display:none;">
+            <input type="hidden" name="SubItemProduction[${index}].ProductId" value="${subItem.ProductId}" />
+        </td>
+        <td>
+            <input type="text" readonly class="form-control"
+               name="SubItemProduction[${index}].Product.Name"
+               value="${subItem.ProductName}" />
+        </td>`;
+
+                        if (subItem.Ingredient || subItem.IntermediaryIngredient) {
+                            // Add row to Selected Products (Ingredient Table)
+                            newRow += `
+        </td>
+         <td style="display:none;">
+            <input type="hidden" readonly class="form-control"
+                   name="SubItemProduction[${index}].Quantity"
+                   value="${quantityValue}"
+                   placeholder="Quantity" />
+        </td>
+        <td>
+            <span class="calculated-subitem">0.00</span>
+            <input type="hidden" name="SubItemProduction[${index}].SubItemQty" class="subitem-qty-hidden" value="0.00" />
+        </td>
+        <td>
+            <input type="text" readonly class="form-control"
+                   name="SubItemProduction[${index}].Unit"
+                   value="${subItem.Unit || ''}"
+                   placeholder="Unit" />
+        </td>`;
+                            $('#selectedProducts tbody').append(newRow);
+
+                        } else if (subItem.PType === "Variable" || subItem.PType === "IntermediaryIngredient" || subItem.PType === "ByProduct") {
+                            // Add row to Product Type Table (Final Product Table)
+                            newRow += `
+        <td>
+            <input type="text" class="form-control production-qty1"
+                data-variable-product-id="${subItem.VariableProduct}"
+                name="SubItemProduction[${index}].Quantity"
+                value="${quantityValue}"
+                placeholder="Quantity" />
+        </td>
+        <td>
+            <input type="text" readonly class="form-control"
+                   name="SubItemProduction[${index}].Unit"
+                   value="${subItem.Unit || ''}"
+                   placeholder="Unit" />
+        </td>
+        <td>
+            <input type="text" readonly class="form-control"
+                   name="SubItemProduction[${index}].Product.PType"
+                   value="${subItem.PType}"
+                   placeholder="Product Type" />
+        </td>
+        <td>
+            <input type="hidden"
+                   name="SubItemProduction[${index}].ProductType"
+                   value="${subItem.PType}" />
+        </td>`;
+                            $('#productTypeTable tbody').append(newRow);
+                        }
+
+                        newRow += `</tr>`;
+                    });
+
+
+                    // Update calculations after adding rows
+                    updateSubItemCalculations();
+                } else {
+                    // If no data, clear tables and show alert
+                    $('#selectedProducts tbody').empty();
+                    $('#productTypeTable tbody').empty();
+                    alert('No sub-item details found.');
+                }
+            },
+            error: function () {
+                alert('Failed to fetch sub-item details.');
+            }
+        });
+    } else {
+        // If no product selected, clear both tables
+        $('#selectedProducts tbody').empty();
+        $('#productTypeTable tbody').empty();
+    }
+});*@
+
+$('#productDropdown').change(function () {
+    var productId = $(this).val(); // Get the selected product ID
+
+    if (productId) {
+        $.ajax({
+            url: '@Url.Action("GetSubItemDetails", "PacProduction")',
+            type: 'GET',
+            data: { productId: productId },
+            success: function (response) {
+                if (response && (response.subItems.length > 0 || response.packingColors.length > 0)) {
+                    $('#selectedProducts tbody').empty();
+                    $('#productTypeTable tbody').empty();
+
+                    // ✅ Get Production Quantity from input field
+                    let productionQty = parseFloat($('#PacProduction_Quantity').val()) || 0;
+
+                    // ✅ Get Batch Quantity from PackagingBOM
+                    let batchQty = parseFloat(response.batchQuantity) || 1; // Avoid division by 0
+
+                    // ✅ Loop through subItems and calculate required quantity
+                    response.subItems.forEach((subItem, index) => {
+                        let isByProduct = subItem.PType === "ByProduct";
+                        let baseQty = parseFloat(subItem.Quantity) || 0;
+
+                        // 👉 Calculate: (BaseQty × ProductionQty) / BatchQty
+                        let calculatedQty = (baseQty * productionQty) / batchQty;
+                        calculatedQty = calculatedQty.toFixed(2); // Format to 2 decimal places
+
+                        if ((subItem.Ingredient || subItem.IntermediaryIngredient) && baseQty > 0) {
+                            let row = `
+                    <tr ${isByProduct ? 'style="display: none;"' : ''}>
+                        <td>${index + 1}</td>
+                        <td style="display:none;">
+                            <input type="hidden" name="PacSubItemProduction[${index}].ProductId" value="${subItem.ProductId}" />
+                        </td>
+                        <td>
+                            <input type="text" readonly class="form-control"
+                                   name="PacSubItemProduction[${index}].Product.Name"
+                                   value="${subItem.ProductName}" />
+                        </td>
+                        <td>
+                            <input type="text" readonly class="form-control"
+                                   name="PacSubItemProduction[${index}].Quantity"
+                                   value="${calculatedQty}" />
+                        </td>
+                        <td>
+                            <input type="text" readonly class="form-control"
+                                   name="PacSubItemProduction[${index}].Unit"
+                                   value="${subItem.Unit || ''}" />
+                        </td>
+                    </tr>`;
+                            $('#selectedProducts tbody').append(row);
+                        }
+                    });
+
+                    // ✅ Populate Packaging Color Table (no changes here)
+                    // ✅ Populate Packaging Color Table
+                    response.packingColors.forEach((item, index) => {
+                        let row = `
+<tr>
+    <td>${index + 1}</td>
+    <td style="display:none;">
+        <input type="hidden" name="PacColor.Index" value="${index}" />
+        <input type="hidden" name="PacColor[${index}].ProductId" value="${item.ProductId}" />
+    </td>
+    <td>
+        <input type="text" readonly class="form-control"
+               name="PacColor[${index}].Product.Name"
+               id="packagingName${index}"
+               value="${item.ProductName}" />
+    </td>
+    <td>
+        <input type="text" readonly class="form-control"
+               name="PacColor[${index}].Color"
+               id="packagingColor${index}"
+               value="${item.Color}" />
+    </td>
+    <td>
+        <input type="text" class="form-control"
+               name="PacColor[${index}].Quantity"
+               id="packagingQuantity${index}"
+               value="${item.Quantity}" />
+    </td>
+    <td>
+        <button type="button" class="delete btn btn-default add-new">
+            <i class="material-icons">&#xE872;</i>
+        </button>
+    </td>
+</tr>`;
+                        $('#productTypeTable tbody').append(row);
+                    });
+                } else {
+                    $('#selectedProducts tbody').empty();
+                    $('#productTypeTable tbody').empty();
+                    alert('No data found for this product.');
+                }
+            }
+
+
+
+        });
+    } else {
+        // If no product selected, clear both tables
+        $('#selectedProducts tbody').empty();
+        $('#productTypeTable tbody').empty();
+    }
+});
+
+    $('#PacProduction_Quantity').on('input', function () {
+        $('#productDropdown').trigger('change');
+    });
+
+
+
+
+    @*$(document).ready(function () {
+        $('#validateBtn').click(function () {
+            // Prepare data to send to the server
+            const productUpdates = [];
+
+            $('#selectedProducts > tbody > tr').each(function () {
+                const productName = $(this).find("[name$='ProductName']").val(); // Adjust selector for product name
+                const quantity = parseFloat($(this).find("[name$='Quantity']").val()) || 0; // Get quantity value
+                const calculatedValue = quantity * gtotalWeight; // Multiply quantity by total weight
+                const currentStock = parseFloat($(this).find('.stock-column').text()) || 0; // Adjust selector for stock column
+
+                // Push the product details into the array
+                productUpdates.push({
+                    name: productName,
+                    subtractValue: calculatedValue,
+                    currentStock: currentStock
+                });
+            });
+
+            // Send data to the server using AJAX
+            $.ajax({
+                url: '@Url.Action("ValidateStock", "NewProduction")', // Backend API endpoint
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(productUpdates),
+                success: function (response) {
+                    alert("Stock updated successfully!");
+                    console.log(response);
+                    location.reload(); // Reload the page to fetch updated stock values
+                },
+                error: function (error) {
+                    alert("An error occurred while updating the stock.");
+                    console.log(error);
+                }
+            });
+        });
+    });*@
+
+    @*$('#validateBtn').click(function () {
+        // Prepare data to send to the server
+        const productUpdates = [];
+        $('#selectedProducts > tbody > tr').each(function () {
+            const productName = $(this).find("[name$='ProductName']").val();
+            const quantity = parseFloat($(this).find("[name$='Quantity']").val()) || 0;
+            const calculatedValue = quantity * gtotalWeight;
+            const currentStock = parseFloat($(this).find('.stock-column').text()) || 0;
+            console.log("callingggggggggg", productName, quantity)
+
+            productUpdates.push({
+                Name: productName, // Note: Changed to match controller method parameter
+                SubtractValue: calculatedValue // Note: Changed to match controller method parameter
+            });
+        });
+
+        // Send data to the server using AJAX
+        $.ajax({
+            url: '@Url.Action("ValidateStock", "NewProduction")', // Use Razor syntax for correct routing
+            type: 'POST',
+            data: {
+                updates: productUpdates,
+                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val() // Add anti-forgery token
+            },
+            success: function (response) {
+                alert("Stock updated successfully!");
+                location.reload();
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred while updating the stock.");
+                console.error(error);
+            }
+        });
+    });*@
+   @*$('#validateBtn').click(function () {
+    const productUpdates = [];
+    $('#selectedProducts > tbody > tr').each(function () {
+        // Correctly fetch product name
+       /* const productId = $(this).find("[name*='Product.Id']").val() || ""; // Adjust selector if necessary*/
+        const productName = $(this).find("[name*='Product.Name']").val() || ""; // Adjust selector if necessary
+      /*  const id = $(this).find("[id*='Product.Id']").val() || ""; // Ensure field matches your input structure*/
+        const quantity = parseFloat($(this).find("[name*='Quantity']").val()) || 0;
+        const gtotalWeight = 15; // Example total weight for calculation
+        const calculatedValue = quantity * gtotalWeight;
+        console.log($(this));
+
+        // Correctly fetch stock
+        const stock = parseFloat($(this).find("[name*='Stock']").val()) || 0;
+
+        // Calculate subtraction value
+        const subtractValue = stock - calculatedValue;
+
+        console.log(`Product: ${id},${productName}, Stock: ${stock}, CalculatedValue: ${calculatedValue}, SubtractValue: ${subtractValue}`, id);
+
+        // Save the product update information
+        productUpdates.push({
+            id: id,
+            productId: $(this).find("[name*='Product.ProductId']").val() || "",  // Send ProductId
+            productId1: $(this).find("[name*='Product.id']").val() || "",  // Send ProductId
+            productId2: $(this).find("[name*='Product.Id']").val() || "",  // Send ProductId
+            productName: productName,
+            calculatedValue: calculatedValue,
+            stock: stock,
+            subtractValue: subtractValue
+        });
+    });
+       console.log(productUpdates[0], "arrrrrrrrrrrrrrrrrrr");
+       console.log(productUpdates[1], "arrrrrrrrrrrrrrrrrrr")
+
+    // Ensure data is collected before making an AJAX call
+    if (productUpdates.length > 0) {
+        $.ajax({
+            url: '@Url.Action("ValidateStock", "NewProduction")',
+            type: 'POST',
+            data: {
+                updates: productUpdates,
+                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+            },
+            success: function (response) {
+                alert(response.message);
+                if (response.success) {
+                    location.reload();
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred while updating the stock.");
+                console.error("Error:", error);
+            }
+        });
+    } else {
+        alert("No products to validate.");
+    }
+});*@
+      $('#validateBtn').click(function (event) {
+        event.preventDefault();
+        alert("Button Clicked!"); // Debugging alert
+
+        let productUpdates = [];
+
+          $('#selectedProducts > tbody > tr').each(function () {
+              let productionId = $("#NewProduction_Id").val();
+              let productId = $(this).find("[name*='ProductId']").val() ||
+                  $(this).find("[name*='Product.id']").val() ||
+                  $(this).find("[name*='Product.Id']").val() || "";
+
+
+
+              let productName = $(this).find("[name*='Product.Name']").val() || "";
+              let quantity = parseFloat($(this).find("[name*='Quantity']").val()) || 0;
+
+        /*      let gtotalWeight = 15; // Ensure this value is set correctly*/
+              let calculatedValue = quantity * gtotalWeight;
+              let stock = parseFloat($(this).find("[name*='Stock']").val()) || 0;
+              let subtractValue = stock - calculatedValue;
+
+              productUpdates.push({
+                  productionId: productionId,
+                  productId: productId,
+                  productName: productName,
+                  calculatedValue: calculatedValue,
+                  stock: stock,
+                  subtractValue: subtractValue
+              });
+          });
+
+
+        console.log("Final Product Updates List:", productUpdates);
+
+          if (productUpdates.length > 0) {
+
+            alert("Sending AJAX Request..."); // Debugging alert
+            $.ajax({
+                url: '@Url.Action("ValidateCStock", "NewProduction")',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ updates: productUpdates }),
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function (response) {
+                    alert(response.message);
+                    if (response.success) {
+                        location.reload();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert("An error occurred while updating the stock.");
+                    console.error("Error:", error);
+                }
+            });
+        } else {
+            alert("No products to validate.");
+        }
+    });
+
+
+
+    $('#CreateSO').click(function (e) {
+        $('.calculated-subitem').each(function () {
+            let calculatedValue = $(this).text().trim();
+            $(this).siblings('.subitem-qty-hidden').val(calculatedValue);
+            //alert('.subitem-qty')
+            //alert('calculatedValue')
+        });
+    });
+
+
+
+
+    txtSerialNum = 0;
+    TriggerBodyEvents();
+
+    var getPrevBalanceUrl = '@Url.Action("GetPreviousBalance", "SOSR")';                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     //OpenDialogue('#name0');
+
+
+    @{
+        var carton = 0; //= (d.Stock / d.PerPack);
+        var piece = 0;
+        foreach (var d in Model.Products)
+        {
+            carton = (int)(d.Stock / d.PerPack);
+            piece = (int)(d.Stock % d.PerPack);
+            if (piece == 0)
+            {
+               @:products.push([ "@d.Id", "@d.Name", "@d.Unit", "@d.Unit", "@carton" ]);
+            }
+            else
+            {
+                @:products.push(["@d.Id", "@d.Name", "@d.SalePrice", "@carton,@piece"]);
+            }
+            @:productsBarcodes.push(["@d.Id", "@d.BarCode"]);
+
+        }
+     }
+
+
+        IsReturn = '@(ViewBag.IsReturn)';
+
+
+        $('.from-date-picker').datetimepicker({
+            dateFormat: "dd-M-yy",
+            timeFormat: "hh:mm tt",
+            showOn: "both",
+            timeInput: true,
+            stepHour: 1,
+            stepMinute: 5,
+            oneLine: true,
+            //changeMonth: true,
+            //changeYear: true,
+            controlType: 'select',
+            buttonImageOnly: true,
+            buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif",
+            buttonText: "Select date"
+        });
+
+
+
+
+         $("#NewData").dialog({
+            autoOpen: false,
+             title: 'Should not sell-out, already rented on thses dates',
+            closeText: '', //Changes the text of the titlebar-close button to hello instead of default Close
+            width: 500,
+            Height:500
+
+        });
+
+        function FetchProductRentStatus() {
+        //alert('wwww');
+
+            var date = new Date();
+            var day = date.getDate();       // yields date
+            var month = date.getMonth() + 1;    // yields month (add one as '.getMonth()' is zero indexed)
+            var year = date.getFullYear();  // yields year
+            var hour = date.getHours();     // yields hours
+            var minute = date.getMinutes(); // yields minutes
+            var second = date.getSeconds(); // yields seconds
+
+            // After this construct a string with the above results as below
+            var sellDate = day + "/" + month + "/" + year;// + " " + hour + ':' + minute + ':' + second;
+
+            var prodId = $('#idn' + clickedIdNum).val();
+
+
+
+
+            $.ajax({
+                url: "@Url.Action("ProductRentStatus","SOSR")",
+                data: { 'prodId': prodId, 'sellDate': sellDate},
+                type: "GET",
+                cache: false,
+                success: function (data) {
+                    //toastr.success('Hi! I am success message.');
+                    //var abc = data;
+                    //alert(data);
+                    if (data.indexOf('12:00:00 AM') != -1) {
+
+                        $("#NewData").html(data);
+                        $("#NewData").dialog("open");
+                    //}
+                    }
+
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    //$('#lblCommentsNotification').text("Error encountered while saving the comments.");
+                    alert('Data provided was not valid');
+                }
+            });
+        }
+
+        //alert(IsReturn);
+
+        $('#isService').on('change', function () {
+            if (this.value == 'true')
+            //.....................^.......
+            {
+                $("#pprice").hide();
+                $("#stk").hide();
+            }
+            else {
+                $("#pprice").show();
+                $("#stk").show();
+            }
+        });
+
+
+
+</script>
+@*@section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }*@
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const remarksDropdown = document.getElementById("remarksDropdown"); // The remarks dropdown
+        const unitField = document.getElementById("unitField");             // The Unit input field
+
+        // Parse the JSON data for remarks from the dropdown's data_remarks attribute
+        const remarksData = JSON.parse(remarksDropdown.dataset.remarks);
+
+        // Handle dropdown change event
+        remarksDropdown.addEventListener("change", function () {
+            const selectedRemark = this.value; // Get the selected remark value
+
+            // Find the matched data for the selected remark
+            const matchedData = remarksData.find(r => r.Value === selectedRemark);
+
+            if (matchedData) {
+                // Populate the Unit field with the matched Unit value
+                unitField.value = matchedData.Unit || "N/A"; // Default to "N/A" if no unit found
+            } else {
+                // Clear the field if no match is found
+                unitField.value = "";
+            }
+        });
+    });
+
+
+
+</script>

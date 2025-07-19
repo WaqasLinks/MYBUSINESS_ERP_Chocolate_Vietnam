@@ -379,7 +379,7 @@ namespace MYBUSINESS.Controllers
         //    ViewBag.FutureTime = ViewBag.MalaysiaTime.AddMonths(3);
         //    return View(purchaseReciverOrderViewModel);
         //}
-        public ActionResult Create(string id, bool update)
+        public ActionResult Create(string id, bool? update)
         {
             if (id == null)
             {
@@ -457,6 +457,7 @@ namespace MYBUSINESS.Controllers
             ViewBag.IsReturn = pO.PurchaseReturn.ToString().ToLower();
             ViewBag.MalaysiaTime = DateTime.Now;  // Current DateTime (Malaysia Time)
             ViewBag.FutureTime = DateTime.Now.AddMonths(3);  // 3 Months Ahead for Expiry
+            ViewBag.POId = iid; // This is the decoded PO ID
             return View(purchaseReciverOrderViewModel);
         }
 
@@ -464,7 +465,7 @@ namespace MYBUSINESS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Prefix = "Supplier", Include = "Name,Address")] Supplier Supplier, [Bind(Prefix = "PurchaseOrderReciver", Include = "BillAmount,Balance,PrevBalance,BillPaid,Discount,SupplierId,Remarks,Remarks2,PaymentMethod,PaymentDetail,PurchaseReturn,FundingSourceId,BankAccountId,Date")] POReciver pOReciver, [Bind(Prefix = "PurchaseReciverOrderDetail", Include = "ProductId,Quantity,SaleType,PerPack,IsPack,PurchasePrice,ExpiryDate,PurchasingDate,Unit,QtyReceived")] List<PODReciver> pODRecivers)
+        public ActionResult Create([Bind(Prefix = "Supplier", Include = "Name,Address")] Supplier Supplier, [Bind(Prefix = "PurchaseOrderReciver", Include = "BillAmount,Balance,PrevBalance,BillPaid,Discount,SupplierId,Remarks,Remarks2,PaymentMethod,PaymentDetail,PurchaseReturn,FundingSourceId,BankAccountId,Date,POId")] POReciver pOReciver, [Bind(Prefix = "PurchaseReciverOrderDetail", Include = "ProductId,Quantity,SaleType,PerPack,IsPack,PurchasePrice,ExpiryDate,PurchasingDate,Unit,QtyReceived")] List<PODReciver> pODRecivers)
         {
             //PO pO = new PO();
             if (ModelState.IsValid)
@@ -475,6 +476,8 @@ namespace MYBUSINESS.Controllers
                 {
                     return RedirectToAction("StoreNotFound", "UserManagement");
                 }
+                string poId = Request["POId"];
+                pOReciver.POId = poId;
                 //var storeId = Session["StoreId"] as string; //commented due to session issue
                 //if (storeId == null)
                 //{
@@ -1345,6 +1348,54 @@ namespace MYBUSINESS.Controllers
             return View(purchaseReciverOrderViewModel);
         }
 
+        //public JsonResult Validation(List<MYBUSINESS.Models.POPRViewModel> LstProductionVM)
+        //{
+        //    try
+        //    {
+        //        if (LstProductionVM == null || !LstProductionVM.Any())
+        //        {
+        //            return Json(new { success = false, message = "No data received." });
+        //        }
+
+        //        foreach (var item in LstProductionVM)
+        //        {
+        //            int prodId = item.productId;
+        //            string poId = item.poreciverId;
+
+        //            // Find the matching POD record by POId and ProductId
+        //            var podRecord = db.PODRecivers.FirstOrDefault(p =>
+        //                p.POReciverId.ToString() == poId && p.ProductId == prodId);
+
+        //            if (podRecord == null)
+        //            {
+        //                return Json(new { success = false, message = $"No POD found for ProductId {prodId} and POId {poId}." });
+        //            }
+
+        //            // Update the Validate field
+        //            podRecord.Validate = true;
+        //            // Mark the field as modified
+        //            db.Entry(podRecord).Property(x => x.Validate).IsModified = true;
+        //            var product = db.Products.FirstOrDefault(p => p.Id == prodId);
+        //            if (product != null)
+        //            {
+        //                product.Stock += quantity; // Add the received quantity to existing stock
+        //                db.Entry(product).Property(x => x.Stock).IsModified = true;
+        //            }
+        //        }
+
+        //        // Save all changes to the database
+        //        db.SaveChanges();
+
+        //        string redirectUrl = Url.Action("Index", "POPR");
+        //        return Json(new { success = true, message = "Validation completed and records updated.", redirectUrl = redirectUrl });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { success = false, message = "Server error: " + ex.Message });
+        //    }
+        //}
+
+
         public JsonResult Validation(List<MYBUSINESS.Models.POPRViewModel> LstProductionVM)
         {
             try
@@ -1358,6 +1409,7 @@ namespace MYBUSINESS.Controllers
                 {
                     int prodId = item.productId;
                     string poId = item.poreciverId;
+                    int quantity = item.quantity; // ✅ FIXED: Get quantity from the model
 
                     // Find the matching POD record by POId and ProductId
                     var podRecord = db.PODRecivers.FirstOrDefault(p =>
@@ -1370,16 +1422,21 @@ namespace MYBUSINESS.Controllers
 
                     // Update the Validate field
                     podRecord.Validate = true;
-
-                    // Mark the field as modified
                     db.Entry(podRecord).Property(x => x.Validate).IsModified = true;
+
+                    // ✅ Update the product stock
+                    var product = db.Products.FirstOrDefault(p => p.Id == prodId);
+                    if (product != null)
+                    {
+                        product.Stock += quantity;
+                        db.Entry(product).Property(x => x.Stock).IsModified = true;
+                    }
                 }
 
-                // Save all changes to the database
                 db.SaveChanges();
 
                 string redirectUrl = Url.Action("Index", "POPR");
-                return Json(new { success = true, message = "Validation completed and records updated.", redirectUrl = redirectUrl });
+                return Json(new { success = true, message = "Validation completed and records updated.", redirectUrl });
             }
             catch (Exception ex)
             {

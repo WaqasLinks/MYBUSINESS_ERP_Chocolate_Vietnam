@@ -125,7 +125,7 @@ new { @class = "form-control product-dropdown", @id = "productDropdown", @readon
                         <th></th>-->
                                             <th style="width: 5%;">#</th>
                                             <th style="width: 50%;">Shape</th>
-                                            @*<th style="width: 12%;">Qty</th>*@
+                                           @*<th style="width: 12%;">Qty</th>*@
                                             <th style="width: 20%;">Request Qty</th>
                                             <th style="width: 20%;">Actual Qty</th>
                                             @*<th style="width: 12%;"></th>*@
@@ -138,37 +138,46 @@ new { @class = "form-control product-dropdown", @id = "productDropdown", @readon
                                                 int sNo = 0; // Start index
                                                 foreach (var item in Model.QuantityToProduce)
                                                 {
-                                                    <tr>
-                                                        <td id="Pr@(sNo)">@(sNo + 1)</td>
-                                                        <td style="display:none;">
-                                                            <input type="hidden" name="ProductTypeDetail.Index" value="@sNo" />
-                                                        </td>
-                                                        <td style="display:none;">
-                                                            <input type="text" value="@item.ProductId" readonly class="form-control classBGcolor"
-                                                                   name="QuantityToProduce[@sNo].ProductId" id="idn@(sNo)">
-                                                        </td>
-                                                        <td>
-                                                            <input readonly type="text" autocomplete="off" value="@item.Shape" class="form-control"
-                                                                   name="QuantityToProduce[@sNo].Shape" id="shape@(sNo)" placeholder="Type shape"
-                                                                   data-toggle="tooltip" data-placement="top" title="Type shape">
-                                                        </td>
-                                                        <td>
-                                                            <input readonly type="text" autocomplete="off" value="@item.ProductionQty"
-                                                                   class="form-control production-qty"
-                                                                   name="QuantityToProduce[@sNo].ProductionQty" id="productionqty@(sNo)"
-                                                                   data-weight="@item.CalculatedWeight@*ProductDetail?.Weight ?? 0*@">
-                                                        </td>
+                                                                                <tr>
+                                                                                    <td id="Pr@(sNo)">@(sNo + 1)</td>
+                                                                                    <td style="display:none;">
+                                                                                        <input type="hidden" name="ProductTypeDetail.Index" value="@sNo" />
+                                                                                    </td>
+                                                                                    <td style="display:none;">
+                                                                                        <input type="text" value="@item.ProductId" readonly class="form-control classBGcolor"
+                                                                                               name="QuantityToProduce[@sNo].ProductId" id="idn@(sNo)">
+                                                                                    </td>
+                                                                                    <td style="display:none;">
+                                                                                        <input type="text" value="@item.ProductDetailId" readonly class="form-control classBGcolor"
+                                                                                               name="QuantityToProduce[@sNo].ProductDetailId" id="productdetailId@(sNo)">
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input readonly type="text" autocomplete="off" value="@item.Shape" class="form-control"
+                                                                                               name="QuantityToProduce[@sNo].Shape" id="shape@(sNo)" placeholder="Type shape"
+                                                                                               data-toggle="tooltip" data-placement="top" title="Type shape">
+                                                                                    </td>
+                                                                                    <td style="display:none;">
+                                                                                        <input readonly type="text" autocomplete="off" value="@item.Weight" class="form-control"
+                                                                                               name="QuantityToProduce[@sNo].Weight" id="weight@(sNo)" placeholder="Type shape"
+                                                                                               data-toggle="tooltip" data-placement="top" title="Type shape">
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input readonly type="text" autocomplete="off" value="@item.ProductionQty"
+                                                                                               class="form-control production-qty"
+                                                                                               name="QuantityToProduce[@sNo].ProductionQty" id="productionqty@(sNo)"
+                                                                                               data-weight="item.CalculatedWeight@*ProductDetail?.Weight ?? 0*@">
+                                                                                    </td>
 
 
-                                                        <td>
-                                                            <input type="text" autocomplete="off" value="@item.CalculatedWeight"
-                                                                   class="form-control calculated-weight calculated-weight"
-                                                                   name="QuantityToProduce[@sNo].CalculatedWeight" id="calculatedWeight@(sNo)"
-                                                                   placeholder="Calculated weight"
-                                                                   data-toggle="tooltip" data-placement="top" title="Calculated weight">
-                                                        </td>
+                                                                                    <td>
+                                                                                        <input type="text" autocomplete="off" value="@item.CalculatedWeight"
+                                                                                               class="form-control calculated-weight calculated-weight"
+                                                                                               name="QuantityToProduce[@sNo].CalculatedWeight" id="calculatedWeight@(sNo)"
+                                                                                               placeholder="Calculated weight"
+                                                                                               data-toggle="tooltip" data-placement="top" title="Calculated weight">
+                                                                                    </td>
 
-                                                    </tr>
+                                                                                </tr>
                                                     sNo++; // Increment index
                                                 }
                                             }
@@ -292,7 +301,7 @@ new { @class = "form-control product-dropdown", @id = "productDropdown", @readon
                                     foreach (var item in Model.SubItemProduction)
                                     {
                                         //if (item.Product.FinishedProduct == true && item.Product.PType != 1)
-                                        if ((item.Product != null &&  item.Product.PType == 5 || item.Product.PType == 3 ) && item.SubItemQty == null)
+                                        if ((item.Product != null &&  item.Product.PType == 6 || item.Product.PType == 3 ) && item.SubItemQty == null)
                                         {
                                             <tr>
                                                 <td id="SNo0">@(sNo + 1)</td>
@@ -319,7 +328,7 @@ new { @class = "form-control product-dropdown", @id = "productDropdown", @readon
    item.Product.PType == 2 ? "Excess" :
                   item.Product.PType == 3 ? "ByProduct" :
                   item.Product.PType == 5 ? "Excess" :
-                  item.Product.PType == 6 ? "Excess" : "Unknown")"
+                  item.Product.PType == 6 ? "IntermedataryProduct" : "Unknown")"
                                                            class="form-control"
                                                            name="SubItemProduction[@sNo].Product.PType"
                                                            id="ptype@(sNo)"
@@ -428,7 +437,7 @@ new { @class = "form-control product-dropdown", @id = "productDropdown", @readon
                 $('#unitHiddenField').val(data.unit); // Update the hidden unit field
             },
             error: function () {
-                alert('Failed to fetch unit details.');
+ /*               alert('Failed to fetch unit details.');*/
             }
         });
     } else {
@@ -437,6 +446,23 @@ new { @class = "form-control product-dropdown", @id = "productDropdown", @readon
     }
 });
 
+    // When user types in CalculatedWeight field manually
+    $(document).on('input', '.calculated-weight', function () {
+        calculateTotalWeightBasedOnWeight();
+    });
+
+    // New function that multiplies CalculatedWeight × Weight for all rows
+    function calculateTotalWeightBasedOnWeight() {
+        let total = 0;
+        $('#selectedProduct > tbody > tr').each(function () {
+            let calculatedWeight = parseFloat($(this).find('.calculated-weight').val()) || 0;
+            let weight = parseFloat($(this).find("[name$='Weight']").val()) || 0;
+
+            total += calculatedWeight * weight;
+        });
+
+        $('#totalWeightDisplay').text(total.toFixed(2));
+    }
 
     // Trigger when the product dropdown changes
 $('#productDropdown').change(function () {
@@ -484,7 +510,7 @@ $('#productDropdown').change(function () {
                 }
             },
             error: function () {
-                alert('Failed to fetch product details.');
+                /*alert('Failed to fetch product details.');*/
             }
         });
     } else {
@@ -578,7 +604,7 @@ $('#productDropdown').change(function () {
         const variableConsumptionRate = parseFloat($(this).data('consumption-rate')) || 1; // Get consumption rate per unit
 
         // Alert to check input values
-        alert(`Production Qty Changed: ${productionQty}, Weight: ${weight}, Variable Product ID: ${variableProductId}, Consumption Rate: ${variableConsumptionRate}`);
+        /*alert(`Production Qty Changed: ${productionQty}, Weight: ${weight}, Variable Product ID: ${variableProductId}, Consumption Rate: ${variableConsumptionRate}`);*/
 
         // Calculate the weight and update the corresponding field
         const calculatedWeight = productionQty * weight;
@@ -593,7 +619,7 @@ $('#productDropdown').change(function () {
 
             if (rowProductId == variableProductId) {
                 let newVariableProductQty = productionQty * variableConsumptionRate;
-                alert(`Updating Variable Product ID ${variableProductId}: New Quantity = ${newVariableProductQty}`);
+                /*alert(`Updating Variable Product ID ${variableProductId}: New Quantity = ${newVariableProductQty}`);*/
                 $(this).find('.calculated-subitem').text(newVariableProductQty.toFixed(2)); // Update quantity
             }
         });

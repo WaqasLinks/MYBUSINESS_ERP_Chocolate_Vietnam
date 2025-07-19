@@ -17,8 +17,10 @@ namespace MYBUSINESS.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public PackagingBOM()
         {
-            this.PacSubitems = new HashSet<PacSubitem>();
             this.PackagingColors = new HashSet<PackagingColor>();
+            this.PacSubitems = new HashSet<PacSubitem>();
+            this.PacColors = new HashSet<PacColor>();
+            this.PacSubItemProductions = new HashSet<PacSubItemProduction>();
         }
     
         public int Id { get; set; }
@@ -37,10 +39,14 @@ namespace MYBUSINESS.Models
         public string Unit { get; set; }
         public decimal Quantity { get; set; }
     
-        public virtual Product Product { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PackagingColor> PackagingColors { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PacSubitem> PacSubitems { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PackagingColor> PackagingColors { get; set; }
+        public virtual ICollection<PacColor> PacColors { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PacSubItemProduction> PacSubItemProductions { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

@@ -17,7 +17,7 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.js"></script>
 
 <link href="@Url.Content("~/Content/custom/custom.css")" rel="stylesheet" type="text/css" />
-<script src="~/Content/custom/supplierReciever.js"></script>
+<script src="~/Content/custom/standardsupplierReciever.js"></script>
 
 <script src="~/Content/custom/downloads/jquery.mcautocomplete.js"></script>
 <script src="~/Content/custom/downloads/jquery.scannerdetection.js"></script>
@@ -684,8 +684,8 @@
 
     // Loop through each row to get ProductIds and POIds
         $("#selectedProducts tbody tr").each(function () {
-        let productId = $(this).find('input[name^="PurchaseReciverOrderDetail"][name$=".ProductId"]').val();
-        let poreciverId = $(this).find('input[name^="PurchaseReciverOrderDetail"][name$=".POReciverId"]').val();
+            let productId = $(this).find('input[name^="SPDReceiver"][name$=".ProductId"]').val();
+            let poreciverId = $(this).find('input[name^="SPDReceiver"][name$=".POReciverId"]').val();
         productUpdates.push({
             productId: parseInt(productId),
             poreciverId: poreciverId
@@ -699,7 +699,7 @@
 
     // Send AJAX request
     $.ajax({
-        url: '@Url.Action("Validation", "POPRReciver")',
+        url: '@Url.Action("Validation", "SPackagingReceiving")',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({ LstProductionVM: productUpdates }),

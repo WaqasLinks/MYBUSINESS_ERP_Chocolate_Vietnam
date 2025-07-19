@@ -349,7 +349,10 @@ namespace MYBUSINESS.Controllers
         new SelectListItem { Value = "4", Text = "FinishedProduct" },
         new SelectListItem { Value = "5", Text = "IngredientProduct" },
         new SelectListItem { Value = "6", Text = "IntermedataryProduct" },
-        new SelectListItem { Value = "7", Text = "Merchendise" }
+        new SelectListItem { Value = "7", Text = "Merchendise" },
+        new SelectListItem { Value = "8", Text = "PackagingProduct" },
+        new SelectListItem { Value = "9", Text = "Saleable Merchandise" },
+        new SelectListItem { Value = "10", Text = "Special Saleable Merchandise" }
     };
 
             // 2. Maintain all ViewBag items that the view expects
@@ -393,7 +396,8 @@ namespace MYBUSINESS.Controllers
         new SelectListItem { Value = "6", Text = "IntermedataryProduct" },
         new SelectListItem { Value = "7", Text = "Merchendise" },
         new SelectListItem { Value = "8", Text = "PackagingProduct" },
-        new SelectListItem { Value = "9", Text = "Saleable Merchandise" }
+        new SelectListItem { Value = "9", Text = "Saleable Merchandise" },
+        new SelectListItem { Value = "10", Text = "Special Saleable Merchandise" }
     };
 
             // Get stores for dropdown - FIXED: Compare with string "true" instead of bool true
@@ -435,6 +439,84 @@ namespace MYBUSINESS.Controllers
             if (pType != null)
             {
                 query = query.Where(x => x.PType == pType);
+            }
+
+            var products = query.ToList();
+
+            return View(products);
+        }
+
+        [Authorize(Roles = "Admin,Purchasing manager,Technical Manager,Chocolate Production staff,Chocolate Production manager")]
+        public ActionResult IndexStoreStock(int? pType = null, int? storeId = null)
+        {
+            // 1. Get all necessary data for dropdowns
+            var productTypes = new List<SelectListItem>
+    {
+        new SelectListItem { Value = "1", Text = "VariableProduct" },
+        new SelectListItem { Value = "2", Text = "ExcessProduct" },
+        new SelectListItem { Value = "3", Text = "ByProduct" },
+        new SelectListItem { Value = "4", Text = "FinishedProduct" },
+        new SelectListItem { Value = "5", Text = "IngredientProduct" },
+        new SelectListItem { Value = "6", Text = "IntermedataryProduct" },
+        new SelectListItem { Value = "7", Text = "Merchendise" },
+        new SelectListItem { Value = "8", Text = "PackagingProduct" },
+        new SelectListItem { Value = "9", Text = "Saleable Merchandise" },
+        new SelectListItem { Value = "10", Text = "Sepecial Saleable Merchandise" }
+
+    };
+
+            // Get stores for dropdown
+            var stores = DAL.dbStore
+                .Select(s => new SelectListItem
+                {
+                    Value = s.Id.ToString(),
+                    Text = s.StoreShortName
+                })
+                .ToList();
+
+            // 2. Maintain all ViewBag items that the view expects
+            ViewBag.ProductTypes = productTypes;
+            ViewBag.Stores = stores;
+            ViewBag.CurrentPType = pType;
+            ViewBag.CurrentStoreId = storeId ?? (Session["StoreId"] as int?);
+            ViewBag.Suppliers = DAL.dbSuppliers;
+
+            // 3. Get current store from session or parameter
+            int? currentStoreId = storeId ?? (Session["StoreId"] as int?);
+            if (currentStoreId == null)
+            {
+                return RedirectToAction("StoreNotFound", "UserManagement");
+            }
+
+            // Update session if store was changed via dropdown
+            if (storeId != null)
+            {
+                Session["StoreId"] = storeId;
+            }
+
+            // 4. Get OrderIds associated with the selected StoreId
+
+
+            // 4. Get OrderIds associated with the selected StoreId
+            var orderIds = db.Orders
+                .Where(x => x.StoreId == currentStoreId)
+                .Select(o => o.Id)  // No need for .HasValue, as o.Id is int (non-nullable)
+                .ToList();
+
+            // 5. Get ProductIds from OrderItems associated with those OrderIds
+            var productIds = db.OrderItems
+                .Where(oi => orderIds.Contains((int)oi.OrderId))  // Use Contains to check OrderIds
+                .Select(oi => oi.ProductId)
+                .Distinct()  // To get unique products only
+                .ToList();
+
+            // 6. Query products by ProductIds and filter by ProductType if provided
+            var query = DAL.dbProducts
+                .Where(p => productIds.Contains(p.Id));
+
+            if (pType != null)
+            {
+                query = query.Where(p => p.PType == pType);
             }
 
             var products = query.ToList();
@@ -602,7 +684,7 @@ namespace MYBUSINESS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(
-     [Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,StoreId,Category,Unit,Variable,Excess,ByProduct,PType,VarProdParentId,Ingredient,FinishedProduct,Merchandise,IntermediaryIngredient,EInvoicePCode,PVATName,Supplier,FlatPackaging,FinishPackaging")] Product product,
+     [Bind(Include = "Id,Name,PurchasePrice,SalePrice,WholeSalePrice,Stock,Saleable,Purchasable,Manufacturable,PerPack,IsService,ShowIn,BarCode,Remarks,StoreId,Category,Unit,Variable,Excess,ByProduct,PType,VarProdParentId,Ingredient,FinishedProduct,Merchandise,IntermediaryIngredient,EInvoicePCode,PVATName,Supplier,FlatPackaging,FinishPackaging,TargetProdParentId")] Product product,
      [Bind(Prefix = "ProductDetail", Include = "Id,ProductId,Shape,Weight")] List<ProductDetail> productDetails)
         {
             // ✅ FIX: Assign PType from dropdown

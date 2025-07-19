@@ -21,6 +21,6 @@ namespace MYBUSINESS.Models
         public Product Product { get; set; }
         //public ProductType ProductType { get; set; }
         public PackagingBOM PackagingBOM { get; set; }
-        public Dictionary<int, SelectList> PacSubitemDropdowns { get; set; } = new Dictionary<int, SelectList>();
+        //public Dictionary<int, SelectList> PacSubitemDropdowns { get; set; } = new Dictionary<int, SelectList>();
     }
 }

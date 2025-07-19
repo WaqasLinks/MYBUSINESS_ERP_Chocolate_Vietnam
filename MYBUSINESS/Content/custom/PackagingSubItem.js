@@ -1,10 +1,16 @@
-﻿var productColumns = [{ name: 'Id', minWidth: '50px' }, { name: 'Product', minWidth: '300px' }, { name: 'S.Price', minWidth: '100px' }, { name: 'Stock', minWidth: '50px' }];
+﻿var productColumns = [{ name: 'Id', minWidth: '50px' }, { name: 'Product', minWidth: '300px' }, { name: 'Color', minWidth: '150px' },  { name: 'S.Price', minWidth: '100px' }, { name: 'Stock', minWidth: '50px' }];
 //var products = []; //[['Ciplet', '10', '60'], ['Gaviscon', '85', '12'], ['Surficol', '110', '8']];
 var products = new Array();
 
 var customerColumns = [{ name: 'Id', minWidth: '100px' }, { name: 'Name', minWidth: '320px' }, { name: 'Address', minWidth: '400px' }, { name: 'Balance', minWidth: '150px' }];
 //var products = []; //[['Ciplet', '10', '60'], ['Gaviscon', '85', '12'], ['Surficol', '110', '8']];
 var customers = new Array();
+var colorColumns = [
+    { name: 'Id', minWidth: '50px' },
+    { name: 'ColorName', minWidth: '200px' },
+    { name: 'ColorCode', minWidth: '100px' }
+];
+var colors = new Array();
 var productsBarcodes = new Array();
 //var focusedBtnId = "";
 //var focusedBtnSno = "";
@@ -38,6 +44,29 @@ function OnTypeCustomerName(param) {
 
 }
 
+function OnColorName(param) {
+    /*alert('hi');*/
+    $(param).mcautocomplete({
+        showHeader: true,
+        columns: colorColumns,
+        source: colors,
+        select: function (event, ui) {
+            this.value = (ui.item ? ui.item[1] : '');
+            //productName = this.value;
+            $('#idnColor').val(ui.item ? ui.item[0] : '');
+            $('#colorname').val(ui.item ? ui.item[2] : '');
+            $('#colorcode').val(ui.item ? ui.item[3] : '');
+            //document.getElementById(clickedTextboxId).focus();
+            update_itemTotal();
+
+            return false;
+        }
+
+    });
+
+}
+
+
 var productName = "";
 // Single unified function that works for both tables
 function OnTypeName(param) {
@@ -53,120 +82,199 @@ function OnTypeName(param) {
     });
 
 
+    //$(param).mcautocomplete({
+    //    showHeader: true,
+    //    columns: productColumns,
+    //    source: products,
+    //    select: function (event, ui) {
+    //        var pfound = 0;
+    //        $('#selectedProducts > tbody  > tr').each(function () {
+
+    //            if ($(this).find("[id^='idn']").val() == ui.item[0]) {
+    //                var num = +$(this).find("[id^='quantity']").val() + 1;
+    //                +$(this).find("[id^='quantity']").val(num);
+    //                //alert($(this).find("[id^='quantity']").val());
+    //                //$(this).find("[id^='quantity']").val() += 1;
+    //                //alert(ui.item[0]);
+    //                update_itemTotal();
+    //                pfound = 1;
+    //                return false;
+    //            }
+    //        })
+
+    //        if (pfound == 0) {
+
+
+    //            this.value = (ui.item ? ui.item[1] : '');
+    //            productName = this.value;
+    //            //if ($('#isPack' + clickedIdNum).val() == "true") {//false=piece true=PerPack
+    //            $('#perPack' + clickedIdNum).val(ui.item ? ui.item[4] : '');
+    //            //}
+
+    //            $('#salePrice' + clickedIdNum).val(ui.item ? ui.item[2] : '');
+    //            $('#quantity' + clickedIdNum).val(ui.item ? 1 : '');
+    //            $('#idn' + clickedIdNum).val(ui.item ? ui.item[0] : '');
+    //            //document.getElementById(clickedTextboxId).focus();
+    //            update_itemTotal();
+    //            //FetchProductRentStatus();
+    //            return false;
+    //        }
+    //    }
+    //});
     $(param).mcautocomplete({
         showHeader: true,
         columns: productColumns,
         source: products,
         select: function (event, ui) {
             var pfound = 0;
-            $('#selectedProducts > tbody  > tr').each(function () {
 
+            // Check if the product already exists in the table
+            $('#selectedProducts > tbody > tr').each(function () {
                 if ($(this).find("[id^='idn']").val() == ui.item[0]) {
+                    // If the product exists, update the quantity
                     var num = +$(this).find("[id^='quantity']").val() + 1;
-                    +$(this).find("[id^='quantity']").val(num);
-                    //alert($(this).find("[id^='quantity']").val());
-                    //$(this).find("[id^='quantity']").val() += 1;
-                    //alert(ui.item[0]);
-                    update_itemTotal();
-                    pfound = 1;
-                    return false;
+                    $(this).find("[id^='quantity']").val(num);
+                    update_itemTotal(); // Update the item total
+                    pfound = 1; // Mark as found
+                    return false; // Exit loop
                 }
-            })
+            });
 
             if (pfound == 0) {
+                // Validate that the product data is present before adding a new row
+                if (!ui.item || !ui.item[0]) {
+                    console.warn("Invalid product selection");
+                    return false; // Do not create a row if no product is selected
+                }
 
-
-                this.value = (ui.item ? ui.item[1] : '');
+                // Add the product details to the form
+                this.value = ui.item[1] || ''; // Product Name
                 productName = this.value;
-                //if ($('#isPack' + clickedIdNum).val() == "true") {//false=piece true=PerPack
-                $('#perPack' + clickedIdNum).val(ui.item ? ui.item[4] : '');
-                //}
 
-                $('#salePrice' + clickedIdNum).val(ui.item ? ui.item[2] : '');
-                $('#quantity' + clickedIdNum).val(ui.item ? 1 : '');
-                $('#idn' + clickedIdNum).val(ui.item ? ui.item[0] : '');
-                //document.getElementById(clickedTextboxId).focus();
+                // Set product fields only if data exists
+                $('#perPack' + clickedIdNum).val(ui.item[4] || ''); // PerPack
+                $('#salePrice' + clickedIdNum).val(ui.item[2] || ''); // Sale Price
+                $('#quantity' + clickedIdNum).val(1); // Default quantity to 1
+                $('#idn' + clickedIdNum).val(ui.item[0] || ''); // Product ID
+
+                // Handle unit field safely
+                $('#unit' + clickedIdNum).val(ui.item[3] || ''); // Unit (e.g., Kg, Gram)
+
+                // Update the item total
                 update_itemTotal();
-                //FetchProductRentStatus();
-                return false;
+                return false; // Prevent default action
             }
         }
     });
 
-
     //alert("yes");
 }
+
+//function OnTypePackagingName(param) {
+//    $(param).keyup(function (e) {
+//        clickedTextboxId = $(document.activeElement).attr("id");
+//        clickedIdNum = clickedTextboxId.replace("packagingName", ""); // ✅ Fixed
+//    });
+
+//    $(param).mcautocomplete({
+//        showHeader: true,
+//        columns: productColumns,
+//        source: products,
+//        select: function (event, ui) {
+//            var pfound = 0;
+
+//            $('#selectedPackaging > tbody > tr').each(function () {
+//                var currentId = $(this).find("[id^='packagingidn']").val();
+//                if (currentId == ui.item[0]) {
+//                    var quantity = $(this).find("[id^='packagingQuantity']");
+//                    quantity.val(+quantity.val() + 1);
+//                    update_itemTotal();
+//                    pfound = 1;
+//                    return false;
+//                }
+//            });
+
+//            if (pfound == 0) {
+//                this.value = ui.item ? ui.item[1] : '';
+//                $('#packagingQuantity' + clickedIdNum).val(1);
+//                $('#packagingidn' + clickedIdNum).val(ui.item ? ui.item[0] : '');
+
+//                // ✅ Now this will correctly show ProductId
+//                console.log('Setting ProductId:', $('#packagingidn' + clickedIdNum).val());
+
+//                update_itemTotal();
+//                return false;
+//            }
+//        }
+//    });
+//}
 
 function OnTypePackagingName(param) {
-    //alert(products);
-    //alert(clickedTextboxId);
-    //$('#name' + txtSerialNum).mcautocomplete({
-    
     $(param).keyup(function (e) {
-
         clickedTextboxId = $(document.activeElement).attr("id");
-        clickedIdNum = clickedTextboxId.substring(4);
-
+        clickedIdNum = clickedTextboxId.replace("packagingName", "");
     });
-
 
     $(param).mcautocomplete({
         showHeader: true,
         columns: productColumns,
-        source: products,
+        source: products, // ✅ Show only PType = 8 products
         select: function (event, ui) {
-            var pfound = 0;
-            $('#selectedPackaging > tbody  > tr').each(function () {
+            // ✅ Always allow selection, even if product already selected in another row
+            this.value = ui.item ? ui.item[1] : ''; // Set product name in textbox
+            $('#packagingQuantity' + clickedIdNum).val(1); // Set default quantity to 1 (you can remove this if manual entry is preferred)
+            $('#packagingidn' + clickedIdNum).val(ui.item ? ui.item[0] : ''); // Set hidden ProductId
 
-                if ($(this).find("[id^='packagingidn']").val() == ui.item[0]) {
-                    var num = +$(this).find("[id^='packagingQuantity']").val() + 1;
-                    +$(this).find("[id^='packagingQuantity']").val(num);
-                    //alert($(this).find("[id^='quantity']").val());
-                    //$(this).find("[id^='quantity']").val() += 1;
-                    //alert(ui.item[0]);
-                    update_itemTotal();
-                    pfound = 1;
-                    return false;
-                }
-            })
+            console.log('Selected ProductId:', ui.item[0]);
 
-            if (pfound == 0) {
-
-
-                this.value = (ui.item ? ui.item[1] : '');
-                productName = this.value;
-                //if ($('#isPack' + clickedIdNum).val() == "true") {//false=piece true=PerPack
-                $('#perPack' + clickedIdNum).val(ui.item ? ui.item[4] : '');
-                //}
-
-                $('#salePrice' + clickedIdNum).val(ui.item ? ui.item[2] : '');
-                $('#packagingQuantity' + clickedIdNum).val(ui.item ? 1 : '');
-                $('#packagingidn' + clickedIdNum).val(ui.item ? ui.item[0] : '');
-                //document.getElementById(clickedTextboxId).focus();
-                update_itemTotal();
-                //FetchProductRentStatus();
-                return false;
-            }
+            update_itemTotal(); // Optional: update total if needed
+            return false;
         }
     });
-
-
-    //alert("yes");
 }
+$(document).ready(function () {
+    // Initialize autocomplete for packaging table
+    $('#selectedPackaging').on('focus', 'input[id^="packagingName"]', function () {
+        OnTypePackagingName(this);
+    });
 
+    // Debug form submission
+    $('form').on('submit', function () {
+        console.log('Form submission - PackagingColor[0].ProductId:', $('#packagingidn0').val());
+        return true;
+    });
+});
+
+
+$(document).ready(function () {
+    // Initialize autocomplete for packaging table
+    $('#selectedPackaging').on('focus', 'input[id^="packagingName"]', function () {
+        OnTypePackagingName(this);
+    });
+
+    // Debug form submission
+    $('form').on('submit', function () {
+        console.log('Form submission - PackagingColor[0].ProductId:',
+            $('#packagingidn0').val()); // Now this will show actual value
+        return true;
+    });
+
+});
 
 
 // Initialize autocomplete for both tables
 $(document).ready(function () {
     // For main ingredients table
+    $('#selectedPackaging').on('focus', 'input[id^="packagingName"]', function () {
+        OnTypePackagingName(this);
+    });
+
+
+    // For packaging table
     $('#selectedProducts').on('focus', 'input[id^="name"]', function () {
         OnTypeName(this);
     });
 
-    // For packaging table
-    $('#selectedPackaging').on('focus', 'input[id^="packagingName"]', function () {
-        OnTypeName(this);
-    });
 });
 //$(function () {
 //    //OnTypeName('#name0');
@@ -176,6 +284,7 @@ $(document).ready(function () {
 //    ConfigDialogueCreateCustomer();
     
 //});
+
 
 var _keybuffer = "";
 
@@ -322,17 +431,17 @@ $(document).ready(function () {
         //var rowCount = 
         var row = '<tr>' +
             '<td id="SNo' + txtSerialNum + '">' + $('#selectedProducts tr').length + '</td>' +
-            '<td style="display:none;"><input type="hidden" name="SubItem.Index" value="' + txtSerialNum + '" /></td>' +
-            '<td style="display:none;"><input type="text" readonly class="form-control classBGcolor" name="SubItem[' + txtSerialNum + '].ProductId" id="idn' + txtSerialNum + '"></td>' +
-            '<td><input type="text" class="form-control" autocomplete="off" name="SubItem[' + txtSerialNum + '].Product.Name" id="name' + txtSerialNum + '"></td>' +
-            
-            '<td><input type="number" step="0.1" class="form-control" autocomplete="off" name="SubItem[' + txtSerialNum + '].Quantity" id="quantity' + txtSerialNum + '"></td>' +
+            '<td style="display:none;"><input type="hidden" name="PacSubitem.Index" value="' + txtSerialNum + '" /></td>' +
+            '<td style="display:none;"><input type="text" readonly class="form-control classBGcolor" name="PacSubitem[' + txtSerialNum + '].ProductId" id="idn' + txtSerialNum + '"></td>' +
+            '<td><input type="text" class="form-control" autocomplete="off" name="PacSubitem[' + txtSerialNum + '].Product.Name" id="name' + txtSerialNum + '"></td>' +
 
-           /* '<td><select class="form-control" name="SubItem[' + txtSerialNum + '].Unit" id="unit' + txtSerialNum + '"><option value="Kg" selected>Kg</option><option value="Gram">Gram</option></select></td>' +*/
-            '<td><input type="text" class="form-control" autocomplete="off" name="SubItem[' + txtSerialNum + '].AvailableInventory" id="avaibleinventory' + txtSerialNum + '"></td>' + 
-            /*'<td><input type="text" class="form-control" autocomplete="off" name="SubItem[' + txtSerialNum + '].QuantityRequested" id="quantityrequested' + txtSerialNum + '"></td>' + */
-            '<td><input type="text" class="form-control" autocomplete="off" name="SubItem[' + txtSerialNum + '].QuantitytoPrepare" id="quantitytoprepare' + txtSerialNum + '"></td>' + 
-            /*'<td><select class="form-control" name="SubItem[' + txtSerialNum + '].Unit" id="unit' + txtSerialNum + '"><option value="Kg" selected>Kg</option><option value="Gram">Gram</option></select></td>' +*/
+            '<td><input type="number" step="0.000001" class="form-control" autocomplete="off" name="PacSubitem[' + txtSerialNum + '].Quantity" id="quantity' + txtSerialNum + '"></td>' +
+            '<td><input type="text" class="form-control" autocomplete="off" name="PacSubitem[' + txtSerialNum + '].Unit" id="unit' + txtSerialNum + '"></td>' +
+            //'<td><select class="form-control" name="SubItem[' + txtSerialNum + '].Unit" id="unit' + txtSerialNum + '"></td>' +
+            //    //'<td><input type="text" class="form-control" autocomplete="off" name="SubItem[' + txtSerialNum + '].AvailableInventory" id="avaibleinventory' + txtSerialNum + '"></td>' + 
+            //    /*'<td><input type="text" class="form-control" autocomplete="off" name="SubItem[' + txtSerialNum + '].QuantityRequested" id="quantityrequested' + txtSerialNum + '"></td>' + */
+            //    //'<td><input type="text" class="form-control" autocomplete="off" name="SubItem[' + txtSerialNum + '].QuantitytoPrepare" id="quantitytoprepare' + txtSerialNum + '"></td>' + 
+            //    /*'<td><select class="form-control" name="SubItem[' + txtSerialNum + '].Unit" id="unit' + txtSerialNum + '"><option value="Kg" selected>Kg</option><option value="Gram">Gram</option></select></td>' +*/
 
 
             '<td><button type="button" id="delete' + txtSerialNum + '" class="delete btn btn-default add-new"> <a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button></td>' +
@@ -350,6 +459,105 @@ $(document).ready(function () {
 
     });
 
+    $('#addNewPackagingRow').keydown(function (event) {
+
+        if (event.keyCode == 13) {
+            $('#addNewPackagingRow').trigger('click');
+        }
+    });
+
+    let packagingSerialNum = 0; // Global counter for Packaging rows
+
+    //$("#addNewPackagingRow").click(function () {
+    //    packagingSerialNum += 1;
+    //    var index = $("table tbody tr:last-child").index();
+    //    var row = `
+    //    <tr>
+    //        <td id="PackagingSNo${packagingSerialNum}">${packagingSerialNum + 1}</td>
+
+    //        <td style="display:none;">
+    //            <input type="hidden" name="PackagingColor.Index" value="${packagingSerialNum}" />
+    //        </td>
+    //        <td style="display:none;">
+    //            <input type="hidden" name="PackagingColor[${packagingSerialNum}].ProductId" id="packagingidn${packagingSerialNum}">
+    //        </td>
+
+    //        <td>
+    //            <input type="text" autocomplete="off" class="form-control product-search" 
+    //                name="PackagingColor[${packagingSerialNum}].Product.Name" 
+    //                id="packagingName${packagingSerialNum}" 
+    //                placeholder="Type product name" />
+    //        </td>
+
+    //        <td>
+    //            <input type="text" autocomplete="off" class="form-control" 
+    //                name="PackagingColor[${packagingSerialNum}].Color" 
+    //                id="packagingColor${packagingSerialNum}" />
+    //        </td>
+
+    //        <td>
+    //            <input type="number" step="0.00001" min="0" autocomplete="off" 
+    //                class="form-control" 
+    //                name="PackagingColor[${packagingSerialNum}].Quantity" 
+    //                id="packagingQuantity${packagingSerialNum}" />
+    //        </td>
+
+    //        <td>
+    //            <button type="button" class="delete btn btn-default add-new">
+    //                <a class="delete" title="Delete"><i class="material-icons">&#xE872;</i></a>
+    //            </button>
+    //        </td>
+    //    </tr>
+    //`;
+
+    //    $("#selectedPackaging tbody").append(row);
+
+    //    // Automatically bind autocomplete to new input
+    //    OnTypePackagingName($('#packagingName' + packagingSerialNum));
+    //});
+    $("#addNewPackagingRow").click(function (e) {
+
+        //var key = e.which;
+        //if (key !== 13)  // the enter key code
+        //{
+
+        //    return false;
+        //}
+
+        //$(this).attr("disabled", "disabled");
+        packagingSerialNum += 1;
+        //alert(txtSerialNum)
+        var index = $("table tbody tr:last-child").index();
+        //var rowCount = 
+        var row = '<tr>' +
+            '<td id="PackagingSNo' + packagingSerialNum + '">' + $('#selectedPackaging tr').length + '</td>' +
+            '<td style="display:none;"><input type="hidden" name="PackagingColor.Index" value="' + packagingSerialNum + '" /></td>' +
+            '<td style="display:none;"><input type="text" readonly class="form-control classBGcolor" name="PackagingColor[' + packagingSerialNum + '].ProductId" id="packagingidn' + packagingSerialNum + '"></td>' +
+            '<td><input type="text" class="form-control" autocomplete="off" name="PackagingColor[' + packagingSerialNum + '].Product.Name" id="packagingName' + packagingSerialNum + '"></td>' +
+            '<td><input type="text"  class="form-control" autocomplete="off" name="PackagingColor[' + packagingSerialNum + '].Color" id="packagingColor' + packagingSerialNum + '"></td>' +
+            '<td><input type="number" step="0.000001" class="form-control" autocomplete="off" name="PackagingColor[' + packagingSerialNum + '].Quantity" id="packagingQuantity' + packagingSerialNum + '"></td>' +
+            
+            //'<td><select class="form-control" name="SubItem[' + txtSerialNum + '].Unit" id="unit' + txtSerialNum + '"></td>' +
+            //    //'<td><input type="text" class="form-control" autocomplete="off" name="SubItem[' + txtSerialNum + '].AvailableInventory" id="avaibleinventory' + txtSerialNum + '"></td>' + 
+            //    /*'<td><input type="text" class="form-control" autocomplete="off" name="SubItem[' + txtSerialNum + '].QuantityRequested" id="quantityrequested' + txtSerialNum + '"></td>' + */
+            //    //'<td><input type="text" class="form-control" autocomplete="off" name="SubItem[' + txtSerialNum + '].QuantitytoPrepare" id="quantitytoprepare' + txtSerialNum + '"></td>' + 
+            //    /*'<td><select class="form-control" name="SubItem[' + txtSerialNum + '].Unit" id="unit' + txtSerialNum + '"><option value="Kg" selected>Kg</option><option value="Gram">Gram</option></select></td>' +*/
+
+
+            '<td><button type="button" id="delete' + packagingSerialNum + '" class="delete btn btn-default add-new"> <a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button></td>' +
+            '</tr>';
+
+        //alert(row);
+        $("#selectedPackaging").append(row);
+        //alert(txtSerialNum)
+
+        $("table tbody tr").eq(index + 1).find(".add, .edit").toggle();
+        //$('[data-toggle="tooltip"]').tooltip();
+
+        document.getElementById('name' + packagingSerialNum).focus();
+        TriggerBodyEvents();
+
+    });
 
     // Edit row on edit button click
     $(document).on("click", ".edit", function () {

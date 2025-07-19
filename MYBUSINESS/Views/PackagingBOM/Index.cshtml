@@ -1,15 +1,15 @@
-﻿@model IEnumerable<MYBUSINESS.Models.BOM>
+﻿@model IEnumerable<MYBUSINESS.Models.PackagingBOM>
 
 @{
     ViewBag.Title = "BOMs";
     // Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<center><h2>BOM List</h2></center>
+<center><h2>Packaging BOM List</h2></center>
 
 <div class="col-sm-12 noPrint">
     <a href="#" id="printMe" class="btn btn-info" style="display:none;"><i class=""></i> Print</a>
-    <a href="/BOM/Create" id="createBOM" class="btn btn-success"><i class=""></i> New BOM</a>
+    <a href="/PackagingBOM/Create" id="createBOM" class="btn btn-success"><i class=""></i> New Packaging BOM</a>
     @*@Html.ActionLink("Upload Excel", "Upload", new object { }, new { @class = "btn btn-warning" }) |*@
     <a style="display:none;" href="/SOSR/Create?IsReturn=false" id="createSOSR" class=""><i class=""></i> New Sale</a> 
     <a style="display:none;" href="/POPR/Create?IsReturn=false" id="createPOPR" class=""><i class=""></i> New Purchase</a>

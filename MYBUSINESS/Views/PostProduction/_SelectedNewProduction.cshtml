@@ -37,7 +37,8 @@
                                             @if (item.Validate ?? false)
                                             {
                                                 @Html.ActionLink("View", "Edit", new { id = item.Id, readonlyMode = true }, new { @class = "btn btn-secondary" })
-
+                                                @Html.ActionLink("Print", "PrintProductionsPdf", new { productionId = item.Id },
+                                                new { @class = "btn btn-info text-white" })
                                             }
                                             else
                                             {

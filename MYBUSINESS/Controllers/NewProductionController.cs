@@ -23,12 +23,31 @@ namespace MYBUSINESS.Controllers
 
         [Authorize(Roles = "Admin,Technical Manager,Chocolate Production staff,Chocolate Production manager")]
         // GET: Products
+        //public ActionResult Index()
+        //{
+        //    var newProductions = db.NewProductions
+        //                   .OrderByDescending(p => p.Id) // Sorting by Id in descending order
+        //                   .ToList();
+        //    //var newProductions = db.NewProductions.ToList();
+        //    ViewBag.Suppliers = DAL.dbSuppliers;
+
+        //    return View(newProductions);
+        //}
         public ActionResult Index()
         {
             var newProductions = db.NewProductions
-                           .OrderByDescending(p => p.Id) // Sorting by Id in descending order
+                           .OrderByDescending(p => p.Id)
                            .ToList();
-            //var newProductions = db.NewProductions.ToList();
+
+            // Fix: Use GroupBy to handle duplicate ProductionId entries
+            var postProductionsDict = db.PostProductions
+                .GroupBy(pp => pp.ProductionId) // Group by NewProduction ID
+                .ToDictionary(
+                    g => g.Key,                 // Key = NewProduction.Id
+                    g => g.First().Id           // Value = First PostProduction.Id (or use Last() if needed)
+                );
+
+            ViewBag.HasPostProduction = postProductionsDict; // Pass to View
             ViewBag.Suppliers = DAL.dbSuppliers;
 
             return View(newProductions);
@@ -573,7 +592,7 @@ namespace MYBUSINESS.Controllers
         public ActionResult Edit(
     NewProductionViewModel model,
    [Bind(Prefix = "NewProduction", Include = "Id,ProductionDate,ProductName,Unit,ProductId,Quantity,Validate")] NewProduction newProduction,
-    [Bind(Prefix = "QuantityToProduce", Include = "Id,ProductionQty,BOMId,ProductDetailId,Shape,CalculatedWeight,ProductId")] List<QuantityToProduce> quantityToProduces,
+    [Bind(Prefix = "QuantityToProduce", Include = "Id,ProductionQty,BOMId,ProductDetailId,Shape,CalculatedWeight,ProductId,Weight")] List<QuantityToProduce> quantityToProduces,
     [Bind(Prefix = "SubItemProduction", Include = "Id,ParentProductId,ProductId,Quantity,Unit,AvailableInventory,QuantitytoPrepare,QuantityRequested")] List<SubItemProduction> subItemProductions)
 
         {
@@ -630,6 +649,54 @@ namespace MYBUSINESS.Controllers
 
 
 
+        [HttpGet]
+        public ActionResult PrintProductionsPdf(int productionId)
+        {
+            LocalReport localReport = new LocalReport();
+            localReport.ReportPath = Server.MapPath("~/Reports/Sale_ChocolateProduction.rdlc");
+
+            // Get data from stored procedures
+            var headerData = db.Database.SqlQuery<ChocolateProductionHeaderViewModel>(
+                "EXEC GetChocolateProductionHeader @ProductionId",
+                new SqlParameter("@ProductionId", productionId)).ToList();
+
+            var shapeData = db.Database.SqlQuery<ChocolateProductionShapeViewModel>(
+                "EXEC GetChocolateProductionShapes @ProductionId",
+                new SqlParameter("@ProductionId", productionId)).ToList();
+
+            var ingredientData = db.Database.SqlQuery<ChocolateProductionIngredientViewModel>(
+                "EXEC GetChocolateProductionIngredients @ProductionId",
+                new SqlParameter("@ProductionId", productionId)).ToList();
+
+            if (!headerData.Any())
+            {
+                return Content("No data found.");
+            }
+
+            // Add data sources to report
+            localReport.DataSources.Clear();
+
+            localReport.DataSources.Add(new ReportDataSource("DataSet1", headerData));
+            localReport.DataSources.Add(new ReportDataSource("DataSet2", shapeData));
+            localReport.DataSources.Add(new ReportDataSource("DataSet3", ingredientData));
+
+            // Render report
+            string mimeType, encoding, fileNameExtension;
+            string[] streams;
+            Warning[] warnings;
+
+            byte[] renderedBytes = localReport.Render(
+                "PDF",
+                null,
+                out mimeType,
+                out encoding,
+                out fileNameExtension,
+                out streams,
+                out warnings
+            );
+
+            return File(renderedBytes, mimeType, $"Chocolate_Production_{productionId}.pdf");
+        }
 
 
         // GET: Products/Delete/5

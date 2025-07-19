@@ -100,20 +100,6 @@ namespace MYBUSINESS.Controllers
             ViewBag.Remarks = new SelectList(remarks, "Value", "Text");
             ViewBag.RemarksData = remarks;
 
-
-            var productList = db.Products
-                                    .Select(p => new
-                                    {
-                                        p.Id,
-                                        p.Name,
-                                        p.Stock,
-                                        p.Remarks, // Fetch remarks from BOM
-                                        p.Category,   // Fetch stock for AvailableInventory
-                                    })
-                                    .ToList();
-
-            ViewBag.ProductList = new SelectList(productList, "Id", "Name");
-
             // Fetch data and then map to SubItem outside the LINQ query
             var subItems = db.Products
                              .Select(p => new

@@ -39,7 +39,8 @@
 @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>*@
 
 <!-- Latest compiled JavaScript -->
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+@*<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>*@
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="~/Content/custom/menuHide.js"></script>
 @*<link href="@Url.Content("~/Content/custom/downloads/datetimepicker-master/jquery.datetimepicker.css")" rel="stylesheet" type="text/css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -49,193 +50,215 @@
 @*<script src="~/Scripts/jquery.signalR-2.4.3.min.js"></script>*@
 <script src="~/Scripts/jquery.signalR-2.4.3.js"></script>
 <script src="~/signalr/hubs"></script>
+
 <style>
-
-
-
-    .lefttopay-green {
-        background-color: #28a745 !important;
-        color: #ffffff !important;
-        border-color: #28a745 !important;
+    .responsive-pay-btn {
+        background-color: #2bbdb9;
+        width: 300px;
+        height: 70px;
+        margin: 10px auto 0;
+        font-size: 32px;
+        display: block;
     }
 
-
-    /* For the quick amount buttons */
-    .styled-input {
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
-
-        .styled-input:hover {
-            background-color: #f8f9fa;
+    /* Media query override */
+    @@media screen and (max-width: 1024px) {
+        .responsive-pay-btn {
+            width: 200px;
+            font-size: 28px;
         }
-
-    .table-wrapper2 {
-        margin: 30px auto;
-        background: #fff;
-        padding: 20px;
-        box-shadow: 0 1px 1px rgb(0 0 0 / 5%);
     }
+    @@media screen and (max-width: 1024px) {
+         #CreateSO {
+             width: 200px;
+             height: 70px;
+             font-size: 28px;
+         }
+     }
 
-    .scrollable-div {
-        max-height: 400px; /* Adjust as needed */
-        overflow-y: auto; /* Enable vertical scrolling */
-        padding: 0; /* Optional: remove padding */
-    }
-        /*.scrollable-div {
-            max-height: 400px;*/ /* Adjust as needed */
-        /*overflow-y: auto;
-            padding: 0;*/ /* Remove padding to align items correctly */
-        /*display: flex;
-            flex-wrap: wrap;*/ /* Allow wrapping of items */
-        /*}*/
+     .lefttopay-green {
+         background-color: #28a745 !important;
+         color: #ffffff !important;
+         border-color: #28a745 !important;
+     }
 
-        .scrollable-div .col-md-3 {
-            padding: 0; /* Remove padding to control space manually */
-        }
 
-    .small-box {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        height: 100px; /* Fixed height for boxes */
-        margin-bottom: 15px; /* Space between rows */
-        margin-right: 15px; /* Space between columns */
-        box-sizing: border-box; /* Ensure padding and border are included in width/height */
-    }
+     /* For the quick amount buttons */
+     .styled-input {
+         cursor: pointer;
+         transition: all 0.2s ease;
+     }
 
-        .small-box:last-child {
-            margin-right: 4px; /* Remove right margin for last box in row */
-            margin-bottom: 5px;
-        }
+         .styled-input:hover {
+             background-color: #f8f9fa;
+         }
 
-    .inner {
-        flex: 1; /* Ensure content takes available space */
-    }
+     .table-wrapper2 {
+         margin: 30px auto;
+         background: #fff;
+         padding: 20px;
+         box-shadow: 0 1px 1px rgb(0 0 0 / 5%);
+     }
 
-    .small-box > .inner {
-        padding-left: 12px;
-        padding-top: 0px;
-    }
+     .scrollable-div {
+         max-height: 400px; /* Adjust as needed */
+         overflow-y: auto; /* Enable vertical scrolling */
+         padding: 0; /* Optional: remove padding */
+     }
+         /*.scrollable-div {
+             max-height: 400px;*/ /* Adjust as needed */
+         /*overflow-y: auto;
+             padding: 0;*/ /* Remove padding to align items correctly */
+         /*display: flex;
+             flex-wrap: wrap;*/ /* Allow wrapping of items */
+         /*}*/
 
-    .icon {
-        text-align: center;
-    }
+         .scrollable-div .col-md-3 {
+             padding: 0; /* Remove padding to control space manually */
+         }
 
-    .label-like-input {
-        background-color: transparent;
-        border: none;
-        color: inherit;
-        font-size: inherit;
-        font-weight: inherit;
-        padding: 0;
-        width: auto;
-        cursor: default;
-        margin-top: -7px;
-        margin-left: -34px;
-    }
+     .small-box {
+         display: flex;
+         flex-direction: column;
+         justify-content: space-between;
+         height: 100px; /* Fixed height for boxes */
+         margin-bottom: 15px; /* Space between rows */
+         margin-right: 15px; /* Space between columns */
+         box-sizing: border-box; /* Ensure padding and border are included in width/height */
+     }
 
-        .label-like-input:focus {
-            outline: none; /* Remove the focus outline */
-        }
-    /*.table-wrapper2 {
-            margin: 30px auto;
-            background: #fff;
-            padding: 20px;
-            box-shadow: 0 1px 1px rgb(0 0 0 / 5%);
-        }
+         .small-box:last-child {
+             margin-right: 4px; /* Remove right margin for last box in row */
+             margin-bottom: 5px;
+         }
 
-        .scrollable-div {
-            max-height: 400px;
-            overflow-y: scroll;
-        }
+     .inner {
+         flex: 1; /* Ensure content takes available space */
+     }
 
-        .scrollable-container {*/
-    /*max-height: 100px !important;*/ /* Set desired height */
-    /*height: 100px !important;*/ /* Set desired height */
-    /*overflow-y: auto;*/ /* Enable vertical scrolling */
-    /*overflow-x: hidden;*/ /* Prevent horizontal scrolling */
-    /*padding: 10px;*/ /* Optional: add padding for aesthetics */
-    /*border: 1px solid #ddd;*/ /* Optional: add border for visibility */
-    /*border-radius: 0.25rem;*/ /* Optional: rounded corners */
-    /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/ /* Optional: box shadow */
-    /*}
+     .small-box > .inner {
+         padding-left: 12px;
+         padding-top: 0px;
+     }
 
-        .small-box {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            height: 100px;*/ /* Optional: set a fixed height for each box */
-    /*}
+     .icon {
+         text-align: center;
+     }
 
-        .inner {
-            flex: 1;*/ /* Ensure the content takes available space */
-    /*}
+     .label-like-input {
+         background-color: transparent;
+         border: none;
+         color: inherit;
+         font-size: inherit;
+         font-weight: inherit;
+         padding: 0;
+         width: auto;
+         cursor: default;
+         margin-top: -7px;
+         margin-left: -34px;
+     }
 
-        .icon {
-            text-align: center;
-        }*/
-    /* Default product name styling */
-    .product-box .product-name {
-        font-weight: normal;
-        color: inherit;
-    }
+         .label-like-input:focus {
+             outline: none; /* Remove the focus outline */
+         }
+     /*.table-wrapper2 {
+             margin: 30px auto;
+             background: #fff;
+             padding: 20px;
+             box-shadow: 0 1px 1px rgb(0 0 0 / 5%);
+         }
 
-    /* Styling when the product box is hovered over */
-    .product-box:hover .product-name {
-        font-weight: bold;
-        color: black;
-    }
+         .scrollable-div {
+             max-height: 400px;
+             overflow-y: scroll;
+         }
 
-    /* Ensure smooth transition */
-    .product-box .product-name {
-        transition: font-weight 0.2s ease, color 0.2s ease;
-    }
+         .scrollable-container {*/
+     /*max-height: 100px !important;*/ /* Set desired height */
+     /*height: 100px !important;*/ /* Set desired height */
+     /*overflow-y: auto;*/ /* Enable vertical scrolling */
+     /*overflow-x: hidden;*/ /* Prevent horizontal scrolling */
+     /*padding: 10px;*/ /* Optional: add padding for aesthetics */
+     /*border: 1px solid #ddd;*/ /* Optional: add border for visibility */
+     /*border-radius: 0.25rem;*/ /* Optional: rounded corners */
+     /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/ /* Optional: box shadow */
+     /*}
 
-    .loader {
-        display: none; /* Hide by default */
-        width: 12px;
-        height: 12px;
-        border: 2px solid white;
-        border-top: 2px solid transparent;
-        border-radius: 50%;
-        position: absolute;
-        top: 50%;
-        left: 10px; /* Adjust to position relative to button text */
-        margin-top: -6px; /* Center the loader vertically */
-    }
+         .small-box {
+             display: flex;
+             flex-direction: column;
+             justify-content: space-between;
+             height: 100px;*/ /* Optional: set a fixed height for each box */
+     /*}
 
-    /* Ensure button size remains the same */
-    /*#customerByTaxCode {
-    width: 100%;*/ /* Ensure full width */
-    /*height: 40px;*/ /* Fixed height to prevent resizing */
-    /*padding-left: 35px;*/ /* Add space for the spinner */
-    /*padding-right: 35px;*/ /* Optional if needed for alignment */
-    /*position: relative;*/ /* Ensure loader and text are positioned correctly */
-    /*}*/
-    .calculator-container {
-        position: fixed;
-        top: 86px;
-        right: 14px;
-        width: 31%;
-        background-color: white;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        z-index: 1000;
-        padding: 10px;
-    }
+         .inner {
+             flex: 1;*/ /* Ensure the content takes available space */
+     /*}
 
-    .quantity-calculator-container {
-        right: 14px;
-        width: 100%;
-        background-color: white;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        z-index: 1000;
-        padding: 10px;
-    }
+         .icon {
+             text-align: center;
+         }*/
+     /* Default product name styling */
+     .product-box .product-name {
+         font-weight: normal;
+         color: inherit;
+     }
 
-    .highlight {
-        background-color: yellow;
-    }
+     /* Styling when the product box is hovered over */
+     .product-box:hover .product-name {
+         font-weight: bold;
+         color: black;
+     }
+
+     /* Ensure smooth transition */
+     .product-box .product-name {
+         transition: font-weight 0.2s ease, color 0.2s ease;
+     }
+
+     .loader {
+         display: none; /* Hide by default */
+         width: 12px;
+         height: 12px;
+         border: 2px solid white;
+         border-top: 2px solid transparent;
+         border-radius: 50%;
+         position: absolute;
+         top: 50%;
+         left: 10px; /* Adjust to position relative to button text */
+         margin-top: -6px; /* Center the loader vertically */
+     }
+
+     /* Ensure button size remains the same */
+     /*#customerByTaxCode {
+     width: 100%;*/ /* Ensure full width */
+     /*height: 40px;*/ /* Fixed height to prevent resizing */
+     /*padding-left: 35px;*/ /* Add space for the spinner */
+     /*padding-right: 35px;*/ /* Optional if needed for alignment */
+     /*position: relative;*/ /* Ensure loader and text are positioned correctly */
+     /*}*/
+     .calculator-container {
+         position: fixed;
+         top: 86px;
+         right: 14px;
+         width: 31%;
+         background-color: white;
+         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+         z-index: 1000;
+         padding: 10px;
+     }
+
+     .quantity-calculator-container {
+         right: 14px;
+         width: 100%;
+         background-color: white;
+         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+         z-index: 1000;
+         padding: 10px;
+     }
+
+     .highlight {
+         background-color: yellow;
+     }
 </style>
 @*<h2>Create</h2>*@
 
@@ -244,9 +267,9 @@
     <div class="form-inline" style="margin-bottom: 15px;">
         @using (Html.BeginForm("Create", "SOSR", FormMethod.Get))
         {
-            <div class="form-inline mb-3" style="margin-bottom: 15px;">
+            <div class="form-inline mb-3" style="margin-bottom: 15px; margin-top:-40px;">
                 <div class="form-group" style="margin-top:50px;">
-                    <label style="margin-right: 10px; margin-left:20px;"><b>Filter Products by Category:</b></label>
+                    <label style="margin-right: 10px; margin-left:80px;"><b>Filter Products by Category:</b></label>
                     @Html.DropDownList("category",
                         ViewBag.Categories as SelectList,
                         "-- All Categories --",
@@ -265,7 +288,7 @@
     </div>
 
 </div>
-@using (Html.BeginForm("Create", "SOSR", FormMethod.Post, new { name = "SOCreate", id = "SOCreate" }))
+@using ( Html.BeginForm ("Create", "SOSR", FormMethod.Post, new { name = "SOCreate", id = "SOCreate", style = "margin-top: -40px" }))
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -340,7 +363,7 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <h2 style="margin-top:-10px;">@ViewBag.StoreName</h2>
+                    <h2 style="margin-top:-50px; margin-left:620px;">@ViewBag.StoreName</h2>
                 </div>
 
                 <div class="col-md-6 scrollable-div">
@@ -581,7 +604,7 @@
                         <textarea name="SaleOrder.Remarks" rows="1" cols="100" class="form-control" placeholder="These remarks will print on bill" data-toggle="tooltip" data-placement="top" title="These remarks will print on bill" style="display:none;"></textarea>
                         <textarea name="SaleOrder.Remarks2" rows="1" cols="100" class="form-control" placeholder="These remarks will not print on bill" data-toggle="tooltip" data-placement="top" title="These remarks will not print on bill" style="display:none;"></textarea>
                     </div>
-                    <div class="col-md-6" style="margin-top:-110px;">
+                    <div class="col-md-6" style="margin-top:-41px;">
 
                         <table>
                             <thead></thead>
@@ -624,7 +647,12 @@
                                 </tr>
                                 <tr>
                                     @*<td colspan="2" rowspan="2"><button type="button" id="CreateSO" class="btn btn-primary" style="background-color: #2bbdb9; width: 300px; height: 70px; margin-left: auto; margin-right: auto; display: block; margin-top: 10px; margin-bottom: 0%; font-size: 32px;">Pay</button></td>*@
-                                    <td colspan="2" rowspan="2"><button type="button" id="CreateSO" class="btn btn-primary" style="background-color: #2bbdb9; width: 300px; height: 70px; margin-left: auto; margin-right: auto; display: block; margin-top: 10px; margin-bottom: 0%; font-size: 32px;">Pay</button></td>
+                                    @*<td colspan="2" rowspan="2"><button type="button" id="CreateSO" class="btn btn-primary" style="background-color: #2bbdb9; width: 300px; height: 70px; margin-left: auto; margin-right: auto; display: block; margin-top: 10px; margin-bottom: 0%; font-size: 32px;">Pay</button></td>*@
+                                    <td colspan="2" rowspan="2">
+                                        <button type="button" id="CreateSO" class="btn btn-primary responsive-pay-btn">
+                                            Pay
+                                        </button>
+                                    </td>
                                     <td style="width: 20px;"></td>
                                     <td colspan="2" rowspan="2"><button type="button" id="totalofAllSelecteProducts" class="btn btn-primary" style="width: 91px; height: 40px; margin-left: auto; margin-right: auto; display: block; margin-top: 10px; margin-bottom: 0%; font-size: 13px">Total</button></td>
                                     <td style="width: 20px;"></td>

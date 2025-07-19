@@ -702,10 +702,11 @@
         $("#selectedProducts tbody tr").each(function () {
         let productId = $(this).find('input[name^="PurchaseReciverOrderDetail"][name$=".ProductId"]').val();
         let poreciverId = $(this).find('input[name^="PurchaseReciverOrderDetail"][name$=".POReciverId"]').val();
+        let quantity = $(this).find('input[name^="PurchaseReciverOrderDetail"][name$=".Quantity"]').val();
         productUpdates.push({
             productId: parseInt(productId),
-            poreciverId: poreciverId
-
+            poreciverId: poreciverId,
+            quantity: parseInt(quantity)
         });
         console.log(productId)
         console.log(poreciverId, 'productId')

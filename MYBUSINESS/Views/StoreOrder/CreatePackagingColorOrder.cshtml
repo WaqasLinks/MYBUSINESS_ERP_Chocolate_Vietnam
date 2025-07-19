@@ -1,0 +1,67 @@
+﻿@model List<MYBUSINESS.Models.ProductColorViewModel>
+
+<h2 style="text-align:center; margin-top: 20px;">Packaging Order</h2>
+
+@using (Html.BeginForm("SubmitOrderColorPP", "StoreOrder", FormMethod.Post))
+{
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Packaging Products List</h3>
+                </div>
+                <div class="box-body">
+                    <div class="form-group">
+                        <label>Select Store:</label>
+                        @{
+                            var storesList = ViewBag.Stores as SelectList;
+                        }
+                        @Html.DropDownList("storeId", ViewBag.Stores as SelectList, "Select Store", new
+                   {
+                       @class = "form-control",
+                       required = "required",
+                       style = "width: 200px;"
+                   })
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table id="productTable" class="table table-bordered" style="min-width: 1200px;">
+                            <thead>
+                                <tr>
+                                    <th style="width:10%; min-width: 150px;">Product Name</th>
+                                    @foreach (var color in Model.FirstOrDefault()?.AvailableColors)
+                                    {
+                                        <th style="width:10%;">@color.ColorName</th>
+                                        <th style="width:10%;">Qty</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.Count; i++)
+                                {
+                                    <tr>
+                                        <td>@Model[i].ProductName</td>
+                                        @for (int j = 0; j < Model[i].AvailableColors.Count; j++)
+                                        {
+                                            <td style="background-color: @Model[i].AvailableColors[j].ColorCode"></td>
+                                            <td>
+                                                <input type="hidden" name="orderitem[@((i * Model[i].AvailableColors.Count) + j)].ProductId"
+                                                       value="@Model[i].ProductId" />
+                                                <input type="hidden" name="orderitem[@((i * Model[i].AvailableColors.Count) + j)].ColorId"
+                                                       value="@Model[i].AvailableColors[j].Id" />
+                                                <input type="number" name="orderitem[@((i * Model[i].AvailableColors.Count) + j)].Quantity"
+                                                       class="form-control" min="0" value="0" style="width: 80px;" />
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-primary">Submit Order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+}

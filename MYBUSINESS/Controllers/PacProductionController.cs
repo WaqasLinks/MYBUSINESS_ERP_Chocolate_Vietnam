@@ -1,0 +1,1315 @@
+﻿using MYBUSINESS.CustomClasses;
+using MYBUSINESS.Models;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
+using System.Linq;
+using System.Net;
+using System.Web;
+using System.Web.Mvc;
+using System.Windows.Media;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
+using Microsoft.Reporting.WebForms;
+using System.Data.SqlClient;
+namespace MYBUSINESS.Controllers
+{
+    [Authorize(Roles = "Admin,Technical Manager,Chocolate Production staff,Chocolate Production manager")]
+    public class PacProductionController : Controller
+    {
+        private BusinessContext db = new BusinessContext();
+        private DAL DAL = new DAL();
+        private PacProductionViewModel pacproductionViewModel = new PacProductionViewModel();
+
+        [Authorize(Roles = "Admin,Technical Manager,Chocolate Production staff,Chocolate Production manager")]
+        // GET: Products
+        public ActionResult Index()
+        {
+            var newProductions = db.PacProductions
+                           .OrderByDescending(p => p.Id) // Sorting by Id in descending order
+                           .ToList();
+            //var newProductions = db.NewProductions.ToList();
+            ViewBag.Suppliers = DAL.dbSuppliers;
+
+            return View(newProductions);
+        }
+        public ActionResult IndexComponents()
+        {
+            var newProductions = db.PacProductions
+                           .OrderByDescending(p => p.Id) // Sorting by Id in descending order
+                           .ToList();
+            //var newProductions = db.NewProductions.ToList();
+            ViewBag.Suppliers = DAL.dbSuppliers;
+            return View(newProductions);
+
+        }
+
+        public ActionResult SearchData(string suppId)
+        {
+            if (suppId.Trim() == string.Empty)
+            {
+
+                return PartialView("_SelectedProducts", DAL.dbProducts.OrderBy(i => i.Id).ToList());
+
+            }
+            else
+            {
+                int intSuppId = Int32.Parse(suppId.Trim());
+
+                IQueryable<Product> selectedProducts = null;
+                //selectedProducts = db.Products.Where(p => p.SupplierId == intSuppId);
+                return PartialView("_SelectedProducts", selectedProducts.OrderBy(i => i.Id).ToList());
+
+            }
+
+        }
+
+        //public ActionResult Create()
+        //{
+        //    //int maxId = db.Products.Max(p => p.Id);
+        //    decimal maxId = db.NewProductions.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
+        //    maxId += 1;
+        //    ViewBag.SuggestedId = maxId;
+        //    ViewBag.Suppliers = DAL.dbSuppliers;
+        //    BOM bom = new BOM();
+
+        //    newproductionViewModel.NewProduction = new NewProduction();  // Create an instance of NewProduction
+
+        //    //newproductionViewModel.NewProduction = NewProduction;
+        //    newproductionViewModel.Products = DAL.dbProducts;
+        //    return View(newproductionViewModel);
+        //}
+        ////[HttpPost]
+        ////[ValidateAntiForgeryToken]
+        ////public ActionResult Create([Bind(Prefix = "NewProduction", Include = "Id,ProductionDate,ProductName,Unit,QuantityToProduce")] NewProduction newProduction, [Bind(Prefix = "SubItem", Include = "Id,ProductId,Quantity")] List<SubItem> subItems)
+        ////{
+
+        ////    if (ModelState.IsValid)
+        ////    {
+        ////        db.NewProductions.Add(NewProduction);
+        ////        foreach (var item in subItems) item.ParentProductId = newProduction.Id;
+        ////        db.SubItems.AddRange(subItems);
+
+
+        ////        db.SaveChanges();
+        ////        return RedirectToAction("Index");
+        ////    }
+        ////    ViewBag.Suppliers = DAL.dbSuppliers;
+        ////    return View(newProduction);
+        ////}
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Create([Bind(Prefix = "NewProduction", Include = "Id,ProductionDate,ProductName,Unit,QuantityToProduce")] NewProduction newProduction, [Bind(Prefix = "SubItem", Include = "Id,ProductId,Quantity")] List<SubItem> subItems)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        // Create an instance of NewProduction
+        //        var newProduction1 = new NewProduction
+        //        {
+        //            ProductionDate = newProduction.ProductionDate,
+        //            ProductName = newProduction.ProductName,
+        //            Unit = newProduction.Unit,
+        //            QuantityToProduce = newProduction.QuantityToProduce
+        //        };
+
+        //        db.NewProductions.Add(newProduction);
+
+        //        foreach (var item in subItems)
+        //            item.ParentProductId = newProduction.Id;
+
+        //        db.SubItems.AddRange(subItems);
+
+        //        db.SaveChanges();
+        //        return RedirectToAction("Index");
+        //    }
+
+        //    ViewBag.Suppliers = DAL.dbSuppliers;
+        //    return View(newProduction);
+        //}
+        //public ActionResult Create()
+        //{
+        //    decimal maxId = (db.NewProductions?.Max(p => p == null ? 0 : p.Id) ?? 0) + 1;
+
+        //    ViewBag.SuggestedId = maxId;
+        //    ViewBag.Suppliers = DAL.dbSuppliers;
+
+        //    var productList = db.Products
+        //                        .Select(p => new { p.Id, p.Name, p.Stock })
+        //                        .ToList();
+
+        //    ViewBag.ProductList = new SelectList(productList, "Id", "Name");
+
+        //    var viewModel = new NewProductionViewModel
+        //    {
+        //        NewProduction = new NewProduction(),
+        //        Products = DAL.dbProducts ?? Enumerable.Empty<Product>().AsQueryable(),
+        //        SubItems = db.Products.Select(p => new SubItem
+        //        {
+        //            ProductId = p.Id,
+        //            AvailableInventory = p.Stock, // Assign stock to AvailableInventory
+        //            QuantitytoPrepare = 0 // Initial value, will be updated later
+        //        }).ToList()
+        //    };
+
+        //    return View(viewModel);
+        //}
+
+        [Authorize(Roles = "Admin,Technical Manager,Chocolate Production staff,Chocolate Production manager")]
+        [HttpGet]
+            public ActionResult Create()
+            {
+                decimal maxId = db.PacProductions.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
+                maxId += 1;
+                ViewBag.SuggestedId = maxId;  // Passing the suggested BOM ID to the view
+                ViewBag.Suppliers = DAL.dbSuppliers;  // Assuming this contains the supplier list
+
+            var products = db.Products
+       .Where(p => p.PType == 4 || p.PType == 6)
+       .Select(p => new
+       {
+           Value = p.Id.ToString(),  // ID of the product
+           Text = p.Name            // Name of the product
+       })
+       .ToList();
+
+            ViewBag.ProductList = new SelectList(products, "Value", "Text"); // Pass as a SelectList
+            var productDetails = db.ProductDetails.ToList();
+
+            var remarks = db.PackagingBOMs
+    .Select(b => new
+    {
+        Value = b.Remarks,           // Key for dropdown
+        Text = b.Remarks,            // Display text
+        ProductName = b.ProductName, // Related product name
+        Unit = b.Product.Unit    // Related time unit or unit field
+    })
+    .ToList();
+
+            ViewBag.Remarks = new SelectList(remarks, "Value", "Text");
+            ViewBag.RemarksData = remarks;
+
+
+            var productList = db.Products
+                                    .Select(p => new
+                                    {
+                                        p.Id,
+                                        p.Name,
+                                        p.Stock,
+                                        p.Remarks, // Fetch remarks from BOM
+                                        p.Category,   // Fetch stock for AvailableInventory
+                                    })
+                                    .ToList();
+
+                ViewBag.ProductList = new SelectList(productList, "Id", "Name");
+
+                // Fetch data and then map to SubItem outside the LINQ query
+                var pacsubitems = db.Products
+                                 .Select(p => new
+                                 {
+                                     ProductId = p.Id,
+                                     AvailableInventory = p.Stock
+                                 })
+                                 .AsEnumerable() // Move query execution to memory
+                                 .Select(p => new PacSubitem
+                                 {
+                                     ProductId = p.ProductId,
+                                     AvailableInventory = p.AvailableInventory,
+                                     QuantitytoPrepare = 0 // Initial value
+                                 })
+                                 .ToList();
+           
+            var viewModel = new PacProductionViewModel
+            {
+                PacProduction = new PacProduction
+                {
+                        ProductionDate = DateTime.Today // Set default to today
+                    },
+                    Products = DAL.dbProducts,
+                    PacSubitems = pacsubitems,
+                    PacColor = new List<PacColor> { new PacColor() },
+
+                    ProductDetail = new List<ProductDetail> { new ProductDetail() },
+                };
+
+                return View(viewModel);
+            }
+
+
+
+
+        //   [HttpPost]
+        //   [ValidateAntiForgeryToken]
+        //   public ActionResult Create(NewProductionViewModel model,
+        //       [Bind(Prefix = "NewProduction", Include = "Id,ProductionDate,ProductName,Unit,QuantityToProduce")] NewProduction newProduction,
+        //[Bind(Prefix = "SubItem", Include = "Id,ProductId,Quantity")] List<SubItem> subItems)
+        //   {
+        //       if (ModelState.IsValid)
+        //       {
+        //           var selectedProduct = db.Products.FirstOrDefault(p => p.Id == model.NewProduction.Id);
+
+        //           if (selectedProduct != null)
+        //           {
+        //               model.NewProduction.ProductName = selectedProduct.Name;
+        //           }
+
+        //           model.NewProduction.SubItems = new List<SubItem>();
+
+        //           db.NewProductions.Add(model.NewProduction);
+
+        //           foreach (var item in subItems) item.ParentProductId = newProduction.Id;
+        //           db.SubItems.AddRange(subItems);
+
+        //           db.SaveChanges();
+        //           return RedirectToAction("Index");
+        //       }
+
+        //       ViewBag.Suppliers = DAL.dbSuppliers;
+
+        //       var productList = db.Products.Select(p => new { p.Id, p.Name }).ToList();
+        //       ViewBag.ProductList = new SelectList(productList, "Id", "Name");
+
+        //       return View(model);
+        //   }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(
+     [Bind(Prefix = "PacProduction", Include = "Id,ProductionDate,ProductName,Unit,ProductId,Quantity")] PacProduction newProduction,
+     //[Bind(Prefix = "SubItem", Include = "Id,ParentProductId,ProductId,Quantity,Unit,AvailableInventory,QuantitytoPrepare,QuantityRequested")] List<SubItem> subItems,
+     [Bind(Prefix = "PacSubItemProduction", Include = "Id,ParentProductId,ProductId,Quantity,Unit,AvailableInventory,QuantitytoPrepare,QuantityRequested,SubItemQty")] List<PacSubItemProduction> subItemProductions,
+     [Bind(Prefix = "PacColor", Include = "Id,ProductionQty,BOMId,ProductDetailId,Shape,CalculatedWeight,ProductId,Weight,Color,Quantity")] List<PacColor> pacolors)
+        {
+            if (ModelState.IsValid)
+            {
+                var product = db.Products.Find(newProduction.ProductId);
+                if (product != null)
+                {
+                    newProduction.ProductName = product.Name;
+                }
+
+                // Save the BOM and its SubItems
+                db.PacProductions.Add(newProduction);
+
+                if (subItemProductions != null)
+                {
+                    foreach (var item in subItemProductions)
+                    {
+                        item.ParentProductId = newProduction.ProductId;
+                        item.NewProductionId = newProduction.Id;
+                        db.PacSubItemProductions.Add(item);
+                    }
+                }
+
+                if (pacolors != null)
+                {
+                    foreach (var item in pacolors)
+                    {
+                        item.ParentProductId = newProduction.ProductId;
+                        item.NewProductionId = newProduction.Id;
+                        db.PacColors.Add(item);
+                    }
+                }
+
+
+                db.SaveChanges();
+                return RedirectToAction("Index");
+
+            }
+
+        
+
+        ViewBag.Suppliers = DAL.dbSuppliers;
+
+            var productList = db.Products.Select(p => new { p.Id, p.Name }).ToList();
+            ViewBag.ProductList = new SelectList(productList, "Id", "Name");
+
+            return View(pacproductionViewModel);
+        }
+
+
+
+        // public ActionResult Edit(decimal? id)
+        // {
+        //     if (id == null)
+        //     {
+        //         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //     }
+
+        //     var newProduction = db.NewProductions
+        //                           .Include(np => np.Products) // Include related Products
+        //                           .FirstOrDefault(np => np.Id == id);
+
+        //     if (newProduction == null)
+        //     {
+        //         return HttpNotFound();
+        //     }
+        //     var products = db.Products
+        //.Where(p => p.Manufacturable == true)
+        //.Select(p => new
+        //{
+        //    Value = p.Id.ToString(),
+        //    Text = p.Name
+        //})
+        //.ToList();
+
+        //     ViewBag.ProductList = new SelectList(products, "Value", "Text", newProduction.ProductId); // Pre-select the current product
+
+        //     // Fetch SubItems associated with this NewProduction
+        //     var subItems = db.SubItems.Where(x => x.ParentProductId == newProduction.Id).ToList();
+
+        //     // Prepare ViewModel
+        //     var viewModel = new NewProductionViewModel
+        //     {
+        //         NewProduction = newProduction,
+        //         Products = db.Products, // Include all products
+        //         SubItems = subItems // Include fetched SubItems
+        //     };
+
+        //     // Populate ViewBag with Product List
+        //     var productList = db.Products.Select(p => new { p.Id, p.Name }).ToList();
+        //     ViewBag.ProductList = new SelectList(productList, "Id", "Name", newProduction.ProductName);
+
+        //     return View(viewModel);
+        // }
+        public ActionResult Edit(decimal? id, bool readonlyMode = false)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            // Fetch the NewProduction entity with related Products and other details
+            var newProduction = db.PacProductions
+                                   .Include(np => np.Product) // Include related Products
+                                   .FirstOrDefault(np => np.Id == id);
+
+
+            if (newProduction == null)
+            {
+                return HttpNotFound();
+            }
+            string productType;
+            switch (newProduction.Product.PType)
+            {
+                case 1:
+                    productType = "Variable";
+                    break;
+                case 2:
+                    productType = "Intermediary";
+                    break;
+                case 3:
+                    productType = "ByProduct";
+                    break;
+                default:
+                    productType = "Unknown";
+                    break;
+            }
+
+            var quantityToProduce = db.QuantityToProduces
+.Where(x => x.NewProductionId == newProduction.Id)
+.ToList();
+
+
+
+
+            var totalWeight = quantityToProduce.Sum(x => x.CalculatedWeight) ?? 0;
+
+            var packagingBOM = db.PackagingBOMs.FirstOrDefault(p => p.ProductId == newProduction.ProductId);
+            decimal batchQuantity = packagingBOM != null ? packagingBOM.Quantity : 1;
+
+            ViewBag.BatchQuantity = batchQuantity;
+
+
+
+            //var subItems = db.SubItems.Where(s => s.ParentProductId == newProduction.ProductId).ToList();
+            var subItemProductions = db.PacSubItemProductions.Where(s => s.NewProductionId == newProduction.Id).ToList();
+            Console.WriteLine(newProduction.ProductionDate); // Debugging line
+                                                             // Get the list of products
+            var products = db.Products
+        .Where(p => p.PType == 4 || p.PType == 6)
+        .Select(p => new { Value = p.Id.ToString(), Text = p.Name })
+        .ToList();
+
+            // Pre-select the current product in the dropdown
+            ViewBag.ProductList = new SelectList(products, "Value", "Text",newProduction.ProductId);
+
+            ViewBag.ReadonlyMode = readonlyMode;
+            // Prepare ViewModel (including SubItems if needed)
+            var viewModel = new PacProductionViewModel
+            {
+                //SubItems = subItems,
+                PacSubItemProduction = db.PacSubItemProductions.Where(x => x.NewProductionId == newProduction.Id).ToList(),
+                PacProduction = newProduction,
+                Products = db.Products, // Include all products
+                /* SubItems = db.SubItems.Where(x => x.ParentProductId == newProduction.Id).ToList(), */// Get SubItems associated with this NewProduction
+                TotalWeight = totalWeight,                                                                                    //QuantityToProduce = db.QuantityToProduces.Where(x => x.ProductId == newProduction.Id).ToList()
+                PacColor = db.PacColors.Where(x => x.NewProductionId == newProduction.Id).ToList(),
+            };
+
+            return View("Edit", viewModel);
+        }
+
+
+
+
+
+        //   [HttpPost]
+        //   [ValidateAntiForgeryToken]
+        //   public ActionResult Edit(NewProductionViewModel model,
+        //[Bind(Prefix = "NewProduction", Include = "Id,ProductionDate,ProductName,Unit,QuantityToProduce,ProductId")] NewProduction newProduction,
+        ////[Bind(Prefix = "SubItem", Include = "Id,ProductId,Quantity,Unit,AvailableInventory,QuantitytoPrepare,QuantityRequested")] List<SubItem> subItems,
+        //[Bind(Prefix = "QuantityToProduce", Include = "Id,ProductionQty,BOMId,ProductDetailId,Shape,ProductId")] List<QuantityToProduce> quantityToProduces)
+
+        //       {
+        //       if (ModelState.IsValid)
+        //           {
+        //               // Fetch the existing NewProduction entity
+        //               var existingProduction = db.NewProductions.Find(model.NewProduction.Id);
+        //               var existingQuantityToProduces = db.QuantityToProduces.Where(x => x.ProductId == newProduction.Id).ToList();
+        //               db.QuantityToProduces.RemoveRange(existingQuantityToProduces);
+        //               if (existingProduction == null)
+        //           {
+        //               return HttpNotFound();
+        //           }
+
+        //           // Update NewProduction fields
+        //           existingProduction.ProductionDate = model.NewProduction.ProductionDate;
+        //           existingProduction.ProductName = db.Products.FirstOrDefault(p => p.Id == model.NewProduction.Id)?.Name;
+        //           existingProduction.Unit = model.NewProduction.Unit;
+        //           existingProduction.QuantityToProduces = model.NewProduction.QuantityToProduces;
+
+        //           db.Entry(existingProduction).State = EntityState.Modified;
+
+        //           // Delete existing SubItems
+        //           //var delSubItems = db.SubItems.Where(x => x.ParentProductId == newProduction.Id).ToList();
+        //           //db.SubItems.RemoveRange(delSubItems);
+
+        //           // Add new SubItems
+        //           //foreach (var item in subItems)
+        //           //{
+        //           //    item.ParentProductId = existingProduction.Id;
+        //           //}
+        //           //db.SubItems.AddRange(subItems);
+        //           if (quantityToProduces != null)
+        //           {
+        //               foreach (var item in quantityToProduces)
+        //               {
+        //                   item.ProductId = newProduction.Id;
+        //                   db.QuantityToProduces.Add(item);
+        //               }
+        //           }
+        //      //     Save changes to the database
+        //               db.SaveChanges();
+        //           return RedirectToAction("Index");
+        //       }
+
+        //       // Repopulate ViewBag on failure
+        //       var productList = db.Products.Select(p => new { p.Id, p.Name }).ToList();
+        //       ViewBag.ProductList = new SelectList(productList, "Id", "Name", model.NewProduction.ProductName);
+
+        //       return View(model);
+        //   }
+
+        //    [HttpPost]
+        //    [ValidateAntiForgeryToken]
+        //    public ActionResult Edit(NewProductionViewModel model,
+        //[Bind(Prefix = "NewProduction", Include = "Id,ProductionDate,ProductName,Unit,ProductId")] NewProduction newProduction,
+        //[Bind(Prefix = "QuantityToProduce", Include = "Id,ProductionQty,BOMId,ProductDetailId,Shape,CalculatedWeight,ProductId")] List<QuantityToProduce> quantityToProduces)
+        //    {
+        //        if (ModelState.IsValid)
+        //        {
+        //            // Fetch the existing NewProduction entity
+        //            var existingProduction = db.NewProductions.Find(model.NewProduction.Id);
+
+        //            // Ensure the NewProduction entity exists
+        //            if (existingProduction == null)
+        //            {
+        //                return HttpNotFound();
+        //            }
+
+        //            // Update NewProduction fields
+        //            existingProduction.ProductionDate = model.NewProduction.ProductionDate;
+        //            existingProduction.ProductName = db.Products.FirstOrDefault(p => p.Id == model.NewProduction.ProductId)?.Name;
+        //            existingProduction.Unit = model.NewProduction.Unit;
+        //            existingProduction.ProductId = model.NewProduction.ProductId;
+
+        //            // Update QuantityToProduce for the NewProduction
+        //            // First, remove the existing QuantityToProduce entries related to this production
+        //            var existingQuantityToProduces = db.QuantityToProduces.Where(x => x.ProductId == existingProduction.ProductId).ToList();
+        //            db.QuantityToProduces.RemoveRange(existingQuantityToProduces);
+
+        //            // Add new QuantityToProduce entries
+        //            if (quantityToProduces != null && quantityToProduces.Count > 0)
+        //            {
+        //                foreach (var item in quantityToProduces)
+        //                {
+        //                    item.ProductId = existingProduction.ProductId; // Ensure ProductId is set to the correct value
+        //                    item.NewProductionId = existingProduction.Id; // Ensure QuantityToProduce is linked to the correct NewProduction
+        //                    db.QuantityToProduces.Add(item);
+        //                }
+        //            }
+
+        //            // Save the changes to the database
+        //            db.Entry(existingProduction).State = EntityState.Modified;
+        //            db.SaveChanges();
+
+        //            // Redirect to the index page after saving changes
+        //            return RedirectToAction("Index");
+        //        }
+
+        //        // Repopulate ViewBag on failure (when ModelState is not valid)
+        //        var productList = db.Products.Select(p => new { p.Id, p.Name }).ToList();
+        //        ViewBag.ProductList = new SelectList(productList, "Id", "Name", model.NewProduction.ProductId);
+
+        //        // Return the view with the model data on failure
+        //        return View(model);
+        //    }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(
+      PacProductionViewModel model,
+      [Bind(Prefix = "PacProduction", Include = "Id,ProductionDate,ProductName,Unit,ProductId,Quantity,Validate")] PacProduction newProduction,
+      [Bind(Prefix = "PacColor", Include = "Id,ParentProductId,ProductId,Quantity,BOMId,Unit,NewProductionId,PostProductionId,SubItemQty,Color")] List<PacColor> paccolor,
+      [Bind(Prefix = "PacSubItemProduction", Include = "Id,ParentProductId,ProductId,Quantity,Unit,AvailableInventory,QuantitytoPrepare,QuantityRequested")] List<PacSubItemProduction> subItemProductions)
+        {
+            var existingProduction = db.PacProductions.Find(model.PacProduction.Id);
+            if (existingProduction == null)
+            {
+                return HttpNotFound();
+            }
+
+            existingProduction.ProductionDate = model.PacProduction.ProductionDate;
+            existingProduction.ProductName = db.Products.FirstOrDefault(p => p.Id == model.PacProduction.ProductId)?.Name;
+            existingProduction.Unit = model.PacProduction.Unit;
+            existingProduction.ProductId = model.PacProduction.ProductId;
+
+            // Remove old sub-items
+            var existingSubItems = db.PacSubItemProductions
+                .Where(x => x.NewProductionId == existingProduction.Id)
+                .ToList();
+            db.PacSubItemProductions.RemoveRange(existingSubItems);
+
+            // Add updated sub-items
+            if (subItemProductions != null)
+            {
+                foreach (var item in subItemProductions)
+                {
+                    // ❗ Don't override ProductId here — it's from the form
+                    item.ParentProductId = existingProduction.ProductId;
+                    item.NewProductionId = existingProduction.Id;
+                    db.PacSubItemProductions.Add(item);
+                }
+            }
+
+            // Remove old colors
+            var existingColors = db.PacColors
+                .Where(x => x.NewProductionId == existingProduction.Id)
+                .ToList();
+            db.PacColors.RemoveRange(existingColors);
+
+            // Add updated colors
+            if (paccolor != null)
+            {
+                foreach (var item in paccolor)
+                {
+                    // ❗ Don't override ProductId here — it's from the form
+                    item.ParentProductId = existingProduction.ProductId;
+                    item.NewProductionId = existingProduction.Id;
+                    db.PacColors.Add(item);
+                }
+            }
+
+            db.Entry(existingProduction).State = EntityState.Modified;
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+
+
+
+
+        // GET: Products/Delete/5
+        public ActionResult Delete(decimal id)
+            {
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Product product = db.Products.Find(id);
+                if (product == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(product);
+            }
+
+            // POST: Products/Delete/5
+            [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(decimal id)
+        {
+            Product product = db.Products.Find(id);
+            bool isPresent = false;
+            if (db.PODs.FirstOrDefault(x => x.ProductId == id) != null || db.SODs.FirstOrDefault(x => x.ProductId == id) != null)
+            {
+                isPresent = true;
+            }
+
+            if (isPresent == false)
+            {
+                db.Products.Remove(product);
+            }
+            else
+            {
+                product.Status = "D";
+                db.Entry(product).Property(x => x.Status).IsModified = true;
+
+            }
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+        public JsonResult GetProductUnit(int id)
+        {
+            var product = db.Products.FirstOrDefault(p => p.Id == id);
+            if (product != null)
+            {
+                return Json(new { unit = product.Unit }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(new { unit = "N/A" }, JsonRequestBehavior.AllowGet);
+        }
+        //public JsonResult GetSubItemDetails(int productId)
+        //{
+        //    // Retrieve sub-item details for the given product ID
+        //    var subItems = db.SubItems
+        //        .Where(s => s.ParentProductId == productId)
+        //        .Select(s => new
+        //        {
+        //            s.Id,
+        //            ProductName = s.Product.Name, // Assuming a navigation property for Product
+        //            s.Quantity,
+        //            s.Unit,
+        //             Manufacturable = s.Product.Manufacturable
+        //            /* s.Shape*/ // If Shape is part of the SubItem model
+        //        })
+        //        .ToList();
+
+        //    return Json(subItems, JsonRequestBehavior.AllowGet);
+        //}
+        public JsonResult GetSubItemDetails(int productId)
+        {
+            var subItems = db.PacSubitems
+                .Include(s => s.Product)
+                .Where(s => s.ParentProductId == productId)
+                .Select(s => new
+                {
+                    s.Id,
+                    ProductId = s.Product != null ? s.Product.Id : 0,
+                    ProductName = s.Product != null ? s.Product.Name : "Unknown",
+                    s.Quantity,
+                    s.Unit,
+                    manufacturable = s.Product != null && s.Product.PType == 4,
+                    Ingredient = s.Product != null && s.Product.PType == 5,
+                    IntermediaryIngredient = s.Product != null && s.Product.PType == 6,
+                    FinalProduct = s.Product != null && s.Product.PType == 4,
+                    PType = s.Product != null ?
+                        (s.Product.PType == 1 ? "Variable" :
+                         s.Product.PType == 6 ? "Excess" :
+                         s.Product.PType == 3 ? "ByProduct" :
+                         s.Product.PType == 5 ? "Ingredient" :
+                         s.Product.PType == 6 ? "Intermediary" :
+                         "Unknown")
+                        : "Unknown",
+                    VariableProduct = s.Product != null ? s.Product.VarProdParentId : (int?)null,
+                }).ToList();
+
+            var packingColors = db.PackagingColors
+                .Include(s => s.Product)
+                .Where(s => s.ParentProductId == productId)
+                .Select(s => new
+                {
+                    s.Id,
+                    ProductId = s.Product != null ? s.Product.Id : 0,
+                    ProductName = s.Product != null ? s.Product.Name : "Unknown",
+                    s.Quantity,
+                    s.Unit,
+                    s.Color,
+                    PType = s.Product != null ?
+                        (s.Product.PType == 1 ? "Variable" :
+                         s.Product.PType == 6 ? "Excess" :
+                         s.Product.PType == 3 ? "ByProduct" :
+                         s.Product.PType == 5 ? "Ingredient" :
+                         s.Product.PType == 6 ? "Intermediary" :
+                         "Unknown")
+                        : "Unknown",
+                    VariableProduct = s.Product != null ? s.Product.VarProdParentId : (int?)null,
+                }).ToList();
+
+            // ✅ Get the PackagingBOM Quantity (Batch Quantity)
+            var packagingBomQty = db.PackagingBOMs
+                .Where(p => p.ProductId == productId)
+                .Select(p => p.Quantity)
+                .FirstOrDefault();
+
+            return Json(new { subItems, packingColors, batchQuantity = packagingBomQty }, JsonRequestBehavior.AllowGet);
+        }
+
+
+
+        //[HttpPost]
+        //public JsonResult ValidateStock(List<FinalProductionViewModel> updates)
+        //{
+        //    Console.WriteLine("ValidateStock method hit!");
+        //                return Json(new { message = "Stock validated!", success = true });
+        //}
+
+        [Authorize(Roles = "Admin,Technical Manager,Chocolate Production manager")]
+        [HttpPost]
+        public JsonResult ValidateStock(List<FinalProductionViewModel> LstProductionVM)
+        {
+            if (LstProductionVM == null || !LstProductionVM.Any())
+            {
+                return Json(new { message = "No updates received.", success = false });
+            }
+
+            foreach (FinalProductionViewModel productionVM in LstProductionVM.ToList())
+            {
+                Product product = db.Products.FirstOrDefault(p => p.Id == productionVM.ProductId);
+                product.Stock -= productionVM.CalculatedValue;
+                db.Entry(product).Property(x => x.Stock).IsModified = true;
+                
+                //var production = db.NewProductions.FirstOrDefault(n => n.Id == productionVM.ProductionId);
+            }
+            db.SaveChanges();
+            //FinalProductionViewModel production= new FinalProductionViewModel ();
+            foreach (FinalProductionViewModel productionVM in LstProductionVM.ToList())
+            {
+                //Console.WriteLine($"Received Update - ProductId: {production.ProductId}, Name: {production.Name}, CalculatedValue: {production.CalculatedValue}");
+
+                // Find the product by ProductId
+                var product = db.Products.FirstOrDefault(p => p.Id == productionVM.ProductId);
+                var production = db.NewProductions.FirstOrDefault(n => n.Id == productionVM.ProductionId);
+
+                if (product != null && production != null)
+                {
+                    Console.WriteLine($"Before Update - Product: {product.Name}, Stock: {product.Stock}");
+
+                    // ✅ Attach Product and Production to track changes
+                    db.Products.Attach(product);
+                    db.NewProductions.Attach(production);
+
+                    // Perform stock subtraction (Stock - CalculatedValue)
+                    product.Stock -= productionVM.CalculatedValue;
+
+                    // Ensure stock does not go negative
+                    if (product.Stock < 0)
+                    {
+                        product.Stock = 0;
+                    }
+
+                    // ✅ Explicitly mark properties as modified
+                    db.Entry(product).Property(x => x.Stock).IsModified = true;
+
+                    Console.WriteLine($"After Update - Product: {product.Name}, Stock: {product.Stock}");
+
+                    // ✅ Mark the production as validated
+                    production.Validate = true;
+                    db.Entry(production).Property(x => x.Validate).IsModified = true;
+                }
+                else
+                {
+                    Console.WriteLine($"Product '{productionVM.Name}' not found in the database.");
+                    return Json(new { message = $"Product '{productionVM.Name}' not found.", success = false });
+                }
+            }
+
+            // ✅ Save all changes at once
+            var changes = db.SaveChanges();
+            Console.WriteLine($"Changes Saved: {changes}");
+
+            if (changes > 0)
+            {
+                return Json(new { message = "Stock updated & Production validated successfully.", success = true });
+            }
+            else
+            {
+                return Json(new { message = "No changes detected in the database.", success = false });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult ValidateCStock(List<FinalProductionViewModel> updates)
+        {
+            if (updates == null || !updates.Any())
+            {
+                return Json(new { message = "No updates received.", success = false });
+            }
+
+            foreach (var prod in updates)
+            {
+                Console.WriteLine($"Received Update - ProductId: {prod.ProductId}, Name: {prod.Name}, CalculatedValue: {prod.CalculatedValue}");
+
+                // Find the product by ProductId
+                var product = db.Products.FirstOrDefault(p => p.Id == prod.ProductId);
+
+                if (product != null)
+                {
+                    Console.WriteLine($"Before Update - Product: {product.Name}, Stock: {product.Stock}");
+
+                    // Perform stock subtraction (Stock - CalculatedValue)
+                    product.Stock += prod.CalculatedValue;
+
+                    // Ensure stock does not go negative
+                    if (product.Stock < 0)
+                    {
+                        product.Stock = 0;
+                    }
+
+                    // Mark property as modified
+                    db.Entry(product).Property(x => x.Stock).IsModified = true;
+
+                    Console.WriteLine($"After Update - Product: {product.Name}, Stock: {product.Stock}");
+                }
+                else
+                {
+                    Console.WriteLine($"Product '{prod.Name}' not found in the database.");
+                    return Json(new { message = $"Product '{prod.Name}' not found.", success = false });
+                }
+            }
+
+            // Save all changes at once
+            db.SaveChanges();
+
+            return Json(new { message = "Stock updated successfully.", success = true });
+        }
+        [HttpPost]
+        public JsonResult IncreasedStock(List<FinalProductionViewModel> updates)
+        {
+            if (updates == null || !updates.Any())
+            {
+                return Json(new { message = "No updates received.", success = false });
+            }
+
+            foreach (var prod in updates)
+            {
+                Console.WriteLine($"Received Update - ProductId: {prod.ProductId}, Name: {prod.Name}, CalculatedValue: {prod.CalculatedValue}");
+
+                // Find the product by ProductId
+                var product = db.Products.FirstOrDefault(p => p.Id == prod.ProductId);
+
+                if (product != null)
+                {
+                    Console.WriteLine($"Before Update - Product: {product.Name}, Stock: {product.Stock}");
+
+                    // Perform stock subtraction (Stock - CalculatedValue)
+                    product.Stock += prod.CalculatedValue;
+
+                    // Ensure stock does not go negative
+                    if (product.Stock < 0)
+                    {
+                        product.Stock = 0;
+                    }
+
+                    // Mark property as modified
+                    db.Entry(product).Property(x => x.Stock).IsModified = true;
+
+                    Console.WriteLine($"After Update - Product: {product.Name}, Stock: {product.Stock}");
+                }
+                else
+                {
+                    Console.WriteLine($"Product '{prod.Name}' not found in the database.");
+                    return Json(new { message = $"Product '{prod.Name}' not found.", success = false });
+                }
+            }
+
+            // Save all changes at once
+            db.SaveChanges();
+
+            return Json(new { message = "Stock updated successfully.", success = true });
+        }
+
+        [HttpPost]
+        public JsonResult EIncreasedStock(List<FinalProductionViewModel> updates)
+        {
+            if (updates == null || !updates.Any())
+            {
+                return Json(new { message = "No updates received.", success = false });
+            }
+
+            foreach (var prod in updates)
+            {
+                Console.WriteLine($"Received Update - ProductId: {prod.ProductId}, Name: {prod.Name}, CalculatedValue: {prod.CalculatedValue}");
+
+                // Find the product by ProductId
+                var product = db.Products.FirstOrDefault(p => p.Id == prod.ProductId);
+                var production = db.PostProductions.FirstOrDefault(n => n.Id == prod.ProductionId);
+                if (product != null && production != null)
+                {
+                    Console.WriteLine($"Before Update - Product: {product.Name}, Stock: {product.Stock}");
+
+                    // Perform stock subtraction (Stock - CalculatedValue)
+                    product.Stock += prod.CalculatedValue;
+
+                    // Ensure stock does not go negative
+                    if (product.Stock < 0)
+                    {
+                        product.Stock = 0;
+                    }
+
+                    // Mark property as modified
+                    db.Entry(product).Property(x => x.Stock).IsModified = true;
+                    production.Validate = true;
+                    db.Entry(production).Property(x => x.Validate).IsModified = true;
+                    Console.WriteLine($"After Update - Product: {product.Name}, Stock: {product.Stock}");
+                }
+                else
+                {
+                    Console.WriteLine($"Product '{prod.Name}' not found in the database.");
+                    return Json(new { message = $"Product '{prod.Name}' not found.", success = false });
+                }
+            }
+
+            // Save all changes at once
+            db.SaveChanges();
+
+            return Json(new { message = "Stock updated successfully.", success = true });
+        }
+
+        //public JsonResult GetSubItemDetails(int productId)
+        //{
+        //    // Fetch sub-item details including weight from ProductDetails table
+        //    var subItems = db.SubItems
+        //        .Where(s => s.ParentProductId == productId)
+        //        .Join(
+        //            db.ProductDetails, // Join with ProductDetails
+        //            subItem => subItem.ProductId,
+        //            productDetail => productDetail.ProductId,
+        //            (subItem, productDetail) => new
+        //            {
+        //                subItem.Id,
+        //                ProductName = subItem.Product.Name, // Assuming a navigation property for Product
+        //                subItem.Quantity,
+        //                subItem.Unit,
+        //                Weight = productDetail.Weight // Fetch weight from ProductDetails
+        //            })
+        //        .ToList();
+
+        //    return Json(subItems, JsonRequestBehavior.AllowGet);
+        //}
+
+
+
+        //public JsonResult GetSubItemDetails(int parentProductId)
+        //{
+        //    System.Diagnostics.Debug.WriteLine($"Received ParentProductId: {parentProductId}");
+
+        //    var subItems = db.SubItems
+        //        .Where(s => s.ParentProductId == parentProductId)
+        //        .Include(s => s.Product) // Load navigation property if needed
+        //        .Select(s => new
+        //        {
+        //            s.Id,
+        //            ProductName = s.Product.Name,
+        //            s.ProductId,
+        //            s.Quantity,
+        //            s.Unit
+        //        })
+        //        .ToList();
+
+        //    System.Diagnostics.Debug.WriteLine($"SubItems Count: {subItems.Count}");
+
+        //    return Json(subItems, JsonRequestBehavior.AllowGet);
+        //}
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public JsonResult ValidateStock(List<FinalProductionViewModel> updates)
+        //{
+
+        //    foreach (var update in updates)
+        //    {
+        //        // Find the product by its Name
+        //        var product = db.Products.FirstOrDefault(p => p.Id == update.Product.Id);
+        //        if (product != null)
+        //        {
+        //            // Subtract the calculated value from the stock
+        //            product.Stock -= update.SubtractValue;
+
+        //            // Ensure stock does not go negative
+        //            if (product.Stock < 0)
+        //                product.Stock = 0;
+
+        //            // Save changes directly to the database
+        //        }
+        //    }
+
+        //    db.SaveChanges();
+
+        //    return Json(new { message = "Stock updated successfully" });
+        //}
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public JsonResult ValidateStock(List<FinalProductionViewModel> updates)
+        //{
+        //       if (updates == null || !updates.Any())
+        //   {
+        //        return Json(new { message = "No updates received.", success = false });
+        //    }
+
+        //            foreach (var prod in updates)
+        //            {
+        //                Console.WriteLine($"Received Update - ProductId: {prod.ProductId}, Name: {prod.Name}, SubtractValue: {prod.SubtractValue}");
+
+        //                // Find the product by ProductId instead of Name for accuracy
+        //                var product = db.Products.FirstOrDefault(p => p.Id == prod.ProductId);
+
+        //                if (product != null)
+        //                {
+        //                    Console.WriteLine($"Before Update - Product: {product.Name}, Stock: {product.Stock}");
+
+        //                    // Subtract stock safely
+        //                    product.Stock -= prod.SubtractValue;
+
+        //                    // Ensure stock does not go negative
+        //                    if (product.Stock < 0)
+        //                    {
+        //                        product.Stock = 0;
+        //                    }
+
+        //        //            // Mark property as modified
+        //                    db.Entry(product).Property(x => x.Stock).IsModified = true;
+
+        //                    Console.WriteLine($"After Update - Product: {product.Name}, Stock: {product.Stock}");
+        //                }
+        //                else
+        //                {
+        //                    Console.WriteLine($"Product '{prod.Name}' not found in the database.");
+        //                    return Json(new { message = $"Product '{prod.Name}' not found.", success = false });
+        //                }
+        //            }
+
+        //        //    // Save all changes at once
+        //            db.SaveChanges();
+
+        //            return Json(new { message = "Stock updated successfully.", success = true });
+        //}
+        // [HttpPost]
+        //public JsonResult ValidateStock(List<FinalProductionViewModel> updates)
+        //{
+        //    if (updates == null || !updates.Any())
+        //    {
+        //        return Json(new { message = "No updates received.", success = false });
+        //    }
+
+        //    foreach (var prod in updates)
+        //    {
+        //        Console.WriteLine($"Received Update - ProductId: {prod.ProductId}, Name: {prod.Name}, SubtractValue: {prod.SubtractValue}");
+
+        //        // Find the product by ProductId instead of Name for accuracy
+        //        var product = db.Products.FirstOrDefault(p => p.Id == prod.ProductId);
+
+        //        if (product != null)
+        //        {
+        //            Console.WriteLine($"Before Update - Product: {product.Name}, Stock: {product.Stock}");
+
+        //            // Subtract stock safely
+        //            product.Stock -= prod.SubtractValue;
+
+        //            // Ensure stock does not go negative
+        //            if (product.Stock < 0)
+        //            {
+        //                product.Stock = 0;
+        //            }
+
+        //            // Mark property as modified
+        //            db.Entry(product).Property(x => x.Stock).IsModified = true;
+
+        //            Console.WriteLine($"After Update - Product: {product.Name}, Stock: {product.Stock}");
+        //        }
+        //        else
+        //        {
+        //            Console.WriteLine($"Product '{prod.Name}' not found in the database.");
+        //            return Json(new { message = $"Product '{prod.Name}' not found.", success = false });
+        //        }
+        //    }
+
+        //    // Save all changes at once
+        //    db.SaveChanges();
+
+        //    return Json(new { message = "Stock updated successfully.", success = true });
+        //}
+
+        [HttpGet]
+        public ActionResult FinalExcess()
+        {
+            decimal maxId = db.NewProductions.DefaultIfEmpty().Max(p => p == null ? 0 : p.Id);
+            maxId += 1;
+            ViewBag.SuggestedId = maxId;  // Passing the suggested BOM ID to the view
+            ViewBag.Suppliers = DAL.dbSuppliers;  // Assuming this contains the supplier list
+
+            var products = db.Products
+       .Where(p => p.PType == 4)
+       .Select(p => new
+       {
+           Value = p.Id.ToString(),  // ID of the product
+           Text = p.Name            // Name of the product
+       })
+       .ToList();
+
+            ViewBag.ProductList = new SelectList(products, "Value", "Text"); // Pass as a SelectList
+            var productDetails = db.ProductDetails.ToList();
+
+            var remarks = db.BOMs
+    .Select(b => new
+    {
+        Value = b.Remarks,           // Key for dropdown
+        Text = b.Remarks,            // Display text
+        ProductName = b.ProductName, // Related product name
+        Unit = b.Product.Unit    // Related time unit or unit field
+    })
+    .ToList();
+
+            ViewBag.Remarks = new SelectList(remarks, "Value", "Text");
+            ViewBag.RemarksData = remarks;
+
+
+            var productList = db.Products
+                                    .Select(p => new
+                                    {
+                                        p.Id,
+                                        p.Name,
+                                        p.Stock,
+                                        p.Remarks, // Fetch remarks from BOM
+                                        p.Category,   // Fetch stock for AvailableInventory
+                                    })
+                                    .ToList();
+
+            ViewBag.ProductList = new SelectList(productList, "Id", "Name");
+
+            // Fetch data and then map to SubItem outside the LINQ query
+            var subItems = db.Products
+                             .Select(p => new
+                             {
+                                 ProductId = p.Id,
+                                 AvailableInventory = p.Stock
+                             })
+                             .AsEnumerable() // Move query execution to memory
+                             .Select(p => new SubItem
+                             {
+                                 ProductId = p.ProductId,
+                                 AvailableInventory = p.AvailableInventory,
+                                 QuantitytoPrepare = 0 // Initial value
+                             })
+                             .ToList();
+
+            var viewModel = new NewProductionViewModel
+            {
+                NewProduction = new NewProduction(),
+                Products = DAL.dbProducts,
+                SubItems = subItems,
+                QuantityToProduce = new List<QuantityToProduce> { new QuantityToProduce() },
+                ProductDetail = new List<ProductDetail> { new ProductDetail() },
+            };
+
+            return View(viewModel);
+        }
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+        [HttpGet]
+        
+        public ActionResult PrintProductionPdf(int productionId)
+        {
+            LocalReport localReport = new LocalReport();
+            localReport.ReportPath = Server.MapPath("~/Reports/Production_Report.rdlc");
+
+            // Get data from stored procedure
+            var model = new ProductionDetailsViewModel();
+
+            using (var command = db.Database.Connection.CreateCommand())
+            {
+                db.Database.Connection.Open();
+                command.CommandText = "EXEC GetProductionDetailsById @ProductionId";
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@ProductionId", productionId));
+
+                using (var reader = command.ExecuteReader())
+                {
+                    // Read first result set (main production info)
+                    if (reader.Read())
+                    {
+                        model.ProductionInfo = new ProductionDetailsViewModel.MainProductionInfo
+                        {
+                            Id = reader.GetInt32(0),
+                            ProductionDate = reader.GetDateTime(1),
+                            ProductId = reader.GetInt32(2),
+                            MainProductName = reader.GetString(3),
+                            Unit = reader.GetString(4),
+                            TotalQuantity = reader.GetDecimal(5)
+                        };
+                    }
+
+                    // Read second result set (quantities to produce)
+                    reader.NextResult();
+                    model.QuantitiesToProduce = new List<ProductionDetailsViewModel.QuantityToProduce>();
+                    while (reader.Read())
+                    {
+                        model.QuantitiesToProduce.Add(new ProductionDetailsViewModel.QuantityToProduce
+                        {
+                            Id = reader.GetInt32(0),
+                            Shape = reader.GetString(1),
+                            Quantity = reader.GetDecimal(2),
+                            Total = reader.GetDecimal(3),
+                            Unit = reader.GetString(4)
+                        });
+                    }
+
+                    // Read third result set (ingredients)
+                    reader.NextResult();
+                    model.Ingredients = new List<ProductionDetailsViewModel.MainIngredient>();
+                    while (reader.Read())
+                    {
+                        model.Ingredients.Add(new ProductionDetailsViewModel.MainIngredient
+                        {
+                            Id = reader.GetInt32(0),
+                            IngredientName = reader.GetString(1),
+                            Quantity = reader.GetDecimal(2),
+                            Unit = reader.GetString(3),
+                            SubItemQty = reader.GetDecimal(4)
+                        });
+                    }
+                }
+            }
+
+            if (model.ProductionInfo == null)
+            {
+                return Content("No data found.");
+            }
+
+            // Add data sources to report
+            localReport.DataSources.Add(new ReportDataSource("MainProductionInfo", new List<ProductionDetailsViewModel.MainProductionInfo> { model.ProductionInfo }));
+            localReport.DataSources.Add(new ReportDataSource("QuantitiesToProduce", model.QuantitiesToProduce));
+            localReport.DataSources.Add(new ReportDataSource("Ingredients", model.Ingredients));
+
+            // Render report
+            string mimeType, encoding, fileNameExtension;
+            string[] streams;
+            Warning[] warnings;
+
+            byte[] renderedBytes = localReport.Render(
+                "PDF",
+                null,
+                out mimeType,
+                out encoding,
+                out fileNameExtension,
+                out streams,
+                out warnings
+            );
+
+            return File(renderedBytes, mimeType, $"Production_Report_{productionId}.pdf");
+        }
+    }
+}

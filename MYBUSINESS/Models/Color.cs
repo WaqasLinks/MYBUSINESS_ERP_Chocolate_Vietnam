@@ -14,8 +14,20 @@ namespace MYBUSINESS.Models
     
     public partial class Color
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Color()
+        {
+            this.OrderItemPProducts = new HashSet<OrderItemPProduct>();
+            this.OrderItemColorPProducts = new HashSet<OrderItemColorPProduct>();
+        }
+    
         public int Id { get; set; }
         public string ColorName { get; set; }
         public string ColorCode { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OrderItemPProduct> OrderItemPProducts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OrderItemColorPProduct> OrderItemColorPProducts { get; set; }
     }
 }

@@ -50,7 +50,6 @@ namespace MYBUSINESS.Models
         public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<MetaDetaDescription> MetaDetaDescriptions { get; set; }
         public virtual DbSet<MyBusinessInfo> MyBusinessInfoes { get; set; }
-        public virtual DbSet<OrderItemPProduct> OrderItemPProducts { get; set; }
         public virtual DbSet<OrderItem> OrderItems { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<PackagingColored> PackagingColoreds { get; set; }
@@ -60,7 +59,6 @@ namespace MYBUSINESS.Models
         public virtual DbSet<PO> POes { get; set; }
         public virtual DbSet<POD> PODs { get; set; }
         public virtual DbSet<PODReciver> PODRecivers { get; set; }
-        public virtual DbSet<POReciver> PORecivers { get; set; }
         public virtual DbSet<PPBOM> PPBOMs { get; set; }
         public virtual DbSet<PPColorReceipt> PPColorReceipts { get; set; }
         public virtual DbSet<PPReceiver> PPReceivers { get; set; }
@@ -95,7 +93,6 @@ namespace MYBUSINESS.Models
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<UserAuthorization> UserAuthorizations { get; set; }
         public virtual DbSet<PTypeDesc> PTypeDescs { get; set; }
-        public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<SPackagingDetail> SPackagingDetails { get; set; }
         public virtual DbSet<SPackgingReceiver> SPackgingReceivers { get; set; }
         public virtual DbSet<SPDReceiver> SPDReceivers { get; set; }
@@ -111,10 +108,20 @@ namespace MYBUSINESS.Models
         public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<ScanCreditCard> ScanCreditCards { get; set; }
         public virtual DbSet<StoreOrderReceiptPP> StoreOrderReceiptPPs { get; set; }
-        public virtual DbSet<PackagingBOM> PackagingBOMs { get; set; }
-        public virtual DbSet<PacSubitem> PacSubitems { get; set; }
         public virtual DbSet<SO> SOes { get; set; }
+        public virtual DbSet<PackagingBOM> PackagingBOMs { get; set; }
         public virtual DbSet<PackagingColor> PackagingColors { get; set; }
+        public virtual DbSet<PacSubitem> PacSubitems { get; set; }
+        public virtual DbSet<PacQuantityToProduce> PacQuantityToProduces { get; set; }
+        public virtual DbSet<PacColor> PacColors { get; set; }
+        public virtual DbSet<PacSubItemProduction> PacSubItemProductions { get; set; }
+        public virtual DbSet<PacProduction> PacProductions { get; set; }
+        public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<POReciver> PORecivers { get; set; }
+        public virtual DbSet<OrderItemPProduct> OrderItemPProducts { get; set; }
+        public virtual DbSet<OrderColorPProduct> OrderColorPProducts { get; set; }
+        public virtual DbSet<OrderItemColorPProduct> OrderItemColorPProducts { get; set; }
+        public virtual DbSet<StoreColorOrderReceiptPP> StoreColorOrderReceiptPPs { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {
@@ -343,6 +350,78 @@ namespace MYBUSINESS.Models
                 new ObjectParameter("SaleOrderID", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spSOReport_Result>("spSOReport", saleOrderIDParameter);
+        }
+    
+        public virtual int GetColoredPackagingById(Nullable<int> orderId)
+        {
+            var orderIdParameter = orderId.HasValue ?
+                new ObjectParameter("OrderId", orderId) :
+                new ObjectParameter("OrderId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GetColoredPackagingById", orderIdParameter);
+        }
+    
+        public virtual int GetChocolateProductionById(Nullable<int> productionId)
+        {
+            var productionIdParameter = productionId.HasValue ?
+                new ObjectParameter("ProductionId", productionId) :
+                new ObjectParameter("ProductionId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GetChocolateProductionById", productionIdParameter);
+        }
+    
+        public virtual ObjectResult<GetChocolateProductionHeader_Result> GetChocolateProductionHeader(Nullable<int> productionId)
+        {
+            var productionIdParameter = productionId.HasValue ?
+                new ObjectParameter("ProductionId", productionId) :
+                new ObjectParameter("ProductionId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetChocolateProductionHeader_Result>("GetChocolateProductionHeader", productionIdParameter);
+        }
+    
+        public virtual ObjectResult<GetChocolateProductionIngredients_Result> GetChocolateProductionIngredients(Nullable<int> productionId)
+        {
+            var productionIdParameter = productionId.HasValue ?
+                new ObjectParameter("ProductionId", productionId) :
+                new ObjectParameter("ProductionId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetChocolateProductionIngredients_Result>("GetChocolateProductionIngredients", productionIdParameter);
+        }
+    
+        public virtual ObjectResult<GetChocolateProductionShapes_Result> GetChocolateProductionShapes(Nullable<int> productionId)
+        {
+            var productionIdParameter = productionId.HasValue ?
+                new ObjectParameter("ProductionId", productionId) :
+                new ObjectParameter("ProductionId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetChocolateProductionShapes_Result>("GetChocolateProductionShapes", productionIdParameter);
+        }
+    
+        public virtual ObjectResult<GetPostChocolateProductionHeader_Result> GetPostChocolateProductionHeader(Nullable<int> postProductionId)
+        {
+            var postProductionIdParameter = postProductionId.HasValue ?
+                new ObjectParameter("PostProductionId", postProductionId) :
+                new ObjectParameter("PostProductionId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetPostChocolateProductionHeader_Result>("GetPostChocolateProductionHeader", postProductionIdParameter);
+        }
+    
+        public virtual ObjectResult<GetPostChocolateProductionIngredients_Result> GetPostChocolateProductionIngredients(Nullable<int> postProductionId)
+        {
+            var postProductionIdParameter = postProductionId.HasValue ?
+                new ObjectParameter("PostProductionId", postProductionId) :
+                new ObjectParameter("PostProductionId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetPostChocolateProductionIngredients_Result>("GetPostChocolateProductionIngredients", postProductionIdParameter);
+        }
+    
+        public virtual ObjectResult<GetPostChocolateProductionShapes_Result> GetPostChocolateProductionShapes(Nullable<int> postProductionId)
+        {
+            var postProductionIdParameter = postProductionId.HasValue ?
+                new ObjectParameter("PostProductionId", postProductionId) :
+                new ObjectParameter("PostProductionId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetPostChocolateProductionShapes_Result>("GetPostChocolateProductionShapes", postProductionIdParameter);
         }
     }
 }

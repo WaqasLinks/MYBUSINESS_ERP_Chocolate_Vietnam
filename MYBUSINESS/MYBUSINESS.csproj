@@ -390,6 +390,7 @@
     <Compile Include="Controllers\NewProductionController.cs" />
     <Compile Include="Controllers\PackagingBOMController.cs" />
     <Compile Include="Controllers\PackagingProductionController.cs" />
+    <Compile Include="Controllers\PacProductionController.cs" />
     <Compile Include="Controllers\POPRReciverController.cs" />
     <Compile Include="Controllers\PostProductionController.cs" />
     <Compile Include="Controllers\PPBOMController.cs" />
@@ -443,6 +444,16 @@
     <Compile Include="CustomClasses\NoCache.cs" />
     <Compile Include="CustomClasses\Utilities.cs" />
     <Compile Include="CustomClasses\WebServiceResponse.cs" />
+    <Compile Include="DataSets\DataSet10.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataSet10.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\DataSet11.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataSet11.xsd</DependentUpon>
+    </Compile>
     <Compile Include="DataSets\DataSet3.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -462,6 +473,21 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DataSet6.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\DataSet7.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataSet7.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\DataSet8.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataSet8.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\DataSet9.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataSet9.xsd</DependentUpon>
     </Compile>
     <Compile Include="DataSets\spGetOrderPProductDetailsDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -553,6 +579,12 @@
     <Compile Include="Models\BusinessInfo.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ChocolatePostProductionHeaderViewModel.cs" />
+    <Compile Include="Models\ChocolatePostProductionIngredientViewModel.cs" />
+    <Compile Include="Models\ChocolatePotProductionShapeViewModel.cs" />
+    <Compile Include="Models\ChocolateProductionHeaderViewModel.cs" />
+    <Compile Include="Models\ChocolateProductionIngredientViewModel.cs" />
+    <Compile Include="Models\ChocolateProductionShapeViewModel.cs" />
     <Compile Include="Models\Color.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -581,6 +613,7 @@
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\EditOrderCategoryViewModel.cs" />
+    <Compile Include="Models\EditProductColorViewModel.cs" />
     <Compile Include="Models\Employee.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -596,6 +629,15 @@
     </Compile>
     <Compile Include="Models\FinalProductionViewModel.cs" />
     <Compile Include="Models\FlatBoxStockViewModel.cs" />
+    <Compile Include="Models\GetChocolateProductionHeader_Result.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetChocolateProductionIngredients_Result.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetChocolateProductionShapes_Result.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GetColorQuantitiesByProductionId_Result.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -603,6 +645,15 @@
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetPackagingProductionColorDetails_Result.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetPostChocolateProductionHeader_Result.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetPostChocolateProductionIngredients_Result.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetPostChocolateProductionShapes_Result.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetProductionDetailsById_Result.cs" />
@@ -639,7 +690,13 @@
     <Compile Include="Models\Order.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\OrderColorPProduct.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\OrderItem.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\OrderItemColorPProduct.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\OrderItemPProduct.cs">
@@ -650,8 +707,12 @@
     <Compile Include="Models\OrderPProduct.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\OrderReceiptColorProductionViewModel.cs" />
     <Compile Include="Models\OrderReceiptViewModel.cs" />
     <Compile Include="Models\PacakgingBOMViewModel.cs" />
+    <Compile Include="Models\PacColor.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\PackagingBOM.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -668,7 +729,17 @@
     <Compile Include="Models\PackagingSubItem.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\PacProduction.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PacProductionViewModel.cs" />
+    <Compile Include="Models\PacQuantityToProduce.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\PacSubitem.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PacSubItemProduction.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\PaperColor.cs">
@@ -747,6 +818,7 @@
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ProductCategoryViewModel.cs" />
+    <Compile Include="Models\ProductColorViewModel.cs" />
     <Compile Include="Models\ProductDetail.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -782,6 +854,7 @@
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\QuantityToProduceViewModel.cs" />
+    <Compile Include="Models\ReceiveColorOrderViewModel.cs" />
     <Compile Include="Models\ReceiveOrderViewModel.cs" />
     <Compile Include="Models\Rent.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
@@ -876,6 +949,9 @@
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\StoreBalanceViewModel.cs" />
+    <Compile Include="Models\StoreColorOrderReceiptPP.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\StoreOrderReceipt.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -3363,12 +3439,15 @@
     <Content Include="Content\custom\clientSOSR.js" />
     <Content Include="Content\custom\creditorPOPR.js" />
     <Content Include="Content\custom\newProduction.js" />
+    <Content Include="Content\custom\PackagingProduction .js" />
     <Content Include="Content\custom\Packagingproduction.js" />
+    <Content Include="Content\custom\PackagingProductionEdit.js" />
     <Content Include="Content\custom\PackagingSubItem.js" />
     <Content Include="Content\custom\productDetail.js" />
     <Content Include="Content\custom\PV_Logo.png" />
     <Content Include="Content\custom\searchable.css" />
     <Content Include="Content\custom\shared.js" />
+    <Content Include="Content\custom\standardsupplierReciever.js" />
     <Content Include="Content\custom\stores.js" />
     <Content Include="Content\custom\customerSOSR_SOSR_Index.js" />
     <Content Include="Content\custom\customerSOSR2.js" />
@@ -3716,6 +3795,28 @@
     <Content Include="DataSets\DataSet3.xsc">
       <DependentUpon>DataSet3.xsd</DependentUpon>
     </Content>
+    <Content Include="DataSets\DataSet10.xsc">
+      <DependentUpon>DataSet10.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\DataSet10.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DataSet10.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="DataSets\DataSet10.xss">
+      <DependentUpon>DataSet10.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\DataSet11.xsc">
+      <DependentUpon>DataSet11.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\DataSet11.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DataSet11.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="DataSets\DataSet11.xss">
+      <DependentUpon>DataSet11.xsd</DependentUpon>
+    </Content>
     <None Include="DataSets\DataSet3.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
@@ -3756,6 +3857,39 @@
     </None>
     <Content Include="DataSets\DataSet6.xss">
       <DependentUpon>DataSet6.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\DataSet7.xsc">
+      <DependentUpon>DataSet7.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\DataSet7.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DataSet7.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="DataSets\DataSet7.xss">
+      <DependentUpon>DataSet7.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\DataSet8.xsc">
+      <DependentUpon>DataSet8.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\DataSet8.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DataSet8.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="DataSets\DataSet8.xss">
+      <DependentUpon>DataSet8.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\DataSet9.xsc">
+      <DependentUpon>DataSet9.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\DataSet9.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DataSet9.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="DataSets\DataSet9.xss">
+      <DependentUpon>DataSet9.xsd</DependentUpon>
     </Content>
     <None Include="DataSets\spGetOrderPProductDetailsDataSet.xsd">
       <SubType>Designer</SubType>
@@ -4444,6 +4578,37 @@
     <Content Include="Views\PackagingBOM\_IndexComponents.cshtml" />
     <Content Include="Views\PackagingBOM\_SelectedProducts.cshtml" />
     <Content Include="Views\PackagingBOM\_SelectedProducts1.cshtml" />
+    <Content Include="Views\PacProduction\Create.cshtml" />
+    <Content Include="Views\PacProduction\BOMEdit.cshtml" />
+    <Content Include="Views\PacProduction\Create - Copy %282%29.cshtml" />
+    <Content Include="Views\PacProduction\Create - Copy %283%29 - Copy.cshtml" />
+    <Content Include="Views\PacProduction\Create - Copy %283%29.cshtml" />
+    <Content Include="Views\PacProduction\Create - Copy.cshtml" />
+    <Content Include="Views\PacProduction\_IndexComponents.cshtml" />
+    <Content Include="Views\PacProduction\_SelectedNewProduction.cshtml" />
+    <Content Include="Views\PacProduction\_SelectedProducts1.cshtml" />
+    <Content Include="Views\PacProduction\CreateService.cshtml" />
+    <Content Include="Views\PacProduction\Create_NewProduction.cshtml" />
+    <Content Include="Views\PacProduction\Delete.cshtml" />
+    <Content Include="Views\PacProduction\DeleteBOM.cshtml" />
+    <Content Include="Views\PacProduction\Details.cshtml" />
+    <Content Include="Views\PacProduction\Edit - Copy %282%29.cshtml" />
+    <Content Include="Views\PacProduction\Edit - Copy.cshtml" />
+    <Content Include="Views\PacProduction\Edit.cshtml" />
+    <Content Include="Views\PacProduction\EditBOM.cshtml" />
+    <Content Include="Views\PacProduction\EditService.cshtml" />
+    <Content Include="Views\PacProduction\Edit_NewProduction.cshtml" />
+    <Content Include="Views\PacProduction\FinalExcess.cshtml" />
+    <Content Include="Views\PacProduction\Index - Copy.cshtml" />
+    <Content Include="Views\PacProduction\Index.cshtml" />
+    <Content Include="Views\PacProduction\IndexComponents.cshtml" />
+    <Content Include="Views\Products\IndexStoreStock.cshtml" />
+    <Content Include="Views\Products\_SelectedStoreStocks.cshtml" />
+    <Content Include="Views\StoreOrder\CreatePackagingColorOrder.cshtml" />
+    <Content Include="Views\StoreOrder\IndexOrderColorPP.cshtml" />
+    <Content Include="Views\StoreOrder\_SelectedProductsOrderColorPP.cshtml" />
+    <Content Include="Views\StoreOrder\EditOrderColorPP.cshtml" />
+    <Content Include="Views\StoreOrder\ReceiveColorOrderPP.cshtml" />
     <None Include="Web.Debug.Config">
       <DependentUpon>Web.Config</DependentUpon>
     </None>
@@ -4514,6 +4679,9 @@
     <Content Include="Reports\Sale_ReceiptWoutCustomer.rdlc" />
     <Content Include="Reports\Sale_ReceiptPaperColor.rdlc" />
     <Content Include="Reports\Sale_ReceiptPaperOrder.rdlc" />
+    <Content Include="Reports\Sale_ReceiptOrderColered.rdlc" />
+    <Content Include="Reports\Sale_ChocolateProduction.rdlc" />
+    <Content Include="Reports\Sale_ChocolateProductionPost.rdlc" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,0 +1,154 @@
+﻿@model List<MYBUSINESS.Models.EditProductColorViewModel>
+
+<h2 style="text-align:center; margin-top: 20px;">@(ViewBag.IsValidated ?? false ? "View" : "Edit") Edit Colored Packaging Order</h2>
+@{
+    bool isReadonly = ViewBag.ReadonlyMode ?? false;
+    int currentStoreId = ViewBag.CurrentStoreId;
+}
+
+@using (Html.BeginForm("EditOrderColorPP", "StoreOrder", FormMethod.Post))
+{
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title"> Colored Packaging List</h3>
+                </div>
+                <div class="box-body">
+                    @Html.Hidden("orderId", (object)ViewBag.OrderId)
+
+                    <div class="form-group">
+                        <label>Select Store:</label>
+                        @if (!isReadonly)
+                        {
+                            <div class="form-group">
+                                <label>Store:</label>
+                                @Html.DropDownList("storeId", ViewBag.Stores as SelectList, new
+                           {
+                               @class = "form-control  readonly",
+                               style = "width: 200px;"
+                           })
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group">
+                                <label>Store:</label>
+                                <input style = "width: 200px;" type="text" class="form-control" value="@((ViewBag.Stores as SelectList)?.FirstOrDefault(s => s.Value == currentStoreId.ToString())?.Text)" readonly />
+                                @Html.Hidden("storeId", currentStoreId)
+                            </div>
+                        }
+                    </div>
+
+                    <div style="overflow-x: auto;">
+                        <table id="productTable" class="table table-bordered" style="min-width: 1200px;">
+                            <thead>
+                                <tr>
+                                    <th style="width:10%; min-width: 150px;">Product Name</th>
+                                    @foreach (var color in Model.FirstOrDefault()?.AvailableColors ?? new List<MYBUSINESS.Models.ColorWithQuantity>())
+                                    {
+                                        <th style="width:10%;">@color.ColorName</th>
+                                        <th style="width:10%;">Qty</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.Count; i++)
+                                {
+                                    <tr>
+                                        <td>@Model[i].ProductName</td>
+                                        @for (int j = 0; j < Model[i].AvailableColors.Count; j++)
+                                        {
+                                            var color = Model[i].AvailableColors[j];
+                                            <td style="background-color:@color.ColorCode"></td>
+                                            <td>
+                                                <input type="hidden" name="orderitem[@((i * Model[i].AvailableColors.Count) + j)].ProductId" value="@Model[i].ProductId" />
+                                                <input type="hidden" name="orderitem[@((i * Model[i].AvailableColors.Count) + j)].ColorId" value="@color.Id" />
+                                                <input type="number" name="orderitem[@((i * Model[i].AvailableColors.Count) + j)].Quantity"
+                                                       class="form-control" @(isReadonly ? "readonly" : "") value="@color.Quantity" min="0" style="width: 80px;" />
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                        <div class="box-footer">
+                            @if (!isReadonly)
+                            {
+                                <button type="submit" class="btn btn-primary">Update Order</button>
+                                <button type="button" class="btn btn-primary" id="btnValidate">Validate</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    @Html.ActionLink("Cancel", "IndexOrderPP", null, new { @class = "btn btn-default" })
+}
+<script>
+    $("#btnValidate").click(function () {
+    alert('Validating colored packaging order...');
+
+    let orderItems = [];
+    let orderId = $('input[name="orderId"]').val();
+    let storeId = $('select[name="storeId"]').val();
+
+    // Loop through each product row
+    $("#productTable tbody tr").each(function (rowIndex) {
+        let productId = $(this).find('input[name*=".ProductId"]').first().val();
+
+        // Loop through each color/quantity pair in the row
+        $(this).find('input[name*=".Quantity"]').each(function (colIndex) {
+            let colorId = $(this).prev('input[name*=".ColorId"]').val();
+            let quantity = $(this).val();
+
+            if (quantity > 0) {
+                orderItems.push({
+                    OrderId: parseInt(orderId),
+                    ProductId: parseInt(productId),
+                    ColorId: parseInt(colorId),
+                    Quantity: parseFloat(quantity)
+                });
+            }
+        });
+    });
+
+    if (orderItems.length === 0) {
+        alert("Please enter quantities for at least one color/product combination");
+        return;
+    }
+
+    console.log("Sending Data:", {
+        orderId: orderId,
+        storeId: storeId,
+        orderItems: orderItems
+    });
+
+    // Send AJAX request
+    $.ajax({
+        url: '@Url.Action("ValidationColorPP", "StoreOrder")',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            orderId: orderId,
+            storeId: storeId,
+            orderItems: orderItems
+        }),
+        headers: {
+            'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+        },
+        success: function (response) {
+            alert(response.message);
+            if (response.success) {
+                window.location.href = response.redirectUrl || '@Url.Action("IndexOrderPP", "StoreOrder")';
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error:", error);
+            alert("An error occurred while validating. Please try again.");
+        }
+    });
+});
+</script>

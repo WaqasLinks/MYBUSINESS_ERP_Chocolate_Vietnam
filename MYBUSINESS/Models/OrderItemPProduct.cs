@@ -24,9 +24,11 @@ namespace MYBUSINESS.Models
         public Nullable<int> OrderId { get; set; }
         public Nullable<decimal> ProductId { get; set; }
         public Nullable<decimal> Quantity { get; set; }
+        public Nullable<int> ColorId { get; set; }
     
-        public virtual Product Product { get; set; }
+        public virtual Color Color { get; set; }
         public virtual OrderPProduct OrderPProduct { get; set; }
+        public virtual Product Product { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<StoreOrderReceiptPP> StoreOrderReceiptPPs { get; set; }
     }

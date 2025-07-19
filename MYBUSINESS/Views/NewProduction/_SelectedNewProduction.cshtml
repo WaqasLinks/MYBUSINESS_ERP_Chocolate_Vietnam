@@ -35,7 +35,7 @@
                                         <td>@Html.DisplayFor(modelItem => item.ProductName)</td>
                                         <td>@Html.DisplayFor(modelItem => item.Unit)</td>
                                         @*<td>@Html.DisplayFor(modelItem => item.ProductionProcessCategory)</td>*@
-                                        
+
 
                                         @*<td>
             @if (item.Validate ?? false)
@@ -51,36 +51,70 @@
             @Html.ActionLink("Post Production", "Create", "PostProduction", new { id = item.Id }, new { @class = "btn btn-light text-dark" })
             @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
         </td>*@
-                                        <td>
-                                            @if (item.Validate ?? false)
+                                        <!--<td>
+                                  if (item.Validate ?? false)
+                                  {
+                                      @Html.ActionLink("View", "Edit", new { id = item.Id, readonlyMode = true },
+    new { @class = "btn btn-primary text-white" })-->
+                                        <!-- Blue color for View -->
+
+                                        <!-- Show Post Production button only when Validate is true -->
+                                        <!--@Html.ActionLink("Post Production", "Create", "PostProduction", new { id = item.Id },
+    new { @class = "btn btn-warning text-dark fw-bold" })--> <!-- Yellow color for Post Production -->
+
+
+                                        <!--@Html.ActionLink("PostProduction Update", "Edit", "PostProduction", new { id = item.Id },
+        new { @class = "btn btn-danger text-white" })
+
+    }
+    else
+    {
+        @Html.ActionLink("Update/Validate", "Edit", new { id = item.Id },
+            new { @class = "btn btn-info text-white" })--> <!-- Light Blue for Update -->
+                                        <!--}
+
+
+      <span style="display:none;">
+          @Html.ActionLink("Delete", "Delete", new { id = item.Id },
+    new { @class = "btn btn-danger text-white" })--> <!-- Red color for Delete -->
+                                        <!--</span>
+
+
+    </td>-->
+                                    <td>
+                                        @if (item.Validate ?? false)
+                                        {
+                                            @Html.ActionLink("View", "Edit", new { id = item.Id, readonlyMode = true },
+                             new { @class = "btn btn-primary text-white" })
+
+                                            @Html.ActionLink("Print", "PrintProductionsPdf", new { productionId = item.Id },
+    new { @class = "btn btn-info text-white" })
+
+                                            if (ViewBag.HasPostProduction != null && ViewBag.HasPostProduction.ContainsKey(item.Id))
                                             {
-                                                @Html.ActionLink("View", "Edit", new { id = item.Id, readonlyMode = true },
-              new { @class = "btn btn-primary text-white" }) <!-- Blue color for View -->
-
-                                                <!-- Show Post Production button only when Validate is true -->
-                                                @Html.ActionLink("Post Production", "Create", "PostProduction", new { id = item.Id },
-              new { @class = "btn btn-warning text-dark fw-bold" }) <!-- Yellow color for Post Production -->
-
-
-                                                @Html.ActionLink("PostProduction Update", "Edit", "PostProduction", new { id = item.Id },
-                                                new { @class = "btn btn-danger text-white" })
-
+                                                <!-- If PostProduction exists, show Update link -->
+                                                @Html.ActionLink("Update Post Production", "Edit", "PostProduction",
+                                                    new { id = ViewBag.HasPostProduction[item.Id] },
+                                                    new { @class = "btn btn-danger text-white" })
                                             }
                                             else
                                             {
-                                                @Html.ActionLink("Update/Validate", "Edit", new { id = item.Id },
-                                                    new { @class = "btn btn-info text-white" }) <!-- Light Blue for Update -->
+                                                <!-- If no PostProduction exists, show Create link -->
+                                                @Html.ActionLink("Post Production", "Create", "PostProduction", new { id = item.Id },
+                                                    new { @class = "btn btn-warning text-dark fw-bold" })
                                             }
+                                        }
+                                        else
+                                        {
+                                            @Html.ActionLink("Update/Validate", "Edit", new { id = item.Id },
+                                                new { @class = "btn btn-info text-white" })
+                                        }
 
-
-                                            <span style="display:none;">
-                                                @Html.ActionLink("Delete", "Delete", new { id = item.Id },
-                                          new { @class = "btn btn-danger text-white" }) <!-- Red color for Delete -->
-                                            </span>
-
-
-                                        </td>
-
+                                        <span style="display:none;">
+                                            @Html.ActionLink("Delete", "Delete", new { id = item.Id },
+                                                new { @class = "btn btn-danger text-white" })
+                                        </span>
+                                    </td>
 
 
 
@@ -89,6 +123,9 @@
             @Html.ActionLink("Post Production", "Create", "PostProduction", new { id = item.Id }, new { @class = "btn btn-light text-dark" })
             @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
         </td>*@
+                                        <td>
+                                        </td>
+
                                     </tr>
                                 }
                             </tbody>

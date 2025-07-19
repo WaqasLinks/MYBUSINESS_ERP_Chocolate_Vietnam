@@ -24,6 +24,8 @@ namespace MYBUSINESS.Models
             this.OrderPProducts = new HashSet<OrderPProduct>();
             this.ScanCreditCards = new HashSet<ScanCreditCard>();
             this.SOes = new HashSet<SO>();
+            this.OrderColorPProducts = new HashSet<OrderColorPProduct>();
+            this.StoreColorOrderReceiptPPs = new HashSet<StoreColorOrderReceiptPP>();
         }
     
         public int Id { get; set; }
@@ -60,5 +62,9 @@ namespace MYBUSINESS.Models
         public virtual ICollection<ScanCreditCard> ScanCreditCards { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SO> SOes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OrderColorPProduct> OrderColorPProducts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<StoreColorOrderReceiptPP> StoreColorOrderReceiptPPs { get; set; }
     }
 }

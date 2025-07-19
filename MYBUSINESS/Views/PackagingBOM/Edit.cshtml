@@ -1,4 +1,4 @@
-﻿@model MYBUSINESS.Models.BOMViewModel
+﻿@model MYBUSINESS.Models.PacakgingBOMViewModel
 
 @{
     ViewBag.Title = "Update BOM";
@@ -14,7 +14,7 @@
 
 
 <link href="@Url.Content("~/Content/custom/custom.css")" rel="stylesheet" type="text/css" />
-<script src="~/Content/custom/subItem_BOM.js"></script>
+<script src="~/Content/custom/PackagingSubItem.js"></script>
 <script src="~/Content/custom/downloads/jquery.mcautocomplete.js"></script>
 <script src="~/Content/custom/downloads/jquery.scannerdetection.js"></script>
 
@@ -40,10 +40,10 @@
 
 
                         <div class="form-group">
-                            @Html.LabelFor(model => Model.BOM.Id, htmlAttributes: new { @class = "control-label" })
+                            @Html.LabelFor(model => Model.PackagingBOM.Id, htmlAttributes: new { @class = "control-label" })
 
-                            @Html.EditorFor(model => Model.BOM.Id, new { htmlAttributes = new { @class = "form-control", @Readonly = "Readonly" } })
-                            @Html.ValidationMessageFor(model => Model.BOM.Id, "", new { @class = "text-danger" })
+                            @Html.EditorFor(model => Model.PackagingBOM.Id, new { htmlAttributes = new { @class = "form-control", @Readonly = "Readonly" } })
+                            @Html.ValidationMessageFor(model => Model.PackagingBOM.Id, "", new { @class = "text-danger" })
 
                         </div>
 
@@ -59,14 +59,14 @@
             @Html.ValidationMessageFor(model => Model.BOM.ProductId, "", new { @class = "text-danger" })
         </div>*@
                         <div class="form-group">
-                            @Html.LabelFor(model => model.BOM.ProductId, "Select Product", new { @class = "control-label" })
+                            @Html.LabelFor(model => model.PackagingBOM.ProductId, "Select Product", new { @class = "control-label" })
                             @Html.DropDownListFor(
-                                model => model.BOM.ProductId,
+                                model => model.PackagingBOM.ProductId,
                                 ViewBag.ProductList as SelectList, // Ensure it's cast correctly
                                 "Select a Product",
                                 new { @class = "form-control", @id = "productDropdown" }
                             )
-                            @Html.ValidationMessageFor(model => model.BOM.ProductId, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(model => model.PackagingBOM.ProductId, "", new { @class = "text-danger" })
                         </div>
 
 
@@ -88,9 +88,9 @@
                             @Html.Label("Unit", new { @class = "control-label" })
                             <input type="text" id="unitField" class="form-control" readonly
                                    placeholder="Unit will be displayed here"
-                                   value="@Model.BOM.Unit" /> <!-- Pre-fill the saved unit -->
-                            @Html.HiddenFor(model => model.BOM.Unit, new { @id = "unitHiddenField" })
-                            @Html.ValidationMessageFor(model => model.BOM.Unit, "", new { @class = "text-danger" })
+                                   value="@Model.PackagingBOM.Unit" /> <!-- Pre-fill the saved unit -->
+                            @Html.HiddenFor(model => model.PackagingBOM.Unit, new { @id = "unitHiddenField" })
+                            @Html.ValidationMessageFor(model => model.PackagingBOM.Unit, "", new { @class = "text-danger" })
                         </div>
 
 
@@ -105,42 +105,42 @@
         new { @class = "form-control", id = "isService" })
                            </div>*@
                         <div class="form-group">
-                            @Html.LabelFor(model => Model.BOM.Remarks, htmlAttributes: new { @class = "control-label" })
+                            @Html.LabelFor(model => Model.PackagingBOM.Remarks, htmlAttributes: new { @class = "control-label" })
 
-                            @Html.EditorFor(model => Model.BOM.Remarks, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => Model.BOM.Remarks, "", new { @class = "text-danger" })
+                            @Html.EditorFor(model => Model.PackagingBOM.Remarks, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => Model.PackagingBOM.Remarks, "", new { @class = "text-danger" })
 
                         </div>
 
 
                         <!--<div class="form-group">
-    @Html.LabelFor(model => Model.BOM.Saleable, htmlAttributes: new { @class = "control-label" })
-    @Html.EditorFor(model => Model.BOM.Saleable)-->
+    @Html.LabelFor(model => Model.PackagingBOM.Saleable, htmlAttributes: new { @class = "control-label" })
+    @Html.EditorFor(model => Model.PackagingBOM.Saleable)-->
                         @*@Html.EditorFor(model => model.Saleable, new[] { new SelectListItem { Text = "Yes", Value = "True", Selected = true }, new SelectListItem { Text = "No", Value = "False" } })*@
                         @*@Html.CheckBoxFor(m => m.Saleable, new { @value = "true" })*@
-                        <!--@Html.ValidationMessageFor(model => Model.BOM.Saleable, "", new { @class = "text-danger" })
+                        <!--@Html.ValidationMessageFor(model => Model.PackagingBOM.Saleable, "", new { @class = "text-danger" })
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => Model.BOM.Purchasable, htmlAttributes: new { @class = "control-label" })
-        @Html.EditorFor(model => Model.BOM.Purchasable)-->
+        @Html.LabelFor(model => Model.PackagingBOM.Purchasable, htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => Model.PackagingBOM.Purchasable)-->
                         @*@Html.EditorFor(model => model.Saleable, new[] { new SelectListItem { Text = "Yes", Value = "True", Selected = true }, new SelectListItem { Text = "No", Value = "False" } })*@
                         @*@Html.CheckBoxFor(m => m.Saleable, new { @value = "true" })*@
-                        <!--@Html.ValidationMessageFor(model => Model.BOM.Purchasable, "", new { @class = "text-danger" })
+                        <!--@Html.ValidationMessageFor(model => Model.PackagingBOM.Purchasable, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
-        @Html.LabelFor(model => Model.BOM.Manufacturable, htmlAttributes: new { @class = "control-label" })
-        @Html.EditorFor(model => Model.BOM.Manufacturable)-->
+        @Html.LabelFor(model => Model.PackagingBOM.Manufacturable, htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => Model.PackagingBOM.Manufacturable)-->
                         @*@Html.EditorFor(model => model.Saleable, new[] { new SelectListItem { Text = "Yes", Value = "True", Selected = true }, new SelectListItem { Text = "No", Value = "False" } })*@
                         @*@Html.CheckBoxFor(m => m.Saleable, new { @value = "true" })*@
-                        <!--@Html.ValidationMessageFor(model => Model.BOM.Manufacturable, "", new { @class = "text-danger" })
+                        <!--@Html.ValidationMessageFor(model => Model.PackagingBOM.Manufacturable, "", new { @class = "text-danger" })
     </div>-->
 
                         <div class="form-group">
-                            @Html.LabelFor(model => Model.BOM.ProductionProcessCateogry, htmlAttributes: new { @class = "control-label" })
+                            @Html.LabelFor(model => Model.PackagingBOM.ProductionProcessCateogry, htmlAttributes: new { @class = "control-label" })
 
                             @Html.DropDownListFor(
-model => Model.BOM.ProductionProcessCateogry,
+model => Model.PackagingBOM.ProductionProcessCateogry,
 new SelectList(
 new List<SelectListItem>
           {
@@ -155,21 +155,28 @@ new { @class = "form-control" }
 )
 
 
-                            @Html.ValidationMessageFor(model => Model.BOM.ProductionProcessCateogry, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(model => Model.PackagingBOM.ProductionProcessCateogry, "", new { @class = "text-danger" })
                         </div>
 
                         <div class="form-group">
-                            @Html.LabelFor(model => Model.BOM.ProductionProcessDescription, htmlAttributes: new { @class = "control-label" })
+                            @Html.LabelFor(model => Model.PackagingBOM.ProductionProcessDescription, htmlAttributes: new { @class = "control-label" })
 
-                            @Html.EditorFor(model => Model.BOM.ProductionProcessDescription, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => Model.BOM.ProductionProcessDescription, "", new { @class = "text-danger" })
+                            @Html.EditorFor(model => Model.PackagingBOM.ProductionProcessDescription, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => Model.PackagingBOM.ProductionProcessDescription, "", new { @class = "text-danger" })
 
                         </div>
                         <div class="form-group">
                             @*@Html.LabelFor(model => Model.BOM.ShelfLife, htmlAttributes: new { @class = "control-label" })*@
                             <label>ShelfLife (Days) </label>
-                            @Html.EditorFor(model => model.BOM.ShelfLife, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => Model.BOM.ShelfLife, "", new { @class = "text-danger" })
+                            @Html.EditorFor(model => model.PackagingBOM.ShelfLife, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => Model.PackagingBOM.ShelfLife, "", new { @class = "text-danger" })
+
+                        </div>
+                        <div class="form-group">
+                            @*@Html.LabelFor(model => Model.BOM.ShelfLife, htmlAttributes: new { @class = "control-label" })*@
+                            <label>Batch Quantity</label>
+                            @Html.EditorFor(model => model.PackagingBOM.Quantity, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => Model.PackagingBOM.Quantity, "", new { @class = "text-danger" })
 
                         </div>
                         @*<div class="form-group">
@@ -218,23 +225,23 @@ new { @class = "form-control" }
                                 </tr>
                             </thead>
                             <tbody>
-                                @if (Model.SubItem != null && Model.SubItem.Count > 0)
+                                @if (Model.PacSubitem != null && Model.PacSubitem.Count > 0)
                                 {
                                     int sNo = 0;
-                                    foreach (var item in Model.SubItem)
+                                    foreach (var item in Model.PacSubitem)
                                     {
                                         if (item.Product != null && (item.Product.PType == 5 && item.Quantity > 0 || item.Product.PType == 6 && item.Quantity > 0))
 
                                         {
                                             <tr>
                                                 <td id="SNo0">@(sNo + 1)</td>
-                                                <td style="display:none;"><input type="hidden" name="SubItem.Index" value="@sNo" /></td>
-                                                <td style="display:none;"><input type="text" value=@item.ProductId readonly class="form-control classBGcolor" name="SubItem[@sNo].ProductId" id="idn@(sNo)"></td>
-                                                <td><input type="text" autocomplete="off" value="@(item.Product.Name)" class="form-control" name="SubItem[@sNo].Product.Name" id="name@(sNo)" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name"></td>
+                                                <td style="display:none;"><input type="hidden" name="PacSubitem.Index" value="@sNo" /></td>
+                                                <td style="display:none;"><input type="text" value=@item.ProductId readonly class="form-control classBGcolor" name="PacSubitem[@sNo].ProductId" id="idn@(sNo)"></td>
+                                                <td><input type="text" autocomplete="off" value="@(item.Product.Name)" class="form-control" name="PacSubitem[@sNo].Product.Name" id="name@(sNo)" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name"></td>
 
-                                                <td><input type="number" step="0.00001" min="0" autocomplete="off" value=@item.Quantity class="form-control" name="SubItem[@sNo].Quantity" id="quantity@(sNo)"></td>
+                                                <td><input type="number" step="0.00001" min="0" autocomplete="off" value=@item.Quantity class="form-control" name="PacSubitem[@sNo].Quantity" id="quantity@(sNo)"></td>
                                                 <td>
-                                                    <input type="text" autocomplete="off" value=@item.Unit class="form-control" name="SubItem[@sNo].Unit" id="unit@(sNo)">
+                                                    <input type="text" autocomplete="off" value=@item.Unit class="form-control" name="PacSubitem[@sNo].Unit" id="unit@(sNo)">
                                                 </td>
                                                 <td>
 
@@ -269,83 +276,74 @@ new { @class = "form-control" }
             </div>
 
             <div class="col-md-6">
+                <!-- general form elements -->
+                <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Secondary Materials</h3>
+                        <h3 class="box-title">Packaging</h3>
                     </div>
 
+
                     <div class="box-body">
-                        <table id="selectedProducts" class="table table-bordered">
+
+
+
+                        <table id="selectedPackaging" class="table table-bordered">
                             <thead>
                                 <tr>
                                     <th style="width: 5%;">#</th>
-                                    <th style="width: 50%;">Name</th>
-                                    <th style="width: 12%; display:none;">Qty</th>
-                                    <th style="width: 20%;">Unit</th>
+                                    <th style="width: 25%;">Name</th>
+                                    <th style="width: 20%;">Color</th>
+                                    <th style="width: 20%;">Qty</th>
+                                    <th style="width: 15%;"></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @if (Model.SubItem != null && Model.SubItem.Count > 0)
+                                @if (Model.PackagingColor != null && Model.PackagingColor.Count > 0)
                                 {
                                     int sNo = 0;
-                                    foreach (var item in Model.SubItem)
+                                    foreach (var item in Model.PackagingColor)
                                     {
-                                        // Ensure item.Product is not null before accessing its properties
-                                        //if (item.Product != null && (item.Product.FinishedProduct == true || item.Product.PType == 1))
-                                        if (item.Product != null && (item.Product.PType == 1 || item.Product.PType == 5 || item.Product.PType == 3) && item.Quantity == null)
-                                        {
+                                        
                                             <tr>
-                                                <td>@(sNo + 1)</td>
+                                                <td id="PackagingSNo0">@(sNo + 1)</td>
+                                                <td style="display:none;"><input type="hidden" name="PackagingColor.Index" value="@sNo" /></td>
+                                                <td style="display:none;"><input type="text" value=@item.ProductId readonly class="form-control classBGcolor" name="PackagingColor[@sNo].ProductId" id="packagingidn@(sNo)"></td>
+                                                <td><input type="text" autocomplete="off" value="@(item.Product.Name)" class="form-control" name="PackagingColor[@sNo].Product.Name" id="packagingName@(sNo)" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name"></td>
+                                                <td><input type="text" autocomplete="off" value="@(item.Color)" class="form-control" name="PackagingColor[@sNo].Color" id="packagingColor@(sNo)"  data-toggle="tooltip" data-placement="top" title="Type product name"></td>                                                
+                                                <td><input type="number" step="0.00001" min="0" autocomplete="off" value=@item.Quantity class="form-control" name="PackagingColor[@sNo].Quantity" id="packagingQuantity@(sNo)"></td>
                                                 <td style="display:none;">
-                                                    <input type="hidden" name="SubItem.Index" value="@sNo" />
-                                                    <input type="hidden" name="SubItem[@sNo].Id" value="@item.Id" />
+                                                    <input type="text" autocomplete="off" value=@item.Unit class="form-control" name="PackagingColor[@sNo].Unit" id="unit@(sNo)">
                                                 </td>
                                                 <td>
-                                                    @Html.DropDownListFor(
-                                                         model => model.SubItem[sNo].ProductId,
-                                                         new SelectList(ViewBag.SubItemProductList, "Value", "Text", item.ProductId),
-                                                         "Select Product",
-                                                         new { @class = "form-control" }
-                                                     )
-                                                </td>
-                                                <!--<td>-->
-                                                <!-- You can choose which dropdown to use here.
-    For example, if you want to use the product list based on PType: -->
-                                                <!--@Html.DropDownListFor(
-          model => Model.Product.Id,
-          ViewBag.PTypeProductList as SelectList, // Ensure it's cast correctly
-          "Select a Product",
-          new { @class = "form-control", @id = "productDropdown" }
-      )
-    </td>-->
 
-                                                <td style="display: none;">
-                                                    <input type="text" name="SubItem[@sNo].Quantity" value="@item.Quantity"
-                                                           class="form-control"
-                                                           @(item.Product?.PType == 1 || item.Product?.PType == 3 ? "readonly" : "") />
-                                                </td>
-                                                <td>
-                                                    <input readonly type="text" name="SubItem[@sNo].Unit" value="@item.Unit" class="form-control" />
-                                                </td>
-                                                <td style="display:none;">
-                                                    <input type="hidden" readonly autocomplete="off" value="@item.Product?.PType"
-                                                           class="form-control" name="SubItem[@sNo].Product.PType" id="ptype@(sNo)">
+                                                    <button type="button" id="delete@(sNo)" class="delete btn btn-default add-new"><a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></button>
                                                 </td>
                                             </tr>
-                                        }
-                                        sNo++;
+                                        
+                                        sNo += 1;
                                     }
-                                }
-                                else
-                                {
-                                    <tr>
-                                        <td colspan="5" class="text-center">No items available.</td>
-                                    </tr>
-                                }
 
+
+                                }
                             </tbody>
+
                         </table>
+
+
+                        <div class="table-title">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <button type="button" id="addNewPackagingRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
+
+
+
+
                 </div>
             </div>
 
@@ -363,7 +361,60 @@ new { @class = "form-control" }
 
 
 <script>
+    var colorColumns = [
+       { name: 'Id', minWidth: '50px' },
+       { name: 'ColorName', minWidth: '200px' },
+       { name: 'ColorCode', minWidth: '100px' }
+   ];
 
+   // Step 2: Array to hold color data
+   var colors = new Array();
+
+   // Step 3: Get color list from server using AJAX
+   function fetchColorList() {
+       $.ajax({
+           url: '@Url.Action("GetColors", "PackagingBOM")',
+           type: 'GET',
+           success: function (data) {
+               colors = data.map(item => [item.Id, item.ColorName, item.ColorCode]);
+               console.log("Colors loaded:", colors);
+           },
+           error: function (xhr, status, error) {
+               console.error("Failed to load colors:", status, error);
+               console.log("Response:", xhr.responseText);
+           }
+       });
+   }
+
+   // Step 4: Function to apply autocomplete on a color input
+   function OnColorName(param) {
+       console.log('hi');
+       $(param).mcautocomplete({
+
+           showHeader: true,
+           columns: colorColumns,
+           source: colors, // ✅ Now dynamically filled!
+           select: function (event, ui) {
+               this.value = ui.item ? ui.item[1] : ''; // ColorName
+               $(param).closest('td').find('input[type="hidden"]').val(ui.item ? ui.item[0] : '');
+
+               $('#colorcode').val(ui.item ? ui.item[2] : ''); // ColorCode
+               return false;
+           }
+       });
+   }
+
+
+   // Step 5: Run everything on page load
+   $(document).ready(function () {
+       fetchColorList(); // load colors once
+
+       $('#selectedPackaging').on('focus', 'input[id^="packagingColor"]', function () {
+           OnColorName(this);
+       });
+
+
+   });
   //$(document).ready(function () {
   //  document.getElementById('SOCreate').reset(); // has to be handle
   //});
@@ -563,7 +614,7 @@ new { @class = "form-control" }
      }
 
      var i;
-     var sodCount = "@Model.SubItem.Count()";
+     var sodCount = "@Model.PacSubitem.Count()";
      for (i = 0; i < sodCount; i++)
      {
 

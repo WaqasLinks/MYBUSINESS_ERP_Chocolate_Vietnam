@@ -136,7 +136,7 @@
                     @*Purchase Order*@
                     <li><a href="#"><i class=""></i> <span><b>Purchase Order</b></span></a></li>
                     <li><a href="/POPR/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New Purchase Order</span></a></li>
-                    <li><a href="/POPR/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Purchase Order</span></a></li>
+                    @*<li><a href="/POPR/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Purchase Order</span></a></li>*@
                     <li><a href="/POPR/Index"><i class="fa fa-search"></i> <span>Purchases Order History</span></a></li>
                     <li><a href="/POPRReciver/Index"><i class="fa fa-search"></i> <span>Goods Recieving History</span></a></li>
                     @*Chocolate BOM*@
@@ -148,10 +148,20 @@
                     <li><a href="~/NewProduction/Create"><i class="fa fa-sparkles"></i> <span>New Chocolate Production</span></a></li>
                     <li><a href="~/NewProduction/Index"><i class="fa fa-gift"></i> <span>Chocolate Production List</span></a></li>
                     <li><a href="~/PostProduction/Index"><i class="fa fa-gift"></i> <span>Chocolate Post Production List</span></a></li>
+
+                    <li><a href="#"><i class=""></i> <span><b>Packaging BOM</b></span></a></li>
+                    <li><a href="~/PackagingBOM/Create"><i class="fa fa-sparkles"></i> <span>New Packaging BOM</span></a></li>
+                    <li><a href="~/PackagingBOM/Index"><i class="fa fa-gift"></i> <span>Packaging BOM List</span></a></li>
+
+                    <li><a href="#"><i class=""></i> <span><b>New Packaging Production</b></span></a></li>
+                    <li><a href="~/PacProduction/Create"><i class="fa fa-sparkles"></i> <span>New Packaging Production</span></a></li>
+                    <li><a href="~/PacProduction/Index"><i class="fa fa-gift"></i> <span>Packaging Production List</span></a></li>
+
+
                     @*Standard Packaging Order*@
                     <li><a href="#"><i class=""></i> <span><b>Standard Packaging Order</b></span></a></li>
                     <li><a href="/SPackaging/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>New SPackaging Order</span></a></li>
-                    <li><a href="/SPackaging/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Standard Packaging Order</span></a></li>
+                    @*<li><a href="/SPackaging/Create?IsReturn=true"><i class="fa fa-rotate-left"></i> <span>Return Standard Packaging Order</span></a></li>*@
                     <li><a href="/SPackaging/Index"><i class="fa fa-search"></i> <span>SPackaging History</span></a></li>
                     <li><a href="/POPRReciver/Index"><i class="fa fa-search"></i> <span>Standard Packaging Receiving</span></a></li>
                     @*Printed Packaging BOM*@
@@ -174,8 +184,8 @@
                     <li><a href="#"><i class=""></i> <span><b>Colored Packaging Production</b></span></a></li>
                     <li><a href="~/PackagingProduction/ColorIndex"><i class="fa fa-gift"></i> <span>Colored Packaging Production List</span></a></li>
                     @*Colored Packaging Assembly*@
-                    <li><a href="#"><i class=""></i> <span><b>Colored Packaging Assembly</b></span></a></li>
-                    <li><a href="~/PackagingProduction/FlatBoxStockSummary"><i class="fa fa-gift"></i> <span>Paper Production List</span></a></li>
+                    @*<li><a href="#"><i class=""></i> <span><b>Colored Packaging Assembly</b></span></a></li>
+        <li><a href="~/PackagingProduction/FlatBoxStockSummary"><i class="fa fa-gift"></i> <span>Paper Production List</span></a></li>*@
                     @*Color*@
                     <li><a href="#"><i class=""></i> <span><b>Color</b></span></a></li>
                     <li><a href="/Color/Create"><i class="fa fa-sparkles"></i> <span>New Color</span></a></li>
@@ -193,8 +203,10 @@
                     <li><a href="#"><i class=""></i> <span><b>Order Management</b></span></a></li>
                     <li><a href="/StoreOrder/CreateOrder"><i class="fa fa-sparkles"></i> <span>Order Finished Products</span></a></li>
                     <li><a href="/StoreOrder/CreatePackagingOrder"><i class="fa fa-sparkles"></i> <span>Order Packaging Products</span></a></li>
+                    <li><a href="/StoreOrder/CreatePackagingColorOrder"><i class="fa fa-sparkles"></i> <span>Order Color Packaging</span></a></li>
                     <li><a href="/StoreOrder/Index"><i class="fa fa-search"></i> <span>Finished Product Order List</span></a></li>
                     <li><a href="/StoreOrder/IndexOrderPP"><i class="fa fa-search"></i> <span>Packaging Product Order List</span></a></li>
+                    <li><a href="/StoreOrder/IndexOrderColorPP"><i class="fa fa-search"></i> <span>Colored Packaging List</span></a></li>
                     @*Scan Credit Card*@
                     <li><a href="#"><i class=""></i> <span><b>Scan Credit Card</b></span></a></li>
                     <li><a href="/ScanCreditCard/Create?IsReturn=false"><i class="fa fa-sparkles"></i> <span>Scan Credit Card</span></a></li>
@@ -242,6 +254,7 @@
                     <li><a href="/Products/Create"><i class="fa fa-sparkles"></i> <span>New Packaging</span></a></li>
                     <li><a href="/Products/StockIndex"><i class="fa fa-gift"></i> <span>Packaging List</span></a></li>
                     <li><a href="/Products/IndexStock"><i class="fa fa-gift"></i> <span>Stock List</span></a></li>
+                    <li><a href="/Products/IndexStoreStock"><i class="fa fa-gift"></i> <span>Stock Store List</span></a></li>
                     <li><a href="/Products/ColorStock"><i class="fa fa-gift"></i> <span>Packaging Product Colors List</span></a></li>
                     @*Currency*@
                     <li><a href="#"><i class=""></i> <span><b>Currency</b></span></a></li>

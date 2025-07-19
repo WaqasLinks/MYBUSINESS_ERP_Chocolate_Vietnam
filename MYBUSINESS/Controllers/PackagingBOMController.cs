@@ -134,7 +134,7 @@ namespace MYBUSINESS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Remarks,Saleable,Purchasable,Manufacturable,ShelfLife,TimeUnit,ProductionProcessCateogry,ProductionProcessDescription,ProductId,ProductName,CreateDate,UpdateDate,Unit,Quantity")] PackagingBOM bom,
+        public ActionResult Create([Bind(Prefix = "PackagingBOM", Include = "Id,Name,Remarks,Saleable,Purchasable,Manufacturable,ShelfLife,TimeUnit,ProductionProcessCateogry,ProductionProcessDescription,ProductId,ProductName,CreateDate,UpdateDate,Unit,Quantity")] PackagingBOM bom,
                                    [Bind(Prefix = "PacSubitem", Include = "Id,ProductId,Quantity,Unit,ProductType")] List<PacSubitem> subItems,
                                    [Bind(Prefix = "PackagingColor", Include = "Id,ProductId,Quantity,Unit,ProductType,Color")] List<PackagingColor> packagingcolors)
         {
@@ -227,6 +227,14 @@ namespace MYBUSINESS.Controllers
 
             ViewBag.SubItemProductList = new SelectList(subItemProducts, "Value", "Text", bom.ProductId);
 
+            var colorProducts = db.PackagingColors
+                .Where(s => s.BOMId == bom.Id && s.ProductId != null)  // Filter out NULL ProductId
+                .Include(s => s.Product) // Eager load related Product
+                .Select(s => new { Value = s.ProductId.ToString(), Text = s.Product.Name }) // Select Product Name
+                .ToList();
+
+            ViewBag.ColorProductList = new SelectList(colorProducts, "Value", "Text", bom.ProductId);
+
             // Fetch all products based on PType
             var ptypeProducts = db.Products
                 .Where(p => p.PType == 1 || p.PType == 6 || p.PType == 3)
@@ -241,22 +249,38 @@ namespace MYBUSINESS.Controllers
                 PackagingBOM = bom,
                 Products = DAL.dbProducts,
                 PacSubitem = db.PacSubitems.Where(x => x.PackagingBOMId == bom.Id).ToList(),
+                PackagingColor = db.PackagingColors.Where(x => x.BOMId == bom.Id).ToList(),
                 ProductType = db.ProductTypes.Where(x => x.BOMId == bom.Id).ToList()
             };
 
             return View(pacakgingbomViewModel);
         }
+        [HttpGet]
+        public JsonResult GetColors()
+        {
+            var colors = db.Colors
+                           .Select(c => new
+                           {
+                               Id = c.Id,
+                               ColorName = c.ColorName,
+                               ColorCode = c.ColorCode
+                           })
+                           .ToList();
+
+            return Json(colors, JsonRequestBehavior.AllowGet);
+        }
 
 
 
-        
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(
-    [Bind(Prefix = "PackagingBOM", Include = "Id,Name,Remarks,Saleable,Purchasable,Manufacturable,ShelfLife,TimeUnit,ProductionProcessCateogry,ProductionProcessDescription,ProductName,ProductId,Unit,CreateDate,UpdateDate")] PackagingBOM bom,
-    [Bind(Prefix = "SubItem", Include = "Id,ProductId,Quantity,Unit")] List<PacSubitem> subItems,
-    [Bind(Prefix = "ProductType", Include = "Id,ParentProductId,ProductId,Quantity,BOMId,Unit")] List<ProductType> productTypes)
+    [Bind(Prefix = "PackagingBOM", Include = "Id,Name,Remarks,Saleable,Purchasable,Manufacturable,ShelfLife,TimeUnit,ProductionProcessCateogry,ProductionProcessDescription,ProductName,ProductId,Unit,CreateDate,UpdateDate,Quantity")] PackagingBOM bom,
+    [Bind(Prefix = "PacSubitem", Include = "Id,ProductId,Quantity,Unit")] List<PacSubitem> subItems,
+    [Bind(Prefix = "PackagingColor", Include = "Id,ProductId,Quantity,Unit,ProductType,Color")] List<PackagingColor> packagingcolors)
         {
             if (ModelState.IsValid)
             {
@@ -267,9 +291,9 @@ namespace MYBUSINESS.Controllers
                 }
                 // Remove existing SubItems for the BOM
                 var existingSubItems = db.PacSubitems.Where(x => x.PackagingBOMId == bom.Id).ToList();
-                var existingProductType = db.ProductTypes.Where(x => x.BOMId == bom.Id).ToList();
+                var existingProductType = db.PackagingColors.Where(x => x.BOMId == bom.Id).ToList();
                 db.PacSubitems.RemoveRange(existingSubItems);
-                db.ProductTypes.RemoveRange(existingProductType);
+                db.PackagingColors.RemoveRange(existingProductType);
                 // Update the BOM record
                 db.Entry(bom).State = EntityState.Modified;
 
@@ -283,14 +307,14 @@ namespace MYBUSINESS.Controllers
                         db.PacSubitems.Add(item);
                     }
                 }
-                if (productTypes != null && productTypes.Count > 0)
+                if (packagingcolors != null && packagingcolors.Count > 0)
                 {
                     // Add new SubItems
-                    foreach (var item in productTypes)
+                    foreach (var item in packagingcolors)
                     {
                         item.ParentProductId = bom.ProductId; // Set ParentProductId for each SubItem
                         item.BOMId = bom.Id;                  // Set BOMId for each SubItem
-                        db.ProductTypes.Add(item);
+                        db.PackagingColors.Add(item);
                     }
                 }
                 db.SaveChanges(); // Commit the changes to the database

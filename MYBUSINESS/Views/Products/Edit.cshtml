@@ -61,6 +61,8 @@
                                         <option value="7" @((Model.Product.PType & 7) == 7 ? "selected" : "")>Merchandise</option>
                                         <option value="8" @((Model.Product.PType & 8) == 8 ? "selected" : "")>Packaging Product</option>
                                         <option value="9" @((Model.Product.PType & 9) == 9 ? "selected" : "")>Saleable Merchandise</option>
+                                        <option value="10" @((Model.Product.PType & 10) == 10 ? "selected" : "")>Special Merchandise</option>
+                                        <option value="11" @((Model.Product.PType & 11) == 11 ? "selected" : "")>Colored Packaging</option>
                                     </select>
                                 </div>
 
@@ -150,6 +152,7 @@
                                         <option value="Box" @(Model.Product.Category == "Box" ? "selected" : "")>Box</option>
                                         <option value="Bar" @(Model.Product.Category == "Bar" ? "selected" : "")>Bar</option>
                                         <option value="Bag" @(Model.Product.Category == "Bag" ? "selected" : "")>Bag</option>
+                                        <option value="Isothermal Bag" @(Model.Product.Category == "Isothermal Bag" ? "selected" : "")>Isothermal Bag</option>
                                         <option value="Miscellaneous" @(Model.Product.Category == "Miscellaneous" ? "selected" : "")>Miscellaneous</option>
                                     </select>
                                 </div>
@@ -392,6 +395,14 @@
                 case "9": 
                     $('#barcode-field,#einvoice-field, #supplier-field, #category-field, #unit-field,#purchase-price-field,#sale-price-field,#wholesale-field').show();
                     break
+                case "10": // Variable Product
+                    $('#supplier-field, #category-field, #unit-field, #purchase-price-field').show();
+                    $('#targetproductDropdownContainer').slideDown();
+                    break
+                case "11": // Flat Packaging
+                    // Finish Packaging
+                    $('#supplier-field, #category-field, #unit-field, #purchase-price-field, #shape-detail').show();
+                    break;
                 default:
                     // Default case if nothing is selected
                     break;

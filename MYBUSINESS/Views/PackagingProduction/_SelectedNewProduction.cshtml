@@ -44,7 +44,8 @@
                                             {
                                                 @Html.ActionLink("View", "Edit", new { id = item.Id, readonlyMode = true },
 new { @class = "btn btn-primary text-white" })
-                                            <td>
+                                                @Html.ActionLink("Print", "PrintOrderPdf", new { orderId = item.Id }, new { @class = "btn btn-success" })
+<td>
                                                 @Html.ActionLink("Colored Packaging Production", "Index3", new { packagingProductionId = item.Id }, new { @class = "btn btn-success fw-bold" })
 
                                             </td>
@@ -56,9 +57,7 @@ new { @class = "btn btn-primary text-white" })
                                                 @Html.ActionLink("Phse4", "Index4", new { packagingProductionId = item.Id }, new { @class = "btn btn-success fw-bold" })
 
                                             </td>
-                                            <td>
-                                                @Html.ActionLink("Print", "PrintOrderPdf", new { orderId = item.Id }, new { @class = "btn btn-success" })
-                                            </td>
+                                            
 
                                         }
                                         else

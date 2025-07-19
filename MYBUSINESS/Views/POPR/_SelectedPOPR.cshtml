@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<MYBUSINESS.Models.PO>
+@using MYBUSINESS.Models 
 @using System.Linq
 
 
@@ -182,76 +183,66 @@
                                                 }
 
                                             </td>
-
                                             <td>
                                                 @{
+                                                    var podReceiverList = ViewBag.PODReceiverList as List<MYBUSINESS.Models.PODReciver> ?? new List<MYBUSINESS.Models.PODReciver>();
+                                                    var poReceiverList = ViewBag.POReceivingList as List<MYBUSINESS.Models.POReciver> ?? new List<MYBUSINESS.Models.POReciver>();
+
+                                                    // Decode the item.Id back to original GUID format before comparing
+                                                    byte[] bytesArr = item.Id.Split('-').Select(byte.Parse).ToArray();
+                                                    string decodedString = new string(System.Text.Encoding.UTF8.GetString(bytesArr).ToCharArray());
+                                                    string decodedItemId = Encryption.Decrypt(decodedString, "BZNS");
+
+                                                    // Now safely compare using the decoded ID
+                                                    var poReceiver = poReceiverList.Where(r => r.POId == decodedItemId).ToList();
+
+                                                    var poReceiverId = poReceiverList
+                                                                                .Where(r => r.POId == decodedItemId)
+                                                                                .Select(r => r.Id)
+                                                                                .FirstOrDefault();
+
+                                                    bool isMatchExists = false;
+
+                                                    if (poReceiverId != null)
+                                                    {
+                                                        isMatchExists = poReceiverList.Any(r => r.POId == decodedItemId) &&
+                                                                       podReceiverList.Any(p => p.POReciverId == poReceiverList
+                                                                                                 .First(r => r.POId == decodedItemId).Id);
+                                                    }
+
                                                     bool isValidated = item.PODs != null && item.PODs.Any(p => p.Validate == true);
+                                                }
 
-                                                    var poRecList = ViewBag.POReceivingList as List<MYBUSINESS.Models.PODReciver>;
-                                                    bool isReceived = false;
+                                                @if (isValidated)
+                                                {
+                                                    @Html.ActionLink("View", "Edit", new { id = item.Id, readonlyMode = true }, new { @class = "btn btn-primary text-white" })
 
-                                                    if (poRecList != null && item.PODs != null)
+                                                    if (poReceiverId != null)
                                                     {
-                                                        foreach (var pod in item.PODs)
-                                                        {
-                                                            var match = poRecList.FirstOrDefault(r =>
-                                                                   r.POReciverId == item.Id &&
-                                                                    r.QtyReceived > 0 &&
-                                                                    r.Validate == true);
-
-                                                            if (match != null)
-                                                            {
-                                                                isReceived = true;
-                                                                break;
-                                                            }
-                                                        }
-                                                    }
-
-                                                    if (isValidated && isReceived)
-                                                    {
-                                                        @*<span class="badge bg-success">Received</span>*@
-                                                        <span class="badge badge-pill badge-success">Success</span>
-                                                    }
-                                                    else if (isValidated)
-                                                    {
-                                                        <span class="badge bg-primary">Validated</span>
+                                                        // If POReciver exists, go to Edit
+                                                        @*@Html.ActionLink("Update Receiving", "Edit", "POPRReciver", new { id = poReceiverId }, new { @class = "btn btn-success fw-bold mx-1" })*@
+                                                        @Html.ActionLink("Create Receiving", "Create", "POPRReciver", new { id = item.Id, readonlyMode = true }, new { @class = "btn btn-secondary fw-bold mx-1", disabled = "disabled" })
                                                     }
                                                     else
                                                     {
-                                                        <span class="badge bg-danger">Ongoing</span>
+                                                        // If not exists, go to Create
+                                                        @Html.ActionLink("Receiving", "Create", "POPRReciver", new { id = item.Id, update = true },
+ new { @class = "btn btn-warning text-dark fw-bold" })
                                                     }
+
+                                                    @Html.ActionLink("Print", "PrintSO3", new { id = item.Id }, new { @class = "btn btn-warning mx-1" })
                                                 }
-
-
+                                                else
+                                                {
+                                                    @Html.ActionLink("Update/Validate", "Edit", new { id = item.Id, update = true }, new { @class = "btn btn-info text-white" })
+                                                }
                                             </td>
 
 
 
-                                            @*<td>
-                                                    @{
-                                                        bool Validated = item.PODs != null && item.PODs.Any(p => p.Validate == true);
-                                                    }
-                                                    @if (Validated)
-                                                    {
-                                                        <span class="badge bg-success">Validated</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span class="badge bg-danger">Ongoing</span>
-                                                    }
-                                                </td>*@
 
 
-                                            @*
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.SaleReturn)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.PODId)
-                                                </td>*@
-                                            @*<td>
-                                                    @Html.DisplayFor(modelItem => item.Employee.Login)
-                                                </td>*@
+
                                             <td class="noPrint" style="display:none;">
                                                 @*@Html.ActionLink("View", "Edit", new { id = item.Id }) |*@
 
@@ -279,25 +270,11 @@
                                                         @Html.ActionLink(whtieSpace + "View", "Edit", new { id = item.Id, update = false }, new { @class = "btn btn-info" })
                                                     }-->
 
-                                                <td>
 
 
-                                                    @if (isValidated)
-                                                    {
-                                                        @Html.ActionLink("View", "Edit", new { id = item.Id, readonlyMode = true },
-                             new { @class = "btn btn-primary text-white" })
 
-                                                        @Html.ActionLink("Receiving", "Create", "POPRReciver", new { id = item.Id, update = true },
-                                                         new { @class = "btn btn-warning text-dark fw-bold" })
 
-                                                        @Html.ActionLink("Print", "PrintSO3", new { id = item.Id }, new { @class = "btn btn-warning" })
-                                                    }
-                                                    else
-                                                    {
-                                                        @Html.ActionLink("Update/Validate", "Edit", new { id = item.Id, update = true },
-                                                            new { @class = "btn btn-info text-white" })
-                                                    }
-                                                </td>
+
 
 
 
@@ -311,10 +288,10 @@
                                                 @*
                                                     @Html.ActionLink("Details", "Details", new { id = item.Id }) |
                                                     @Html.ActionLink("Delete", "Delete", new { id = item.Id })*@
-                                                </td>
-                                            </tr>
-                                            //Balance = TotalPOAmout - TotalPRAmout - BillPaid - Discount- PrevBalance;
-                                        }
+                                            </td>
+                                        </tr>
+                                        //Balance = TotalPOAmout - TotalPRAmout - BillPaid - Discount- PrevBalance;
+                                    }
                                 </tbody>
                                 <tfoot>
                                     <tr style="font-weight:bold">

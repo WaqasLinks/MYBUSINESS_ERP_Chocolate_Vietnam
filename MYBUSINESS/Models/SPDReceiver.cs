@@ -31,7 +31,7 @@ namespace MYBUSINESS.Models
         public Nullable<decimal> QtyReceived { get; set; }
         public Nullable<bool> Validate { get; set; }
     
-        public virtual Product Product { get; set; }
         public virtual SPackgingReceiver SPackgingReceiver { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

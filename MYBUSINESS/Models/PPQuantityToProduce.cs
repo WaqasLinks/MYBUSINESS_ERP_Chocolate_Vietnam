@@ -25,7 +25,7 @@ namespace MYBUSINESS.Models
         public Nullable<decimal> Weight { get; set; }
     
         public virtual PPNewProduction PPNewProduction { get; set; }
-        public virtual Product Product { get; set; }
         public virtual PPPostProduction PPPostProduction { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

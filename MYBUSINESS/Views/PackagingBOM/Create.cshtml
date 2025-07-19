@@ -4,6 +4,12 @@
     ViewBag.Title = "Create BOM";
     //Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@if (TempData["ErrorMessage"] != null)
+{
+    <script type="text/javascript">
+        alert('@TempData["ErrorMessage"]');
+    </script>
+}
 
 <!-- Content Wrapper. Contains page content -->
 @using (Html.BeginForm())
@@ -32,6 +38,33 @@
 
                         </div>
 
+                        @*<div class="form-group">
+                                @Html.LabelFor(model => model.BOM.ProductId, "Select Product", new { @class = "control-label" })
+                                @Html.DropDownListFor(
+                                    model => model.BOM.ProductId,
+                                    (SelectList)ViewBag.ProductList, // Use the correct ViewBag property
+                                    "Select a Product", // Placeholder text
+                                    new { @class = "form-control" }
+                                )
+                            </div>*@
+                        @*<div class="form-group">
+                                @Html.LabelFor(model => model.BOM.ProductId, "Select Product", new { @class = "control-label" })
+                                @Html.DropDownListFor(
+                                    model => model.BOM.ProductId,
+                                    (SelectList)ViewBag.ProductList,
+                                    "Select a Product",
+                                    new { @class = "form-control product-dropdown", @id = "productDropdown" }
+                                )
+                                @Html.ValidationMessageFor(model => model.BOM.ProductId, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label("Unit", new { @class = "control-label" })
+                                <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
+                                @Html.HiddenFor(model => model.BOM.Unit, new { @id = "unitHiddenField" })
+                                @Html.ValidationMessageFor(model => model.BOM.Unit, "", new { @class = "text-danger" })
+                            </div>*@
+
                         <div class="form-group">
                             @Html.LabelFor(model => model.PackagingBOM.ProductId, "Select Product", new { @class = "control-label" })
 
@@ -58,6 +91,34 @@
                             @Html.HiddenFor(model => model.PackagingBOM.Unit, new { @id = "unitHiddenField" })
                             @Html.ValidationMessageFor(model => model.PackagingBOM.Unit, "", new { @class = "text-danger" })
                         </div>
+                        @*<div class="form-group">
+                                @Html.Label("Variable Product ID", new { @class = "control-label" })
+                                <input type="text" id="variableProductIdField" class="form-control" readonly placeholder="Variable Product ID will be displayed here" />
+                                @Html.HiddenFor(model => Model.Product.VarProdParentId, new { @id = "variableProductIdHiddenField" })
+                            </div>*@
+
+
+
+
+
+                        @*<div class="form-group">
+                                @Html.LabelFor(model => model.BOM.ProductId, "Select Product", new { @class = "control-label" })
+                                @Html.DropDownListFor(
+                                    model => model.BOM.ProductId,
+                                    (SelectList)ViewBag.ProductList,
+                                    "Select a Product",
+                                    new { @class = "form-control product-dropdown", @id = "productDropdown" }
+                                )
+                                @Html.ValidationMessageFor(model => model.BOM.ProductId, "", new { @class = "text-danger" })
+                            </div>*@
+
+                        @*<div class="form-group">
+                                @Html.Label("Unit", new { @class = "control-label" })
+                                <input type="text" id="unitField" class="form-control" readonly placeholder="Unit will be displayed here" />
+                                <input type="hidden" name="BOM.Unit" id="unitHiddenField" />
+                            </div>*@
+
+
 
                         <div class="form-group">
                             @Html.LabelFor(model => Model.PackagingBOM.Remarks, htmlAttributes: new { @class = "control-label" })
@@ -67,6 +128,29 @@
 
                         </div>
 
+
+                        <!--<div class="form-group">
+                        @Html.LabelFor(model => Model.PackagingBOM.Saleable, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => Model.PackagingBOM.Saleable)-->
+                        @*@Html.EditorFor(model => model.Saleable, new[] { new SelectListItem { Text = "Yes", Value = "True", Selected = true }, new SelectListItem { Text = "No", Value = "False" } })*@
+                        @*@Html.CheckBoxFor(m => m.Saleable, new { @value = "true" })*@
+                        <!--@Html.ValidationMessageFor(model => Model.PackagingBOM.Saleable, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => Model.PackagingBOM.Purchasable, htmlAttributes: new { @class = "control-label" })
+                            @Html.EditorFor(model => Model.PackagingBOM.Purchasable)-->
+                        @*@Html.EditorFor(model => model.Saleable, new[] { new SelectListItem { Text = "Yes", Value = "True", Selected = true }, new SelectListItem { Text = "No", Value = "False" } })*@
+                        @*@Html.CheckBoxFor(m => m.Saleable, new { @value = "true" })*@
+                        <!--@Html.ValidationMessageFor(model => Model.PackagingBOM.Purchasable, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => Model.PackagingBOM.Manufacturable, htmlAttributes: new { @class = "control-label" })
+                            @Html.EditorFor(model => Model.PackagingBOM.Manufacturable)-->
+                        @*@Html.EditorFor(model => model.Saleable, new[] { new SelectListItem { Text = "Yes", Value = "True", Selected = true }, new SelectListItem { Text = "No", Value = "False" } })*@
+                        @*@Html.CheckBoxFor(m => m.Saleable, new { @value = "true" })*@
+                        <!--@Html.ValidationMessageFor(model => Model.PackagingBOM.Manufacturable, "", new { @class = "text-danger" })
+                        </div>-->
 
                         <div class="form-group">
                             @*@Html.LabelFor(model => Model.BOM.ProductionProcessCateogry, htmlAttributes: new { @class = "control-label" })*@
@@ -93,6 +177,7 @@
                         <div class="form-group">
                             <label>Production Process Description</label>
                             @*@Html.LabelFor(model => Model.BOM.ProductionProcessDescription, htmlAttributes: new { @class = "control-label" })*@
+
                             @Html.EditorFor(model => Model.PackagingBOM.ProductionProcessDescription, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => Model.PackagingBOM.ProductionProcessDescription, "", new { @class = "text-danger" })
 
@@ -109,12 +194,20 @@
 
                         <div class="form-group">
                             @*@Html.LabelFor(model => Model.BOM.ShelfLife, htmlAttributes: new { @class = "control-label" })*@
-                            <label>Batch Qty</label>
+                            <label>Batch Quantity</label>
                             @Html.EditorFor(model => Model.PackagingBOM.Quantity, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => Model.PackagingBOM.Quantity, "", new { @class = "text-danger" })
 
                         </div>
 
+
+                        @*<div id="pprice" class="form-group">
+                                @Html.LabelFor(model => Model.BOM.TimeUnit, htmlAttributes: new { @class = "control-label" })
+
+                                @Html.EditorFor(model => Model.BOM.TimeUnit, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => Model.BOM.TimeUnit, "", new { @class = "text-danger" })
+
+                            </div>*@
 
                     </div>
 
@@ -222,7 +315,21 @@
                                         <input type="hidden" name="PackagingColor[0].ProductId" id="packagingidn0">
                                     </td>
                                     <td><input style="background-color: #f8f9fa;" type="text" autocomplete="off" class="form-control bg-light product-search" name="PackagingColor[0].Product.Name" id="packagingName0" placeholder="Type product name" data-toggle="tooltip" data-placement="top" title="Type product name"></td>
-                                    <td><input style="background-color: #f8f9fa;" type="text" autocomplete="off" class="form-control .bg-light" name="PackagingColor[0].Color" id="packagingColor0"  data-toggle="tooltip" data-placement="top" title="Type product name"></td>
+                                    @*<td><input style="background-color: #f8f9fa;" type="text" autocomplete="off" class="form-control .bg-light" name="PackagingColor[0].Color" id="packagingColor0" data-toggle="tooltip" data-placement="top" title="Type product name"></td>*@
+                                <td>
+                                    <input type="text"
+                                           autocomplete="off"
+                                           class="form-control bg-light color-search"
+                                           name="PackagingColor[0].Color"
+                                           id="packagingColor0"
+                                           placeholder="Type color name"
+                                           data-toggle="tooltip"
+                                           title="Type color name">
+
+                                    <input type="hidden" name="PackagingColor[0].ColorId" id="packagingColorId0" />
+                                </td>
+
+
                                     <td><input type="number" step="0.00001" min="0" autocomplete="off" class="form-control" name="PackagingColor[0].Quantity" id="packagingQuantity0"></td>
 
                                     <td>
@@ -240,7 +347,7 @@
                         <div class="table-title">
                             <div class="row">
                                 <div class="col-sm-3">
-                                    <button type="button" id="addNewRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
+                                    <button type="button" id="addNewPackagingRow" class="btn btn-primary add-new" style="background-color: #2bbdb9;"><i class="fa fa-plus"></i> New Row</button>
                                 </div>
                             </div>
                         </div>
@@ -281,6 +388,60 @@
 
 <script>
 
+ var colorColumns = [
+        { name: 'Id', minWidth: '50px' },
+        { name: 'ColorName', minWidth: '200px' },
+        { name: 'ColorCode', minWidth: '100px' }
+    ];
+
+    // Step 2: Array to hold color data
+    var colors = new Array();
+
+    // Step 3: Get color list from server using AJAX
+    function fetchColorList() {
+        $.ajax({
+            url: '@Url.Action("GetColors", "PackagingBOM")',
+            type: 'GET',
+            success: function (data) {
+                colors = data.map(item => [item.Id, item.ColorName, item.ColorCode]);
+                console.log("Colors loaded:", colors);
+            },
+            error: function (xhr, status, error) {
+                console.error("Failed to load colors:", status, error);
+                console.log("Response:", xhr.responseText);
+            }
+        });
+    }
+
+    // Step 4: Function to apply autocomplete on a color input
+    function OnColorName(param) {
+        
+        $(param).mcautocomplete({
+            
+            showHeader: true,
+            columns: colorColumns,
+            source: colors, // ✅ Now dynamically filled!
+            select: function (event, ui) {
+                this.value = ui.item ? ui.item[1] : ''; // ColorName
+                $(param).closest('td').find('input[type="hidden"]').val(ui.item ? ui.item[0] : '');
+
+                $('#colorcode').val(ui.item ? ui.item[2] : ''); // ColorCode
+                return false;
+            }
+        });
+    }
+
+
+    // Step 5: Run everything on page load
+    $(document).ready(function () {
+        fetchColorList(); // load colors once
+
+        $('#selectedPackaging').on('focus', 'input[id^="packagingColor"]', function () {
+            OnColorName(this);
+        });
+
+
+    });
   $(document).ready(function () {
     document.getElementById('SOCreate').reset(); // has to be handle
   });
@@ -289,7 +450,7 @@
 
     if (productId) {
         $.ajax({
-            url: '@Url.Action("GetProductUnit", "BOM")', // Corrected API method
+            url: '@Url.Action("GetProductUnit", "PackagingBOM")', // Corrected API method
             type: 'GET',
             data: { id: productId },
             success: function (data) {

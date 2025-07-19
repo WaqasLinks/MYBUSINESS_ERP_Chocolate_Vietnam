@@ -1,0 +1,104 @@
+﻿@model IEnumerable<MYBUSINESS.Models.OrderColorPProduct>
+
+@{
+    ViewBag.Title = "Products";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<center><h2>Colored Packaging Order List</h2></center>
+
+@*<p>
+        @Html.ActionLink("Create New Product", "Create")
+    </p>*@
+
+<div class="col-sm-12 noPrint">
+    @*<button type="submit" id="CreateSO" class="btn btn-info add-new"><i class="fa fa-plus"></i>Save & Print</button>*@
+    <a style="display:none;" href="#" id="printMe" class="btn btn-info "><i class=""></i> Print</a>
+    <a href="/StoreOrder/CreatePackagingColorOrder" id="createProduct" class="btn btn-success "><i class=""></i> New Packaging Order</a>
+    @*@Html.ActionLink("Upload Excel", "Upload", new object { }, new { @class = "btn btn-warning" }) |
+        <a href="/SOSR/Create?IsReturn=false" id="createSOSR" class=""><i class=""></i> New Sale</a> |
+        <a href="/POPR/Create?IsReturn=false" id="createPOPR" class=""><i class=""></i> New Purchase</a>*@
+</div>
+
+
+@{Html.RenderPartial("_SelectedProductsOrderColorPP", Model); }
+
+<style type="text/css" media="screen">
+    .noPrint {
+    }
+
+    .noScreen {
+        display: none;
+    }
+</style>
+
+<style type="text/css" media="print">
+    .noPrint {
+        display: none;
+    }
+
+    .noScreen {
+    }
+</style>
+
+
+<script type="text/javascript">
+
+        OnTypeSupplierName('#supplier');
+        $(function () { // will trigger when the document is ready
+            //var date = $('.datepicker').datepicker({ dateFormat: 'dd-mm-yy' }).val();
+            $('.datepicker').datepicker({
+                dateFormat: 'dd-M-yy',
+                showOn: "both"//,
+                //buttonImageOnly: true,
+                //buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif",
+
+                //buttonText: "Select date"
+            });
+
+        });
+
+        $(document).ready(function () {
+
+            $('#btnSearch').click(function () {
+                var suppId = $('#idnSupplier').val();
+                //alert(suppId);
+
+                if ($('#supplier').val().trim() != "" && $('#idnSupplier').val() == "") {
+                    alert('Supplier not selected. Please select supplier from list');
+                    return false;
+                }
+
+
+                //if ($('#idnSupplier').val() == "") {
+                //    alert('Supplier not selected. Please select supplier from list');
+                //    return false;
+
+                //}
+
+
+                //$('#loading-image').show();
+                $.ajax({
+                    url: "@Url.Action("SearchData", "Products")",
+                    data: { 'suppId': suppId },
+                    type: "GET",
+                    cache: false,
+                    success: function (data) {
+                        //alert(data);
+                        $("#NewData").html(data);
+
+                        //$("#hdnOrigComments").val($('#txtComments').val());
+                        //$('#lblCommentsNotification').text(savingStatus);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        //$('#lblCommentsNotification').text("Error encountered while saving the comments.");
+                        alert('Data provided was not valid');
+                    }
+                });
+            });
+
+
+        });
+</script>

@@ -100,6 +100,14 @@ namespace MYBUSINESS.Controllers
      .Where(x => x.Date >= dtStartDate && x.Date <= dtEndtDate && x.SupplierId > 0)
      .Include(s => s.Supplier)
      .Include(p => p.PODs.Select(pod => pod.Product));
+            var podReceivers = db.PODRecivers
+        .Include(p => p.POReciver)
+        .ToList();
+
+            ViewBag.PODReceiverList = podReceivers;
+            var poReceivers = db.PORecivers.ToList();
+
+            ViewBag.POReceiverList = poReceivers;
             //pOes.ForEachAsync(m => m.Id = Encryption.Encrypt(m.Id, "BZNS"));
             //var pOes = db.POes.Where(s => s.SaleReturn == false);
             GetTotalBalance(ref pOes);
@@ -123,7 +131,9 @@ namespace MYBUSINESS.Controllers
       .ToList();
 
             ViewBag.ReceivedPOIds = receivedPOIds;
-            ViewBag.POReceivingList = db.PODRecivers.ToList();
+            ViewBag.POReceivingList = db.PORecivers.ToList(); // This is POReciver (parent)
+            ViewBag.PODReceiverList = db.PODRecivers.ToList(); // This is PODReciver (child)
+
             ViewBag.LstMaxSerialno = LstMaxSerialNo;
             ViewBag.Suppliers = DAL.dbSuppliers;
             ViewBag.StartDate = dtStartDate.ToString("dd-MMM-yyyy");
@@ -380,7 +390,7 @@ namespace MYBUSINESS.Controllers
 
             PurchaseOrderViewModel purchaseOrderViewModel = new PurchaseOrderViewModel();
             purchaseOrderViewModel.Suppliers = DAL.dbSuppliers;
-            purchaseOrderViewModel.Products = DAL.dbProducts.Include(x => x.StoreProducts).Where(x => x.PType == 5 || x.PType == 7 || x.PType == 9 && x.IsService == false);
+            purchaseOrderViewModel.Products = DAL.dbProducts.Include(x => x.StoreProducts).Where(x => x.PType == 5 || x.PType == 7 || x.PType == 9 || x.PType == 10 && x.IsService == false);
             //purchaseOrderViewModel.FundingSources = db.FundingSources.ToList() ;
             ViewBag.FundingSources = new SelectList(db.Suppliers.Where(x => x.IsCreditor == true), "Id", "Name");//db.FundingSources.ToList(); ;
             ViewBag.BankAccounts = new SelectList(db.BankAccounts, "Id", "Name");

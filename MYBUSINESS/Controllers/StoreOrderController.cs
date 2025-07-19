@@ -31,9 +31,25 @@ namespace MYBUSINESS.Controllers
 
         [Authorize(Roles = "Admin,Technical Manager,stock staff,stock manager")]
         public ActionResult IndexOrderPP()
-        {            
+        {
             var orderitemspp = db.OrderPProducts.OrderByDescending(p => p.Id) // Sorting by Id in descending order
                            .ToList().ToList();
+            return View(orderitemspp);
+            //return View(DAL.dbBOMs.Where(x => x.SubItems.Count() == 0).ToList());
+        }
+
+        public ActionResult IndexOrderColorPP()
+        {
+            var orderitemspp = db.OrderColorPProducts.OrderByDescending(p => p.Id) // Sorting by Id in descending order
+                           .ToList().ToList();
+
+            var receivedOrderIds = db.StoreColorOrderReceiptPPs
+                .Select(ro => ro.OrderId)
+                .Distinct()
+                .ToHashSet();
+
+            ViewBag.ReceivedOrderIds = receivedOrderIds;
+
             return View(orderitemspp);
             //return View(DAL.dbBOMs.Where(x => x.SubItems.Count() == 0).ToList());
         }
@@ -67,7 +83,7 @@ namespace MYBUSINESS.Controllers
         [Authorize(Roles = "Admin,Technical Manager,stock staff,stock manager")]
         public ActionResult CreateOrder()
         {
-            var finishProducts = db.Products.Where(p => p.PType == 4).ToList();
+            var finishProducts = db.Products.Where(p => p.PType == 4 || p.PType == 10).ToList();
             var stores = db.Stores.ToList(); // Assuming you have a Stores table
 
             var groupedProducts = finishProducts
@@ -125,6 +141,26 @@ namespace MYBUSINESS.Controllers
 
             return View(model);
         }
+
+        public ActionResult ReceiveColorOrderPP(int orderId)
+        {
+            var order = db.OrderColorPProducts.Include(o => o.Store).FirstOrDefault(o => o.Id == orderId);
+            if (order == null)
+            {
+                return HttpNotFound();
+            }
+
+            var model = new ReceiveColorOrderViewModel
+            {
+                OrderId = order.Id,
+                StoreName = order.Store?.Name,
+                StoreId = order.StoreId ?? 0 // or any default/fallback value
+
+            };
+
+            return View(model);
+        }
+
         [Authorize(Roles = "Admin,Technical Manager,stock staff,stock manager")]
         [HttpPost]
 
@@ -162,14 +198,37 @@ namespace MYBUSINESS.Controllers
                     var orderItems = db.OrderItems.Where(oi => oi.OrderId == model.OrderId).ToList();
 
                     // Step 3: Update product stock
+                    //foreach (var item in orderItems)
+                    //{
+                    //    var product = db.Products.FirstOrDefault(p => p.Id == item.ProductId);
+                    //    if (product != null)
+                    //    {
+                    //        //product.Stock += item.Quantity;
+                    //    }
+                    //}
+                    // Step 3: Update product stock
                     foreach (var item in orderItems)
                     {
                         var product = db.Products.FirstOrDefault(p => p.Id == item.ProductId);
                         if (product != null)
                         {
-                            product.Stock += item.Quantity;
+                            // Update stock for child product
+                            //product.Stock += item.Quantity;
+
+                            // If it has a parent, update the parent product stock too
+                            if (product.TargetProdParentId != null)
+                            {
+                                var parentProduct = db.Products.FirstOrDefault(p => p.Id == product.TargetProdParentId);
+                                if (parentProduct != null)
+                                {
+                                    parentProduct.Stock += item.Quantity;
+                                }
+                            }
                         }
                     }
+
+
+
 
                     // Step 4: Save all changes
                     db.SaveChanges();
@@ -246,6 +305,64 @@ namespace MYBUSINESS.Controllers
             }
         }
 
+        [ValidateAntiForgeryToken]
+        public ActionResult ReceiveColorOrderPPPost(ReceiveColorOrderViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            // Check for existing receipt to prevent duplicates
+            var existingReceipt = db.StoreColorOrderReceiptPPs.FirstOrDefault(r => r.OrderId == model.OrderId);
+            if (existingReceipt != null)
+            {
+                ModelState.AddModelError("", "This order has already been received.");
+                return View(model);
+            }
+
+            // Begin transaction to ensure atomicity
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    // Step 1: Save the receipt
+                    var receipt = new StoreColorOrderReceiptPP
+                    {
+                        OrderId = model.OrderId,
+                        StoreId = model.StoreId,
+                        UniqueCode = model.ReceivedCode
+                    };
+                    db.StoreColorOrderReceiptPPs.Add(receipt);
+
+                    // Step 2: Fetch Order Items
+                    var orderItems = db.OrderItemColorPProducts.Where(oi => oi.OrderId == model.OrderId).ToList();
+
+                    // Step 3: Update product stock
+                    foreach (var item in orderItems)
+                    {
+                        var product = db.Products.FirstOrDefault(p => p.Id == item.ProductId);
+                        if (product != null)
+                        {
+                            product.Stock += item.Quantity;
+                        }
+                    }
+
+                    // Step 4: Save all changes
+                    db.SaveChanges();
+                    transaction.Commit();
+
+                    TempData["SuccessMessage"] = "Order received and stock updated successfully!";
+                    return RedirectToAction("IndexOrderColorPP");
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    ModelState.AddModelError("", "Error receiving order: " + ex.Message);
+                    return View(model);
+                }
+            }
+        }
 
         public static void SendOrderNotificationEmail(Order order, string receiverEmail)
         {
@@ -358,7 +475,246 @@ namespace MYBUSINESS.Controllers
 
             return View(packagingProducts);
         }
-        
+
+        public ActionResult CreatePackagingColorOrder()
+        {
+            // 1. Get packaging products (PType 8 or 9)
+            var packagingProducts = db.Products.Where(p => p.PType == 8 || p.PType == 9).ToList();
+
+            // 2. Get all stores for dropdown
+            var stores = db.Stores.ToList();
+            ViewBag.Stores = new SelectList(stores, "Id", "StoreShortName");
+
+            // 3. Get all colors from database
+            var colors = db.Colors.ToList();
+
+            // 4. Map products to ViewModel with colors
+            var viewModel = packagingProducts.Select(p => new ProductColorViewModel
+            {
+                ProductId = (int)p.Id,
+                ProductName = p.Name,
+                AvailableColors = colors  // Assign all colors to each product
+            }).ToList();
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult SubmitOrderColorPP(List<OrderItemColorPProduct> orderitem, int storeId)
+        {
+            // Filter out empty quantities
+            var validItems = orderitem.Where(item => item.Quantity > 0).ToList();
+
+            if (!validItems.Any())
+            {
+                TempData["ErrorMessage"] = "Please select at least one item with quantity > 0.";
+                return RedirectToAction("CreatePackagingColorOrder");
+            }
+
+            // Create order
+            var order = new OrderColorPProduct
+            {
+                StoreId = storeId,
+                OrderDate = DateTime.Now
+            };
+            db.OrderColorPProducts.Add(order);
+            db.SaveChanges();
+
+            // Add items with colors
+            foreach (var item in validItems)
+            {
+                db.OrderItemColorPProducts.Add(new OrderItemColorPProduct
+                {
+                    OrderId = order.Id,
+                    ProductId = item.ProductId,
+                    ColorId = item.ColorId,  // Save ColorId
+                    Quantity = item.Quantity
+                });
+            }
+            db.SaveChanges();
+
+            // Send email (optional)
+            //SendOrderNotificationEmail(order, "zeeshannaveed893@gmail.com");
+
+            return RedirectToAction("IndexOrderColorPP");
+        }
+
+        public ActionResult EditOrderColorPP(int id, bool? readonlyMode = false)
+        {
+            // Get the existing order
+            var order = db.OrderColorPProducts.Find(id);
+            if (order == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Get all stores for dropdown
+            var stores = db.Stores.ToList();
+            ViewBag.Stores = new SelectList(stores, "Id", "StoreShortName", order.StoreId);
+            ViewBag.CurrentStoreId = order.StoreId;
+            ViewBag.ReadonlyMode = readonlyMode ?? false;
+            // Get all products and colors
+            var packagingProducts = db.Products.Where(p => p.PType == 8 || p.PType == 9).ToList();
+            var colors = db.Colors.ToList();
+
+            // Get existing order items
+            var orderItems = db.OrderItemColorPProducts
+                .Where(oi => oi.OrderId == id)
+                .ToList();
+
+            // Create view model
+            var viewModel = packagingProducts.Select(p => new EditProductColorViewModel
+            {
+                ProductId = (int)p.Id,
+                ProductName = p.Name,
+                AvailableColors = colors.Select(c => new ColorWithQuantity
+                {
+                    Id = c.Id,
+                    ColorName = c.ColorName,
+                    ColorCode = c.ColorCode,
+                    Quantity = orderItems.FirstOrDefault(oi => oi.ProductId == p.Id && oi.ColorId == c.Id)?.Quantity ?? 0
+                }).ToList()
+            }).ToList();
+
+            ViewBag.OrderId = id;
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult EditOrderColorPP(List<OrderItemColorPProduct> orderitem, int storeId, int orderId)
+        {
+            // Filter out empty quantities
+            var validItems = orderitem.Where(item => item.Quantity > 0).ToList();
+
+            if (!validItems.Any())
+            {
+                TempData["ErrorMessage"] = "Please select at least one item with quantity > 0.";
+                return RedirectToAction("EditOrderColorPP", new { id = orderId });
+            }
+
+            // Get existing order
+            var order = db.OrderColorPProducts.Find(orderId);
+            if (order == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Update order details
+            order.StoreId = storeId;
+            db.Entry(order).State = EntityState.Modified;
+
+            // Remove existing items
+            var existingItems = db.OrderItemColorPProducts.Where(oi => oi.OrderId == orderId);
+            db.OrderItemColorPProducts.RemoveRange(existingItems);
+
+            // Add updated items
+            foreach (var item in validItems)
+            {
+                db.OrderItemColorPProducts.Add(new OrderItemColorPProduct
+                {
+                    OrderId = orderId,
+                    ProductId = item.ProductId,
+                    ColorId = item.ColorId,
+                    Quantity = item.Quantity
+                });
+            }
+
+            db.SaveChanges();
+            return RedirectToAction("IndexOrderColorPP");
+        }
+
+
+        [HttpPost]
+        [ValidateInput(false)]
+        public JsonResult ValidationColorPP(int orderId, int storeId, List<OrderItemColorPProduct> orderItems)
+        {
+            try
+            {
+                if (orderItems == null || !orderItems.Any())
+                {
+                    return Json(new { success = false, message = "No items to validate." });
+                }
+
+                // Get the parent order
+                var order = db.OrderColorPProducts.Find(orderId);
+                if (order == null)
+                {
+                    return Json(new { success = false, message = "Order not found." });
+                }
+
+                // Check if order is already validated
+                if (order.Validate == true)
+                {
+                    return Json(new { success = false, message = "Order is already validated." });
+                }
+
+                // Update store if changed
+                if (order.StoreId != storeId)
+                {
+                    order.StoreId = storeId;
+                }
+
+                // Remove existing items
+                var existingItems = db.OrderItemColorPProducts.Where(oi => oi.OrderId == orderId).ToList();
+                db.OrderItemColorPProducts.RemoveRange(existingItems);
+
+                // Add validated items
+                foreach (var item in orderItems)
+                {
+                    var product = db.Products.Find(item.ProductId);
+                    if (product == null)
+                    {
+                        return Json(new { success = false, message = $"Product with ID {item.ProductId} not found." });
+                    }
+
+                    // For packaging products (PType 8 or 9)
+                    if (product.PType == 8 || product.PType == 9)
+                    {
+                        if (product.Stock < item.Quantity)
+                        {
+                            return Json(new
+                            {
+                                success = false,
+                                message = $"Insufficient stock for {product.Name}. Available: {product.Stock}, Requested: {item.Quantity}"
+                            });
+                        }
+
+                        // Subtract quantity from product stock
+                        product.Stock -= item.Quantity;
+                    }
+
+                    // Add new order item
+                    db.OrderItemColorPProducts.Add(new OrderItemColorPProduct
+                    {
+                        OrderId = orderId,
+                        ProductId = item.ProductId,
+                        ColorId = item.ColorId,
+                        Quantity = item.Quantity
+                    });
+                }
+
+                // Mark order as validated
+                order.Validate = true;
+                order.OrderDate = DateTime.Now; // Update order date
+                db.SaveChanges();
+
+                return Json(new
+                {
+                    success = true,
+                    message = "Order validated successfully!",
+                    redirectUrl = Url.Action("IndexOrderColorPP", "StoreOrder")
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = $"An error occurred: {ex.Message}"
+                });
+            }
+        }
+
         [HttpPost]
         public ActionResult SubmitOrder(List<ProductCategoryViewModel> categories, int storeId)
         {
@@ -407,6 +763,8 @@ namespace MYBUSINESS.Controllers
 
             return RedirectToAction("Index");
         }
+
+
 
         [HttpPost]
         public ActionResult SubmitOrderPP(List<OrderItemPProduct> orderitem, int storeId)
@@ -500,6 +858,51 @@ namespace MYBUSINESS.Controllers
             );
 
             return File(renderedBytes, mimeType, $"Order_Receipt_{orderId}.pdf");
+        }
+        [HttpGet]
+        public ActionResult PrintColorOrderPdf(int id)
+        {
+            LocalReport localReport = new LocalReport();
+            localReport.ReportPath = Server.MapPath("~/Reports/Sale_ReceiptOrderColered.rdlc");
+
+            // Get data from stored procedure
+            var data = db.Database.SqlQuery<OrderReceiptColorProductionViewModel>(
+                "EXEC GetColoredPackagingById @OrderId",
+                new SqlParameter("@OrderId", id)).ToList();
+
+            if (!data.Any())
+            {
+                return Content("No data found.");
+            }
+
+            // Add data source to report
+            //ReportDataSource reportDataSource = new ReportDataSource(
+            //    "spGetOrderProductDetailsDataSet",
+            //    data);
+            ReportDataSource reportDataSource = new ReportDataSource(
+    "DataSet1",
+    data);
+            localReport.DataSources.Add(reportDataSource);
+
+            // ✅ Set required report parameter
+            //localReport.SetParameters(new ReportParameter("OrderId", orderId.ToString()));
+
+            // Render report
+            string mimeType, encoding, fileNameExtension;
+            string[] streams;
+            Warning[] warnings;
+
+            byte[] renderedBytes = localReport.Render(
+                "PDF",
+                null,
+                out mimeType,
+                out encoding,
+                out fileNameExtension,
+                out streams,
+                out warnings
+            );
+
+            return File(renderedBytes, mimeType, $"Order_Receipt_{id}.pdf");
         }
         [HttpGet]
         public ActionResult PrintOrderPPdf(int orderId)
